@@ -122,7 +122,7 @@ App Store 주요 골프 스코어 카운터 앱들을 조사한 결과는 다음
 
 **기본 동작**:
 - 라운드 종료 후 "공유하기" → 임시 HTML viewer 생성
-- 서버 업로드 → `https://gold.zerolive.co.kr/{shortId}` 반환
+- 서버 업로드 → `https://golf.zerolive.co.kr/{shortId}` 반환
 - **7일 후 자동 만료**
 - iOS 시스템 공유 시트로 카카오톡/iMessage/인스타 등 어디든 공유
 - **안드로이드 친구도 링크 클릭만 하면 OK**
@@ -173,13 +173,13 @@ viewer의 모든 사진은 **방문자가 자기 사진앱에 저장 가능**해
 **기술적 구현 포인트**:
 ```html
 <!-- 갤러리 사진 (iOS Long Press → 사진에 저장 가능) -->
-<img src="https://gold.zerolive.co.kr/{shortId}/photo/{photoId}" 
+<img src="https://golf.zerolive.co.kr/{shortId}/photo/{photoId}" 
      alt="라운드 사진" 
      loading="lazy" 
      style="touch-action: pinch-zoom;" />
 
 <!-- 명시적 다운로드 버튼 -->
-<a href="https://gold.zerolive.co.kr/{shortId}/photo/{photoId}?download=1" 
+<a href="https://golf.zerolive.co.kr/{shortId}/photo/{photoId}?download=1" 
    download="golf-2026-05-11-h3.jpg">
    다운로드
 </a>
@@ -227,7 +227,7 @@ Content-Disposition: attachment; filename="..."
 [iPhone 앱]
   ↓ ① 라운드 데이터 + 사진 직렬화
   ↓ ② POST /api/share (디바이스 토큰 + 옵션)
-[Cloudflare Worker (gold.zerolive.co.kr)]
+[Cloudflare Worker (golf.zerolive.co.kr)]
   ↓ ③ shortId 생성 (base62 8자)
   ↓ ④ JSON → KV / 이미지 → R2 저장 (TTL 7일)
   ↓ ⑤ shortId + URL + editToken 반환
@@ -249,7 +249,7 @@ Content-Disposition: attachment; filename="..."
 | **Cloudflare KV** | shortId → 메타데이터 (TTL: 7일) |
 | **Cloudflare R2** | 사진 파일 저장 (S3 호환, TTL 7일 자동 삭제) |
 | **Cloudflare CDN** | 글로벌 엣지 캐싱 |
-| **DNS** | 이미 Cloudflare → `gold.zerolive.co.kr` Worker 라우트 |
+| **DNS** | 이미 Cloudflare → `golf.zerolive.co.kr` Worker 라우트 |
 
 > **비용**: 무료 티어로 충분
 > - KV: 100k reads/day, 1k writes/day
