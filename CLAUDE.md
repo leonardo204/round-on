@@ -1,0 +1,57 @@
+# Claude Code 개발 가이드
+
+> 공통 규칙(Agent Delegation, 커밋 정책, Context DB 등)은 글로벌 설정(`~/.claude/CLAUDE.md`)을 따릅니다.
+> 글로벌 미설치 시: `curl -fsSL https://raw.githubusercontent.com/leonardo204/dotclaude/main/install.sh | bash`
+
+---
+
+## Slim 정책
+
+이 파일은 **100줄 이하**를 유지한다. 새 지침 추가 시:
+1. 매 턴 참조 필요 → 이 파일에 1줄 추가
+2. 상세/예시/테이블 → Ref-docs/claude/*.md에 작성 후 여기서 참조
+3. ref-docs 헤더: `# 제목 — 한 줄 설명` (모델이 첫 줄만 보고 필요 여부 판단)
+
+---
+
+## PROJECT
+
+### 개요
+
+**라운드온 (Round-On)** — iPhone + Apple Watch 골프 스코어 카운터 앱
+
+| 항목 | 값 |
+|------|-----|
+| 앱 이름 | 라운드온 (Round-On) — 2026-05-11 확정 |
+| 컨셉 | "한 번 탭할 때마다 한 타. 라운드 끝나면 사진과 함께 친구들에게 공유." |
+| 기술 스택 | iOS 17+ / watchOS 10+, SwiftUI, SwiftData, CloudKit, HealthKit, WatchConnectivity, Cloudflare Workers + KV + R2 |
+| 빌드 방법 | Xcode 워크스페이스 (iOS + watchOS + Shared) — TBD |
+| Viewer 도메인 | `golf.zerolive.co.kr` (7일 만료 라운드 viewer URL) |
+| 상태 | 기획/명세 단계 (v4) — 단일 Phase 개발 예정 |
+
+### 상세 문서
+
+#### 프로젝트 명세
+- [기능 명세서 v4](Ref-docs/golf-scorecard-app-spec_3.md) — F1~F14 전체 기능 + 디자인 시스템 + 작업 분담
+- [한국 골프장 DB 패키지](Ref-docs/golf-db-pack/README.md) — 546개 골프장 데이터셋 (OSM/ODbL)
+- [DB 스키마](Ref-docs/golf-db-pack/40-COURSE_DB_SCHEMA.md) — JSON 스키마 + Swift `CourseRepository` 예시
+- [DB 파이프라인](Ref-docs/golf-db-pack/41-COURSE_DB_PIPELINE.md) — 데이터 수집·빌드 과정
+
+#### Claude Code 시스템
+- [Context DB](Ref-docs/claude/context-db.md) — SQLite 기반 세션/태스크/결정 저장소
+- [Context Monitor](Ref-docs/claude/context-monitor.md) — HUD + compaction 감지/복구
+- [컨벤션](Ref-docs/claude/conventions.md) — 커밋, 주석, 로깅 규칙
+- [셋업](Ref-docs/claude/setup.md) — 새 환경 초기 설정
+
+### 핵심 규칙
+
+- **디자인 톤**: "사계절 그린" 4팔레트 (Spring 라이트 / Winter 다크 디폴트), 절제·미니멀, 8pt 그리드
+- **F4 카운터 컨셉**: par에서 시작 X — **0에서 시작, 샷마다 +1** (OB +2, 해저드 +1, OK +1)
+- **개인정보**: 위치/동반자 이름 외부 전송 금지. viewer는 7일 후 KV/R2 자동 삭제
+- **DB 라이선스**: 골프장 데이터는 OSM ODbL — 앱 내 표기 필수 (설정 → 정보)
+- **DB 품질 분기**: 546개 중 524개 `low` (클럽하우스만), F3(GPS 홀 자동 감지)는 14개에서만 동작 → dataQuality 기반 분기 처리 필수
+- **글로벌 출시 시 재고**: 영어 "round on"은 부정 의미("공격하다") — 영어권 진출 시 별도 브랜드 검토
+
+---
+
+*최종 업데이트: 2026-05-11*
