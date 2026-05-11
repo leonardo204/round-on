@@ -3,7 +3,7 @@
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
 > **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §F9 (spec_3.md:121-143), §F10 (spec_3.md:144-220), §3.1 (spec_3.md:224-242)
-> **관련 문서**: `30-API_SPEC.md`, `10-DESIGN_SYSTEM.md`, `32-CLOUDFLARE_SETUP.md` (작성 예정), `33-SECURITY.md` (작성 예정), `62-COMPAT_MATRIX.md` (작성 예정)
+> **관련 문서**: `30-API_SPEC.md`, `10-DESIGN_SYSTEM.md`, `32-CLOUDFLARE_SETUP.md` (작성 예정), `33-SECURITY.md`, `62-COMPAT_MATRIX.md` (작성 예정)
 
 ---
 
@@ -18,7 +18,7 @@
 | HTTP 응답 헤더, 엔드포인트 요청/응답 구조 | `30-API_SPEC.md` |
 | 디자인 토큰, 색상 팔레트, 폰트 스케일 | `10-DESIGN_SYSTEM.md` |
 | Worker 렌더링 코드, KV/R2 키 스킴, TTL 설정 | `32-CLOUDFLARE_SETUP.md` (작성 예정) |
-| bcrypt cost factor, 잠금 카운터, PII 패턴 매칭 | `33-SECURITY.md` (작성 예정) |
+| bcrypt cost factor, 잠금 카운터, PII 패턴 매칭 | `33-SECURITY.md` |
 | 브라우저 quirk 카탈로그 (카톡 인앱, Samsung Internet 등) | `62-COMPAT_MATRIX.md` (TODO, 작성 예정) |
 
 ---
@@ -300,9 +300,21 @@ spec_3.md:203이 "순수 HTML + 최소 JS (10KB 미만)"를 명세 범위에 포
 
 ## 8. PIN 잠금 화면
 
-(spec_3.md:239-240, 30-API_SPEC §9.2)
+(spec_3.md:239-240, 33-SECURITY §5 정식 확정)
 
 `accessControl == "pin"` viewer 최초 접근 시 스코어카드 대신 이 화면을 렌더링한다.
+
+**PIN 검증 엔드포인트**: `POST /:shortId/verify-pin` (33-SECURITY §5 정식 확정. 30-API §9.2 권장안 `/unlock`을 대체한다.)
+
+**응답 처리 분기**:
+
+| HTTP | 바디 | 화면 처리 |
+|------|------|----------|
+| 200 | `{ "ok": true }` | 세션 쿠키 자동 저장(브라우저) → `location.reload()` |
+| 401 | `{ "ok": false, "attempts": N, "locked": false }` | "PIN이 일치하지 않습니다 (N/5)" 표시 |
+| 429 | `{ "ok": false, "locked": true, "retryAfter": 3600 }` | "5회 오답으로 1시간 잠금되었습니다" 표시 |
+
+세션 쿠키(`viewer_session`)는 `Set-Cookie` 응답 헤더로 자동 수신된다. fetch 옵션에 `credentials: 'include'`를 반드시 명시해야 쿠키가 전송·저장된다. 세션 쿠키 보안 속성(HttpOnly/Secure/SameSite/Max-Age/Path)은 `33-SECURITY §5.4`를 따른다.
 
 ```html
 <section class="pin-lock">
@@ -321,26 +333,36 @@ spec_3.md:203이 "순수 HTML + 최소 JS (10KB 미만)"를 명세 범위에 포
 <script>
 document.getElementById('pin-form').addEventListener('submit', function (e) {
   e.preventDefault();
-  /* PIN 검증: 30-API_SPEC §9.2 권장 엔드포인트 호출 */
+  /*
+   * PIN 검증 엔드포인트: POST /:shortId/verify-pin (33-SECURITY §5 정식 확정)
+   * credentials: 'include' — 세션 쿠키(viewer_session) 자동 전송·저장에 필수
+   */
   fetch('/{shortId}/verify-pin', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ pin: document.getElementById('pin-input').value })
-  }).then(function(r){return r.json();}).then(function(d){
-    if (d.ok) { window.location.reload(); }
-    else if (d.locked) {
-      document.getElementById('pin-locked').hidden = false;
-      document.getElementById('pin-error').hidden  = true;
-    } else {
-      var el = document.getElementById('pin-error');
-      el.textContent = 'PIN이 일치하지 않습니다. (' + d.attempts + '/5)';
-      el.hidden = false;
-    }
-  });
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ pin: document.getElementById('pin-input').value })
+  })
+    .then(function (r) { return r.json().then(function (d) { return { status: r.status, data: d }; }); })
+    .then(function (res) {
+      var d = res.data;
+      if (res.status === 200 && d.ok) {
+        /* 200: 세션 쿠키 브라우저 자동 저장 완료 → viewer 본문 로드 */
+        window.location.reload();
+      } else if (res.status === 429 && d.locked) {
+        /* 429: 5회 오답 잠금 */
+        document.getElementById('pin-locked').hidden = false;
+        document.getElementById('pin-error').hidden  = true;
+      } else {
+        /* 401: PIN 불일치 — attempts 카운트 표시 */
+        var el = document.getElementById('pin-error');
+        el.textContent = 'PIN이 일치하지 않습니다. (' + (d.attempts != null ? d.attempts : '?') + '/5)';
+        el.hidden = false;
+      }
+    });
 });
 </script>
 ```
-
-PIN 잠금 응답 처리(`429` 또는 별도 필드)는 `30-API_SPEC §8`을 따른다.
 
 ---
 
@@ -403,7 +425,7 @@ PIN 잠금 응답 처리(`429` 또는 별도 필드)는 `30-API_SPEC §8`을 따
 | Samsung Internet long-press 동작 | [SPEC-UNDEFINED] | `62-COMPAT_MATRIX.md` (작성 예정) |
 | Firefox iOS long-press 동작 | [SPEC-UNDEFINED] | `62-COMPAT_MATRIX.md` (작성 예정) |
 | `og:image` 동적 생성 방식 | [SPEC-UNDEFINED] | §9 역참조 — 30-API_SPEC §3 `ogImageURL` 검토 |
-| PIN 검증 엔드포인트 URL/응답 구조 | [SPEC-UNDEFINED] | `30-API_SPEC §9.2` 권장안 |
+| PIN 검증 엔드포인트 URL/응답 구조 | `POST /:shortId/verify-pin` 정식 확정 | `33-SECURITY §5` 확정 — 31-VIEWER_HTML §8 동기 완료 |
 | `window.__PHOTOS__` 직렬화 형식 | [SPEC-UNDEFINED] | `32-CLOUDFLARE_SETUP.md` (작성 예정) |
 
 ### 책임 경계
@@ -414,7 +436,7 @@ PIN 잠금 응답 처리(`429` 또는 별도 필드)는 `30-API_SPEC §8`을 따
 | **30-API_SPEC.md** | HTTP 계약 — 엔드포인트, 응답 헤더, 상태 코드 |
 | **62-COMPAT_MATRIX.md** (작성 예정) | 브라우저 quirk 카탈로그 — 환경별 실제 동작 검증 |
 | **32-CLOUDFLARE_SETUP.md** (작성 예정) | Worker 렌더링 코드, KV/R2 키 스킴, TTL |
-| **33-SECURITY.md** (작성 예정) | bcrypt cost, 잠금 카운터, PII 패턴 매칭 |
+| **33-SECURITY.md** | bcrypt cost, 잠금 카운터, PII 패턴 매칭 |
 
 ---
 
