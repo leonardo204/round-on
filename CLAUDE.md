@@ -41,10 +41,15 @@
 - [00 제품 개요](Ref-docs/specs/00-OVERVIEW.md) — 정체성, 가치 제안, Non-Goals
 - [02 사용자 플로우](Ref-docs/specs/02-USER_FLOWS.md) — F-A~F-G 7개 골든패스
 - [10 디자인 시스템](Ref-docs/specs/10-DESIGN_SYSTEM.md) — 4계절 컬러 토큰, 타이포, 8pt 그리드
+- [11 컴포넌트 카탈로그](Ref-docs/specs/11-COMPONENTS.md) — 컴포넌트 8+2종 props/상태/변형, elevation 토큰
+- [13 햅틱 및 모션](Ref-docs/specs/13-HAPTICS_AND_MOTION.md) — WKHapticType 매핑, 모션 토큰 4종
 - [20 전체 아키텍처](Ref-docs/specs/20-ARCHITECTURE.md) — 컴포넌트/모듈/데이터 흐름, GolfCourse·iCloud 결정
 - [21 데이터 모델](Ref-docs/specs/21-DATA_MODEL.md) — SwiftData @Model + CloudKit
+- [22 상태 관리](Ref-docs/specs/22-STATE_MANAGEMENT.md) — @Observable VM 5종, WC 메시지 3종, 카운터 delta-merge
+- [23 오프라인 동작](Ref-docs/specs/23-OFFLINE_BEHAVIOR.md) — PendingOperation 큐, 백오프, viewer 만료 nil
 - [30 API 명세](Ref-docs/specs/30-API_SPEC.md) — Cloudflare Worker 7개 엔드포인트
 - [31 Viewer HTML](Ref-docs/specs/31-VIEWER_HTML.md) — 모바일 우선 + 사진 long-press 저장
+- [32 Cloudflare 셋업](Ref-docs/specs/32-CLOUDFLARE_SETUP.md) — KV 4네임스페이스, R2 버킷, wrangler.toml
 - [33 보안 정책](Ref-docs/specs/33-SECURITY.md) — bcrypt 12, PIN 검증 EP, PII 마스킹
 - [50 개인정보 처리방침](Ref-docs/specs/50-PRIVACY_POLICY.md) — PIPA §30, App Store Privacy Nutrition Label
 - [53 권한 요청](Ref-docs/specs/53-PERMISSIONS.md) — Info.plist 키, usage string 한/영
