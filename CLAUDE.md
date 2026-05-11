@@ -37,6 +37,15 @@
 - [DB 스키마](Ref-docs/golf-db-pack/40-COURSE_DB_SCHEMA.md) — JSON 스키마 + Swift `CourseRepository` 예시
 - [DB 파이프라인](Ref-docs/golf-db-pack/41-COURSE_DB_PIPELINE.md) — 데이터 수집·빌드 과정
 
+#### 사전 설계 문서 (specs/ — §10.3 최소 권장 8종)
+- [00 제품 개요](Ref-docs/specs/00-OVERVIEW.md) — 정체성, 가치 제안, Non-Goals
+- [02 사용자 플로우](Ref-docs/specs/02-USER_FLOWS.md) — F-A~F-G 7개 골든패스
+- [10 디자인 시스템](Ref-docs/specs/10-DESIGN_SYSTEM.md) — 4계절 컬러 토큰, 타이포, 8pt 그리드
+- [21 데이터 모델](Ref-docs/specs/21-DATA_MODEL.md) — SwiftData @Model + CloudKit
+- [30 API 명세](Ref-docs/specs/30-API_SPEC.md) — Cloudflare Worker 7개 엔드포인트
+- [31 Viewer HTML](Ref-docs/specs/31-VIEWER_HTML.md) — 모바일 우선 + 사진 long-press 저장
+- [53 권한 요청](Ref-docs/specs/53-PERMISSIONS.md) — Info.plist 키, usage string 한/영
+
 #### Claude Code 시스템
 - [Context DB](Ref-docs/claude/context-db.md) — SQLite 기반 세션/태스크/결정 저장소
 - [Context Monitor](Ref-docs/claude/context-monitor.md) — HUD + compaction 감지/복구
