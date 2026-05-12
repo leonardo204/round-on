@@ -44,6 +44,7 @@
 - [11 컴포넌트 카탈로그](Ref-docs/specs/11-COMPONENTS.md) — 컴포넌트 8+2종 props/상태/변형, elevation 토큰
 - [12 화면 카탈로그](Ref-docs/specs/12-SCREENS.md) — Stitch 시안 22화면 매핑, ScoreCell Variant B 채택, 색상/폰트 교체 정책
 - [13 햅틱 및 모션](Ref-docs/specs/13-HAPTICS_AND_MOTION.md) — WKHapticType 매핑, 모션 토큰 4종
+- [14 접근성](Ref-docs/specs/14-ACCESSIBILITY.md) — VoiceOver 4-tuple, Dynamic Type 스케일, WCAG AA 대비, par-diff 모양 매핑, Reduce Motion
 - [20 전체 아키텍처](Ref-docs/specs/20-ARCHITECTURE.md) — 컴포넌트/모듈/데이터 흐름, GolfCourse·iCloud 결정
 - [21 데이터 모델](Ref-docs/specs/21-DATA_MODEL.md) — SwiftData @Model + CloudKit
 - [22 상태 관리](Ref-docs/specs/22-STATE_MANAGEMENT.md) — @Observable VM 5종, WC 메시지 3종, 카운터 delta-merge
