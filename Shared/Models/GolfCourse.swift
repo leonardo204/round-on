@@ -42,7 +42,7 @@ public struct GolfCourse: Codable, Sendable, Identifiable {
         case clubhouse
         case holesCount, courseType
         case kakaoPlaceUrl
-        case subCourses = "courses"   // v3 JSON 필드명 "courses" → Swift subCourses
+        case subCourses               // v3 enrich_subcourses.py 산출 키와 동일
         case holes, dataQuality, sources
     }
 
@@ -99,11 +99,12 @@ public struct Clubhouse: Codable, Sendable, Hashable {
 /// 27/36홀 코스의 코스 구분 (동/서/남/북 등).
 public struct SubCourse: Codable, Sendable, Identifiable {
     public let name: String          // "동코스", "서코스", "전반", "후반"
-    public let holes: [HoleInfo]     // 데이터 보강 전이면 빈 배열
+    /// 홀별 상세. 데이터 보강 전이면 nil 또는 빈 배열. JSON에 키가 없으면 nil로 디코드됨.
+    public let holes: [HoleInfo]?
 
     public var id: String { name }
 
-    public init(name: String, holes: [HoleInfo] = []) {
+    public init(name: String, holes: [HoleInfo]? = nil) {
         self.name = name
         self.holes = holes
     }
