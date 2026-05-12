@@ -9,6 +9,8 @@ import Shared
 struct ActiveRoundView: View {
     @Bindable var roundVM: RoundViewModel
     @State private var showFinishConfirm = false
+    @State private var showPenaltySheet = false
+    @State private var bannerMessage: String?
 
     private var holeVM: HoleViewModel? { roundVM.holeViewModel }
     private var scoreVM: ScoreCardViewModel? { roundVM.scoreCardViewModel }
@@ -20,7 +22,14 @@ struct ActiveRoundView: View {
                 Color.springSurface.ignoresSafeArea()
 
                 VStack(spacing: 0) {
-                    // 라운드 헤더
+                    // 오프라인 배너
+                    if let msg = bannerMessage {
+                        BannerNotice(message: msg, severity: .warning, dismissAction: {
+                            bannerMessage = nil
+                        })
+                    }
+
+                    // 라운드 헤더 + HoleProgress
                     roundHeader
 
                     // 스코어카드 (split9x2)
@@ -31,6 +40,15 @@ struct ActiveRoundView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showPenaltySheet = true
+                    } label: {
+                        Image(systemName: "exclamationmark.triangle")
+                            .foregroundStyle(Color.springTextSecondary)
+                    }
+                    .accessibilityLabel("벌타 입력")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("종료") {
                         showFinishConfirm = true
@@ -41,8 +59,12 @@ struct ActiveRoundView: View {
             .confirmationDialog("라운드를 종료하시겠어요?", isPresented: $showFinishConfirm, titleVisibility: .visible) {
                 Button("종료", role: .destructive) {
                     roundVM.finishRound()
+                    Task { await HapticEngine.shared.play(.roundEnd) }
                 }
                 Button("취소", role: .cancel) {}
+            }
+            .sheet(isPresented: $showPenaltySheet) {
+                penaltySheet
             }
         }
     }
@@ -63,7 +85,7 @@ struct ActiveRoundView: View {
                     }
                 }
                 Spacer()
-                // 현재 홀 표시
+                // 현재 홀 표시 + 플레이어 칩
                 if let holeVM = holeVM {
                     VStack(alignment: .trailing, spacing: 0) {
                         Text("\(holeVM.currentHoleNumber)번 홀")
@@ -76,18 +98,13 @@ struct ActiveRoundView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.vertical, 10)
 
-            // 홀 진행 바 (HoleProgress)
+            // HoleProgress 도트
             if let holeVM = holeVM {
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Color.springBorder
-                        Color.springGreenPrimary
-                            .frame(width: geo.size.width * CGFloat(holeVM.currentHoleNumber) / CGFloat(holeVM.totalHoles))
-                    }
-                }
-                .frame(height: 3)
+                HoleProgress(currentHole: holeVM.currentHoleNumber, totalHoles: holeVM.totalHoles)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
             }
         }
         .background(Color.springSurfaceElevated)
@@ -209,31 +226,37 @@ struct ActiveRoundView: View {
         let currentHole = roundVM.holeViewModel?.currentHoleNumber
 
         return HStack(spacing: 2) {
-            // 플레이어 이름
+            // 플레이어 이름 (PlayerChip 읽기전용)
             Text(player.name)
                 .font(.system(size: 12, weight: isActive ? .semibold : .regular))
                 .foregroundStyle(isActive ? Color.springGreenPrimary : Color.springTextPrimary)
                 .lineLimit(1)
                 .frame(width: 28, alignment: .center)
 
-            // 각 홀 셀
+            // 각 홀 셀 (ScoreCell 컴포넌트 사용)
             ForEach(holes, id: \.self) { h in
                 let count = scoreVM.count(holeNumber: h, playerId: player.id)
                 let cat = scoreVM.scoreCategory(holeNumber: h, playerId: player.id)
                 let isCurrent = h == currentHole
+                let par = scoreVM.parByHole[h] ?? 4
 
-                ScoreCellView(
+                ScoreCell(
                     count: count,
                     category: cat,
-                    isCurrentHole: isCurrent
+                    isCurrentHole: isCurrent,
+                    holeNumber: h,
+                    playerName: player.name,
+                    par: par,
+                    onTap: {
+                        roundVM.increment(holeNumber: h, playerId: player.id)
+                        roundVM.holeViewModel?.goToHole(index: h - 1)
+                        Task { await HapticEngine.shared.play(.shotIncrement) }
+                    },
+                    onLongPress: {
+                        roundVM.decrement(holeNumber: h, playerId: player.id)
+                        Task { await HapticEngine.shared.play(.shotDecrement) }
+                    }
                 )
-                .onTapGesture {
-                    roundVM.increment(holeNumber: h, playerId: player.id)
-                    roundVM.holeViewModel?.goToHole(index: h - 1)
-                }
-                .onLongPressGesture(minimumDuration: 0.4) {
-                    roundVM.decrement(holeNumber: h, playerId: player.id)
-                }
             }
 
             // 구간 합계
@@ -286,6 +309,59 @@ struct ActiveRoundView: View {
         .shadow(color: .black.opacity(0.04), radius: 1, x: 0, y: 0)
     }
 
+    // MARK: Penalty Sheet (iphone-2.4)
+
+    private var penaltySheet: some View {
+        NavigationStack {
+            ZStack {
+                Color.springSurface.ignoresSafeArea()
+
+                VStack(spacing: 16) {
+                    if let holeVM = holeVM,
+                       let playerVM = playerVM,
+                       let activePlayer = playerVM.activePlayer {
+
+                        Text("\(holeVM.currentHoleNumber)번 홀 · \(activePlayer.name)")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(Color.springTextPrimary)
+                            .padding(.top, 8)
+
+                        VStack(spacing: 8) {
+                            PenaltyButton(variant: .ob) {
+                                roundVM.tapOB(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                Task { await HapticEngine.shared.play(.penaltyOB) }
+                                showPenaltySheet = false
+                            }
+                            PenaltyButton(variant: .hazard) {
+                                roundVM.tapHazard(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                Task { await HapticEngine.shared.play(.penaltyHazard) }
+                                showPenaltySheet = false
+                            }
+                            PenaltyButton(variant: .ok) {
+                                roundVM.tapOK(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                Task { await HapticEngine.shared.play(.penaltyOK) }
+                                showPenaltySheet = false
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
+
+                    Spacer()
+                }
+            }
+            .navigationTitle("벌타 입력")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("닫기") { showPenaltySheet = false }
+                }
+            }
+        }
+        .presentationDetents([.fraction(0.4)])
+    }
+
+    // MARK: Helpers
+
     private func vsParText(_ vsPar: Int) -> String {
         if vsPar == 0 { return "E" }
         return vsPar > 0 ? "+\(vsPar)" : "\(vsPar)"
@@ -297,69 +373,5 @@ struct ActiveRoundView: View {
         if vsPar == 0 { return Color.springTextSecondary }
         if vsPar == 1 { return Color(red: 0.85, green: 0.3, blue: 0.3) }
         return Color(red: 0.7, green: 0.1, blue: 0.1)
-    }
-}
-
-// MARK: - ScoreCellView
-// ScoreCell.split9x2 변형 (12-SCREENS D-1, 11-COMPONENTS §6)
-
-private struct ScoreCellView: View {
-    let count: Int
-    let category: ScoreCategory
-    let isCurrentHole: Bool
-
-    var body: some View {
-        ZStack {
-            // par 대비 색상 배경 (11-COMPONENTS §6)
-            cellBackground
-
-            Text(count > 0 ? "\(count)" : "")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(cellForeground)
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 32)
-        .overlay(
-            RoundedRectangle(cornerRadius: 4)
-                .stroke(isCurrentHole ? Color.springGreenPrimary : Color.clear, lineWidth: 1.5)
-        )
-    }
-
-    @ViewBuilder
-    private var cellBackground: some View {
-        switch category {
-        case .empty:
-            Color.clear
-        case .eagle:
-            // 진한 그린 원형 (D-4: --green-primary 동그라미)
-            Circle()
-                .fill(Color.springGreenPrimary)
-                .padding(2)
-        case .birdie:
-            // 연한 그린 원형
-            Circle()
-                .fill(Color.springGreenSecondary.opacity(0.5))
-                .padding(2)
-        case .par:
-            Color.clear
-        case .bogey:
-            // 연한 적색 사각형 (D-4: --text-secondary 사각형)
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color(red: 0.95, green: 0.87, blue: 0.87))
-                .padding(2)
-        case .doublePlus:
-            // 진한 적색 사각형
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color(red: 0.95, green: 0.78, blue: 0.78))
-                .padding(2)
-        }
-    }
-
-    private var cellForeground: Color {
-        switch category {
-        case .eagle: return Color.springTextPrimary
-        case .birdie: return Color.springTextPrimary
-        default: return Color.springTextPrimary
-        }
     }
 }

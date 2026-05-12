@@ -34,6 +34,8 @@ targets:
       - path: Shared/Haptics
       - path: Shared/Sync
       - path: Shared/ViewModels
+        excludes:
+          - "ShareViewModel.swift"  # UIKit 의존 (iOS 전용)
     info:
       path: Shared/Info.plist
     settings:
@@ -69,6 +71,11 @@ targets:
         CFBundleDevelopmentRegion: ko
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        NSPhotoLibraryUsageDescription: "라운드 사진을 첨부하여 공유 viewer에 포함할 수 있습니다."
+        NSPhotoLibraryAddUsageDescription: "공유 viewer 사진을 사진 앱에 저장할 수 있습니다."
+        NSHealthShareUsageDescription: "골프 라운드 운동 기록을 건강 앱에 저장합니다."
+        NSHealthUpdateUsageDescription: "골프 라운드를 운동으로 기록하여 건강 앱에 저장합니다."
+        NSLocationWhenInUseUsageDescription: "가까운 골프장을 자동으로 찾기 위해 현재 위치를 사용합니다."
 
   RoundOn-Watch:
     type: application

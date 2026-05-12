@@ -1,0 +1,389 @@
+import SwiftUI
+import Shared
+
+// MARK: - ShareSheetView
+// iphone-2.7: 공유 옵션 + 링크 생성 (12-SCREENS 2.7)
+// 이름 공개 토글 + PIN 입력 + "공유 링크 생성" CTA
+
+struct ShareSheetView: View {
+
+    // MARK: Props
+
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    let round: Round
+    @Bindable var shareVM: ShareViewModel
+    let onShared: ((URL) -> Void)?
+
+    // MARK: State
+
+    @State private var showActivitySheet = false
+    @State private var activityURL: URL?
+
+    private let apiClient = ShareAPIClient()
+
+    // MARK: Body
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.springSurface.ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // 에러 배너
+                        if let error = shareVM.errorMessage {
+                            BannerNotice(message: error, severity: .error, dismissAction: {
+                                shareVM.errorMessage = nil
+                            })
+                        }
+
+                        // 이름 공개 토글
+                        nameVisibilitySection
+
+                        // PIN 설정
+                        accessControlSection
+
+                        // PIN 입력 (pin 선택 시)
+                        if case .pin = shareVM.accessControl {
+                            pinSection
+                        }
+
+                        // 현재 공유 링크 정보 (업데이트 모드)
+                        if let url = round.sharedURL, round.sharedShortId != nil {
+                            currentLinkSection(url: url)
+                        }
+
+                        Spacer(minLength: 80)
+                    }
+                    .padding(.top, 16)
+                    .padding(.horizontal, 16)
+                }
+
+                // 하단 CTA
+                VStack {
+                    Spacer()
+                    ctaButton
+                }
+            }
+            .navigationTitle(shareVM.isUpdateMode ? "viewer 업데이트" : "공유하기")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("취소") { dismiss() }
+                }
+            }
+            .sheet(isPresented: $showActivitySheet) {
+                if let url = activityURL {
+                    ActivityShareSheet(url: url)
+                        .presentationDetents([.medium, .large])
+                }
+            }
+        }
+    }
+
+    // MARK: 이름 공개 섹션
+
+    private var nameVisibilitySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionLabel("이름 공개")
+
+            VStack(spacing: 0) {
+                Toggle(isOn: Binding(
+                    get: { shareVM.nameVisibility == .real },
+                    set: { shareVM.nameVisibility = $0 ? .real : .anonymous }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(shareVM.nameVisibility == .real ? "실명 공개" : "익명 (A/B/C/D)")
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color.springTextPrimary)
+                        Text(shareVM.nameVisibility == .real
+                            ? "플레이어 이름이 그대로 표시됩니다."
+                            : "이름 대신 A, B, C, D로 표시됩니다.")
+                            .font(.system(size: 13))
+                            .foregroundStyle(Color.springTextSecondary)
+                    }
+                }
+                .tint(Color.springGreenPrimary)
+                .padding(16)
+            }
+            .background(Color.springSurfaceElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
+    // MARK: 접근 제어 섹션
+
+    private var accessControlSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionLabel("접근 제한")
+
+            VStack(spacing: 8) {
+                accessOption(
+                    title: "전체 공개",
+                    subtitle: "링크를 가진 누구나 볼 수 있어요.",
+                    isSelected: {
+                        if case .public = shareVM.accessControl { return true }
+                        return false
+                    }(),
+                    action: { shareVM.accessControl = .public }
+                )
+
+                accessOption(
+                    title: "PIN 보호",
+                    subtitle: "4자리 PIN을 아는 사람만 볼 수 있어요.",
+                    isSelected: {
+                        if case .pin = shareVM.accessControl { return true }
+                        return false
+                    }(),
+                    action: {
+                        shareVM.accessControl = .pin(shareVM.pinInput)
+                    }
+                )
+            }
+        }
+    }
+
+    private func accessOption(title: String, subtitle: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 15))
+                        .foregroundStyle(Color.springTextPrimary)
+                    Text(subtitle)
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                Spacer()
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(isSelected ? Color.springGreenPrimary : Color.springBorder)
+                    .font(.system(size: 20))
+            }
+            .padding(16)
+            .background(Color.springSurfaceElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
+    // MARK: PIN 입력 섹션
+
+    private var pinSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionLabel("PIN 설정")
+
+            VStack(spacing: 8) {
+                Text("4자리 숫자 PIN을 설정해 주세요.")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.springTextSecondary)
+
+                PinInputField(
+                    pin: $shareVM.pinInput,
+                    isError: !shareVM.isPinValid && !shareVM.pinInput.isEmpty
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 8)
+            }
+            .padding(16)
+            .background(Color.springSurfaceElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
+    // MARK: 현재 링크 섹션
+
+    private func currentLinkSection(url: String) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionLabel("현재 공유 링크")
+
+            HStack {
+                Text(url)
+                    .font(.system(size: 13, design: .monospaced))
+                    .foregroundStyle(Color.springGreenPrimary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+
+                Spacer()
+
+                Button {
+                    UIPasteboard.general.string = url
+                } label: {
+                    Image(systemName: "doc.on.doc")
+                        .foregroundStyle(Color.springGreenPrimary)
+                }
+                .accessibilityLabel("링크 복사")
+            }
+            .padding(16)
+            .background(Color.springSurfaceElevated)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            // 만료일
+            if let expiresAt = round.sharedExpiresAt {
+                Text("만료: \(formattedDate(expiresAt))")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.springTextSecondary)
+            }
+
+            // viewer 회수 버튼
+            if let shortId = round.sharedShortId,
+               let editToken = round.sharedEditToken {
+                Button {
+                    Task { await deleteShare(shortId: shortId, editToken: editToken) }
+                } label: {
+                    Text("viewer 회수")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(Color(red: 1.0, green: 0.92, blue: 0.92))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+            }
+        }
+    }
+
+    // MARK: CTA 버튼
+
+    private var ctaButton: some View {
+        VStack(spacing: 0) {
+            Button {
+                Task { await performShare() }
+            } label: {
+                Group {
+                    if shareVM.isLoading {
+                        ProgressView()
+                            .tint(Color.springTextPrimary)
+                    } else {
+                        Text(shareVM.isUpdateMode ? "viewer 업데이트" : "공유 링크 생성")
+                            .font(.system(size: 17, weight: .semibold))
+                    }
+                }
+                .foregroundStyle(Color.springTextPrimary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 54)
+                .background(shareVM.canShare ? Color.springGreenPrimary : Color.springBorder)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal, 16)
+                .padding(.bottom, 32)
+            }
+            .disabled(!shareVM.canShare)
+        }
+        .background(
+            LinearGradient(
+                colors: [Color.springSurface.opacity(0), Color.springSurface],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
+
+    // MARK: Helpers
+
+    private func sectionLabel(_ title: String) -> some View {
+        Text(title)
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(Color.springTextSecondary)
+            .textCase(.uppercase)
+    }
+
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter.string(from: date)
+    }
+
+    // MARK: Share Actions
+
+    private func performShare() async {
+        guard shareVM.canShare else { return }
+        shareVM.errorMessage = nil
+        shareVM.isLoading = true
+        defer { shareVM.isLoading = false }
+
+        let options = shareVM.currentOptions()
+        let deviceToken = UUID().uuidString  // 1차: 임시 UUID (33-SECURITY §3.4 후속에서 Keychain 이관)
+
+        do {
+            if shareVM.isUpdateMode,
+               let shortId = round.sharedShortId,
+               let editToken = round.sharedEditToken {
+                // 업데이트 모드
+                let payload = UpdateShareRequest(
+                    round: RoundPayload(from: round, nameVisibility: options.nameVisibility),
+                    options: ShareOptionsPayload(from: options)
+                )
+                let response = try await apiClient.updateShare(shortId: shortId, editToken: editToken, request: payload)
+                round.sharedURL = response.url
+                round.sharedExpiresAt = response.expiresAt
+                round.sharedOptions = options
+                try? modelContext.save()
+
+                if let url = URL(string: response.url) {
+                    showActivity(url: url)
+                }
+            } else {
+                // 신규 생성
+                let payload = CreateShareRequest(
+                    deviceToken: deviceToken,
+                    round: RoundPayload(from: round, nameVisibility: options.nameVisibility),
+                    options: ShareOptionsPayload(from: options)
+                )
+                let response = try await apiClient.createShare(request: payload)
+                round.sharedShortId = response.shortId
+                round.sharedURL = response.url
+                round.sharedEditToken = response.editToken
+                round.sharedExpiresAt = response.expiresAt
+                round.sharedOptions = options
+                try? modelContext.save()
+
+                if let url = URL(string: response.url) {
+                    showActivity(url: url)
+                    onShared?(url)
+                }
+                Task { await HapticEngine.shared.play(.shareSuccess) }
+            }
+        } catch let error as ShareAPIError {
+            shareVM.errorMessage = error.localizedDescription
+            Task { await HapticEngine.shared.play(.shareError) }
+        } catch {
+            shareVM.errorMessage = "알 수 없는 오류가 발생했어요."
+            Task { await HapticEngine.shared.play(.shareError) }
+        }
+    }
+
+    private func deleteShare(shortId: String, editToken: String) async {
+        do {
+            try await apiClient.deleteShare(shortId: shortId, editToken: editToken)
+            round.sharedShortId = nil
+            round.sharedURL = nil
+            round.sharedEditToken = nil
+            round.sharedExpiresAt = nil
+            round.sharedOptions = nil
+            try? modelContext.save()
+            dismiss()
+        } catch let error as ShareAPIError {
+            shareVM.errorMessage = error.localizedDescription
+        } catch {
+            shareVM.errorMessage = "viewer 회수 중 오류가 발생했어요."
+        }
+    }
+
+    private func showActivity(url: URL) {
+        activityURL = url
+        showActivitySheet = true
+    }
+}
+
+// MARK: - ActivityShareSheet
+// UIActivityViewController 래퍼
+
+struct ActivityShareSheet: UIViewControllerRepresentable {
+    let url: URL
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: [url], applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}

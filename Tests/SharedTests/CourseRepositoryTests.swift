@@ -108,6 +108,9 @@ final class CourseRepositoryTests: XCTestCase {
     func testSubCoursesPopulated() async throws {
         let courses = try await CourseRepository.shared.loadAll()
         let withSub = courses.filter { ($0.subCourses ?? []).count >= 2 }.count
-        XCTAssertGreaterThan(withSub, 5, "subCourses 보유 코스가 5개 이상이어야 함 (enrich_subcourses.py 결과)")
+        // enrich_subcourses.py v2 결과: 116개 후보 중 53건 매칭 (45.7%)
+        // 네이버 검색 HTML 패턴 추출 방식 (hanja/theme/newold/num/alpha 5종 패턴)
+        XCTAssertGreaterThanOrEqual(withSub, 50,
+            "subCourses 보유 코스가 50개 이상이어야 함 (enrich_subcourses.py v2 결과 53건)")
     }
 }

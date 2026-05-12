@@ -5,12 +5,19 @@ import Shared
 // MARK: - HomeView
 // iphone-2.1: 홈 (라운드 리스트) + "새 라운드" 진입점
 // 02-USER_FLOWS F-A
+// 라운드 카드 탭 → RoundDetailView push
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Round.startedAt, order: .reverse) private var rounds: [Round]
     @State private var showNewRound = false
     @Binding var roundViewModel: RoundViewModel?
+    let onRoundFinished: ((Round) -> Void)?
+
+    init(roundViewModel: Binding<RoundViewModel?>, onRoundFinished: ((Round) -> Void)? = nil) {
+        self._roundViewModel = roundViewModel
+        self.onRoundFinished = onRoundFinished
+    }
 
     var body: some View {
         NavigationStack {
@@ -23,8 +30,14 @@ struct HomeView: View {
                             emptyStateView
                         } else {
                             ForEach(rounds) { round in
-                                RoundSummaryCard(round: round)
-                                    .padding(.horizontal, 16)
+                                // 완료 라운드 → RoundDetailView
+                                NavigationLink {
+                                    RoundDetailView(round: round)
+                                } label: {
+                                    RoundSummaryCard(round: round)
+                                        .padding(.horizontal, 16)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
@@ -81,7 +94,7 @@ struct HomeView: View {
 
 // MARK: - RoundSummaryCard
 
-private struct RoundSummaryCard: View {
+struct RoundSummaryCard: View {
     let round: Round
 
     var body: some View {
@@ -125,6 +138,18 @@ private struct RoundSummaryCard: View {
                 Text("\(round.holes.count)홀")
                     .font(.system(size: 13))
                     .foregroundStyle(Color.springTextSecondary)
+            }
+
+            // 공유 링크 있을 때 아이콘 표시
+            if round.sharedShortId != nil {
+                HStack(spacing: 4) {
+                    Image(systemName: "link")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Color.springGreenPrimary)
+                    Text("공유됨")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.springGreenPrimary)
+                }
             }
         }
         .padding(16)
