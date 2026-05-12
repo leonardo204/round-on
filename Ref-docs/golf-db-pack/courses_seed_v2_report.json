@@ -1,0 +1,71 @@
+{
+  "totalCourses": 965,
+  "coordMatchedMois": 86,
+  "coordMatchedOsm": 118,
+  "byDataQuality": {
+    "low": 941,
+    "partial": 12,
+    "minimal": 9,
+    "complete": 3
+  },
+  "byRegion": {
+    "(미상)": 257,
+    "경기": 212,
+    "경북": 74,
+    "강원": 67,
+    "전남": 60,
+    "제주": 58,
+    "경남": 54,
+    "충북": 53,
+    "충남": 32,
+    "전북": 32,
+    "인천": 18,
+    "부산": 13,
+    "서울": 7,
+    "광주": 7,
+    "대구": 6,
+    "울산": 6,
+    "세종": 5,
+    "대전": 4
+  },
+  "byHolesCount": {
+    "1": 2,
+    "10": 3,
+    "18": 240,
+    "21": 1,
+    "24": 2,
+    "27": 121,
+    "36": 26,
+    "45": 2,
+    "54": 1,
+    "6": 8,
+    "63": 1,
+    "8": 1,
+    "81": 1,
+    "9": 116,
+    "미상": 440
+  },
+  "coverage": {
+    "hasClubhouse": 674,
+    "hasPhone": 115,
+    "hasAddress": 782,
+    "hasHolesCount": 525
+  },
+  "bySources": {
+    "osm": 183,
+    "mcst": 171,
+    "mois": 165,
+    "mcst,mois,osm": 131,
+    "mcst,mois": 61,
+    "mois,osm_coord": 57,
+    "mcst,mois,osm_coord": 47,
+    "mcst,mois_coord,osm": 43,
+    "mois,osm": 35,
+    "mcst,osm": 28,
+    "mcst,mois,mois_coord,osm": 22,
+    "mcst,mois,mois_coord,osm_coord": 11,
+    "mcst,mois,mois_coord": 8,
+    "mcst,mois,mois_coord,osm,osm_coord": 2,
+    "mcst,mois,osm,osm_coord": 1
+  }
+}

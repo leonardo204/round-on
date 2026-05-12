@@ -1,0 +1,13 @@
+{
+  "totalCourses": 965,
+  "apiCalls": 664,
+  "enrichedCount": 664,
+  "coordRejected": 0,
+  "cacheSize": 1003,
+  "coverage": {
+    "hasClubhouse": 859,
+    "hasPhone": 736,
+    "hasAddress": 939,
+    "hasKakaoUrl": 664
+  }
+}

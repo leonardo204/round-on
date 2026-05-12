@@ -1,4 +1,13 @@
 
+# Secrets — NEVER commit
+.env
+.env.local
+*.local
+.api-keys
+.api-keys.*
+Secrets.plist
+secrets/
+
 # Claude Code runtime
 .claude/db/context.db
 .claude/.ctx_state
@@ -8,6 +17,7 @@
 .claude/.hook_feedback
 .claude/.project_root
 .claude/.messenger_enabled
+.claude/scheduled_tasks.lock
 
 # Xcode generated
 *.xcworkspace/
@@ -18,3 +28,10 @@ DerivedData/
 build/
 *.dSYM
 .swiftpm/
+
+# Kakao API cache (재빌드 가능)
+Ref-docs/golf-db-pack/.kakao_cache.json
+
+# Python
+__pycache__/
+*.pyc
