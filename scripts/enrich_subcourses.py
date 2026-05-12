@@ -46,31 +46,53 @@ CONNECT_TIMEOUT = 20
 RATE_LIMIT = 0.4  # 초
 
 # ── 코스명 추출 패턴 (우선순위 순) ─────────────────────────────────────────
-# (패턴이름, 컴파일된 정규식, 최소빈도)
-PATTERNS: list[tuple[str, re.Pattern, int]] = [
-    # 방위 코스: 동/서/남/북/중
-    ("hanja",  re.compile(r"(동|서|남|북|중)\s*코스"), 2),
-    # 숫자 코스: 1~5코스
-    ("num",    re.compile(r"([1-5])\s*코스"), 2),
+# (패턴이름, 컴파일된 정규식, desc전용여부)
+PATTERNS: list[tuple[str, re.Pattern, bool]] = [
+    # 방위 코스: 동/서/남/북/중 + 방위쪽(남쪽/북쪽 등)
+    ("hanja",   re.compile(r"(동쪽?|서쪽?|남쪽?|북쪽?|중)\s*코스"), False),
+    # 숫자 코스: 1~5코스 — desc에서만 추출(노이즈 방지)
+    ("num",     re.compile(r"([1-5])\s*코스"), True),
     # 신구/뉴올드 코스
-    ("newold", re.compile(r"(신|구|뉴|올드|새)\s*코스"), 1),
-    # 테마 코스 — 광범위
-    ("theme",  re.compile(
+    ("newold",  re.compile(r"(신|구|뉴|올드|새)\s*코스"), False),
+    # 테마 코스 — 광범위 (한국어 테마명)
+    ("theme",   re.compile(
         r"(레이크|마운틴|밸리|크릭|힐|파인|메도우|블루|레드|파라다이스"
         r"|가든|로얄|챔피언|클래식|골드|실버|포레스트|리버|오션"
         r"|나라사랑|호국보훈|사계|봄|여름|가을|겨울"
         r"|고구려|백제|신라|가야|조선"
         r"|예술|문화|자연|한국"
-        r"|베어|크리크|버치|오크|파인|힐스|리지|파크|비스타"
+        r"|베어|크리크|버치|오크|힐스|리지|파크|비스타"
         r"|레이크힐|마운틴힐|밸리힐"
-        r"|레드|블루|화이트|블랙|퍼플|그린|골든|화이트"
+        r"|화이트|블랙|퍼플|그린|골든"
         r"|이스트|웨스트|노스|사우스"
         r"|인터내셔널|챌린지|드림|비전|스카이|스타"
         r"|로즈|아이리스|라일락|코스모스|철쭉|진달래|목련|벚꽃"
-        r")\s*코스"), 1),
-    # A~D 알파벳 코스 (CC 이름 노이즈 제거 필요)
-    ("alpha",  re.compile(r"([A-Da-d])\s*코스"), 2),
+        r"|실크"
+        r")\s*코스"), False),
+    # 영문 전체 단어 코스명: SPRING/SUMMER/EAST/CHERRY 등 (4자 이상 대문자)
+    ("en_word", re.compile(r"\b([A-Z]{4,10})\s*코스"), False),
+    # A~D 단일 알파벳 코스
+    ("alpha",   re.compile(r"([A-Da-d])\s*코스"), False),
 ]
+
+# alpha / en_word 패턴 블랙리스트
+ALPHA_BLACKLIST = {"C", "c", "Cc", "cC", "CC", "cc", "GC", "gc", "G", "g"}
+EN_WORD_BLACKLIST = {
+    "GOLF", "CLUB", "COURSE", "HOLE", "YARD", "TOUR", "OPEN",
+    "LPGA", "KPGA", "KLPGA", "JACK", "TYPE", "KPGA",
+}
+
+# 동의어 정규화 — '골드'/'골든' 등 같은 의미의 다른 표기 통일
+SYNONYMS: list[tuple[set, str]] = [
+    ({"골드", "골든"}, "골드"),
+    ({"레이크", "Lake", "LAKE"}, "레이크"),
+    ({"마운틴", "Mountain", "MOUNTAIN"}, "마운틴"),
+    ({"밸리", "Valley", "VALLEY"}, "밸리"),
+    ({"힐스", "Hills", "HILLS"}, "힐스"),
+]
+
+# 네이버 장소 설명(CourseInfo) desc 추출 패턴
+_DESC_RE = re.compile(r'"desc":"([^"]{20,600})"')
 
 
 # ── 네이버 HTML 페치 (캐시 우선) ──────────────────────────────────────────
@@ -96,31 +118,76 @@ def fetch_naver(name: str) -> str:
     return body
 
 
+# ── 동의어 정규화 ──────────────────────────────────────────────────────────
+def normalize_synonyms(tokens: list[str]) -> list[str]:
+    """동의어 세트 중 같은 의미의 여러 토큰이 있으면 대표어로 통일."""
+    result = list(tokens)
+    for syn_set, canonical in SYNONYMS:
+        # 해당 동의어 세트에서 2개 이상 존재하면 대표어만 남기고 나머지 제거
+        present = [t for t in result if t in syn_set]
+        if len(present) >= 2:
+            for t in present:
+                if t != canonical and t in result:
+                    result.remove(t)
+    return sorted(set(result))
+
+
 # ── 코스명 추출 ────────────────────────────────────────────────────────────
 def extract_courses(body: str, name: str, expected: int) -> tuple[list[str], str]:
     """
     HTML body에서 코스명을 추출한다.
+    전략:
+      1단계: desc 블록에서 추출 (정확도 높음)
+      2단계: 전체 body에서 추출 (desc_only=False 패턴만)
     - name: 골프장명 (노이즈 필터용)
     - expected: holesCount // 9
     반환: (코스명 리스트, 사용된 패턴명) 또는 ([], None)
     """
+    # desc 블록 추출
+    descs = [d for d in _DESC_RE.findall(body) if "코스" in d]
+    desc_text = " ".join(descs)
+
     # 골프장명에 포함된 알파벳 — alpha 패턴 false positive 방지
     name_alpha = set(re.findall(r"[A-Da-d]", name))
 
-    for pname, pat, min_freq in PATTERNS:
-        raw = pat.findall(body)
+    for pname, pat, desc_only in PATTERNS:
+        # desc_only 패턴은 desc_text에서만 시도
+        search_text = desc_text if desc_only else body
+
+        raw = pat.findall(search_text)
         cnt = Counter(raw)
 
         if pname == "alpha":
-            # 골프장명 알파벳 제거
             valid = {k for k, v in cnt.items()
-                     if k.upper() not in {a.upper() for a in name_alpha}
-                     and v >= min_freq}
+                     if k not in ALPHA_BLACKLIST
+                     and k.upper() not in {a.upper() for a in name_alpha}
+                     and v >= 2}
+        elif pname == "en_word":
+            valid = {k for k, v in cnt.items()
+                     if k not in EN_WORD_BLACKLIST
+                     and v >= 2}
+        elif pname in ("newold", "theme"):
+            # 테마/신구는 1회도 수용 (desc에서 명확하게 나오면 OK)
+            if desc_text:
+                raw_desc = pat.findall(desc_text)
+                cnt_desc = Counter(raw_desc)
+                valid_desc = {k for k, v in cnt_desc.items() if v >= 1}
+                if 2 <= len(valid_desc) <= expected:
+                    normed = normalize_synonyms(list(valid_desc))
+                    if 2 <= len(normed) <= expected:
+                        return normed, pname
+            # desc 실패 시 전체 body에서 2회 이상
+            valid = {k for k, v in cnt.items() if v >= 2}
+        elif pname == "num" and desc_only:
+            # desc에서만 숫자 코스 추출
+            valid = {k for k, v in cnt.items() if v >= 1}
         else:
-            valid = {k for k, v in cnt.items() if v >= min_freq}
+            valid = {k for k, v in cnt.items() if v >= 2}
 
         if 2 <= len(valid) <= expected:
-            return sorted(valid), pname
+            normed = normalize_synonyms(list(valid))
+            if 2 <= len(normed) <= expected:
+                return normed, pname
 
     return [], ""
 

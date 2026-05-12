@@ -182,20 +182,7 @@
       "courseType": "회원제",
       "ownerType": "사립",
       "areaM2": 1024961,
-      "courses": [
-        {
-          "name": "고구려",
-          "holes": []
-        },
-        {
-          "name": "백제",
-          "holes": []
-        },
-        {
-          "name": "신라",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -204,7 +191,18 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/17110811"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/17110811",
+      "subCourses": [
+        {
+          "name": "고구려"
+        },
+        {
+          "name": "백제"
+        },
+        {
+          "name": "신라"
+        }
+      ]
     },
     {
       "id": "양지파인cc_경기",
@@ -229,7 +227,15 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8007244"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8007244",
+      "subCourses": [
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "파크"
+        }
+      ]
     },
     {
       "id": "수원cc_경기",
@@ -254,7 +260,21 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8456286"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8456286",
+      "subCourses": [
+        {
+          "name": "구"
+        },
+        {
+          "name": "뉴"
+        },
+        {
+          "name": "신"
+        },
+        {
+          "name": "올드"
+        }
+      ]
     },
     {
       "id": "플라자cc_경기",
@@ -279,7 +299,15 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/27303300"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/27303300",
+      "subCourses": [
+        {
+          "name": "백제"
+        },
+        {
+          "name": "신라"
+        }
+      ]
     },
     {
       "id": "태광cc_경기_1",
@@ -618,7 +646,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/16426118"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/16426118",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "레이크사이드cc_경기_1",
@@ -656,7 +695,18 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/9769457"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/9769457",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "레이크사이드cc_경기_2",
@@ -793,7 +843,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/21303985"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/21303985",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "블루원용인cc_경기_1",
@@ -916,7 +974,18 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/17151845"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/17151845",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "지산cc_경기_2",
@@ -1718,7 +1787,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8069192"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8069192",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "화성gc_경기",
@@ -2878,7 +2958,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/21308108"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/21308108",
+      "subCourses": [
+        {
+          "name": "문화"
+        },
+        {
+          "name": "예술"
+        }
+      ]
     },
     {
       "id": "삼성물산주안양cc_경기",
@@ -3623,7 +3711,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8497384"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8497384",
+      "subCourses": [
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
+      ]
     },
     {
       "id": "필로스gc_경기",
@@ -3721,7 +3817,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10380824"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10380824",
+      "subCourses": [
+        {
+          "name": "베어"
+        },
+        {
+          "name": "크리크"
+        }
+      ]
     },
     {
       "id": "몽베르cc_경기_1",
@@ -3839,7 +3943,18 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/2129728011"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/2129728011",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
+      ]
     },
     {
       "id": "포천힐스cc_경기",
@@ -4104,7 +4219,21 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/7960570"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/7960570",
+      "subCourses": [
+        {
+          "name": "CHERRY"
+        },
+        {
+          "name": "MAPLE"
+        },
+        {
+          "name": "PERSIMMON"
+        },
+        {
+          "name": "PINE"
+        }
+      ]
     },
     {
       "id": "금강_경기_1",
@@ -4344,7 +4473,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/26993676"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/26993676",
+      "subCourses": [
+        {
+          "name": "고구려"
+        },
+        {
+          "name": "백제"
+        },
+        {
+          "name": "신라"
+        }
+      ]
     },
     {
       "id": "스카이밸리_경기_1",
@@ -4997,20 +5137,7 @@
       "courseType": "회원제",
       "ownerType": "",
       "areaM2": 1527005,
-      "courses": [
-        {
-          "name": "Royal",
-          "holes": []
-        },
-        {
-          "name": "Silk",
-          "holes": []
-        },
-        {
-          "name": "Golden",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -5019,7 +5146,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8617158"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8617158",
+      "subCourses": [
+        {
+          "name": "골든"
+        },
+        {
+          "name": "로얄"
+        },
+        {
+          "name": "실크"
+        }
+      ]
     },
     {
       "id": "하이스트cc_부산",
@@ -5417,7 +5555,15 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25574283"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25574283",
+      "subCourses": [
+        {
+          "name": "드림"
+        },
+        {
+          "name": "파크"
+        }
+      ]
     },
     {
       "id": "오렌지듄스gc_인천",
@@ -5751,7 +5897,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8034159"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8034159",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "베이스타즈cc_울산",
@@ -5872,7 +6029,18 @@
         "osm",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070292"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070292",
+      "subCourses": [
+        {
+          "name": "가든"
+        },
+        {
+          "name": "그린"
+        },
+        {
+          "name": "레이크"
+        }
+      ]
     },
     {
       "id": "엘리시안강촌cc_강원",
@@ -5896,7 +6064,18 @@
         "mcst",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070174"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070174",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "엘리시안강촌대중_강원",
@@ -6060,7 +6239,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/26952881"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/26952881",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
+      ]
     },
     {
       "id": "스프링베일리조트_강원",
@@ -6110,7 +6300,15 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/21119732"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/21119732",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "힐스"
+        }
+      ]
     },
     {
       "id": "라비에벨cc_강원",
@@ -6755,20 +6953,7 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1346136,
-      "courses": [
-        {
-          "name": "Vision",
-          "holes": []
-        },
-        {
-          "name": "Challenge",
-          "holes": []
-        },
-        {
-          "name": "Dream",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -6777,7 +6962,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1422321901"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1422321901",
+      "subCourses": [
+        {
+          "name": "드림"
+        },
+        {
+          "name": "비전"
+        },
+        {
+          "name": "챌린지"
+        }
+      ]
     },
     {
       "id": "샤인데일골프리조트_강원",
@@ -6826,7 +7022,15 @@
         "mcst",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/14979830"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/14979830",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "웰리힐리퍼블릭_강원",
@@ -7100,7 +7304,18 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/26394565"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/26394565",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "메도우"
+        },
+        {
+          "name": "포레스트"
+        }
+      ]
     },
     {
       "id": "알펜시아700gc_강원",
@@ -7299,7 +7514,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/816955367"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/816955367",
+      "subCourses": [
+        {
+          "name": "PINE"
+        },
+        {
+          "name": "SALMON"
+        },
+        {
+          "name": "SEAVIEW"
+        }
+      ]
     },
     {
       "id": "설해원더레전드코스_강원",
@@ -7501,7 +7727,21 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1056854965"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1056854965",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "북"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "썬밸리_충북",
@@ -7613,20 +7853,7 @@
       "courseType": "대중제",
       "ownerType": null,
       "areaM2": 2180205,
-      "courses": [
-        {
-          "name": "동",
-          "holes": []
-        },
-        {
-          "name": "남",
-          "holes": []
-        },
-        {
-          "name": "서",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -7634,7 +7861,15 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10371634"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10371634",
+      "subCourses": [
+        {
+          "name": "사우스"
+        },
+        {
+          "name": "힐스"
+        }
+      ]
     },
     {
       "id": "스타cc_충북",
@@ -7682,7 +7917,15 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1469957"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1469957",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "골드나인_충북",
@@ -7731,7 +7974,18 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/17183711"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/17183711",
+      "subCourses": [
+        {
+          "name": "ENGLAND"
+        },
+        {
+          "name": "SCOTLAND"
+        },
+        {
+          "name": "WALES"
+        }
+      ]
     },
     {
       "id": "대호단양_충북",
@@ -7804,7 +8058,15 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/2087982406"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/2087982406",
+      "subCourses": [
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
+      ]
     },
     {
       "id": "오창에딘버러_충북",
@@ -7996,7 +8258,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8593120"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8593120",
+      "subCourses": [
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "크리크"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "에콜리안제천_충북",
@@ -8240,7 +8513,15 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/228423269"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/228423269",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "밸리"
+        }
+      ]
     },
     {
       "id": "일레븐_충북",
@@ -8338,7 +8619,18 @@
         "mcst",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8089904"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8089904",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "중"
+        }
+      ]
     },
     {
       "id": "골프존카운티천안_충남",
@@ -9178,7 +9470,18 @@
         "mois_coord",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/17180318"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/17180318",
+      "subCourses": [
+        {
+          "name": "HILLS"
+        },
+        {
+          "name": "LAKE"
+        },
+        {
+          "name": "VALLEY"
+        }
+      ]
     },
     {
       "id": "선리치gc_경북",
@@ -9646,20 +9949,7 @@
       "courseType": "회원제",
       "ownerType": "",
       "areaM2": 1080303,
-      "courses": [
-        {
-          "name": "서",
-          "holes": []
-        },
-        {
-          "name": "동",
-          "holes": []
-        },
-        {
-          "name": "중",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -9668,7 +9958,15 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10261081"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10261081",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "인터불고cc_경북",
@@ -9693,7 +9991,15 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25772536"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25772536",
+      "subCourses": [
+        {
+          "name": "스카이"
+        },
+        {
+          "name": "크리크"
+        }
+      ]
     },
     {
       "id": "구니cc_경북",
@@ -10037,7 +10343,18 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8670798"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8670798",
+      "subCourses": [
+        {
+          "name": "LAKE"
+        },
+        {
+          "name": "MOUNTAIN"
+        },
+        {
+          "name": "VALLEY"
+        }
+      ]
     },
     {
       "id": "오션힐스청도gc_경북",
@@ -10205,7 +10522,15 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8572021"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8572021",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        }
+      ]
     },
     {
       "id": "마이다스구미골프아카데미_경북",
@@ -10680,20 +11005,7 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1405663,
-      "courses": [
-        {
-          "name": "HILL",
-          "holes": []
-        },
-        {
-          "name": "LAKE",
-          "holes": []
-        },
-        {
-          "name": "PINE",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -10702,7 +11014,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070283"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070283",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "밀양cc_경남",
@@ -10801,7 +11121,15 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070425"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070425",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "동부산cc_경남",
@@ -10851,7 +11179,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8004090"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8004090",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "에덴밸리cc_경남",
@@ -10892,20 +11228,7 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1599832,
-      "courses": [
-        {
-          "name": "누리",
-          "holes": []
-        },
-        {
-          "name": "가온",
-          "holes": []
-        },
-        {
-          "name": "마루",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -11473,7 +11796,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10593450"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10593450",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "거창친환경대중_경남",
@@ -11565,7 +11899,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1596917570"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1596917570",
+      "subCourses": [
+        {
+          "name": "EAST"
+        },
+        {
+          "name": "SOUTH"
+        },
+        {
+          "name": "WEST"
+        }
+      ]
     },
     {
       "id": "전주월드컵_전북",
@@ -12376,20 +12721,7 @@
       "courseType": "대중제",
       "ownerType": null,
       "areaM2": 1640629,
-      "courses": [
-        {
-          "name": "Vision",
-          "holes": []
-        },
-        {
-          "name": "Challenge",
-          "holes": []
-        },
-        {
-          "name": "Dream",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -12421,7 +12753,15 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070529"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070529",
+      "subCourses": [
+        {
+          "name": "가든"
+        },
+        {
+          "name": "스카이"
+        }
+      ]
     },
     {
       "id": "파인힐스cc_전남",
@@ -12437,20 +12777,7 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1505472,
-      "courses": [
-        {
-          "name": "파인",
-          "holes": []
-        },
-        {
-          "name": "레이크",
-          "holes": []
-        },
-        {
-          "name": "힐스",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -12459,7 +12786,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/84783369"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/84783369",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "힐스"
+        }
+      ]
     },
     {
       "id": "순천cc_전남",
@@ -12923,20 +13258,7 @@
       "courseType": "회원제",
       "ownerType": "",
       "areaM2": 1545440,
-      "courses": [
-        {
-          "name": "Spring",
-          "holes": []
-        },
-        {
-          "name": "Summer",
-          "holes": []
-        },
-        {
-          "name": "Autumn",
-          "holes": []
-        }
-      ],
+      "courses": [],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -12945,7 +13267,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10996579"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10996579",
+      "subCourses": [
+        {
+          "name": "AUTUMN"
+        },
+        {
+          "name": "SPRING"
+        },
+        {
+          "name": "SUMMER"
+        }
+      ]
     },
     {
       "id": "조아밸리cc_전남",
@@ -13138,7 +13471,15 @@
         "mcst",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/9915992"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/9915992",
+      "subCourses": [
+        {
+          "name": "스카이"
+        },
+        {
+          "name": "챌린지"
+        }
+      ]
     },
     {
       "id": "사우스링스영암cc_전남",
@@ -13162,7 +13503,15 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1713891097"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1713891097",
+      "subCourses": [
+        {
+          "name": "A"
+        },
+        {
+          "name": "B"
+        }
+      ]
     },
     {
       "id": "무안cc_전남",
@@ -13187,7 +13536,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/7876988"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/7876988",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "클린밸리cc_전남",
@@ -13337,7 +13697,18 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10021757"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10021757",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
+      ]
     },
     {
       "id": "백양우리cc_전남",
@@ -13855,7 +14226,18 @@
         "kakao_coord",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/280281311"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/280281311",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "파인"
+        },
+        {
+          "name": "힐스"
+        }
+      ]
     },
     {
       "id": "클럽나인브릿지_제주",
@@ -14120,7 +14502,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8121447"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8121447",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "해비치cc_제주_1",
@@ -14195,7 +14588,15 @@
         "mcst",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070444"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070444",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        }
+      ]
     },
     {
       "id": "라헨느_제주",

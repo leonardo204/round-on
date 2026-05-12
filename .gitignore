@@ -32,6 +32,7 @@ build/
 # Kakao API cache (재빌드 가능)
 Ref-docs/golf-db-pack/.kakao_cache.json
 Ref-docs/golf-db-pack/.kakao_html_cache/
+Ref-docs/golf-db-pack/.naver_html_cache/
 
 # Python
 __pycache__/
