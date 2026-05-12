@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>사진 추가</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface": "#fdf7ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#1d1b20",
+                        "on-primary-container": "#e0d2ff",
+                        "tertiary": "#765b00",
+                        "surface-container-highest": "#e6e0e9",
+                        "surface-variant": "#e6e0e9",
+                        "surface-tint": "#6750a4",
+                        "on-background": "#1d1b20",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary": "#4f378a",
+                        "on-primary-fixed": "#22005d",
+                        "inverse-on-surface": "#f5eff7",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#645a7d",
+                        "surface-container-low": "#f8f2fa",
+                        "secondary-fixed": "#e9ddff",
+                        "secondary": "#63597c",
+                        "tertiary-container": "#c9a74d",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-dim": "#ded8e0",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "background": "#fdf7ff",
+                        "surface-bright": "#fdf7ff",
+                        "on-surface-variant": "#494551",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#cfbcff",
+                        "surface-container-high": "#ece6ee",
+                        "primary-container": "#6750a4",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "secondary-container": "#e1d4fd",
+                        "primary-fixed": "#e9ddff",
+                        "outline-variant": "#cbc4d2",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "outline": "#7a7582",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f2ecf4",
+                        "on-tertiary-container": "#503d00",
+                        "inverse-surface": "#322f35",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#594400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "12px",
+                        "section-gap": "48px",
+                        "container-padding": "24px",
+                        "element-gap": "16px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "data-lg": ["JetBrains Mono"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen font-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface flex justify-between items-center px-container-padding py-unit w-full max-w-7xl mx-auto docked full-width top-0 sticky z-50">
+<div class="flex items-center gap-4">
+<!-- No leading icon specified, omitted for structural purity based on user prompt -->
+<h1 class="font-headline-md text-headline-md text-on-surface">사진 추가</h1>
+</div>
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity p-2">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-grow px-container-padding py-section-gap flex flex-col gap-section-gap max-w-7xl mx-auto w-full">
+<!-- Action Cards Section -->
+<section class="flex gap-element-gap w-full">
+<button class="flex-1 flex flex-col items-center justify-center p-6 gap-unit border border-outline-variant bg-surface-container-lowest rounded-xl hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl mb-2" data-icon="photo_library">photo_library</span>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">사진 라이브러리</span>
+</button>
+<button class="flex-1 flex flex-col items-center justify-center p-6 gap-unit border border-outline-variant bg-surface-container-lowest rounded-xl hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl mb-2" data-icon="photo_camera">photo_camera</span>
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">촬영</span>
+</button>
+</section>
+<!-- Photo Gallery Section -->
+<section class="flex flex-col gap-element-gap">
+<!-- Gallery Header -->
+<div class="flex justify-between items-baseline">
+<h2 class="font-body-md text-body-md font-medium text-on-surface-variant">첨부된 사진</h2>
+<span class="font-data-sm text-data-sm text-on-surface-variant">12 / 30</span>
+</div>
+<!-- Gallery Grid -->
+<div class="grid grid-cols-3 gap-unit">
+<!-- Thumbnail Item -->
+<div class="relative aspect-square rounded-lg overflow-hidden border border-outline-variant/30 group">
+<img alt="Golf course at sunrise" class="w-full h-full object-cover" data-alt="A cinematic, high-contrast editorial photograph of a lush green golf course at sunrise. The image perfectly embodies the minimal 'Gallery of the Green' aesthetic, with soft golden hour light creating gentle shadows across the fairway. The composition features vast negative space in the sky, reflecting a serene and premium atmosphere suitable for a light-mode golf application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBStMWXIeJvnl1oaMzpYmkEEYmC7o9lHizO6q2QUrSiZUUtCzobSZ6yF5CguNjnjQULgGqcOb3qurp2pmHEHzJLA1hlvS2XoXXTzULiQh_NC3VqGWbqi6NmY_TiLMdWBjzxI_53OW4_Xuf82EN6CYcwid8LebB5VFlSG6E1F0t3XvEvInVuXr16S0lTRN9ykpGxk78mFe1OIKY4lJr13lsC-C9PT5B-bOM76wpsHtRm42NGMR3FVlUGIwb9451oFEDQKY2zBIaU8D5"/>
+<button class="absolute top-1 right-1 bg-inverse-surface/80 text-inverse-on-surface rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] leading-none block" data-icon="close">close</span>
+</button>
+</div>
+<!-- Thumbnail Item -->
+<div class="relative aspect-square rounded-lg overflow-hidden border border-outline-variant/30 group">
+<img alt="Golf club hitting ball" class="w-full h-full object-cover" data-alt="A close-up, highly detailed shot of a polished golf club resting on pristine green grass next to a crisp white golf ball. The lighting is soft and natural, emphasizing the texture of the grass and the metallic gleam of the club. The composition is tight and minimalist, focusing purely on the essential elements of the game, aligning with a sophisticated, editorial design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC48dU5AwnNvoaCI3lrZDibJIL7K_nOHNj1P6fCwSN1La_Hljl0bnc1vudjdlZFdUfRat0pGwheBW5VA6HIc9zENcvdimIw5MrTvRz1XCvdq1Y0sfVU-H9C26rihRu83_iYKdBNGyepobEGltsAVSUcqLHu54seia1SECXNkQagPgDU15liY1IIiC6fOjw1Dq57rNQxEBPDosl_ui1amawdT-S11s61mYkitBucljl0uQt4gvtSLMyrtFy8yR68-UQw7NSWGvlwOd9m"/>
+<button class="absolute top-1 right-1 bg-inverse-surface/80 text-inverse-on-surface rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] leading-none block" data-icon="close">close</span>
+</button>
+</div>
+<!-- Thumbnail Item -->
+<div class="relative aspect-square rounded-lg overflow-hidden border border-outline-variant/30 group">
+<img alt="Golf cart on path" class="w-full h-full object-cover" data-alt="A tranquil scene of a modern golf cart parked on a winding paved path amidst a beautiful, expansive golf course landscape. Tall, elegant trees frame the composition, casting long, delicate shadows. The image carries a quiet, poetic atmosphere typical of high-end editorial photography, utilizing subtle tonal contrasts to enhance the light-mode UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRufBoashllYr39QkONogShiWEUhbuA5CH4n-OwLE3aVN9GXKZ9zAONXya2SUUJFGBMDujCtSGI2JPWVnMUkvlEGQvLxyn4ZOulTweZ-3MzMDyxnUvB4IG3SfFaTUcdtBqFVgLnZWIAc9ZFOJQtz5toQ0jG88709Mdl_vBj9ICoHuP2d4s4uRLkPu0CemRKgdBsmX-AlAzPBwd6nUfkerwYbEQNhtisKa0S93nwzJ8JFf4uaDpi08oASUXxlKBA4EgkLCPEdgnwN58"/>
+<button class="absolute top-1 right-1 bg-inverse-surface/80 text-inverse-on-surface rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] leading-none block" data-icon="close">close</span>
+</button>
+</div>
+<!-- Thumbnail Item -->
+<div class="relative aspect-square rounded-lg overflow-hidden border border-outline-variant/30 group">
+<img alt="Golf green and flag" class="w-full h-full object-cover" data-alt="A minimalist photograph focusing on a vibrant red golf flag standing starkly against a perfectly manicured putting green. The background fades into a soft, out-of-focus vista of trees and sky. The image emphasizes geometry and color contrast, perfectly suited for a clean, premium digital gallery layout." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCat7RmRNiRzD-dwgfV15prU5KrBq3RzKJs8P7d-qKPwgAAwQ4cVWWirxNTUfPRdJHVMFJqld0QmVYDDzFQzXk7HkfD0mfQ3oPCDtccLTe6uvnb37Wkh9yOUUjqxIo9TfOJqO4dnAjOK7xiALR5R-5qm9jW7J-gB5mdOXjpt0guFtERk4f6E_3fbHw9SsXmvhWoLEfnS71kP-WzmZFmI0Wy8KySH_JqYr2PSoguc5V4rVp2ccGYWpgxsJzVlxM9IBcO8AShsBssDvRL"/>
+<button class="absolute top-1 right-1 bg-inverse-surface/80 text-inverse-on-surface rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] leading-none block" data-icon="close">close</span>
+</button>
+</div>
+<!-- Empty State (Hidden in this view, shown for reference) 
+                <div class="col-span-3 py-12 flex items-center justify-center border border-dashed border-outline-variant/50 rounded-lg">
+                    <p class="font-body-md text-body-md text-on-surface-variant text-center">이 라운드에 첨부된 사진이 없습니다</p>
+                </div>
+                -->
+</div>
+</section>
+</main>
+<!-- Bottom Action Area -->
+<div class="w-full px-container-padding py-6 sticky bottom-0 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 z-40 max-w-7xl mx-auto">
+<button class="w-full bg-primary text-on-primary font-body-lg text-body-lg font-semibold py-4 rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity active:scale-95 duration-200">
+            완료
+        </button>
+</div>
+</body></html>

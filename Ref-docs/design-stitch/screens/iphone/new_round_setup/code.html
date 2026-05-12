@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New Round - Round-On</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#494551",
+                      "tertiary-container": "#c9a74d",
+                      "on-surface": "#1d1b20",
+                      "on-background": "#1d1b20",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#ffdf93",
+                      "surface-container-low": "#f8f2fa",
+                      "on-tertiary-fixed": "#241a00",
+                      "on-primary-container": "#e0d2ff",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#645a7d",
+                      "surface-container": "#f2ecf4",
+                      "surface-variant": "#e6e0e9",
+                      "background": "#fdf7ff",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#e6e0e9",
+                      "surface-bright": "#fdf7ff",
+                      "secondary": "#63597c",
+                      "on-tertiary-fixed-variant": "#594400",
+                      "on-primary-fixed": "#22005d",
+                      "on-secondary-fixed-variant": "#4b4263",
+                      "surface": "#fdf7ff",
+                      "inverse-on-surface": "#f5eff7",
+                      "outline": "#7a7582",
+                      "on-secondary-fixed": "#1f1635",
+                      "inverse-surface": "#322f35",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#cbc4d2",
+                      "primary": "#4f378a",
+                      "surface-dim": "#ded8e0",
+                      "on-primary-fixed-variant": "#4f378a",
+                      "tertiary": "#765b00",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#e9ddff",
+                      "on-tertiary-container": "#503d00",
+                      "surface-container-high": "#ece6ee",
+                      "tertiary-fixed-dim": "#e7c365",
+                      "on-error-container": "#93000a",
+                      "surface-tint": "#6750a4",
+                      "secondary-fixed": "#e9ddff",
+                      "primary-fixed-dim": "#cfbcff",
+                      "secondary-fixed-dim": "#cdc0e9",
+                      "primary-container": "#6750a4",
+                      "secondary-container": "#e1d4fd",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#cfbcff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "12px",
+                      "unit": "8px",
+                      "section-gap": "48px",
+                      "container-padding": "24px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "display-hero": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "data-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "data-lg": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "display-hero": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "data-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased pb-32">
+<!-- Header -->
+<header class="px-container-padding pt-6 pb-unit">
+<button class="mb-4 text-primary p-2 -ml-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">chevron_left</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg tracking-tighter">새 라운드</h1>
+</header>
+<main class="px-container-padding mt-element-gap space-y-section-gap">
+<!-- Section 1: Course -->
+<section>
+<h2 class="font-data-sm text-data-sm text-on-surface-variant uppercase mb-unit">코스</h2>
+<div class="border border-outline-variant/30 rounded-xl overflow-hidden bg-surface-container-lowest">
+<div class="h-48 w-full bg-surface-variant relative">
+<img alt="Aerial view of a pristine golf course" class="w-full h-full object-cover" data-alt="A breathtaking cinematic aerial photograph of a pristine, high-end golf course during early morning. Soft, diffused light-mode illumination highlights the manicured bright green fairways contrasting with deep, moody shadows in the surrounding forests. The aesthetic is minimal, luxurious, and editorial, perfectly aligned with a premium Gallery of the Green style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw_3tuwX6m-yYCRFx9_3f6y0R7LjB33qnKQWXiBxHi21ztKFc080rZG7uQuoEQLE1xIcCEv_V3NZtw_iKJMsRUxBsiJ4xuMbsnGN_o9i9jeW8euSExSovQriWnGo9VH8kfNLMxZotpmUgcM5vp29pq-jk-r2Sm8-fTevEWb0B_CjcizOPbgMBtd9rQU0ptL7Q7HX4guWlmO0TIe0IQaYo3rDTurp0ppj5gHvU6SIhyh6NRr-gHxLC1SNYo884AgiV3nIGgeRevQYc7"/>
+</div>
+<div class="p-element-gap relative">
+<h3 class="font-headline-md text-headline-md mb-1">스카이힐 골프클럽</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">동코스</p>
+<p class="font-data-sm text-data-sm text-on-surface-variant">1.2km · 자동 선택됨</p>
+<button class="absolute bottom-element-gap right-element-gap font-body-md text-body-md text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-colors">변경</button>
+</div>
+</div>
+<!-- Data Quality Badge -->
+<div class="mt-element-gap flex items-start gap-unit border-l-2 border-dashed border-error/50 pl-3 py-1">
+<span class="material-symbols-outlined text-error" style="font-size: 18px;">warning</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-[13px] leading-tight">GPS 홀 자동 감지 미지원 코스 · 수동으로 홀을 넘겨주세요</p>
+</div>
+</section>
+<!-- Section 2: Players -->
+<section>
+<h2 class="font-data-sm text-data-sm text-on-surface-variant uppercase mb-unit">동반자</h2>
+<div class="flex flex-wrap gap-unit items-center">
+<div class="bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md text-body-md flex items-center gap-2">
+<span>나</span>
+</div>
+<div class="border border-outline px-4 py-2 rounded-lg font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span>동반자1</span>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 16px;">edit</span>
+</div>
+<div class="border border-outline px-4 py-2 rounded-lg font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span>동반자2</span>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 16px;">edit</span>
+</div>
+<button class="font-body-md text-body-md text-primary ml-2 hover:opacity-80 transition-opacity">+ 추가</button>
+</div>
+</section>
+<!-- Section 3: Workout -->
+<section>
+<h2 class="font-data-sm text-data-sm text-on-surface-variant uppercase mb-unit">건강 데이터</h2>
+<div class="flex justify-between items-center py-4 border-b border-outline-variant/30">
+<div>
+<h3 class="font-body-lg text-body-lg text-on-surface">Apple 건강 워크아웃</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-[13px]">라운드 기록을 운동 앱과 연동합니다</p>
+</div>
+<button class="w-12 h-6 bg-primary rounded-full relative transition-colors duration-300 focus:outline-none">
+<div class="w-5 h-5 bg-surface rounded-full absolute right-0.5 top-0.5 shadow-sm"></div>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom CTA -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-xl px-container-padding py-6 border-t border-outline-variant/10 z-50 flex flex-col items-center">
+<p class="font-data-sm text-data-sm text-on-surface-variant mb-3">위치 권한이 필요합니다</p>
+<button class="w-full bg-primary text-on-primary font-body-lg text-body-lg h-[56px] rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity">
+            라운드 시작
+        </button>
+</div>
+</body></html>

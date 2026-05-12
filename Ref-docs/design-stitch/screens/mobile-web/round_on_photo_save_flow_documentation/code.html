@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Photo Saving Flow Documentation</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link as="style" crossorigin="" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#cbc4d2",
+                        "surface-container": "#f2ecf4",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-surface": "#1d1b20",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#cfbcff",
+                        "primary-container": "#6750a4",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#ece6ee",
+                        "surface-variant": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "surface": "#fdf7ff",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error": "#ba1a1a",
+                        "tertiary": "#765b00",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f8f2fa",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "background": "#fdf7ff",
+                        "outline": "#7a7582",
+                        "inverse-on-surface": "#f5eff7",
+                        "secondary-container": "#e1d4fd",
+                        "surface-bright": "#fdf7ff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e9ddff",
+                        "secondary": "#63597c",
+                        "tertiary-container": "#c9a74d",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#22005d",
+                        "on-secondary": "#ffffff",
+                        "primary": "#4f378a",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-container": "#645a7d",
+                        "surface-container-highest": "#e6e0e9",
+                        "primary-fixed": "#e9ddff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#6750a4",
+                        "surface-dim": "#ded8e0",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-background": "#1d1b20",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-surface-variant": "#494551",
+                        "primary-fixed-dim": "#cfbcff",
+                        "inverse-surface": "#322f35"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "12px",
+                        "element-gap": "16px",
+                        "container-padding": "24px",
+                        "unit": "8px",
+                        "section-gap": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "data-lg": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"],
+                        "korean": ["Pretendard", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Pretendard', 'Hanken Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen antialiased selection:bg-primary-container selection:text-on-primary-container py-section-gap flex flex-col items-center justify-center">
+<div class="max-w-screen-2xl mx-auto w-full px-container-padding flex flex-col items-center gap-section-gap">
+<!-- Header / Context -->
+<div class="text-center mb-8">
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">Photo Saving Flow</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">System behavior simulation for image long-press interactions.</p>
+</div>
+<!-- Frames Container -->
+<div class="flex flex-col xl:flex-row gap-element-gap justify-center items-center w-full">
+<!-- Frame A: Default Lightbox -->
+<div class="flex flex-col items-center gap-4">
+<span class="font-body-md text-body-md text-on-surface-variant font-bold">Frame A: Default View</span>
+<div class="w-[320px] h-[640px] bg-black relative flex flex-col rounded-[32px] overflow-hidden border-8 border-surface-container-high shadow-2xl">
+<!-- Top Controls -->
+<div class="flex justify-between items-center p-4 z-10 text-white/90">
+<span class="font-data-sm text-data-sm opacity-80 tracking-widest">3 / 12</span>
+<span class="material-symbols-outlined cursor-pointer hover:opacity-70 transition-opacity">close</span>
+</div>
+<!-- Image Area -->
+<div class="flex-1 flex items-center justify-center relative w-full overflow-hidden">
+<img class="w-full h-auto object-cover max-h-[80%]" data-alt="A cinematic, wide-angle shot of a pristine golf course at dawn. The morning mist hovers over the lush green fairway, illuminated by the soft, golden light of the rising sun. Deep, moody shadows contrast with the bright highlights on the manicured grass. The atmosphere is serene and luxurious, perfectly capturing an editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeRFvIkZTvuxlqSE6IZun_c8E6A3tvc2ITlJtWRdLkVy9Gjhwageop4lxb764q4Tn6wTcIIoGajYqMVGuCjzX684RBVA00EjPECP39cZQw6fZfH1hmi6R1u5eSJUIQfT8wqyDHup_aCNQ9CVII9gSJ5xoVYrJfGwClAlB_Dqc7gUxIK6STpkNogVZL5TW6cFVJpMxlMILLOlbsbR8MQyO1nHOPkxMFLhaiphYYlYtAW18HaZT4b4uLHDFBC3QWWNx_WMZ7STcXMtze"/>
+</div>
+<!-- Bottom Controls -->
+<div class="p-6 z-10 text-center">
+<button class="text-white/90 hover:text-white font-body-md text-body-md border-b border-white/30 pb-1 transition-colors">
+                            사진 저장
+                        </button>
+</div>
+</div>
+</div>
+<!-- Frame B: iOS Simulation -->
+<div class="flex flex-col items-center gap-4">
+<span class="font-body-md text-body-md text-on-surface-variant font-bold">Frame B: iOS Safari</span>
+<div class="w-[320px] h-[640px] bg-black relative flex flex-col rounded-[32px] overflow-hidden border-8 border-surface-container-high shadow-2xl">
+<!-- Image Area (Dimmed for context menu) -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<img class="w-full h-auto object-cover max-h-[80%] opacity-60 scale-95 transition-transform origin-center rounded-lg" data-alt="A cinematic, wide-angle shot of a pristine golf course at dawn. The morning mist hovers over the lush green fairway, illuminated by the soft, golden light of the rising sun. Deep, moody shadows contrast with the bright highlights on the manicured grass. The atmosphere is serene and luxurious, perfectly capturing an editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1tIbOA2mhpSCE8JjO4zEFPqXuNW_ZP6gFCr_WqQiI5PvVIrssW28E2VWFC3D9wYoGhPhMH6_oer1K14StpnSfoJhQ-MmJcpgZw5UyD-Vgj9Uxfb_Il8rZSGstbnl5GEXuhobzNA1UjIH444ONnSmf9xMeaB6jl0_GoSZERwIMYWIB30RP_sEoE1sWTvaRazlt0a3JCl2yfUqmfNjiL_l1KBgzi93Un5GJnxWEzlJQnjRv3e2Gv7P8TPurYD6S94mBN9JnYR32F-2d"/>
+</div>
+<!-- iOS Context Menu Overlay -->
+<div class="absolute bottom-6 left-4 right-4 z-30 flex flex-col gap-2">
+<!-- Menu Options -->
+<div class="bg-surface-container-lowest/90 backdrop-blur-xl rounded-2xl overflow-hidden text-center divide-y divide-outline-variant/20 shadow-lg">
+<button class="w-full py-4 font-body-md text-body-md font-bold text-primary active:bg-surface-variant/50 transition-colors">
+                                사진에 저장
+                            </button>
+<button class="w-full py-4 font-body-md text-body-md text-on-surface active:bg-surface-variant/50 transition-colors">
+                                이미지 복사
+                            </button>
+<button class="w-full py-4 font-body-md text-body-md text-on-surface active:bg-surface-variant/50 transition-colors">
+                                공유...
+                            </button>
+</div>
+<!-- Cancel Button -->
+<div class="bg-surface-container-lowest/90 backdrop-blur-xl rounded-2xl overflow-hidden text-center shadow-lg">
+<button class="w-full py-4 font-body-md text-body-md font-bold text-primary active:bg-surface-variant/50 transition-colors">
+                                취소
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Frame C: Android Simulation -->
+<div class="flex flex-col items-center gap-4">
+<span class="font-body-md text-body-md text-on-surface-variant font-bold">Frame C: Android Chrome</span>
+<div class="w-[320px] h-[640px] bg-black relative flex flex-col rounded-[32px] overflow-hidden border-8 border-surface-container-high shadow-2xl">
+<!-- Image Area (Slightly Dimmed) -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<img class="w-full h-auto object-cover max-h-[80%] opacity-70" data-alt="A cinematic, wide-angle shot of a pristine golf course at dawn. The morning mist hovers over the lush green fairway, illuminated by the soft, golden light of the rising sun. Deep, moody shadows contrast with the bright highlights on the manicured grass. The atmosphere is serene and luxurious, perfectly capturing an editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaGbvPh4_dfrqLOD4kliz5pCq0UQKSvpldCaI_y3JGZq0L5G8zOUuuqMd1C4lTEIuzhN3wcpKUf1CUOtvBT5oMSzwXgIReW5OBvscy3IMOcNjNuDVhh48WqIWbp-uOlwlDH2cgajRLve_pAoWZ71Zc4yDyv1WPW-vsOtkizZ2_1BLuaoFWMEjeIqJo2sNS2NmokeHH5q_PAoBHPX8nfKwwbJS_2nwSITMbpTuBAzCkxAMAt3f_OsYHHzUBt1vxV9l16YGjl2pxf1dp"/>
+</div>
+<!-- Full screen overlay dim -->
+<div class="absolute inset-0 bg-black/40 z-20"></div>
+<!-- Android Bottom Sheet -->
+<div class="absolute bottom-0 left-0 right-0 z-30 bg-surface-container-lowest rounded-t-3xl overflow-hidden shadow-[0_-8px_30px_rgba(0,0,0,0.12)]">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center py-3">
+<div class="w-8 h-1 bg-outline-variant/50 rounded-full"></div>
+</div>
+<div class="flex flex-col pb-4">
+<button class="w-full text-left px-6 py-4 font-body-md text-body-md text-on-surface hover:bg-surface-container active:bg-surface-variant transition-colors flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+                                이미지 다운로드
+                            </button>
+<button class="w-full text-left px-6 py-4 font-body-md text-body-md text-on-surface hover:bg-surface-container active:bg-surface-variant transition-colors flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
+                                이미지 보기
+                            </button>
+<button class="w-full text-left px-6 py-4 font-body-md text-body-md text-on-surface hover:bg-surface-container active:bg-surface-variant transition-colors flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+                                이미지 검색
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Prominent Caption -->
+<div class="mt-8 max-w-3xl w-full text-center">
+<div class="bg-surface-container p-8 rounded-2xl border border-outline-variant/30 shadow-sm relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<p class="font-headline-md text-headline-md text-on-surface mb-2 font-bold leading-tight">
+                    long-press 시 OS가 자동으로 보여주는 메뉴.
+                </p>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                    viewer는 <code class="font-data-sm bg-surface-variant px-2 py-1 rounded text-primary">&lt;img&gt;</code> 태그만 제공하면 됩니다.
+                </p>
+</div>
+</div>
+</div>
+</body></html>

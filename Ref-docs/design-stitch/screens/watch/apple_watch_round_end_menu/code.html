@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Round-On Apple Watch Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#494551",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-primary-container": "#e0d2ff",
+                        "on-background": "#1d1b20",
+                        "surface-container-high": "#ece6ee",
+                        "secondary-fixed": "#e9ddff",
+                        "secondary": "#63597c",
+                        "primary": "#4f378a",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#503d00",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#c9a74d",
+                        "surface-variant": "#e6e0e9",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#22005d",
+                        "background": "#fdf7ff",
+                        "surface": "#fdf7ff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-secondary-container": "#645a7d",
+                        "tertiary-fixed": "#ffdf93",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-container": "#f2ecf4",
+                        "inverse-primary": "#cfbcff",
+                        "surface-container-highest": "#e6e0e9",
+                        "primary-container": "#6750a4",
+                        "on-surface": "#1d1b20",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-dim": "#ded8e0",
+                        "outline": "#7a7582",
+                        "inverse-surface": "#322f35",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#e9ddff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "surface-tint": "#6750a4",
+                        "inverse-on-surface": "#f5eff7",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-bright": "#fdf7ff",
+                        "outline-variant": "#cbc4d2",
+                        "surface-container-low": "#f8f2fa",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#765b00",
+                        "secondary-container": "#e1d4fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "element-gap": "16px",
+                        "container-padding": "24px",
+                        "gutter": "12px",
+                        "section-gap": "48px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "data-lg": ["JetBrains Mono"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen w-screen flex items-center justify-center font-body-md overflow-hidden antialiased">
+<!-- Watch Container Constraint (198x242 scaled for visibility if needed, or pure representation) -->
+<main class="w-[198px] h-[242px] bg-surface-container-lowest flex flex-col relative rounded-[40px] overflow-hidden shadow-2xl border border-outline-variant/20">
+<!-- Dismiss Action Top Right -->
+<div class="absolute top-2 right-2 z-10 p-2 rounded-full bg-surface-container-high/50 backdrop-blur-md cursor-pointer hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-on-surface-variant text-sm block" data-icon="close">close</span>
+</div>
+<!-- Scrollable Menu Area -->
+<div class="flex-1 overflow-y-auto w-full pt-12 pb-4 flex flex-col gap-[2px] bg-surface-variant">
+<!-- Destructive Action -->
+<button class="w-full bg-surface-container-lowest flex items-center justify-center min-h-[50px] px-4 active:bg-surface-container-low transition-colors">
+<span class="font-body-lg font-bold text-error">라운드 종료</span>
+</button>
+<!-- Info Row -->
+<div class="w-full bg-surface-container-lowest flex items-center justify-center min-h-[50px] px-4 opacity-60">
+<span class="font-body-md text-on-surface-variant text-center leading-tight">사진 추가는<br/>iPhone에서</span>
+</div>
+<!-- Normal Actions -->
+<button class="w-full bg-surface-container-lowest flex items-center justify-center min-h-[50px] px-4 active:bg-surface-container-low transition-colors">
+<span class="font-body-lg font-bold text-on-surface">다음 홀로 이동</span>
+</button>
+<button class="w-full bg-surface-container-lowest flex items-center justify-center min-h-[50px] px-4 active:bg-surface-container-low transition-colors">
+<span class="font-body-lg font-bold text-on-surface">이전 홀로 이동</span>
+</button>
+<button class="w-full bg-surface-container-lowest flex items-center justify-center min-h-[50px] px-4 active:bg-surface-container-low transition-colors pb-6 pt-2 rounded-b-[40px]">
+<span class="font-body-md text-on-surface-variant">취소</span>
+</button>
+</div>
+</main>
+</body></html>

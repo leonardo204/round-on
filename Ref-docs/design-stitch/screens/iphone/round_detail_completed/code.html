@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Round-On - Round Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#ece6ee",
+                        "on-tertiary-container": "#503d00",
+                        "on-surface-variant": "#494551",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#cfbcff",
+                        "surface-variant": "#e6e0e9",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f5eff7",
+                        "on-surface": "#1d1b20",
+                        "primary": "#4f378a",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-container": "#f2ecf4",
+                        "inverse-surface": "#322f35",
+                        "surface-tint": "#6750a4",
+                        "surface-bright": "#fdf7ff",
+                        "on-background": "#1d1b20",
+                        "secondary": "#63597c",
+                        "primary-fixed": "#e9ddff",
+                        "on-primary-fixed": "#22005d",
+                        "inverse-primary": "#cfbcff",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#f8f2fa",
+                        "surface": "#fdf7ff",
+                        "outline": "#7a7582",
+                        "background": "#fdf7ff",
+                        "tertiary-container": "#c9a74d",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#e0d2ff",
+                        "on-tertiary-fixed": "#241a00",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-secondary-container": "#645a7d",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "primary-container": "#6750a4",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-highest": "#e6e0e9",
+                        "secondary-container": "#e1d4fd",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary": "#765b00",
+                        "surface-dim": "#ded8e0",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "outline-variant": "#cbc4d2",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "48px",
+                        "unit": "8px",
+                        "container-padding": "24px",
+                        "gutter": "12px",
+                        "element-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "data-lg": ["JetBrains Mono"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-sans antialiased">
+<!-- Top Navigation (Custom for Detail Page - Excluded from JSON due to specific intent) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md">
+<div class="flex justify-between items-center px-container-padding py-unit w-full max-w-7xl mx-auto h-16 border-b border-outline-variant/30">
+<button class="text-on-surface hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">arrow_back_ios</span>
+</button>
+<h1 class="font-headline-md text-headline-md tracking-tight">해슬리 나인브릿지</h1>
+<button class="text-on-surface hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">more_horiz</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="pt-24 pb-section-gap px-container-padding max-w-7xl mx-auto">
+<!-- Shared Banner (Conditional) -->
+<div class="bg-primary-container text-on-primary-container rounded-xl p-4 flex flex-col md:flex-row md:justify-between md:items-center mb-element-gap">
+<div class="flex items-center gap-2 mb-3 md:mb-0">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span class="font-body-md text-body-md font-medium">공유 중 · 5일 남음</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-surface/20 hover:bg-surface/30 px-4 py-2 rounded-lg font-body-md text-body-md transition-colors border border-outline-variant/20">링크 복사</button>
+<button class="text-on-error-container hover:text-error transition-colors font-body-md text-body-md">회수</button>
+</div>
+</div>
+<!-- Hero Section -->
+<section class="mb-section-gap">
+<div class="relative w-full h-64 md:h-96 rounded-xl overflow-hidden mb-6 border border-outline-variant/30">
+<img alt="Golf Course" class="w-full h-full object-cover" data-alt="A cinematic, high-end editorial photograph of a pristine golf course at early morning. The scene is bathed in soft, diffused light, capturing the quiet elegance of the green. The color palette emphasizes sophisticated natural tones, aligning with a light-mode aesthetic. A subtle, moody atmosphere permeates the image, reflecting a premium lifestyle brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByqcPtNEB2Tr2poFYp51ddyD3YvRMMEZ_8Pih-mpR8zENuyTRKc_nQbeF1Fzzg0nrf76GzRVtvB3-hAam-pu8tRoTbbQymzphPsWDCHtgh42l2tSlMMMJOO2dboV-fAIbIfF1tnbc9kSSIAUi2hp55XnOceff8ZL-29k8mhONckGhcK5cj4dq-AgVGoFQ-M6pCl10Xp6tSEANGaHlA0Bu80qR86Aj5HHWZHcYO3CxRbBoJs3Jwmj8woGLC5WI97bf0Srg28dXRX-_X"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6 text-white w-full">
+<p class="font-data-lg text-data-lg mb-1 tracking-widest opacity-80">2024. 05. 14</p>
+<div class="flex items-baseline gap-3">
+<span class="font-display-hero text-display-hero text-6xl">82</span>
+<span class="font-headline-md text-headline-md opacity-70">(+10)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Tabs -->
+<nav class="flex border-b border-outline-variant/30 mb-8 overflow-x-auto hide-scrollbar">
+<button class="px-6 py-3 font-body-lg text-body-lg text-primary border-b-2 border-primary font-medium whitespace-nowrap">스코어카드</button>
+<button class="px-6 py-3 font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">사진</button>
+<button class="px-6 py-3 font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">통계</button>
+</nav>
+<!-- Tab Content: Scorecard (Active) -->
+<section class="mb-section-gap">
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+<!-- Front 9 -->
+<div class="overflow-x-auto">
+<div class="min-w-max p-4">
+<h3 class="font-headline-md text-headline-md text-sm mb-4 opacity-70 uppercase tracking-widest">Out Course</h3>
+<!-- Holes Row -->
+<div class="flex gap-2 mb-2">
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">1</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">2</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">3</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">4</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">5</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">6</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">7</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">8</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">9</div>
+<div class="w-16 h-8 flex items-center justify-center font-data-sm text-data-sm font-bold text-on-surface bg-surface-variant rounded">OUT</div>
+</div>
+<!-- Par Row -->
+<div class="flex gap-2 mb-3">
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">3</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">5</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">3</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">5</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-16 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">36</div>
+</div>
+<!-- Score Row -->
+<div class="flex gap-2">
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">4</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/30 relative">
+                                5
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+1</span>
+</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">3</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">5</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/50 relative">
+                                6
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+2</span>
+</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">4</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">3</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">5</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">4</div>
+<div class="w-16 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline/30 rounded bg-surface-container-high font-bold">39</div>
+</div>
+</div>
+</div>
+<div class="w-full h-px bg-outline-variant/30"></div>
+<!-- Back 9 -->
+<div class="overflow-x-auto">
+<div class="min-w-max p-4">
+<h3 class="font-headline-md text-headline-md text-sm mb-4 opacity-70 uppercase tracking-widest">In Course</h3>
+<!-- Holes Row -->
+<div class="flex gap-2 mb-2">
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">10</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">11</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">12</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">13</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">14</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">15</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">16</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">17</div>
+<div class="w-12 h-8 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant bg-surface-container rounded">18</div>
+<div class="w-16 h-8 flex items-center justify-center font-data-sm text-data-sm font-bold text-on-surface bg-surface-variant rounded">IN</div>
+</div>
+<!-- Par Row -->
+<div class="flex gap-2 mb-3">
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">3</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">5</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">3</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">5</div>
+<div class="w-12 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">4</div>
+<div class="w-16 h-6 flex items-center justify-center font-data-sm text-data-sm text-on-surface-variant/60 text-[10px]">36</div>
+</div>
+<!-- Score Row -->
+<div class="flex gap-2">
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">4</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/30 relative">
+                                5
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+1</span>
+</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">3</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/50 relative">
+                                7
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+2</span>
+</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">4</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/30 relative">
+                                5
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+1</span>
+</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-surface">3</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/50 relative">
+                                7
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+2</span>
+</div>
+<div class="w-12 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline-variant/50 rounded bg-error-container/30 relative">
+                                5
+                                <span class="absolute top-1 right-1 font-data-sm text-[8px] text-error">+1</span>
+</div>
+<div class="w-16 h-12 flex items-center justify-center font-data-lg text-data-lg border border-outline/30 rounded bg-surface-container-high font-bold">43</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

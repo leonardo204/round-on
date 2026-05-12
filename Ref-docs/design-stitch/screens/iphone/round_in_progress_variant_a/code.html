@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Round in Progress</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e9ddff",
+                        "outline": "#7a7582",
+                        "inverse-primary": "#cfbcff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-tertiary-container": "#503d00",
+                        "on-primary-fixed": "#22005d",
+                        "inverse-surface": "#322f35",
+                        "surface-bright": "#fdf7ff",
+                        "tertiary-container": "#c9a74d",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "primary-container": "#6750a4",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-background": "#1d1b20",
+                        "surface-container-highest": "#e6e0e9",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container-high": "#ece6ee",
+                        "primary": "#4f378a",
+                        "surface-dim": "#ded8e0",
+                        "secondary": "#63597c",
+                        "on-surface": "#1d1b20",
+                        "outline-variant": "#cbc4d2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#645a7d",
+                        "inverse-on-surface": "#f5eff7",
+                        "tertiary": "#765b00",
+                        "surface-variant": "#e6e0e9",
+                        "secondary-container": "#e1d4fd",
+                        "surface-tint": "#6750a4",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#f8f2fa",
+                        "surface": "#fdf7ff",
+                        "on-primary-container": "#e0d2ff",
+                        "background": "#fdf7ff",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-container": "#f2ecf4",
+                        "on-surface-variant": "#494551",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "48px",
+                        "unit": "8px",
+                        "element-gap": "16px",
+                        "container-padding": "24px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "data-lg": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col pb-[200px]">
+<!-- Top Compact Bar -->
+<header class="flex justify-between items-center px-container-padding py-gutter border-b border-outline-variant/20">
+<div class="font-body-md text-body-md text-secondary">스카이힐 · 동코스</div>
+<button class="font-body-md text-body-md text-primary font-bold hover:opacity-80 transition-opacity">라운드 종료</button>
+</header>
+<!-- Hero Score Section -->
+<section class="px-container-padding pt-section-gap pb-element-gap flex flex-col items-center">
+<div class="flex items-end gap-gutter mb-unit">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">H7</h1>
+<span class="font-headline-md text-headline-md text-secondary mb-1">Par 4</span>
+</div>
+<div class="flex items-baseline gap-gutter justify-center mb-section-gap">
+<span class="font-display-hero text-display-hero text-on-surface">5</span>
+<span class="font-headline-md text-headline-md text-secondary">(+1)</span>
+</div>
+<!-- 18-Segment Progress Strip -->
+<div class="w-full flex gap-[2px] h-1 mb-section-gap px-4">
+<!-- Holes 1-6 (Played) -->
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<!-- Hole 7 (Current) -->
+<div class="flex-1 bg-primary opacity-40"></div>
+<!-- Holes 8-18 (Unplayed) -->
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+<div class="flex-1 bg-surface-variant"></div>
+</div>
+</section>
+<!-- Scrollable Player Chips -->
+<div class="px-container-padding mb-element-gap flex gap-unit overflow-x-auto hide-scrollbar pb-2">
+<button class="whitespace-nowrap px-5 py-2 rounded-full bg-primary text-on-primary font-body-md text-body-md font-medium shadow-sm">김민수</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant text-on-surface font-body-md text-body-md">박지훈</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant text-on-surface font-body-md text-body-md">이동건</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant text-on-surface font-body-md text-body-md">최정우</button>
+</div>
+<!-- Scorecard Grid -->
+<div class="w-full overflow-x-auto hide-scrollbar border-y border-outline-variant/30 bg-surface-container-lowest">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr>
+<th class="sticky left-0 bg-surface-container-lowest border-r border-outline-variant/20 px-container-padding py-2 font-data-sm text-data-sm text-secondary min-w-[100px] z-10">HOLE</th>
+<!-- Render 9 holes for display purpose -->
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">1</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">2</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">3</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">4</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">5</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">6</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-primary bg-primary/5">7</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">8</th>
+<th class="px-4 py-2 font-data-sm text-data-sm text-center text-secondary">9</th>
+</tr>
+<tr>
+<th class="sticky left-0 bg-surface-container-lowest border-r border-outline-variant/20 border-b border-outline-variant/20 px-container-padding pb-3 font-data-sm text-data-sm text-secondary z-10">PAR</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">4</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">3</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">5</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">4</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">4</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">3</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-primary border-b border-outline-variant/20 bg-primary/5">4</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">5</th>
+<th class="px-4 pb-3 font-data-sm text-data-sm text-center text-secondary border-b border-outline-variant/20">4</th>
+</tr>
+</thead>
+<tbody>
+<!-- Player 1 (Active) -->
+<tr>
+<td class="sticky left-0 bg-surface-container-lowest border-r border-outline-variant/20 px-container-padding py-4 font-body-md text-body-md text-on-surface font-bold border-b border-outline-variant/10 z-10">김민수</td>
+<!-- Par -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10">
+<div class="font-data-lg text-data-lg text-on-surface">4</div>
+</td>
+<!-- Birdie (1 Circle) -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10">
+<div class="w-8 h-8 mx-auto rounded-full border border-error flex items-center justify-center font-data-lg text-data-lg text-error">2</div>
+</td>
+<!-- Eagle (2 Circles) -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10">
+<div class="w-8 h-8 mx-auto rounded-full border border-error p-[2px]">
+<div class="w-full h-full rounded-full border border-error flex items-center justify-center font-data-lg text-data-lg text-error">3</div>
+</div>
+</td>
+<!-- Bogey (1 Square) -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10">
+<div class="w-8 h-8 mx-auto border border-primary flex items-center justify-center font-data-lg text-data-lg text-primary">5</div>
+</td>
+<!-- Double Bogey (2 Squares) -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10">
+<div class="w-8 h-8 mx-auto border border-primary p-[2px]">
+<div class="w-full h-full border border-primary flex items-center justify-center font-data-lg text-data-lg text-primary">6</div>
+</div>
+</td>
+<!-- Par -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10">
+<div class="font-data-lg text-data-lg text-on-surface">3</div>
+</td>
+<!-- Current Hole -->
+<td class="px-4 py-4 text-center border-b border-outline-variant/10 bg-primary/5">
+<div class="font-data-lg text-data-lg text-primary font-bold">5</div>
+</td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+</tr>
+<!-- Player 2 -->
+<tr>
+<td class="sticky left-0 bg-surface-container-lowest border-r border-outline-variant/20 px-container-padding py-4 font-body-md text-body-md text-secondary border-b border-outline-variant/10 z-10">박지훈</td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="w-8 h-8 mx-auto border border-outline flex items-center justify-center font-data-lg text-data-lg text-secondary">6</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10 bg-primary/5"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+</tr>
+<!-- Player 3 -->
+<tr>
+<td class="sticky left-0 bg-surface-container-lowest border-r border-outline-variant/20 px-container-padding py-4 font-body-md text-body-md text-secondary border-b border-outline-variant/10 z-10">이동건</td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="w-8 h-8 mx-auto rounded-full border border-outline flex items-center justify-center font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">5</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="w-8 h-8 mx-auto border border-outline flex items-center justify-center font-data-lg text-data-lg text-secondary">5</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10 bg-primary/5"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+</tr>
+<!-- Player 4 -->
+<tr>
+<td class="sticky left-0 bg-surface-container-lowest border-r border-outline-variant/20 px-container-padding py-4 font-body-md text-body-md text-secondary border-b border-outline-variant/10 z-10">최정우</td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">5</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="w-8 h-8 mx-auto rounded-full border border-outline flex items-center justify-center font-data-lg text-data-lg text-secondary">3</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"><div class="w-8 h-8 mx-auto border border-outline flex items-center justify-center font-data-lg text-data-lg text-secondary">4</div></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10 bg-primary/5"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+<td class="px-4 py-4 text-center border-b border-outline-variant/10"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom Sticky Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container/90 backdrop-blur-xl border-t border-outline-variant/20 px-container-padding py-element-gap z-50">
+<!-- Penalty Chips -->
+<div class="flex gap-gutter mb-element-gap justify-center flex-wrap">
+<button class="px-4 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant font-body-md text-body-md border border-outline-variant/50 hover:bg-surface-variant transition-colors">OB +2</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant font-body-md text-body-md border border-outline-variant/50 hover:bg-surface-variant transition-colors">해저드 +1</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant font-body-md text-body-md border border-outline-variant/50 hover:bg-surface-variant transition-colors">OK +1</button>
+</div>
+<!-- Main Action Button -->
+<button class="w-full bg-primary text-on-primary rounded-lg py-5 flex items-center justify-center font-headline-md text-headline-md shadow-sm hover:opacity-90 transition-opacity">
+            +1 타
+        </button>
+</div>
+</body></html>

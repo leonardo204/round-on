@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>라운드 잠금</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#503d00",
+                        "surface-container-high": "#ece6ee",
+                        "on-surface-variant": "#494551",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#6750a4",
+                        "surface-container": "#f2ecf4",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-background": "#1d1b20",
+                        "outline-variant": "#cbc4d2",
+                        "surface-bright": "#fdf7ff",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-variant": "#e6e0e9",
+                        "inverse-on-surface": "#f5eff7",
+                        "on-primary-container": "#e0d2ff",
+                        "secondary-container": "#e1d4fd",
+                        "surface-container-low": "#f8f2fa",
+                        "surface": "#fdf7ff",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary": "#63597c",
+                        "primary-fixed": "#e9ddff",
+                        "inverse-primary": "#cfbcff",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#c9a74d",
+                        "on-secondary-container": "#645a7d",
+                        "background": "#fdf7ff",
+                        "secondary-fixed": "#e9ddff",
+                        "inverse-surface": "#322f35",
+                        "on-primary-fixed": "#22005d",
+                        "surface-tint": "#6750a4",
+                        "tertiary": "#765b00",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1d1b20",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e6e0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "outline": "#7a7582",
+                        "surface-dim": "#ded8e0",
+                        "primary": "#4f378a",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "12px",
+                        "container-padding": "24px",
+                        "element-gap": "16px",
+                        "unit": "8px",
+                        "section-gap": "48px"
+                    },
+                    "fontFamily": {
+                        "data-lg": ["JetBrains Mono"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface-dim min-h-screen flex items-center justify-center font-body-md text-body-md text-on-surface antialiased">
+<!-- Mobile Container -->
+<div class="w-full max-w-[390px] h-[1024px] bg-surface relative flex flex-col justify-between overflow-hidden shadow-2xl sm:h-[844px] sm:rounded-3xl sm:border sm:border-outline-variant/50">
+<!-- Header Info -->
+<header class="pt-section-gap px-container-padding text-center">
+<h2 class="font-body-md text-body-md text-on-surface-variant">스카이힐 골프클럽</h2>
+<p class="font-data-sm text-data-sm text-on-surface-variant mt-unit">2026-05-08</p>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center justify-center px-container-padding w-full">
+<!-- Lock Icon -->
+<div class="mb-element-gap text-on-surface-variant">
+<span class="material-symbols-outlined text-[48px] font-light">lock</span>
+</div>
+<!-- Headlines -->
+<div class="text-center mb-section-gap w-full">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-unit">이 라운드는 PIN으로<br/>보호되어 있습니다</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">공유 받은 사람에게 PIN을 문의하세요</p>
+</div>
+<!-- PIN Input Area -->
+<div class="w-full flex flex-col items-center gap-element-gap">
+<!-- 4 Digit Input -->
+<div class="flex gap-gutter w-full justify-center">
+<input class="w-16 h-20 bg-transparent border-b-2 border-outline focus:border-primary text-center font-display-hero text-display-hero text-on-surface focus:outline-none transition-colors" inputmode="numeric" maxlength="1" pattern="[0-9]*" placeholder="·" type="text" value=""/>
+<input class="w-16 h-20 bg-transparent border-b-2 border-outline focus:border-primary text-center font-display-hero text-display-hero text-on-surface focus:outline-none transition-colors" inputmode="numeric" maxlength="1" pattern="[0-9]*" placeholder="·" type="text" value=""/>
+<input class="w-16 h-20 bg-transparent border-b-2 border-outline focus:border-primary text-center font-display-hero text-display-hero text-on-surface focus:outline-none transition-colors" inputmode="numeric" maxlength="1" pattern="[0-9]*" placeholder="·" type="text" value=""/>
+<input class="w-16 h-20 bg-transparent border-b-2 border-outline focus:border-primary text-center font-display-hero text-display-hero text-on-surface focus:outline-none transition-colors" inputmode="numeric" maxlength="1" pattern="[0-9]*" placeholder="·" type="text" value=""/>
+</div>
+<!-- Error State (Hidden by default, shown for demonstration) -->
+<!-- 
+                <p class="text-error font-body-md text-body-md mt-unit">PIN이 일치하지 않습니다. (3/5)</p>
+                -->
+<!-- Locked State (Hidden by default) -->
+<!--
+                <div class="text-center mt-element-gap">
+                    <p class="text-error font-body-md text-body-md">5회 오답으로 1시간 잠금되었습니다</p>
+                    <p class="font-data-lg text-data-lg text-on-surface-variant mt-unit">59:59</p>
+                </div>
+                -->
+</div>
+</main>
+<!-- Footer Action -->
+<footer class="p-container-padding w-full pb-section-gap sm:pb-container-padding">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-headline-md text-headline-md text-center transition-opacity hover:opacity-90 active:scale-[0.98]" type="button">
+                확인
+            </button>
+</footer>
+</div>
+</body></html>

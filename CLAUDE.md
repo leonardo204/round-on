@@ -42,6 +42,7 @@
 - [02 사용자 플로우](Ref-docs/specs/02-USER_FLOWS.md) — F-A~F-G 7개 골든패스
 - [10 디자인 시스템](Ref-docs/specs/10-DESIGN_SYSTEM.md) — 4계절 컬러 토큰, 타이포, 8pt 그리드
 - [11 컴포넌트 카탈로그](Ref-docs/specs/11-COMPONENTS.md) — 컴포넌트 8+2종 props/상태/변형, elevation 토큰
+- [12 화면 카탈로그](Ref-docs/specs/12-SCREENS.md) — Stitch 시안 22화면 매핑, ScoreCell Variant B 채택, 색상/폰트 교체 정책
 - [13 햅틱 및 모션](Ref-docs/specs/13-HAPTICS_AND_MOTION.md) — WKHapticType 매핑, 모션 토큰 4종
 - [20 전체 아키텍처](Ref-docs/specs/20-ARCHITECTURE.md) — 컴포넌트/모듈/데이터 흐름, GolfCourse·iCloud 결정
 - [21 데이터 모델](Ref-docs/specs/21-DATA_MODEL.md) — SwiftData @Model + CloudKit
@@ -53,6 +54,11 @@
 - [33 보안 정책](Ref-docs/specs/33-SECURITY.md) — bcrypt 12, PIN 검증 EP, PII 마스킹
 - [50 개인정보 처리방침](Ref-docs/specs/50-PRIVACY_POLICY.md) — PIPA §30, App Store Privacy Nutrition Label
 - [53 권한 요청](Ref-docs/specs/53-PERMISSIONS.md) — Info.plist 키, usage string 한/영
+
+#### 디자인 시안 (design-stitch/)
+- [Stitch 프롬프트 모음](Ref-docs/design-stitch/stitch-prompt.md) — Google Stitch 작업 프롬프트 v2 + 인계 가이드
+- [시안 산출물](Ref-docs/design-stitch/screens/) — iPhone 10화면 / Watch 7화면 / Mobile-Web 5화면 PNG + HTML
+- 색상 교체 정책: Stitch Material You 보라 → 라운드온 Spring 그린 (`12-SCREENS.md §3` 참조)
 
 #### Claude Code 시스템
 - [Context DB](Ref-docs/claude/context-db.md) — SQLite 기반 세션/태스크/결정 저장소

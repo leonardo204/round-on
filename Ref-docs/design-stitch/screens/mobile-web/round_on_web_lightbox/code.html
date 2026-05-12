@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Photo Lightbox</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#241a00",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-secondary-container": "#645a7d",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "primary-container": "#6750a4",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-highest": "#e6e0e9",
+                        "secondary-container": "#e1d4fd",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary": "#765b00",
+                        "surface-dim": "#ded8e0",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "outline-variant": "#cbc4d2",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fdf7ff",
+                        "outline": "#7a7582",
+                        "background": "#fdf7ff",
+                        "tertiary-container": "#c9a74d",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-tint": "#6750a4",
+                        "surface-bright": "#fdf7ff",
+                        "on-background": "#1d1b20",
+                        "secondary": "#63597c",
+                        "primary-fixed": "#e9ddff",
+                        "on-primary-fixed": "#22005d",
+                        "inverse-primary": "#cfbcff",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#f8f2fa",
+                        "surface-container-high": "#ece6ee",
+                        "on-tertiary-container": "#503d00",
+                        "on-surface-variant": "#494551",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#cfbcff",
+                        "surface-variant": "#e6e0e9",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f5eff7",
+                        "on-surface": "#1d1b20",
+                        "primary": "#4f378a",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-container": "#f2ecf4",
+                        "inverse-surface": "#322f35"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "12px",
+                        "element-gap": "16px",
+                        "container-padding": "24px",
+                        "unit": "8px",
+                        "section-gap": "48px"
+                    },
+                    "fontFamily": {
+                        "data-sm": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "data-lg": ["JetBrains Mono"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background antialiased h-screen w-screen overflow-hidden flex flex-col justify-between">
+<div class="absolute inset-0 z-10 bg-[#FAFCF7]/92 backdrop-blur-md flex flex-col justify-between" id="lightbox-overlay">
+<header class="flex justify-between items-center px-container-padding py-6 z-20">
+<div class="font-data-sm text-data-sm text-[#5A6850]">
+                3 / 12
+            </div>
+<button aria-label="Close lightbox" class="w-[44px] h-[44px] flex items-center justify-center text-on-surface hover:text-primary transition-colors focus:outline-none">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative z-20">
+<div class="w-full max-w-4xl max-h-[819px] flex flex-col items-center justify-center relative touch-pan-x">
+<img alt="Cinematic shot of an early morning golf course tee time. A solitary figure walks across the dew-covered fairway, casting a long shadow in the soft, angled light of sunrise. The scene captures the tranquil, quiet atmosphere of premium golf, framed symmetrically with tall pines on either side. The lighting highlights the rich greens and earthy tones, evoking a high-end editorial aesthetic typical of 'The Gallery of the Green' concept." class="w-full h-full object-contain pointer-events-auto shadow-sm" data-alt="Cinematic shot of an early morning golf course tee time. A solitary figure walks across the dew-covered fairway, casting a long shadow in the soft, angled light of sunrise. The scene captures the tranquil, quiet atmosphere of premium golf, framed symmetrically with tall pines on either side. The lighting highlights the rich greens and earthy tones, evoking a high-end editorial aesthetic typical of 'The Gallery of the Green' concept." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7-Y-rNMDUNNhW4SLELvV7wzPOIZeMHTXKyLzmqZY4JJXnGsduTk9dXuIbTzEgJ8AfMN6LZFJ4TOoRdpVxpLVZpz1MLDp6lz7Q3XiKowt2z--xIDSsGtlds9xKu0lUszT6v1o71YL1D4bJ2YSPInEQun48Vti6tUCTTcLsXg3sUUW52Crj6wk0lBIxiGbIX-KIEdAnBCTapK4Q-dSwJV6Aj5flgySoZg2teTjNdvT2KMhQo_t5Om8CsXJzF6JVyEciHfUFsUewYGC"/>
+<p class="mt-4 font-body-md text-body-md text-[#5A6850] text-center w-full max-w-md">
+                    14th Hole, Royal County Down. Morning dew.
+                </p>
+</div>
+<div class="absolute inset-y-0 left-0 w-1/6 z-30 cursor-pointer flex items-center justify-start px-2 opacity-0 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-on-surface/50">chevron_left</span>
+</div>
+<div class="absolute inset-y-0 right-0 w-1/6 z-30 cursor-pointer flex items-center justify-end px-2 opacity-0 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-4xl text-on-surface/50">chevron_right</span>
+</div>
+</main>
+<footer class="h-[60px] flex items-center justify-center px-container-padding z-20 bg-transparent sticky bottom-0 w-full mb-6">
+<a class="flex items-center gap-2 font-body-md text-body-md text-[#1F2A1B] hover:text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary/20 rounded px-3 py-2" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">download</span>
+<span>사진 저장</span>
+</a>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Round-On</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fdf7ff",
+                        "on-surface-variant": "#494551",
+                        "inverse-surface": "#322f35",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#e0d2ff",
+                        "primary-fixed-dim": "#cfbcff",
+                        "surface-bright": "#fdf7ff",
+                        "primary-fixed": "#e9ddff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ece6ee",
+                        "secondary-container": "#e1d4fd",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "surface-tint": "#6750a4",
+                        "surface-container": "#f2ecf4",
+                        "background": "#fdf7ff",
+                        "surface-dim": "#ded8e0",
+                        "secondary-fixed": "#e9ddff",
+                        "secondary": "#63597c",
+                        "on-secondary-container": "#645a7d",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1d1b20",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "inverse-primary": "#cfbcff",
+                        "inverse-on-surface": "#f5eff7",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "tertiary-container": "#c9a74d",
+                        "on-primary-fixed": "#22005d",
+                        "primary": "#4f378a",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#765b00",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e6e0e9",
+                        "outline-variant": "#cbc4d2",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-surface": "#1d1b20",
+                        "surface-container-low": "#f8f2fa",
+                        "on-secondary-fixed": "#1f1635",
+                        "primary-container": "#6750a4",
+                        "surface-variant": "#e6e0e9",
+                        "outline": "#7a7582"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "element-gap": "16px",
+                        "container-padding": "24px",
+                        "gutter": "12px",
+                        "unit": "8px",
+                        "section-gap": "48px"
+                    },
+                    "fontFamily": {
+                        "data-lg": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen relative flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface text-primary dark:text-primary-fixed-dim docked full-width top-0 bg-surface dark:bg-surface flat no shadows">
+<div class="flex justify-between items-center px-container-padding py-unit w-full max-w-7xl mx-auto hover:opacity-80 transition-opacity Active: scale-95 duration-200">
+<button aria-label="Menu" class="text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-hero text-display-hero text-on-surface dark:text-on-surface-variant text-on-surface dark:text-inverse-on-surface">Round-On</h1>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pb-32">
+<!-- Editorial Header Section -->
+<section class="px-container-padding pt-section-gap pb-container-padding flex justify-between items-end">
+<div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-unit">라운드 12회 · 이번 시즌 평균 +8</p>
+</div>
+<button class="font-body-lg text-body-lg text-primary flex items-center gap-1 hover:opacity-80 transition-opacity">
+<span>+ 새 라운드</span>
+</button>
+</section>
+<!-- List Hero Card -->
+<section class="px-container-padding pb-section-gap">
+<div class="border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low flex flex-col group">
+<div class="w-full aspect-video overflow-hidden">
+<img alt="Aerial view of golf course" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A stunning, cinematic aerial photograph of a lush green golf course at dawn. The high-angle shot reveals the elegant curves of the fairway, pristine white sand traps, and tall surrounding trees casting long, soft shadows. The lighting is bright and fresh, evoking a serene early morning atmosphere, fitting a premium, minimalist light-mode design aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgS7VOolCXFKWoCQRzOpB0M8VakU1w3MnrDMIwRvCV0aYmyWWvKvm8mBvmHQ19aKBxGQo71hzG8aDFJbVH7yrcy1wFiDDtn8bwUoy3Tp-PY-8BXAlM6fY8h52jsUZUdtirJmbU8K19Jwwl7qs3ZUQEbg2dHL2TUuVm20dGgFcdX4l-Z4LtbMkOUNjAxP9MpzvVY_d2s_ODQeEp0dV2i6F0sVhhApZQwPNfU71IDQxZBYlakJN8vGdbyZVMqd0zdb35KaQrGiGcqSUd"/>
+</div>
+<div class="p-container-padding flex justify-between items-start">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">스카이힐 골프클럽</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">동코스 · 2026-05-08</p>
+</div>
+<div class="text-right">
+<div class="font-display-hero text-display-hero text-on-surface leading-none">82</div>
+<div class="font-body-md text-body-md text-on-surface-variant mt-1">(+10)</div>
+</div>
+</div>
+</div>
+</section>
+<!-- List Compact -->
+<section class="px-container-padding pb-section-gap flex flex-col">
+<!-- Row 1 -->
+<article class="flex items-center py-element-gap border-b border-outline-variant/30 last:border-0 group cursor-pointer">
+<div class="w-14 h-14 rounded-md overflow-hidden flex-shrink-0 mr-element-gap">
+<img alt="Golf green close up" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A close-up, high-end editorial photo of a pristine golf green with a single white golf ball resting near the hole. The grass texture is rich and detailed. Soft, diffused daylight highlights the vibrant green tones, creating a calm and sophisticated mood perfectly suited for a luxury minimalist UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwCu-oEqonDFd5dSfpFBLnf6gCqFLIqeAsGnuNPz8cFOQHaxDVolPI_X8PRdXjqs1KVOZbdtHDH1Sh_fKED7qP24o6_4ZG832wjEeqTWjZlcOgqThz-tj4vUj0CanuXMpJK84AauBj3lGoLSHzrNXrstPhjOtUgQfm0TnugoCbibYO9tCX1uCi7TQJDjYbs5LXFkw7dPu02koSESiIWvJKcEwuH_ZfjhkNQNffeT18AtZDSu59WzT5I-vBy1Ur_aumyoqYlroCzC_5"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold">파인리즈 컨트리클럽</h3>
+<p class="font-data-sm text-data-sm text-on-surface-variant mt-1">2026-04-22</p>
+</div>
+<div class="text-right font-data-lg text-data-lg text-on-surface">
+                    79 <span class="text-on-surface-variant font-data-sm text-data-sm ml-1">(+7)</span>
+</div>
+</article>
+<!-- Row 2 -->
+<article class="flex items-center py-element-gap border-b border-outline-variant/30 last:border-0 group cursor-pointer">
+<div class="w-14 h-14 rounded-md overflow-hidden flex-shrink-0 mr-element-gap">
+<img alt="Golf clubhouse" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A striking, low-angle photograph of a modern golf clubhouse nestled among rolling hills. The architectural lines are clean and sharp against a clear, pale blue sky. The lighting is crisp and bright, conveying a sense of quiet elegance and premium leisure in a light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIoQFMLZ7N8qHKz-1r6bpHqKTIF7zeJ35IKvhCk5oNyuZttMbo7_R7v_RWKF0Fknj_gNdYxCpxiyHkW5Qk61oTIXTygOX4r0M8Ne2bbrPW5535CwEt40RrVD1sxgllEEcwXUSP8289qOrAnlRCTP0MqH8AZhRAfi5u7bsAlOzOmEmL7xoM_n-hww0tVBBZDNEmBKLhCoaFF3feqayV2_HEplsnyhJ_WluCmN4bG4eRXG5VV05InGWBGZtDrXjc9V2sPZaEzUTtVAGs"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold">사우스케이프 오너스클럽</h3>
+<p class="font-data-sm text-data-sm text-on-surface-variant mt-1">2026-04-10</p>
+</div>
+<div class="text-right font-data-lg text-data-lg text-on-surface">
+                    85 <span class="text-on-surface-variant font-data-sm text-data-sm ml-1">(+13)</span>
+</div>
+</article>
+<!-- Row 3 -->
+<article class="flex items-center py-element-gap border-b border-outline-variant/30 last:border-0 group cursor-pointer">
+<div class="w-14 h-14 rounded-md overflow-hidden flex-shrink-0 mr-element-gap">
+<img alt="Golf cart path" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A cinematic, beautifully composed shot of an empty golf cart path winding through a dense, green forest. The scene is bathed in dappled morning sunlight, creating a tranquil and inviting atmosphere. The colors are fresh and vibrant greens, aligning with a high-end, minimalist visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrDO9cIG8jm0kxfbFnCgd0xST0y_G95c2EYgz1h_iS0AWL87siNqo8_LkASHWS2SDbx9Vbq2PzbJWIuPqVgT8AasWx-yAh96R7cO7NIZP88RusApwExBuefH8TWku406L8VoHdDsngdPZQWzdjUhwNBBcVgq0J9CNPe5cP0YvILLkAD0Jx596IDnKMKJPBZlOKBAC8AdiMSQM2JgxVzp0GOdzEFyT6FXgHjtnrcr9c3UjNXI0GlLO9yaYM-bsAu0Nr9BB48HU41bJf"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold">나인브릿지 골프클럽</h3>
+<p class="font-data-sm text-data-sm text-on-surface-variant mt-1">2026-03-28</p>
+</div>
+<div class="text-right font-data-lg text-data-lg text-on-surface">
+                    78 <span class="text-on-surface-variant font-data-sm text-data-sm ml-1">(+6)</span>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface/90 dark:bg-surface-dim/90 font-body-md text-body-md uppercase tracking-widest font-display-hero text-display-hero text-on-surface docked full-width bottom-0 z-50 backdrop-blur-xl border-t border-outline-variant/30 flat no shadows fixed bottom-0 left-0 w-full flex justify-around items-center px-section-gap py-6">
+<!-- Active Tab: Gallery -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:text-primary dark:hover:text-primary-fixed transition-colors Active: scale-90 transition-transform duration-300">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="text-[10px] tracking-widest">Gallery</span>
+</button>
+<!-- Inactive Tab: Journal -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/50 dark:text-on-surface-variant/50 hover:text-primary dark:hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">auto_stories</span>
+<span class="text-[10px] tracking-widest">Journal</span>
+</button>
+</nav>
+</body></html>

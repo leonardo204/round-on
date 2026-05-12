@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Share Options Bottom Sheet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#e9ddff",
+                        "outline": "#7a7582",
+                        "surface-container": "#f2ecf4",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface": "#fdf7ff",
+                        "background": "#fdf7ff",
+                        "secondary-container": "#e1d4fd",
+                        "surface-bright": "#fdf7ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#503d00",
+                        "inverse-on-surface": "#f5eff7",
+                        "secondary-fixed": "#e9ddff",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-dim": "#ded8e0",
+                        "outline-variant": "#cbc4d2",
+                        "on-primary-fixed": "#22005d",
+                        "tertiary-container": "#c9a74d",
+                        "surface-variant": "#e6e0e9",
+                        "secondary": "#63597c",
+                        "primary": "#4f378a",
+                        "on-surface-variant": "#494551",
+                        "on-background": "#1d1b20",
+                        "inverse-surface": "#322f35",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-primary-container": "#e0d2ff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#765b00",
+                        "inverse-primary": "#cfbcff",
+                        "surface-container-highest": "#e6e0e9",
+                        "surface-container-low": "#f8f2fa",
+                        "surface-container-high": "#ece6ee",
+                        "primary-container": "#6750a4",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#1d1b20",
+                        "surface-tint": "#6750a4",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#645a7d",
+                        "error": "#ba1a1a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "element-gap": "16px",
+                        "gutter": "12px",
+                        "container-padding": "24px",
+                        "unit": "8px",
+                        "section-gap": "48px"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-hero": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "data-sm": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "data-lg": ["JetBrains Mono"]
+                    },
+                    fontSize: {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-hero": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "data-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "data-lg": ["20px", { "lineHeight": "1.0", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Fallback for Pretendard/Korean text as requested */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        .font-kor { font-family: 'Pretendard', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-dim min-h-screen flex items-end justify-center sm:items-center p-0 sm:p-container-padding font-body-md text-on-surface">
+<!-- Bottom Sheet Container -->
+<div class="bg-surface w-full max-w-md rounded-t-[16px] sm:rounded-[16px] shadow-[0_4px_24px_rgba(31,42,27,0.15)] flex flex-col overflow-hidden relative border border-outline-variant/30">
+<!-- Header -->
+<div class="flex justify-between items-center px-container-padding py-6 border-b border-outline-variant/20">
+<h2 class="font-kor text-[20px] font-semibold tracking-tight text-on-surface">공유 옵션</h2>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-unit -mr-unit rounded-full">
+<span class="material-symbols-outlined" data-weight="fill">close</span>
+</button>
+</div>
+<!-- Content Area -->
+<div class="px-container-padding py-8 flex flex-col gap-8 flex-grow">
+<!-- Row 1: Companion Names Toggle -->
+<div class="flex justify-between items-start gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-kor text-[16px] font-medium text-on-surface" for="toggle-names">동반자 이름 공개</label>
+<span class="font-kor text-[14px] text-on-surface-variant">별명: A, B, C, D</span>
+</div>
+<div class="relative inline-block w-12 h-6 align-middle select-none transition duration-200 ease-in mt-1">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-surface border-2 border-outline-variant appearance-none cursor-pointer transition-transform duration-200 ease-in-out focus:ring-0 focus:outline-none checked:right-0 checked:border-primary checked:bg-primary" id="toggle-names" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container-high cursor-pointer transition-colors duration-200 ease-in-out" for="toggle-names"></label>
+</div>
+</div>
+<!-- Row 2 & 3: Access Rights Radio Group & PIN -->
+<div class="flex flex-col gap-6 pt-2">
+<h3 class="font-kor text-[16px] font-medium text-on-surface mb-2">접근 권한</h3>
+<!-- Option: Public -->
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center w-6 h-6 mt-0.5">
+<input class="peer sr-only" name="access" type="radio" value="public"/>
+<div class="w-5 h-5 rounded-full border-2 border-outline-variant peer-checked:border-primary transition-colors"></div>
+<div class="absolute w-2.5 h-2.5 rounded-full bg-primary scale-0 peer-checked:scale-100 transition-transform"></div>
+</div>
+<span class="font-kor text-[16px] text-on-surface-variant group-hover:text-on-surface transition-colors">공개 (누구나 링크로 접근)</span>
+</label>
+<!-- Option: PIN Protected -->
+<div class="flex flex-col gap-4">
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center w-6 h-6 mt-0.5">
+<input checked="" class="peer sr-only" name="access" type="radio" value="pin"/>
+<div class="w-5 h-5 rounded-full border-2 border-primary transition-colors"></div>
+<div class="absolute w-2.5 h-2.5 rounded-full bg-primary transition-transform"></div>
+</div>
+<span class="font-kor text-[16px] text-on-surface transition-colors">PIN 보호 (4자리)</span>
+</label>
+<!-- Conditional PIN Input (Visible since PIN is checked) -->
+<div class="ml-10 flex gap-3">
+<input class="w-12 h-14 text-center font-data-lg text-data-lg bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:outline-none focus:ring-0 rounded-t-sm transition-colors" inputmode="numeric" maxlength="1" type="text" value="1"/>
+<input class="w-12 h-14 text-center font-data-lg text-data-lg bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:outline-none focus:ring-0 rounded-t-sm transition-colors" inputmode="numeric" maxlength="1" type="text" value="9"/>
+<input class="w-12 h-14 text-center font-data-lg text-data-lg bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:outline-none focus:ring-0 rounded-t-sm transition-colors" inputmode="numeric" maxlength="1" placeholder="•" type="text"/>
+<input class="w-12 h-14 text-center font-data-lg text-data-lg bg-surface-container-lowest border-b-2 border-outline-variant focus:border-primary focus:outline-none focus:ring-0 rounded-t-sm transition-colors" inputmode="numeric" maxlength="1" placeholder="•" type="text"/>
+</div>
+</div>
+</div>
+<!-- Row 4: Static Info -->
+<div class="flex items-center gap-3 pt-4 border-t border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant" data-weight="fill">photo_library</span>
+<span class="font-kor text-[15px] text-on-surface-variant">사진 12장 포함</span>
+</div>
+</div>
+<!-- Footer Action Area -->
+<div class="px-container-padding pb-8 pt-4 flex flex-col gap-4">
+<button class="w-full h-[72px] bg-primary text-on-primary rounded-[12px] font-kor text-[18px] font-bold hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm">
+<span>공유 링크 생성</span>
+<span class="material-symbols-outlined text-[20px]" data-weight="fill">ios_share</span>
+</button>
+<p class="font-kor text-[13px] text-center text-on-surface-variant/80">공유 링크는 7일 후 자동 만료됩니다</p>
+</div>
+</div>
+</body></html>
