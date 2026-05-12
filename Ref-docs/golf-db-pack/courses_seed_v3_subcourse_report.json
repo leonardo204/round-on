@@ -1,0 +1,120 @@
+{
+  "processedTargets": 116,
+  "successCount": 10,
+  "failCount": 106,
+  "totalWithSubCourses": 10,
+  "sourceBreakdown": {
+    "official_site": 10
+  },
+  "coursePatternBreakdown": {
+    "기타형": 24,
+    "방위형": 6
+  },
+  "courseCountDistribution": {
+    "3": 10
+  },
+  "successDetails": [
+    {
+      "name": "한원CC",
+      "holesCount": 27,
+      "subCourses": [
+        "고구려",
+        "백제",
+        "신라"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "해운대컨트리클럽",
+      "holesCount": 27,
+      "subCourses": [
+        "Royal",
+        "Silk",
+        "Golden"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "세이지우드CC홍천",
+      "holesCount": 27,
+      "subCourses": [
+        "Vision",
+        "Challenge",
+        "Dream"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "레인보우힐스",
+      "holesCount": 27,
+      "subCourses": [
+        "동",
+        "남",
+        "서"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "대구C.C",
+      "holesCount": 27,
+      "subCourses": [
+        "서",
+        "동",
+        "중"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "리더스컨트리클럽",
+      "holesCount": 27,
+      "subCourses": [
+        "HILL",
+        "LAKE",
+        "PINE"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "양산컨트리클럽",
+      "holesCount": 27,
+      "subCourses": [
+        "누리",
+        "가온",
+        "마루"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "세이지우드여수경도",
+      "holesCount": 27,
+      "subCourses": [
+        "Vision",
+        "Challenge",
+        "Dream"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "파인힐스CC",
+      "holesCount": 27,
+      "subCourses": [
+        "파인",
+        "레이크",
+        "힐스"
+      ],
+      "source": "official_site"
+    },
+    {
+      "name": "화순CC",
+      "holesCount": 27,
+      "subCourses": [
+        "Spring",
+        "Summer",
+        "Autumn"
+      ],
+      "source": "official_site"
+    }
+  ],
+  "cachePath": "/Users/zerolive/work/golfCounter/Ref-docs/golf-db-pack/.kakao_html_cache",
+  "cacheFiles": 118
+}

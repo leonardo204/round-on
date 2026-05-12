@@ -102,4 +102,12 @@ final class CourseRepositoryTests: XCTestCase {
         let second = try await CourseRepository.shared.loadAll()
         XCTAssertEqual(first.count, second.count, "캐시된 결과는 동일한 개수를 반환해야 함")
     }
+
+    // MARK: subCourses 보강 검증
+
+    func testSubCoursesPopulated() async throws {
+        let courses = try await CourseRepository.shared.loadAll()
+        let withSub = courses.filter { ($0.subCourses ?? []).count >= 2 }.count
+        XCTAssertGreaterThan(withSub, 5, "subCourses 보유 코스가 5개 이상이어야 함 (enrich_subcourses.py 결과)")
+    }
 }

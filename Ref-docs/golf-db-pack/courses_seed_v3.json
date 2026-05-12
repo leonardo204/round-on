@@ -182,7 +182,20 @@
       "courseType": "회원제",
       "ownerType": "사립",
       "areaM2": 1024961,
-      "courses": [],
+      "courses": [
+        {
+          "name": "고구려",
+          "holes": []
+        },
+        {
+          "name": "백제",
+          "holes": []
+        },
+        {
+          "name": "신라",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -4984,7 +4997,20 @@
       "courseType": "회원제",
       "ownerType": "",
       "areaM2": 1527005,
-      "courses": [],
+      "courses": [
+        {
+          "name": "Royal",
+          "holes": []
+        },
+        {
+          "name": "Silk",
+          "holes": []
+        },
+        {
+          "name": "Golden",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -6729,7 +6755,20 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1346136,
-      "courses": [],
+      "courses": [
+        {
+          "name": "Vision",
+          "holes": []
+        },
+        {
+          "name": "Challenge",
+          "holes": []
+        },
+        {
+          "name": "Dream",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -7574,7 +7613,20 @@
       "courseType": "대중제",
       "ownerType": null,
       "areaM2": 2180205,
-      "courses": [],
+      "courses": [
+        {
+          "name": "동",
+          "holes": []
+        },
+        {
+          "name": "남",
+          "holes": []
+        },
+        {
+          "name": "서",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -9594,7 +9646,20 @@
       "courseType": "회원제",
       "ownerType": "",
       "areaM2": 1080303,
-      "courses": [],
+      "courses": [
+        {
+          "name": "서",
+          "holes": []
+        },
+        {
+          "name": "동",
+          "holes": []
+        },
+        {
+          "name": "중",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -10615,7 +10680,20 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1405663,
-      "courses": [],
+      "courses": [
+        {
+          "name": "HILL",
+          "holes": []
+        },
+        {
+          "name": "LAKE",
+          "holes": []
+        },
+        {
+          "name": "PINE",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -10814,7 +10892,20 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1599832,
-      "courses": [],
+      "courses": [
+        {
+          "name": "누리",
+          "holes": []
+        },
+        {
+          "name": "가온",
+          "holes": []
+        },
+        {
+          "name": "마루",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -12285,7 +12376,20 @@
       "courseType": "대중제",
       "ownerType": null,
       "areaM2": 1640629,
-      "courses": [],
+      "courses": [
+        {
+          "name": "Vision",
+          "holes": []
+        },
+        {
+          "name": "Challenge",
+          "holes": []
+        },
+        {
+          "name": "Dream",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -12333,7 +12437,20 @@
       "courseType": "대중제",
       "ownerType": "",
       "areaM2": 1505472,
-      "courses": [],
+      "courses": [
+        {
+          "name": "파인",
+          "holes": []
+        },
+        {
+          "name": "레이크",
+          "holes": []
+        },
+        {
+          "name": "힐스",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
@@ -12806,7 +12923,20 @@
       "courseType": "회원제",
       "ownerType": "",
       "areaM2": 1545440,
-      "courses": [],
+      "courses": [
+        {
+          "name": "Spring",
+          "holes": []
+        },
+        {
+          "name": "Summer",
+          "holes": []
+        },
+        {
+          "name": "Autumn",
+          "holes": []
+        }
+      ],
       "holes": [],
       "dataQuality": "low",
       "sources": [
