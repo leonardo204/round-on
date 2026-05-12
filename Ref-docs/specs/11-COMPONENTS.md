@@ -51,6 +51,11 @@
 
 **버튼 변형** (spec_3.md:473): `filled` Primary CTA / `tinted` Secondary / `plain` Tertiary
 
+**버튼 라벨 색상 (10-DESIGN_SYSTEM §5.4 위임 수신, 14-ACCESSIBILITY §6 AA 해소)**:
+- `filled` Primary: 배경 `--green-primary` + 라벨 **`--text-primary` `#1F2A1B`** (대비 10.4:1 AAA). 흰색 라벨 금지.
+- `tinted`: 배경 `--green-accent` 또는 surface-elevated + 라벨 `--text-primary`
+- `plain`: 라벨 `--green-primary` (≥18pt 큰 텍스트) 또는 `--text-primary`
+
 **둥근 모서리** (10-DESIGN_SYSTEM §5): `--radius-sm` 8pt 카드 / `--radius-md` 12pt 모달 / `--radius-lg` 16pt 시트
 
 ### 6단 구조 규약

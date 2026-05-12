@@ -202,11 +202,11 @@ xSmall / Small / Medium / **Large(기본)** / xLarge / xxLarge / xxxLarge / Acce
 | `text-primary` on `surface` | `#1F2A1B` | 14.2:1 | ✓ AAA | 모든 본문 텍스트 |
 | `text-secondary` on `surface` | `#5A6850` | 5.1:1 | ✓ AA | 보조 텍스트, 라벨 |
 | `primary` on `surface` | `#7FB069` | 2.6:1 | ✗ | 18pt 이상 대형 텍스트 한정 허용 (3.0:1 초과) |
-| white on `primary` (버튼 라벨) | `#FFFFFF` | 2.9:1 | ✗ | **필수 수정 권장** — 아래 보완안 참조 |
-| `primary` on `surface-elevated` | `#7FB069` / `#FFFFFF` | 2.7:1 | ✗ | 큰 텍스트 한정 허용 |
+| **`text-primary` on `primary` (버튼 라벨)** | **`#1F2A1B`** | **10.4:1** | **✓ AAA** | **filled 버튼 라벨 정식 (10-DESIGN_SYSTEM §5.4)** |
+| `primary` on `surface-elevated` | `#7FB069` / `#FFFFFF` | 2.7:1 | ✗ | 큰 텍스트(≥18pt) 한정 허용 |
 | `border` on `surface` | `#E8EFE0` | 1.1:1 | ✗ | 비텍스트 1pt 구분선 — 텍스트 대비 기준 미적용 |
 
-**Primary 버튼 라벨 보완안**: `filled` 버튼 라벨을 `#FFFFFF` → `text-primary #1F2A1B`로 변경하거나, 배경을 `primary-dark`(10-DESIGN_SYSTEM 추가 정의 필요)로 어둡게 조정하여 4.5:1 확보. 10-DESIGN_SYSTEM 후속 보완 항목으로 등록. (spec_3.md:480)
+**Primary 버튼 라벨 결정 (2026-05-12)**: `filled` 버튼 라벨 색상은 **`text-primary #1F2A1B`** 정식 채택 (10-DESIGN_SYSTEM §5.4 + 11-COMPONENTS §2 동기 패치 완료). 흰색 라벨은 2.9:1로 AA 미충족이므로 금지. (spec_3.md:480)
 
 ### Winter 팔레트 검증
 
@@ -334,7 +334,7 @@ Xcode Environment Overrides → Accessibility → Color Filters 순서로 Protan
 **후속 보완 TODO**
 
 - [SPEC-UNDEFINED] Summer/Autumn 팔레트 대비비 실측 — 10-DESIGN_SYSTEM §2 보완 후 §6 갱신
-- Primary 버튼 라벨 AA 미충족 → 10-DESIGN_SYSTEM에서 `primary-dark` 토큰 추가 또는 라벨 색상 변경 후 §6 재검증
+- ~~Primary 버튼 라벨 AA 미충족~~ → **해소 완료 (2026-05-12)**: 10-DESIGN_SYSTEM §5.4에 라벨 색상 `text-primary` 정식 명시, 11-COMPONENTS §2 동기 패치, 본 문서 §6 검증표 갱신.
 - DataQualityBadge SF Symbols 최종 1종 선택 (현재 후보 4종 제안 상태)
 - Dynamic Type AccessibilityXL 이상 ScoreCell 전환 레이아웃 → 12-SCREENS 다이어그램 추가 권장
 - Watch VoiceOver 실기기 검증 (Series 9 / Ultra 2 권장) — 시뮬레이터 불완전
