@@ -10,6 +10,8 @@ secrets/
 
 # Claude Code runtime
 .claude/db/context.db
+.claude/db/context.db-shm
+.claude/db/context.db-wal
 .claude/.ctx_state
 .claude/.backup-*
 .claude/.ralph_state
@@ -40,3 +42,4 @@ __pycache__/
 
 # Build backups
 *.json.bak
+*.json.bak[0-9]*
