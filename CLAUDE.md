@@ -33,7 +33,7 @@
 
 #### 프로젝트 명세
 - [기능 명세서 v4](Ref-docs/golf-scorecard-app-spec_3.md) — F1~F14 전체 기능 + 디자인 시스템 + 작업 분담
-- [한국 골프장 DB 패키지](Ref-docs/golf-db-pack/README.md) — 1,163곳 골프장 데이터셋 (v3, 2026-05-12 빌드, OSM/ODbL)
+- [한국 골프장 DB 패키지](Ref-docs/golf-db-pack/README.md) — 965곳 골프장 데이터셋 (v3, 2026-05-12 빌드, OSM/ODbL)
 - [DB 스키마](Ref-docs/golf-db-pack/40-COURSE_DB_SCHEMA.md) — JSON 스키마 + Swift `CourseRepository` 예시
 - [DB 파이프라인](Ref-docs/golf-db-pack/41-COURSE_DB_PIPELINE.md) — 데이터 수집·빌드 과정
 
@@ -79,7 +79,7 @@
 - **F4 카운터 컨셉**: par에서 시작 X — **0에서 시작, 샷마다 +1** (OB +2, 해저드 +1, OK +1)
 - **개인정보**: 위치/동반자 이름 외부 전송 금지. viewer는 7일 후 KV/R2 자동 삭제
 - **DB 라이선스**: 골프장 데이터는 OSM ODbL — 앱 내 표기 필수 (설정 → 정보)
-- **DB 품질 분기**: 한국 골프장 DB v3 (1,163곳, 2026-05-12 빌드) — 1,163곳 중 1,139곳 `low`. F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행) — 모든 코스에서 골프장 단위 감지 가능. complete 3곳 (전체의 0.26%). dataQuality 기반 분기 처리 필수
+- **DB 품질 분기**: 한국 골프장 DB v3 (965곳, 2026-05-12 빌드) — 965곳 중 941곳 `low`. F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행) — 모든 코스에서 골프장 단위 감지 가능. complete 3곳 (전체의 0.31%). dataQuality 기반 분기 처리 필수
 - **글로벌 출시 시 재고**: 영어 "round on"은 부정 의미("공격하다") — 영어권 진출 시 별도 브랜드 검토
 
 ---

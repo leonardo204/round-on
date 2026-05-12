@@ -48,7 +48,7 @@
 
 - 위치 권한 거부 → 수동 검색/선택 fallback (spec_3.md:634)
 - 3km 내 매칭 실패 → 수동 선택 (spec_3.md:635)
-- `dataQuality: low` 매칭 (1,163곳 중 1,139곳) → F-B에서 수동 홀 진행 모드 적용 (CLAUDE.md §PROJECT)
+- `dataQuality: low` 매칭 (965곳 중 941곳) → F-B에서 수동 홀 진행 모드 적용 (CLAUDE.md §PROJECT)
 - F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행) — 모든 코스에서 골프장 단위 감지 가능 (CLAUDE.md §PROJECT)
 
 ---

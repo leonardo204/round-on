@@ -195,10 +195,10 @@ struct SubCourse: Codable {
 
 ### 번들 JSON 방식
 
-`Ref-docs/golf-db-pack/` 에 정의된 번들 JSON (`courses.json`) 은 한국 골프장 DB v3 (1,163곳, 2026-05-12 빌드) 데이터를 앱 번들에 포함하는 방식이다. 스키마 상세는 [40-COURSE_DB_SCHEMA.md](../golf-db-pack/40-COURSE_DB_SCHEMA.md) 참조. 데이터 소스는 OpenStreetMap (ODbL 1.0) + 공공데이터 + 카카오 enrichment이며, 앱 내 설정 → 정보에 라이선스 표기 필수 (CLAUDE.md §PROJECT).
+`Ref-docs/golf-db-pack/` 에 정의된 번들 JSON (`courses.json`) 은 한국 골프장 DB v3 (965곳, 2026-05-12 빌드) 데이터를 앱 번들에 포함하는 방식이다. 스키마 상세는 [40-COURSE_DB_SCHEMA.md](../golf-db-pack/40-COURSE_DB_SCHEMA.md) 참조. 데이터 소스는 OpenStreetMap (ODbL 1.0) + 공공데이터 + 카카오 enrichment이며, 앱 내 설정 → 정보에 라이선스 표기 필수 (CLAUDE.md §PROJECT).
 
-- 1,163곳 중 1,139곳은 `dataQuality: low` (클럽하우스 좌표만 보유)
-- complete 3곳 (전체의 0.26%) / partial 12곳 / minimal 9곳
+- 965곳 중 941곳은 `dataQuality: low` (클럽하우스 좌표만 보유)
+- complete 3곳 (전체의 0.31%) / partial 12곳 / minimal 9곳
 - F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행)
 - `dataQuality` 값 기반 분기 처리 필수 (CLAUDE.md §PROJECT)
 
@@ -206,10 +206,10 @@ struct SubCourse: Codable {
 
 ```swift
 enum DataQuality: String, Codable {
-    case complete  // complete 3곳 (전체의 0.26%): 18홀 완전 매핑
+    case complete  // complete 3곳 (전체의 0.31%): 18홀 완전 매핑
     case partial   // partial 12곳: 9홀 이상 매핑
     case minimal   // minimal 9곳: 1~8홀 매핑
-    case low       // low 1139곳: 홀 정보 없음 — 골프장+서브코스 GPS 감지만 동작
+    case low       // low 941곳: 홀 정보 없음 — 골프장+서브코스 GPS 감지만 동작
     case unknown   // 분류 미정 (안전 fallback)
 }
 ```

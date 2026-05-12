@@ -153,7 +153,7 @@ Stitch HTML `code.html`에 삽입된 Google Fonts `@import url('..Hanken+Grotesk
 - **컴포넌트**: `CourseCard` (자동 매칭 결과), `PlayerChip` (동반자 입력) (11-COMPONENTS §4, §5)
 - **플로우**: F-A 종료 → F-B 시작 (02-USER_FLOWS F-A, F-B)
 - **인터랙션**: "변경" 탭 → 수동 골프장 검색 / 동반자 칩 탭 → 이름 수정 / "라운드 시작" 탭 → iphone-2.3b 진입
-- **Stitch 특이점**: `DataQualityBadge` 4종 분포 — complete 3곳(0.26%) / partial 12곳 / minimal 9곳 / low 1139곳. 시안에서 `low` 1종만 렌더링됨. 나머지 4종(`complete`/`partial`/`minimal`/`unknown`)은 11-COMPONENTS §10 명세만 사용. (CLAUDE.md §PROJECT)
+- **Stitch 특이점**: `DataQualityBadge` 4종 분포 — complete 3곳(0.31%) / partial 12곳 / minimal 9곳 / low 941곳. 시안에서 `low` 1종만 렌더링됨. 나머지 4종(`complete`/`partial`/`minimal`/`unknown`)은 11-COMPONENTS §10 명세만 사용. (CLAUDE.md §PROJECT)
 
 ### iphone-2.3a — 라운드 진행 Variant A (미채택)
 

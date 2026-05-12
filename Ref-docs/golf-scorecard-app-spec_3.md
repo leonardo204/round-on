@@ -70,7 +70,7 @@ App Store 주요 골프 스코어 카운터 앱들을 조사한 결과는 다음
 
 > **F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행)**
 
-- **골프장 단위 감지**: 앱 실행 시 클럽하우스 좌표로 1,163곳 모두에서 즉시 동작 (한국 골프장 DB v3 기준)
+- **골프장 단위 감지**: 앱 실행 시 클럽하우스 좌표로 965곳 모두에서 즉시 동작 (한국 골프장 DB v3 기준)
 - **서브코스 감지**: 27/36홀 골프장 387곳은 `SubCourse` 모델로 동/서/남/북 등 서브코스 라벨 지원 — 현재 v3 데이터에는 서브코스 좌표 미포함, 후속 데이터 보강 후 자동 감지 활성화 예정
 - **홀 단위 진행**: 항상 **수동 홀 진행 모드** — 사용자가 스와이프/탭으로 다음 홀 이동 (홀 단위 자동 감지는 미제공, F3는 골프장+서브코스 단위만 지원)
 - **서브코스 라벨 (동/서/남/북 또는 전반/후반)**: holesCount > 18인 경우 라운드 시작 시 사용자가 수동 선택
@@ -356,8 +356,8 @@ OSM에 없는 곳은:
 
 | 단계 | 작업 | 산출물 | 소요 |
 |------|------|--------|------|
-| P0 | 공공데이터 + OSM + 카카오 enrichment → v3 통합 | `courses_seed_v3.json` (1,163곳) | 완료 (2026-05-12) |
-| P1 | OSM Overpass 자동 수집 | 홀별 정보 (complete 3 / partial 12 / minimal 9 / low 1139) | 완료 |
+| P0 | 공공데이터 + OSM + 카카오 enrichment → v3 통합 | `courses_seed_v3.json` (965곳) | 완료 (2026-05-12) |
+| P1 | OSM Overpass 자동 수집 | 홀별 정보 (complete 3 / partial 12 / minimal 9 / low 941) | 완료 |
 | P2 | 서브코스 라벨 보강 (카카오/네이버 또는 수동) | 27/36홀 골프장 387곳 SubCourse 라벨 추가 | 진행 예정 |
 | P3 | 홀별 좌표 점진 매핑 + 제보 반영 | complete/partial 점진 확대 | 지속 |
 
@@ -368,7 +368,7 @@ OSM에 없는 곳은:
 ```json
 {
   "version": "2026.05.12",
-  "totalCourses": 1163,
+  "totalCourses": 965,
   "courses": [
     {
       "id": "스카이힐골프클럽",
@@ -399,7 +399,7 @@ OSM에 없는 곳은:
 > **subCourses 필드**: v3에는 서브코스 좌표 데이터가 없으므로 현재 `holes: []`. 후속 데이터 보강 시 채워짐.  
 > **holesCount nil**: 638곳은 홀 수 미기재. 라운드 생성 시 사용자 입력 프롬프트(9/18/27/36 선택) 표시.
 
-JSON 크기: 한국 골프장 DB v3 (1,163곳, 2026-05-12 빌드) — 약 **727KB** (앱 번들 무리 없음).
+JSON 크기: 한국 골프장 DB v3 (965곳, 2026-05-12 빌드) — 약 **727KB** (앱 번들 무리 없음).
 
 ---
 
@@ -591,10 +591,10 @@ struct HoleInfo: Codable {
 }
 
 enum DataQuality: String, Codable {
-    case complete  // complete 3곳 (전체의 0.26%): 18홀 완전 매핑
+    case complete  // complete 3곳 (전체의 0.31%): 18홀 완전 매핑
     case partial   // partial 12곳: 9홀 이상 매핑
     case minimal   // minimal 9곳: 1~8홀 매핑
-    case low       // low 1139곳: 홀 정보 없음 — F3 골프장+서브코스 GPS 감지만 동작, 홀 진행은 수동
+    case low       // low 941곳: 홀 정보 없음 — F3 골프장+서브코스 GPS 감지만 동작, 홀 진행은 수동
     case unknown   // 분류 미정 (안전 fallback)
 }
 ```
@@ -682,7 +682,7 @@ enum DataQuality: String, Codable {
 > **F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행)**
 
 ```
-[골프장 단위 감지 — 모든 1,163곳에서 동작]
+[골프장 단위 감지 — 모든 965곳에서 동작]
 1. CLLocationManager.requestLocation() (1회)
 2. GolfCourse DB 순회 → Haversine 거리 계산
 3. 3km 이내 후보 중 가장 가까운 1개 디폴트 표시
@@ -923,7 +923,7 @@ Digital Crown 카운터, 큰 탭 영역, 스와이프, Haptic, 페널티 버튼
 iPhone ↔ Watch 점수 sync, 라운드 상태 sync, 충돌 처리
 
 ### Step 8: 골프장 + 서브코스 GPS 감지 구현
-골프장 단위 GPS 매칭 (1,163곳 전체 동작), SubCourseSelector UI (27/36홀 골프장 387곳), holesCount nil 프롬프트 처리. **홀 단위 자동 감지 코드 미포함 — 수동 홀 진행 모드만 구현.**
+골프장 단위 GPS 매칭 (965곳 전체 동작), SubCourseSelector UI (27/36홀 골프장 387곳), holesCount nil 프롬프트 처리. **홀 단위 자동 감지 코드 미포함 — 수동 홀 진행 모드만 구현.**
 
 ### Step 9: CloudKit + 라운드 재개
 SwiftData ↔ CloudKit 자동 sync, 미완료 라운드 복구

@@ -14,7 +14,7 @@
 - **앱 번들 파일명**: `courses.json` (`courses_seed_v3.json`을 이름만 변경)
 - **크기**: 약 727 KB (minified 추정)
 - **인코딩**: UTF-8
-- **레코드 수**: 1,163개 (실제 코스, OSM + 공공데이터 + 카카오 enrichment)
+- **레코드 수**: 965개 (실제 코스, OSM + 공공데이터 + 카카오 enrichment, 좌표 중복 통합 후)
 
 > **포함되지 않은 것**: 연습장(57개), 파크골프장(14개), 스크린골프(6개)는 별도 파일로 분리 가능하지만 MVP에서는 제외.
 
@@ -28,7 +28,7 @@ interface CourseDB {
   generatedAt: string;      // ISO8601, 빌드 시각
   source: string;           // "OpenStreetMap + 공공데이터 + 카카오 enrichment"
   license: string;          // ODbL 표기
-  totalCourses: number;     // 1163
+  totalCourses: number;     // 965
   courses: Course[];
 }
 ```
@@ -40,8 +40,8 @@ interface CourseDB {
   "generatedAt": "2026-05-12T00:00:00.000000+00:00",
   "source": "OpenStreetMap via Overpass API + 공공데이터포털 + 카카오 로컬 API",
   "license": "Open Database License (ODbL) — © OpenStreetMap contributors",
-  "totalCourses": 1163,
-  "courses": [ /* ... 1163개 Course 객체 ... */ ]
+  "totalCourses": 965,
+  "courses": [ /* ... 965개 Course 객체 ... */ ]
 }
 ```
 
@@ -56,7 +56,7 @@ interface Course {
   region: string;           // 광역시도 단축명 ("경기", "서울", ...)
   address: string | null;   // OSM addr:* 조합 (대부분 null)
   website: string | null;   // 공식 홈페이지 URL
-  phone: string | null;     // 전화번호 (카카오 enrichment — 820/1163개 채워짐)
+  phone: string | null;     // 전화번호 (카카오 enrichment — 664/965개 채워짐)
   holesCount: number | null; // 총 홀 수 (nil 638곳: 라운드 시작 시 사용자 입력)
   courseType: string | null; // "CC", "GC", "리조트", "퍼블릭" 등
   kakaoPlaceUrl: string | null; // 카카오 장소 URL (카카오 enrichment)
@@ -155,14 +155,14 @@ OSM의 광역시도 boundary polygon으로 정확하게 매칭됨 (point-in-poly
 
 ## 5. dataQuality 필드
 
-홀별 정보의 완성도를 나타냅니다. 앱 로직에서 분기 처리에 사용. v3 기준 (1,163곳).
+홀별 정보의 완성도를 나타냅니다. 앱 로직에서 분기 처리에 사용. v3 기준 (965곳).
 
 | 값 | 의미 | 개수 | 비율 | 앱 동작 |
 |-----|------|------|------|---------|
-| `complete` | 18홀 모두 매핑 + 모든 par 정보 | 3 | 0.26% | F3 골프장+서브코스 GPS 감지 + complete 3곳 (전체의 0.26%) |
-| `partial` | 9홀 이상 매핑 | 12 | 1.0% | 수동 홀 진행, partial 코스 정보 참고 |
-| `minimal` | 1~8홀 매핑 | 9 | 0.8% | 수동 홀 진행 |
-| `low` | 홀 정보 없음 (clubhouse만) | 1139 | 97.9% | F1(골프장+서브코스 GPS 감지)만 동작, 홀 전부 수동 |
+| `complete` | 18홀 모두 매핑 + 모든 par 정보 | 3 | 0.31% | F3 골프장+서브코스 GPS 감지 + complete 3곳 (전체의 0.31%) |
+| `partial` | 9홀 이상 매핑 | 12 | 1.2% | 수동 홀 진행, partial 코스 정보 참고 |
+| `minimal` | 1~8홀 매핑 | 9 | 0.9% | 수동 홀 진행 |
+| `low` | 홀 정보 없음 (clubhouse만) | 941 | 97.5% | F1(골프장+서브코스 GPS 감지)만 동작, 홀 전부 수동 |
 | `unknown` | 분류 미정 | — | — | 안전 fallback, 수동 홀 진행 |
 
 > F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행). 자세한 내용은 `41-COURSE_DB_PIPELINE.md` 참고.
@@ -207,7 +207,7 @@ struct Course: Decodable, Identifiable {
     let region: String
     let address: String?
     let website: String?
-    let phone: String?            // 카카오 enrichment (820/1163 채워짐)
+    let phone: String?            // 카카오 enrichment (664/965 채워짐)
     let holesCount: Int?          // nil 638곳 → 라운드 시작 시 사용자 입력
     let courseType: String?       // "CC", "GC" 등
     let kakaoPlaceUrl: String?    // 카카오 장소 URL
@@ -235,10 +235,10 @@ struct Hole: Decodable {
 }
 
 enum DataQuality: String, Decodable {
-    case complete  // 3곳 (전체의 0.26%)
+    case complete  // 3곳 (전체의 0.31%)
     case partial   // 12곳
     case minimal   // 9곳
-    case low       // 1139곳
+    case low       // 941곳
     case unknown   // 분류 미정 — 안전 fallback
 }
 
@@ -290,7 +290,7 @@ extension CourseRepository {
 
 ```swift
 extension CourseRepository {
-    /// 현재 위치에서 가장 가까운 골프장 반환 — 모든 1,163곳에서 동작.
+    /// 현재 위치에서 가장 가까운 골프장 반환 — 모든 965곳에서 동작.
     /// holesCount > 18이고 subCourses 존재 시 SubCourseSelector UI를 표시한다.
     func nearestCourseWithSubCourse(to location: CLLocation,
                                     maxDistanceMeters: Double = 3000) -> Course? {
@@ -404,8 +404,8 @@ import XCTest
 final class CourseRepositoryTests: XCTestCase {
     func testLoadCourses() throws {
         let repo = CourseRepository.shared
-        XCTAssertGreaterThan(repo.db.courses.count, 1000)  // v3: 1,163곳
-        XCTAssertEqual(repo.db.totalCourses, 1163)
+        XCTAssertGreaterThan(repo.db.courses.count, 900)  // v3: 965곳
+        XCTAssertEqual(repo.db.totalCourses, 965)
     }
     
     func testNearestCourseSeoul() {
@@ -416,7 +416,7 @@ final class CourseRepositoryTests: XCTestCase {
     }
     
     func testCompleteCoursesHaveAll18Holes() {
-        // complete 3곳 (전체의 0.26%)
+        // complete 3곳 (전체의 0.31%)
         let complete = CourseRepository.shared.db.courses.filter {
             $0.dataQuality == .complete
         }
@@ -436,7 +436,7 @@ final class CourseRepositoryTests: XCTestCase {
         let minimal = courses.filter { $0.dataQuality == .minimal }.count
         let complete = courses.filter { $0.dataQuality == .complete }.count
         // v3 기준 분포
-        XCTAssertGreaterThan(low, 1100)      // 약 1139
+        XCTAssertGreaterThan(low, 900)       // 약 941
         XCTAssertGreaterThan(partial, 10)    // 약 12
         XCTAssertGreaterThan(minimal, 7)     // 약 9
         XCTAssertEqual(complete, 3)
@@ -450,17 +450,17 @@ final class CourseRepositoryTests: XCTestCase {
 
 ### v2 → v3 마이그레이션 노트 (2026-05-12)
 
-v2(`courses_seed_v2.json`, 546곳)에서 v3(`courses_seed_v3.json`, 1,163곳)으로의 주요 변경 사항:
+v2(`courses_seed_v2.json`, 546곳)에서 v3(`courses_seed_v3.json`, 965곳)으로의 주요 변경 사항:
 
 | 항목 | v2 | v3 |
 |------|----|----|
-| 레코드 수 | 546곳 | 1,163곳 |
+| 레코드 수 | 546곳 | 965곳 (좌표 중복 통합 후) |
 | 빌드 날짜 | 2026.05.11 | 2026.05.12 |
 | 데이터 소스 | OSM 단독 | OSM + 공공데이터 + 카카오 enrichment |
 | 신규 필드 | — | `holesCount`, `courseType`, `phone`, `kakaoPlaceUrl`, `subCourses` |
-| dataQuality 분포 | complete 3 / partial 11 / minimal 8 / low 524 (course 타입만) | complete 3 / partial 12 / minimal 9 / low 1139 |
+| dataQuality 분포 | complete 3 / partial 11 / minimal 8 / low 524 (course 타입만) | complete 3 / partial 12 / minimal 9 / low 941 |
 | DataQuality enum | `complete/partial/minimal/low` | `complete/partial/minimal/low/unknown` 추가 |
-| 카카오 enrichment | 미적용 | 820/1163 골프장에 phone/kakaoPlaceUrl 채워짐 |
+| 카카오 enrichment | 미적용 | 664/965 골프장에 phone/kakaoPlaceUrl 채워짐 |
 | SubCourse | 미지원 | 27/36홀 골프장 387곳에 name 추가 (holes는 후속 보강) |
 
 **앱 코드 마이그레이션 체크리스트**:
@@ -475,7 +475,7 @@ v2 원본에는 다음 4가지 시설 타입이 섞여 있었으며, v3 producti
 
 | facilityType | v2 개수 | 설명 |
 |--------------|---------|------|
-| `course` | 546 → v3: 1,163 | 정식 골프장 (18홀/9홀/27홀/36홀 등) ← MVP 타겟 |
+| `course` | 546 → v3: 965 | 정식 골프장 (18홀/9홀/27홀/36홀 등) ← MVP 타겟 |
 | `practice` | 57 | 골프 연습장 (드라이빙 레인지) |
 | `park_golf` | 14 | 파크골프장 (실버 골프) |
 | `screen` | 6 | 스크린골프장 |

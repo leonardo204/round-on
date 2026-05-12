@@ -378,7 +378,7 @@ enum BannerLevel {
 
 **플랫폼**: iOS (코스 카드 하위)
 
-**용도**: F3 GPS 골프장+서브코스 자동 감지 가능 여부 표시. 한국 골프장 DB v3 (1,163곳) 기준: complete 3곳 (전체의 0.26%) / partial 12곳 / minimal 9곳 / low 1139곳. (CLAUDE.md §PROJECT, spec_3.md F3)
+**용도**: F3 GPS 골프장+서브코스 자동 감지 가능 여부 표시. 한국 골프장 DB v3 (965곳) 기준: complete 3곳 (전체의 0.31%) / partial 12곳 / minimal 9곳 / low 941곳. (CLAUDE.md §PROJECT, spec_3.md F3)
 
 **props**:
 ```swift
@@ -390,7 +390,7 @@ enum DataQuality: String, Codable {
     case complete  // 3곳: 18홀 완전 매핑 — GPS 코스 감지 활성
     case partial   // 12곳: 9홀 이상 매핑 — 수동 홀 진행
     case minimal   // 9곳: 1~8홀 매핑 — 수동 홀 진행
-    case low       // 1139곳: 클럽하우스 좌표만 — 수동 홀 진행
+    case low       // 941곳: 클럽하우스 좌표만 — 수동 홀 진행
     case unknown   // 분류 미정 — 안전 fallback
 }
 ```
@@ -404,7 +404,7 @@ enum DataQuality: String, Codable {
 | `.complete` | 3곳 | "GPS 코스 감지 활성" | `--green-primary` |
 | `.partial` | 12곳 | "수동 홀 진행" | `--text-secondary` |
 | `.minimal` | 9곳 | "수동 홀 진행" | `--text-secondary` |
-| `.low` | 1139곳 | "수동 홀 진행" | `--text-secondary` |
+| `.low` | 941곳 | "수동 홀 진행" | `--text-secondary` |
 | `.unknown` | — | "수동 홀 진행" | `--text-secondary` |
 
 **토큰**: `--text-caption` / `.complete` `--green-primary` / 나머지 `--text-secondary`

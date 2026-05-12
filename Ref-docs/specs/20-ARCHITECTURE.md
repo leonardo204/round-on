@@ -74,7 +74,7 @@
          │  ┌─────────────────────────────────────────┐   │
          │  │  번들 courses.json (약 727KB, 정적 리소스) │   │
          │  │  CourseRepository 인메모리 로드           │   │
-         │  │  한국 골프장 DB v3 (1,163곳, OSM ODbL)   │   │
+         │  │  한국 골프장 DB v3 (965곳, OSM ODbL)    │   │
          │  └─────────────────────────────────────────┘   │
          └───────────────────────────────────────────────┘
 
@@ -252,15 +252,15 @@ App-iOS ◄──/──► App-Watch  (직접 의존 없음 — WatchConnectivi
 
 | # | 근거 | 출처 |
 |---|------|------|
-| 1 | `courses.json` 약 727KB — 앱 시작 시 1회 디코딩 후 메모리 배열로 충분, 쿼리 성능 문제 없음 (한국 골프장 DB v3 1,163곳) | Ref-docs/golf-db-pack/ |
+| 1 | `courses.json` 약 727KB — 앱 시작 시 1회 디코딩 후 메모리 배열로 충분, 쿼리 성능 문제 없음 (한국 골프장 DB v3 965곳) | Ref-docs/golf-db-pack/ |
 | 2 | 골프장 데이터는 앱 업데이트로만 갱신 — 사용자 생성/수정 데이터 없음, SwiftData 쓰기 불필요 | golf-db-pack/README.md |
 | 3 | spec_3.md:112 "CloudKit으로 라운드 기록 자동 동기화" — CloudKit 동기화 대상은 사용자 라운드 기록만, Course는 sync 대상 아님 | spec_3.md:112 |
-| 4 | Haversine 반경 3km 매칭(F1)은 1,163개 × O(1) 거리 계산으로 단일 호출당 1ms 미만 — 메모리 배열 선형 탐색 충분 | spec_3.md:58-61 |
+| 4 | Haversine 반경 3km 매칭(F1)은 965개 × O(1) 거리 계산으로 단일 호출당 1ms 미만 — 메모리 배열 선형 탐색 충분 | spec_3.md:58-61 |
 | 5 | SwiftData `@Model` + CloudKit 컨테이너 구성 시 모든 `@Model`은 기본적으로 sync 대상이 됨 — GolfCourse가 불필요하게 CloudKit private DB로 sync 시도 + 첫 실행 마이그레이션 비용 | 아키텍처 분석 |
 
 **옵션 B (SwiftData @Model 적재) 기각**: 근거 3 및 5에 따라 기각.
 
-`dataQuality` 기반 F3 분기 처리 (1139개 `low` / complete 3 / partial 12 / minimal 9) — F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행) — 는 `21-DATA_MODEL.md` 위임.
+`dataQuality` 기반 F3 분기 처리 (941개 `low` / complete 3 / partial 12 / minimal 9) — F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행) — 는 `21-DATA_MODEL.md` 위임.
 
 ---
 
