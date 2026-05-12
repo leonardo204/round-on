@@ -1,0 +1,43 @@
+name = "roundon-viewer"
+main = "src/index.ts"
+compatibility_date = "2026-05-11"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers Unbound: bcrypt cost 12 처리 (~200-300ms) 허용 (33-SECURITY §4.2)
+usage_model = "unbound"
+workers_dev = true
+
+[triggers]
+crons = ["0 3 * * *"]  # 매일 새벽 3시 만료 회수 처리
+
+[env.production]
+route = { pattern = "golf.zerolive.co.kr/*", zone_name = "zerolive.co.kr" }
+workers_dev = false
+
+[[kv_namespaces]]
+binding = "KV_META"
+id = "<roundon-meta>"
+
+[[kv_namespaces]]
+binding = "KV_RATELIMIT"
+id = "<roundon-ratelimit>"
+
+[[kv_namespaces]]
+binding = "KV_PINLOCK"
+id = "<roundon-pinlock>"
+
+[[kv_namespaces]]
+binding = "KV_SESSION"
+id = "<roundon-session>"
+
+[[r2_buckets]]
+binding = "R2_PHOTOS"
+bucket_name = "roundon-photos"
+
+[vars]
+ENVIRONMENT = "development"
+VIEWER_DOMAIN = "golf.zerolive.co.kr"
+
+# 시크릿 (wrangler.toml에 값 기재 금지 — wrangler secret put으로 등록)
+# BCRYPT_PEPPER    : openssl rand -base64 32
+# SESSION_HMAC_KEY : openssl rand -base64 32

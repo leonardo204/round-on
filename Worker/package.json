@@ -1,0 +1,21 @@
+{
+  "name": "roundon-viewer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "라운드온 Cloudflare Worker — viewer 백엔드",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --env production",
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240529.0",
+    "@types/bcryptjs": "^2.4.6",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.60.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3"
+  }
+}

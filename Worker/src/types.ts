@@ -1,0 +1,147 @@
+/**
+ * 라운드온 Worker 공통 타입 정의
+ * 30-API_SPEC §9.3, 32-CLOUDFLARE_SETUP §5 기반
+ */
+
+// ── Cloudflare 환경 바인딩 ─────────────────────────────────────────────────
+
+export interface Env {
+  // KV 네임스페이스 (32-CLOUDFLARE_SETUP §3)
+  KV_META: KVNamespace;       // shortId → 메타 JSON, pinHash
+  KV_RATELIMIT: KVNamespace;  // Rate limit 카운터 (33-SECURITY §6)
+  KV_PINLOCK: KVNamespace;    // PIN 오답 잠금 카운터 (33-SECURITY §5)
+  KV_SESSION: KVNamespace;    // viewer 세션 쿠키 검증값 (33-SECURITY §5.4)
+
+  // R2 버킷 (32-CLOUDFLARE_SETUP §4)
+  R2_PHOTOS: R2Bucket;        // 사진 파일 ({shortId}/{photoId}.jpg)
+
+  // vars
+  ENVIRONMENT: string;         // "development" | "production"
+  VIEWER_DOMAIN: string;       // "golf.zerolive.co.kr"
+
+  // secrets (wrangler secret put으로 등록 — wrangler.toml에 없음)
+  BCRYPT_PEPPER?: string;      // bcrypt 추가 보안 pepper (선택)
+  SESSION_HMAC_KEY?: string;   // HMAC-SHA256 세션 쿠키 서명 키 (필수)
+}
+
+// ── 공유 라운드 데이터 ──────────────────────────────────────────────────────
+
+/**
+ * 플레이어 1명의 와이어 표현
+ * nameVisibility에 따라 name 필드가 실명 또는 A/B/C/D로 치환된다
+ */
+export interface Player {
+  id: string;
+  name: string;
+  totalScore: number;
+}
+
+/**
+ * 홀 스코어 (플레이어별)
+ */
+export interface HoleScore {
+  playerId: string;
+  shots: number;
+  putts?: number;
+  penalties?: number;
+}
+
+/**
+ * 홀 정보
+ */
+export interface Hole {
+  number: number;     // 1~18
+  par: number;        // 3/4/5
+  scores: HoleScore[];
+}
+
+/**
+ * 라운드 와이어 페이로드 (30-API §9.3 권장 최소 필드)
+ * SwiftData Round → 와이어 직렬화 시 사용
+ */
+export interface Round {
+  id: string;
+  courseName: string;
+  courseId?: string;
+  dataQuality?: "low" | "high";
+  date: string;           // ISO 8601 날짜 (YYYY-MM-DD)
+  startedAt?: string;     // ISO 8601 UTC
+  finishedAt?: string;    // ISO 8601 UTC
+  totalHoles?: number;    // 9 | 18
+  players: Player[];
+  holes: Hole[];
+  notes?: string;
+}
+
+/**
+ * 공유 옵션
+ */
+export interface ShareOptions {
+  nameVisibility: "real" | "anonymous";
+  accessControl: "public" | "pin";
+  pin?: string;           // accessControl == "pin"일 때만, 4자리 숫자
+}
+
+/**
+ * POST /api/share 요청 바디
+ */
+export interface SharePayload {
+  deviceToken: string;    // 익명 UUID — Rate limiting 기준
+  round: Round;
+  options: ShareOptions;
+  idempotencyKey?: string; // 중복 방지용 (30-API §9.7)
+}
+
+/**
+ * KV에 저장되는 share 메타 객체 (share:{shortId})
+ */
+export interface ShareMeta {
+  shortId: string;
+  editToken: string;      // 평문 (클라이언트에 최초 1회 반환 후 비밀 유지)
+  round: Round;
+  options: Omit<ShareOptions, "pin">;  // PIN은 별도 키(pinHash)에 저장
+  createdAt: string;      // ISO 8601 UTC
+  expiresAt: string;      // ISO 8601 UTC (createdAt + 7일)
+  photos: Photo[];        // 사진 목록
+}
+
+/**
+ * 사진 메타
+ */
+export interface Photo {
+  photoId: string;        // ph_{uuid}
+  holeNumber?: number;
+  caption?: string;
+  contentType: string;    // "image/jpeg" | "image/png"
+  size: number;           // bytes
+  uploadedAt: string;     // ISO 8601 UTC
+}
+
+/**
+ * PIN 잠금 카운터 (KV_PINLOCK)
+ */
+export interface PinLockEntry {
+  attempts: number;
+  firstAttemptAt: number; // unix timestamp (ms)
+}
+
+// ── 에러 코드 열거 (30-API §9.4) ───────────────────────────────────────────
+
+export type ErrorCode =
+  | "PIN_REQUIRED"
+  | "PIN_INVALID"
+  | "PIN_LOCKED"
+  | "PIN_INVALID_FORMAT"
+  | "EDIT_TOKEN_INVALID"
+  | "EXPIRED"
+  | "NOT_FOUND"
+  | "RATE_LIMITED"
+  | "PAYLOAD_TOO_LARGE"
+  | "PII_REJECTED"
+  | "INTERNAL_ERROR"
+  | "VALIDATION_ERROR";
+
+export interface ApiError {
+  error: ErrorCode;
+  message: string;
+}
