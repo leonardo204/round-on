@@ -31,6 +31,9 @@ targets:
       - path: Shared/DesignSystem
         excludes:
           - "Color+SeasonalGreen.swift"  # Asset Catalog 참조 제외 (watchOS 런타임 분리)
+      - path: Shared/Haptics
+      - path: Shared/Sync
+      - path: Shared/ViewModels
     info:
       path: Shared/Info.plist
     settings:
