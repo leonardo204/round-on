@@ -1,0 +1,161 @@
+name: RoundOn
+options:
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  bundleIdPrefix: kr.zerolive.golf
+  createIntermediateGroups: true
+
+targets:
+  Shared:
+    type: framework
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Shared
+    info:
+      path: Shared/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.shared
+        DEFINES_MODULE: YES
+        DYLIB_INSTALL_NAME_BASE: "@rpath"
+        SKIP_INSTALL: YES
+
+  Shared-Watch:
+    type: framework
+    platform: watchOS
+    deploymentTarget: "10.0"
+    sources:
+      - path: Shared/Models
+      - path: Shared/DesignSystem
+        excludes:
+          - "Color+SeasonalGreen.swift"  # Asset Catalog 참조 제외 (watchOS 런타임 분리)
+    info:
+      path: Shared/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.shared.watch
+        DEFINES_MODULE: YES
+        DYLIB_INSTALL_NAME_BASE: "@rpath"
+        SKIP_INSTALL: YES
+        PRODUCT_NAME: Shared
+
+  RoundOn:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: App-iOS
+    dependencies:
+      - target: Shared
+        embed: true
+      - target: RoundOn-Watch
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon
+        CODE_SIGN_ENTITLEMENTS: App-iOS/RoundOn.entitlements
+        INFOPLIST_FILE: App-iOS/Info.plist
+        ENABLE_PREVIEWS: YES
+    info:
+      path: App-iOS/Info.plist
+      properties:
+        UILaunchScreen: {}
+        CFBundleDisplayName: 라운드온
+        CFBundleDevelopmentRegion: ko
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+
+  RoundOn-Watch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "10.0"
+    sources:
+      - path: App-Watch
+    dependencies:
+      - target: Shared-Watch
+        embed: true
+        codeSign: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.watchkitapp
+        INFOPLIST_FILE: App-Watch/Info.plist
+        SDKROOT: watchos
+    info:
+      path: App-Watch/Info.plist
+      properties:
+        WKWatchOnly: false
+        WKCompanionAppBundleIdentifier: kr.zerolive.golf.roundon
+        WKApplication: true
+
+  SharedTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Tests/SharedTests
+    info:
+      path: Tests/SharedTests/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: ko
+    dependencies:
+      - target: Shared
+
+  RoundOn-iOS:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: App-iOS
+    dependencies:
+      - target: Shared
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.dev
+        PRODUCT_NAME: RoundOn
+        CODE_SIGN_ENTITLEMENTS: App-iOS/RoundOn.entitlements
+        INFOPLIST_FILE: App-iOS/Info.plist
+        ENABLE_PREVIEWS: YES
+        CODE_SIGN_STYLE: Automatic
+        SKIP_INSTALL: YES
+    info:
+      path: App-iOS/Info.plist
+
+schemes:
+  RoundOn:
+    build:
+      targets:
+        RoundOn: all
+        RoundOn-Watch: all
+        Shared: all
+        Shared-Watch: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SharedTests
+
+  RoundOn-iOS:
+    build:
+      targets:
+        RoundOn-iOS: all
+        Shared: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SharedTests
+
+  SharedTests:
+    build:
+      targets:
+        SharedTests: [test]
+        Shared: [test]
+    test:
+      config: Debug
+      targets:
+        - SharedTests

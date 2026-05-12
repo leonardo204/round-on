@@ -8,3 +8,13 @@
 .claude/.hook_feedback
 .claude/.project_root
 .claude/.messenger_enabled
+
+# Xcode generated
+*.xcworkspace/
+*.xcodeproj/
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+*.dSYM
+.swiftpm/

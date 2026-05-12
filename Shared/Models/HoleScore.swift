@@ -1,0 +1,46 @@
+import Foundation
+import SwiftData
+
+/// ScoreEntry: [UUID: Int] 대신 배열 사용 (SwiftData 딕셔너리 영속화 제한 대응)
+/// 21-DATA_MODEL §10 fallback 적용
+public struct ScoreEntry: Codable, Sendable, Equatable {
+    public var playerId: UUID
+    public var value: Int
+
+    public init(playerId: UUID, value: Int) {
+        self.playerId = playerId
+        self.value = value
+    }
+}
+
+@Model
+public final class HoleScore {
+    public var holeNumber: Int
+    public var par: Int
+    public var counts: [ScoreEntry]
+    public var obCount: [ScoreEntry]
+    public var hazardCount: [ScoreEntry]
+
+    public init(holeNumber: Int, par: Int, counts: [ScoreEntry] = [], obCount: [ScoreEntry] = [], hazardCount: [ScoreEntry] = []) {
+        self.holeNumber = holeNumber
+        self.par = par
+        self.counts = counts
+        self.obCount = obCount
+        self.hazardCount = hazardCount
+    }
+
+    /// playerId로 타수 조회
+    public func count(for playerId: UUID) -> Int {
+        counts.first(where: { $0.playerId == playerId })?.value ?? 0
+    }
+
+    /// playerId로 OB 횟수 조회
+    public func ob(for playerId: UUID) -> Int {
+        obCount.first(where: { $0.playerId == playerId })?.value ?? 0
+    }
+
+    /// playerId로 해저드 횟수 조회
+    public func hazard(for playerId: UUID) -> Int {
+        hazardCount.first(where: { $0.playerId == playerId })?.value ?? 0
+    }
+}

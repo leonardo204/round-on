@@ -56,6 +56,12 @@
 - [50 개인정보 처리방침](Ref-docs/specs/50-PRIVACY_POLICY.md) — PIPA §30, App Store Privacy Nutrition Label
 - [53 권한 요청](Ref-docs/specs/53-PERMISSIONS.md) — Info.plist 키, usage string 한/영
 
+#### 개발 환경 빌드 (구현 단계)
+- 정식 타깃: `RoundOn` 스킴 (Bundle ID `kr.zerolive.golf.roundon`, Watch 임베드 — watchOS 시뮬레이터 설치 환경)
+- 개발용 타깃: `RoundOn-iOS` 스킴 (Bundle ID `kr.zerolive.golf.roundon.dev`, Watch 미임베드 — watchOS 시뮬레이터 없는 환경)
+- 일상 개발: `xcodebuild -scheme RoundOn-iOS` (빠른 iOS 단독 빌드)
+- 정식 빌드/Archive: `xcodebuild -scheme RoundOn` (Watch 시뮬레이터 필요)
+
 #### 디자인 시안 (design-stitch/)
 - [Stitch 프롬프트 모음](Ref-docs/design-stitch/stitch-prompt.md) — Google Stitch 작업 프롬프트 v2 + 인계 가이드
 - [시안 산출물](Ref-docs/design-stitch/screens/) — iPhone 10화면 / Watch 7화면 / Mobile-Web 5화면 PNG + HTML
