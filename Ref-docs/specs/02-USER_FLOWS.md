@@ -48,8 +48,8 @@
 
 - 위치 권한 거부 → 수동 검색/선택 fallback (spec_3.md:634)
 - 3km 내 매칭 실패 → 수동 선택 (spec_3.md:635)
-- `dataQuality: low` 매칭 (546개 중 524개) → F-B에서 수동 홀 선택 강제 (CLAUDE.md §PROJECT)
-- `dataQuality: high` (14개 코스)에서만 GPS 홀 자동 감지(F3) 활성화 (CLAUDE.md §PROJECT)
+- `dataQuality: low` 매칭 (1,163곳 중 1,139곳) → F-B에서 수동 홀 진행 모드 적용 (CLAUDE.md §PROJECT)
+- F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행) — 모든 코스에서 골프장 단위 감지 가능 (CLAUDE.md §PROJECT)
 
 ---
 
@@ -58,11 +58,13 @@
 **Actor**: iPhone | **트리거**: "라운드 시작" 탭 | **종료**: Watch 라운드 데이터 송출 완료
 
 1. F-A에서 확정된 골프장 표시
-2. 동반자 최대 3명, 별명 자동 채워넣기("동반자1/2/3"), 최근 동반자 1탭 선택 가능 (spec_3.md:63-67)
-3. "라운드 시작" 탭
-4. HealthKit 권한 미허가 시 요청 → 허가 시 `HKWorkoutActivityType.golf` 워크아웃 세션 시작 (spec_3.md:116-119, 660)
-5. WatchConnectivity로 Watch에 라운드 데이터 송출 (골프장, 홀, 동반자) (spec_3.md:684-685)
-6. iPhone 4×18 그리드 및 Watch 메인 화면 동시 활성화
+2. holesCount > 18이고 subCourses 존재 시: SubCourseSelector 표시 → 서브코스 라벨 (동/서/남/북 또는 전반/후반) 선택 → Round.courseSubName 저장
+3. holesCount == nil이면 사용자 입력 프롬프트 표시 (9/18/27/36 선택), DB에 기록 안 함
+4. 동반자 최대 3명, 별명 자동 채워넣기("동반자1/2/3"), 최근 동반자 1탭 선택 가능 (spec_3.md:63-67)
+5. "라운드 시작" 탭
+6. HealthKit 권한 미허가 시 요청 → 허가 시 `HKWorkoutActivityType.golf` 워크아웃 세션 시작 (spec_3.md:116-119, 660)
+7. WatchConnectivity로 Watch에 라운드 데이터 송출 (골프장, 홀, 동반자) (spec_3.md:684-685)
+8. iPhone 4×18 그리드 및 Watch 메인 화면 동시 활성화
 
 **분기/예외**
 
@@ -94,16 +96,14 @@ Watch              WatchConnectivity        iPhone
 2. 샷마다 Digital Crown 시계방향 또는 화면 큰 탭 → +1 / 반시계방향 → -1 수정 (spec_3.md:94-96)
 3. 벌타: OB 버튼 +2 / 해저드 +1 / OK +1 (spec_3.md:83-85)
 4. par 대비 실시간 갱신 (예: "5 (+1)") (spec_3.md:86)
-5. GPS 그린 진입(반경 50m) → 다음 홀 자동 전환 + haptic + 토스트 (spec_3.md:639-643)
-   또는 좌/우 스와이프로 수동 홀 이동 (spec_3.md:97)
+5. 수동 홀 진행 모드: 좌/우 스와이프 또는 탭으로 다음 홀 이동 (spec_3.md:97). 홀 단위 자동 진행은 미제공.
 6. 상/하 스와이프 → 본인 ↔ 동반자 전환 (spec_3.md:98)
 7. iPhone 4×18 그리드와 즉시 sync (spec_3.md:104-105)
 
 **분기/예외**
 
 - 카운터 상한/하한: 최대 15타, 최소 1타 — 초과 입력 차단 (spec_3.md:649-651)
-- 수동 홀 변경 직후 5분간 GPS 자동 감지 비활성화 (spec_3.md:644)
-- `dataQuality: low` 코스: GPS 홀 자동 감지 비동작 → 수동 스와이프로만 홀 이동 (CLAUDE.md §PROJECT)
+- 모든 코스: 수동 홀 진행 모드 — 사용자가 스와이프/탭으로 다음 홀 이동. 홀 단위 자동 진행은 미제공 (CLAUDE.md §PROJECT)
 - haptic 패턴 상세 → `13-HAPTICS_AND_MOTION.md` (작성 예정) (spec_3.md §7.3)
 - iPhone 단독 모드: 셀 탭 +1 / 길게 누르기 -1 (spec_3.md:103-105)
 - **WatchConnectivity 끊김 → 복구**: 끊긴 동안 Watch는 로컬 카운터를 큐(`transferUserInfo`)에 누적 → 재연결 시 자동 전송. iPhone 측 같은 홀에 동시 편집이 있었다면 **최신 타임스탬프 우선** 정책 적용(F-D 분기와 동일)

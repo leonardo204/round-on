@@ -66,11 +66,15 @@ App Store 주요 골프 스코어 카운터 앱들을 조사한 결과는 다음
 - 라운드 중에도 자유롭게 이름 수정 가능
 - **최근 동반자 목록**에서 1탭 선택 (이전 라운드에서 같이 친 사람)
 
-### F3. GPS로 현재 홀 자동 감지
-- 각 골프장 데이터에 **18홀의 티박스 좌표 + 그린 좌표 + 파** 사전 등록
-- 라운드 중 GPS로 위치 fetch → 가장 가까운 홀로 자동 이동
-- **파(Par 3/4/5) 자동 표시**
-- 배터리 절약: **2분마다 폴링** 또는 사용자가 화면 탭/Crown 회전 시 즉시 갱신
+### F3. GPS 기반 골프장 + 서브코스 자동 감지
+
+> **F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행)**
+
+- **골프장 단위 감지**: 앱 실행 시 클럽하우스 좌표로 1,163곳 모두에서 즉시 동작 (한국 골프장 DB v3 기준)
+- **서브코스 감지**: 27/36홀 골프장 387곳은 `SubCourse` 모델로 동/서/남/북 등 서브코스 라벨 지원 — 현재 v3 데이터에는 서브코스 좌표 미포함, 후속 데이터 보강 후 자동 감지 활성화 예정
+- **홀 단위 진행**: 항상 **수동 홀 진행 모드** — 사용자가 스와이프/탭으로 다음 홀 이동 (홀 단위 자동 감지는 미제공, F3는 골프장+서브코스 단위만 지원)
+- **서브코스 라벨 (동/서/남/북 또는 전반/후반)**: holesCount > 18인 경우 라운드 시작 시 사용자가 수동 선택
+- **holesCount nil 처리**: 638곳은 holesCount 미기재 → 라운드 생성 시 9/18/27/36 선택 프롬프트 표시 (DB에는 기록 안 함)
 
 ### F4. 타수 카운터 방식 입력
 
@@ -290,8 +294,12 @@ Content-Disposition: attachment; filename="..."
 | 필드 | 출처 | 난이도 |
 |------|------|--------|
 | 골프장 이름 | 공공데이터 | 쉬움 |
-| 코스명 (동/서/남/북) | 골프장 홈페이지 | 중간 |
 | 클럽하우스 위경도 | 공공데이터 + 지도 API | 쉬움 |
+| holesCount (홀 수) | 공공데이터 / 카카오 enrichment | 중간 |
+| courseType (타입) | 공공데이터 | 쉬움 |
+| phone (전화번호) | 카카오 로컬 API enrichment | 쉬움 |
+| kakaoPlaceUrl (카카오 장소 URL) | 카카오 로컬 API enrichment | 쉬움 |
+| subCourses (서브코스 라벨) | 골프장 홈페이지 / 카카오·네이버 수동 보강 | 중간 |
 | 각 홀의 파 (3/4/5) | 골프장 홈페이지 코스 가이드 | 중간 |
 | 각 홀의 티박스 좌표 | **위성 이미지 수동 매핑** | 어려움 |
 | 각 홀의 그린 좌표 | 위성 이미지 수동 매핑 | 어려움 |
@@ -348,37 +356,50 @@ OSM에 없는 곳은:
 
 | 단계 | 작업 | 산출물 | 소요 |
 |------|------|--------|------|
-| P0 | 공공데이터 다운로드 → 기본 정보 JSON | `courses_basic.json` | 1일 |
-| P1 | OSM Overpass 자동 수집 | 30-50% 골프장 홀 정보 | 2일 |
-| P2 | 인기 50개 골프장 수동 매핑 | MVP 출시 가능 | 1주 |
-| P3 | 나머지 점진 매핑 + 제보 반영 | 500개 모두 커버 | 지속 |
+| P0 | 공공데이터 + OSM + 카카오 enrichment → v3 통합 | `courses_seed_v3.json` (1,163곳) | 완료 (2026-05-12) |
+| P1 | OSM Overpass 자동 수집 | 홀별 정보 (complete 3 / partial 12 / minimal 9 / low 1139) | 완료 |
+| P2 | 서브코스 라벨 보강 (카카오/네이버 또는 수동) | 27/36홀 골프장 387곳 SubCourse 라벨 추가 | 진행 예정 |
+| P3 | 홀별 좌표 점진 매핑 + 제보 반영 | complete/partial 점진 확대 | 지속 |
 
-> **MVP 출시 기준**: 인기 100개 골프장 매핑
+> **MVP 출시 기준**: v3 DB 번들 (골프장 + 서브코스 GPS 자동 감지, 홀 진행 수동)
 
-### 4.4 데이터 구조 (앱 번들 JSON)
+### 4.4 데이터 구조 (앱 번들 JSON) — v3 기준
 
 ```json
 {
-  "version": "2026.05.11",
+  "version": "2026.05.12",
+  "totalCourses": 1163,
   "courses": [
     {
-      "id": "skyhill-east",
+      "id": "스카이힐골프클럽",
       "name": "스카이힐 골프클럽",
-      "subName": "동코스",
       "region": "경기",
+      "holesCount": 36,
+      "courseType": "CC",
+      "phone": "031-XXX-XXXX",
+      "kakaoPlaceUrl": "https://place.map.kakao.com/XXXXXXX",
       "clubhouse": { "lat": 37.4567, "lng": 127.1234 },
-      "holes": [
-        { "number": 1, "par": 4, 
-          "tee":   { "lat": 37.4570, "lng": 127.1240 },
-          "green": { "lat": 37.4585, "lng": 127.1250 }
+      "subCourses": [
+        {
+          "name": "동코스",
+          "holes": []
+        },
+        {
+          "name": "서코스",
+          "holes": []
         }
-      ]
+      ],
+      "holes": [],
+      "dataQuality": "low"
     }
   ]
 }
 ```
 
-JSON 크기: 500개 × 1KB = 약 **500KB** (앱 번들 무리 없음).
+> **subCourses 필드**: v3에는 서브코스 좌표 데이터가 없으므로 현재 `holes: []`. 후속 데이터 보강 시 채워짐.  
+> **holesCount nil**: 638곳은 홀 수 미기재. 라운드 생성 시 사용자 입력 프롬프트(9/18/27/36 선택) 표시.
+
+JSON 크기: 한국 골프장 DB v3 (1,163곳, 2026-05-12 빌드) — 약 **727KB** (앱 번들 무리 없음).
 
 ---
 
@@ -542,11 +563,22 @@ struct ShareOptions: Codable {
 final class GolfCourse {
     var id: String
     var name: String
-    var subName: String?
     var region: String
     var clubhouseLat: Double
     var clubhouseLng: Double
-    var holes: [HoleInfo]
+    var holesCount: Int?          // 총 홀 수 (nil이면 라운드 시작 시 사용자 입력)
+    var courseType: String?       // "CC", "GC" 등
+    var phone: String?            // 전화번호
+    var kakaoPlaceUrl: String?    // 카카오 장소 URL
+    var subCourses: [SubCourse]?  // 서브코스 목록 (27/36홀 골프장, 후속 보강 필요)
+    var holes: [HoleInfo]         // 홀별 정보 (complete/partial/minimal 코스에만 존재)
+    var dataQuality: DataQuality  // complete / partial / minimal / low
+}
+
+/// 서브코스 값 타입 (동/서/남/북 또는 전반/후반 라벨)
+struct SubCourse: Codable {
+    var name: String          // 서브코스 라벨 — 서브코스 라벨 (동/서/남/북 또는 전반/후반)
+    var holes: [HoleInfo]     // 해당 서브코스의 홀 정보 (v3에서는 비어있음, 후속 보강)
 }
 
 struct HoleInfo: Codable {
@@ -557,7 +589,17 @@ struct HoleInfo: Codable {
     var greenLat: Double
     var greenLng: Double
 }
+
+enum DataQuality: String, Codable {
+    case complete  // complete 3곳 (전체의 0.26%): 18홀 완전 매핑
+    case partial   // partial 12곳: 9홀 이상 매핑
+    case minimal   // minimal 9곳: 1~8홀 매핑
+    case low       // low 1139곳: 홀 정보 없음 — F3 골프장+서브코스 GPS 감지만 동작, 홀 진행은 수동
+    case unknown   // 분류 미정 (안전 fallback)
+}
 ```
+
+> **Round.courseSubName**: 이미 존재하는 필드 (`String?`). 수동 입력 또는 GPS 서브코스 감지 결과를 저장한다.
 
 ---
 
@@ -586,7 +628,8 @@ struct HoleInfo: Codable {
 
 ```
 ┌─────────────────┐
-│   3번 홀 Par 4   │  ← GPS 자동
+│   3번 홀 Par 4   │  ← 수동 홀 선택
+│  [동코스]        │  ← 서브코스 라벨 표시 (자동)
 │                 │
 │    ╔══════╗     │
 │    ║  5   ║     │  ← 큰 카운트
@@ -614,8 +657,8 @@ struct HoleInfo: Codable {
 | OB 탭 | `.notification(.warning)` |
 | 해저드 탭 | `.click` × 2 |
 | OK 탭 | `.success` (짧게) |
-| 홀 자동 전환 | `.notification(.success)` |
-| 홀 수동 전환 | `.directionUp/Down` |
+| 홀 수동 전환 | `.notification(.success)` |
+| 홀 수동 전환(스와이프) | `.directionUp/Down` |
 | 동반자 전환 | `.click` × 2 |
 | GPS 매칭 완료 | `.success` |
 | 라운드 종료 | `.success` (길게) |
@@ -634,14 +677,28 @@ struct HoleInfo: Codable {
 5. 매칭 실패 시 → 수동 선택 (검색 가능)
 ```
 
-### 8.2 홀 자동 감지
+### 8.2 골프장 + 서브코스 GPS 감지 구현
+
+> **F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행)**
 
 ```
-1. 2분 간격 GPS 폴링 (또는 사용자 탭 시)
-2. 18홀 티박스 + 그린 좌표 중 가장 가까운 위치 찾기
-3. 거리 50m 이내이고 다른 홀이면 자동 전환
-4. Haptic + 토스트 알림
-5. 수동 변경 직후 5분간 자동 감지 비활성화
+[골프장 단위 감지 — 모든 1,163곳에서 동작]
+1. CLLocationManager.requestLocation() (1회)
+2. GolfCourse DB 순회 → Haversine 거리 계산
+3. 3km 이내 후보 중 가장 가까운 1개 디폴트 표시
+4. "○○골프장 자동 선택됨 (변경)" 표시
+
+[서브코스 감지 — holesCount > 18 && subCourses != nil && !isEmpty]
+5. subCourses 배열이 있으면 SubCourseSelector UI 표시
+6. 사용자가 서브코스 라벨 (동/서/남/북 또는 전반/후반) 수동 선택
+7. Round.courseSubName = 선택된 SubCourse.name 저장
+
+[홀 진행 — 항상 수동 홀 진행 모드]
+8. 사용자가 스와이프/탭으로 다음 홀 이동
+9. 홀 단위 자동 감지는 미제공 — 수동 홀 진행만 지원 (F3는 골프장+서브코스 단위 GPS 감지만 제공)
+
+[holesCount nil 처리]
+10. holesCount == nil이면 라운드 시작 시 9/18/27/36 선택 프롬프트 표시
 ```
 
 ### 8.3 카운터 입력 검증
@@ -865,8 +922,8 @@ Digital Crown 카운터, 큰 탭 영역, 스와이프, Haptic, 페널티 버튼
 ### Step 7: WatchConnectivity
 iPhone ↔ Watch 점수 sync, 라운드 상태 sync, 충돌 처리
 
-### Step 8: GPS 홀 자동 감지
-백그라운드 위치 폴링, 홀 전환 로직, Haptic 알림
+### Step 8: 골프장 + 서브코스 GPS 감지 구현
+골프장 단위 GPS 매칭 (1,163곳 전체 동작), SubCourseSelector UI (27/36홀 골프장 387곳), holesCount nil 프롬프트 처리. **홀 단위 자동 감지 코드 미포함 — 수동 홀 진행 모드만 구현.**
 
 ### Step 9: CloudKit + 라운드 재개
 SwiftData ↔ CloudKit 자동 sync, 미완료 라운드 복구

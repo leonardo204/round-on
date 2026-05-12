@@ -153,7 +153,7 @@ Stitch HTML `code.html`에 삽입된 Google Fonts `@import url('..Hanken+Grotesk
 - **컴포넌트**: `CourseCard` (자동 매칭 결과), `PlayerChip` (동반자 입력) (11-COMPONENTS §4, §5)
 - **플로우**: F-A 종료 → F-B 시작 (02-USER_FLOWS F-A, F-B)
 - **인터랙션**: "변경" 탭 → 수동 골프장 검색 / 동반자 칩 탭 → 이름 수정 / "라운드 시작" 탭 → iphone-2.3b 진입
-- **Stitch 특이점**: `DataQualityBadge` (low/high)가 시안에서 `low` 1종만 렌더링됨. 나머지 3종(`medium`/`high`/`unknown`)은 11-COMPONENTS §10 명세만 사용. (CLAUDE.md §PROJECT)
+- **Stitch 특이점**: `DataQualityBadge` 4종 분포 — complete 3곳(0.26%) / partial 12곳 / minimal 9곳 / low 1139곳. 시안에서 `low` 1종만 렌더링됨. 나머지 4종(`complete`/`partial`/`minimal`/`unknown`)은 11-COMPONENTS §10 명세만 사용. (CLAUDE.md §PROJECT)
 
 ### iphone-2.3a — 라운드 진행 Variant A (미채택)
 
@@ -354,7 +354,7 @@ Watch 화면 전체는 Winter 팔레트(다크 디폴트)를 기반으로 렌더
 | 플로우 ID | 플로우 이름 | 주요 화면 | 분기 화면 |
 |---------|-----------|---------|---------|
 | F-A | 앱 첫 실행 / 골프장 자동 매칭 | iphone-2.1 → iphone-2.2 | 위치 권한: iOS 시스템 다이얼로그 (Stitch 미제공) |
-| F-B | 라운드 시작 | iphone-2.2 → iphone-2.3b | dataQuality low → 수동 홀 선택, Watch 미연결 → iPhone 단독 |
+| F-B | 라운드 시작 | iphone-2.2 → iphone-2.3b | holesCount > 18: SubCourseSelector 표시 (Stitch 미제공) / holesCount nil: 홀 수 입력 프롬프트 / Watch 미연결 → iPhone 단독 |
 | F-C | 점수 입력 (핵심) | watch-3.1 + iphone-2.3b 동시 | 홀 이동: watch-3.2 → 3.3 → 3.4 / 동반자 전환: watch-3.5 / 페널티: iphone-2.4 |
 | F-D | 라운드 종료 / 자동 재개 | watch-3.6 → watch-3.7 → iphone-2.6 | 자동 재개: iphone-2.1 재실행 다이얼로그 (Stitch 미제공) |
 | F-E | Viewer 공유 생성/업데이트 | iphone-2.6 → iphone-2.7 → iOS 공유 시트 | 재공유: iphone-2.8 → iphone-2.7 (업데이트 모드) |
@@ -372,6 +372,7 @@ Watch 화면 전체는 Winter 팔레트(다크 디폴트)를 기반으로 렌더
 | HealthKit 권한 요청 | F-B | iOS 시스템 표준 권한 시트 (spec_3.md:116-119) |
 | Watch 미연결 안내 배너 | F-B | `BannerNotice` 컴포넌트 재사용 (11-COMPONENTS §10) |
 | 수동 골프장 검색/선택 | F-A 분기 | 검색 시트 — 별도 설계 필요 (spec_3.md:634-635) |
+| 서브코스 라벨 선택 | F-B | SubCourseSelector — 27/36홀 골프장에서 표시 (Stitch 미제공, 11-COMPONENTS §10) |
 
 ### 화면 전환 타입 요약
 

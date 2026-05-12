@@ -34,6 +34,7 @@
 | 8 | `ShareSheet` | iOS | F9 공유 옵션 (spec_3.md:130-142) |
 | 9 | `BannerNotice` | 공통 | 시스템 안내 (20-ARCHITECTURE §7) |
 | 10 | `DataQualityBadge` | iOS | F1/F3 분기 (CLAUDE.md §PROJECT) |
+| 11 | `SubCourseSelector` | iOS | F3 서브코스 라벨 선택 (spec_3.md §F3, 21-DATA_MODEL §5) |
 
 ---
 
@@ -107,6 +108,11 @@ struct CourseCard: View {
 **변형**:
 - `matched`: 자동 매칭됨 — "○○골프장 자동 선택됨" 뱃지 + "변경" 버튼 (`plain`)
 - `manual`: 수동 선택됨 — 변경 버튼 없음 (이미 사용자 의사로 선택)
+
+**holesCount / courseType 표시 변형**:
+- `holesCount != nil`: 코스명 하단에 "{holesCount}홀" 표시
+- `holesCount == nil`: 홀 수 미표시 (라운드 시작 시 사용자 입력 프롬프트로 처리)
+- `courseType != nil`: 골프장명 옆에 courseType 배지 표시 (예: "CC", "GC")
 
 **토큰 / 접근성 메모**:
 - `--surface`, `--elevation-1`, `--radius-sm`
@@ -372,19 +378,20 @@ enum BannerLevel {
 
 **플랫폼**: iOS (코스 카드 하위)
 
-**용도**: F3 GPS 홀 자동 감지 가능 여부 표시. 524개 `low` (클럽하우스만) / 14개 `high` (18홀 완비) 분기. (CLAUDE.md §PROJECT, spec_3.md F3)
+**용도**: F3 GPS 골프장+서브코스 자동 감지 가능 여부 표시. 한국 골프장 DB v3 (1,163곳) 기준: complete 3곳 (전체의 0.26%) / partial 12곳 / minimal 9곳 / low 1139곳. (CLAUDE.md §PROJECT, spec_3.md F3)
 
 **props**:
 ```swift
 struct DataQualityBadge: View {
-    let quality: DataQuality     // .low / .high
+    let quality: DataQuality     // .complete / .partial / .minimal / .low / .unknown
 }
 
-enum DataQuality {
-    case low      // 524개 코스: 클럽하우스 좌표만
-    case medium   // 8개 코스: 일부 홀 좌표 누락 — golf-db-pack 분류 시 결정 (546 - 524 - 14 = 8)
-    case high     // 14개 코스: 18홀 좌표 완비
-    case unknown  // 분류 미정 — 안전 fallback
+enum DataQuality: String, Codable {
+    case complete  // 3곳: 18홀 완전 매핑 — GPS 코스 감지 활성
+    case partial   // 12곳: 9홀 이상 매핑 — 수동 홀 진행
+    case minimal   // 9곳: 1~8홀 매핑 — 수동 홀 진행
+    case low       // 1139곳: 클럽하우스 좌표만 — 수동 홀 진행
+    case unknown   // 분류 미정 — 안전 fallback
 }
 ```
 
@@ -394,10 +401,43 @@ enum DataQuality {
 
 | 변형 | 코스 수 | 표시 텍스트 | 색상 |
 |------|--------|------------|------|
-| `.low` | 524개 | "GPS 홀 자동 감지 미지원 — 수동 스와이프" | `--text-secondary` |
-| `.high` | 14개 | "GPS 홀 자동 감지 활성" | `--green-primary` |
+| `.complete` | 3곳 | "GPS 코스 감지 활성" | `--green-primary` |
+| `.partial` | 12곳 | "수동 홀 진행" | `--text-secondary` |
+| `.minimal` | 9곳 | "수동 홀 진행" | `--text-secondary` |
+| `.low` | 1139곳 | "수동 홀 진행" | `--text-secondary` |
+| `.unknown` | — | "수동 홀 진행" | `--text-secondary` |
 
-**토큰**: `--text-caption` / `.low` `--text-secondary` / `.high` `--green-primary`
+**토큰**: `--text-caption` / `.complete` `--green-primary` / 나머지 `--text-secondary`
+
+---
+
+### SubCourseSelector
+
+**플랫폼**: iOS
+
+**용도**: 27/36홀 골프장(holesCount > 18)에서 서브코스 라벨 (동/서/남/북 또는 전반/후반) 선택. 라운드 시작 화면에서 표시. (spec_3.md §F3, 21-DATA_MODEL §5)
+
+**props**:
+```swift
+struct SubCourseSelector: View {
+    let subCourses: [SubCourse]        // 선택 가능한 서브코스 목록
+    @Binding var selectedIndex: Int    // 선택된 서브코스 인덱스
+}
+```
+
+**상태**:
+- `idle`: 선택 대기 중 — 서브코스 버튼 그룹 표시
+- `disabled`: subCourses 비어있거나 nil — 컴포넌트 숨김 또는 비활성
+
+**변형**:
+- `2서브코스`: 동/서 또는 전반/후반 — 가로 2버튼
+- `3서브코스`: 동/서/남 등 — 가로 3버튼 또는 세그먼트
+- `4서브코스`: 동/서/남/북 — 가로 4버튼 또는 2×2 그리드
+
+**토큰 / 접근성 메모**:
+- `--surface-elevated`, `--green-accent` (선택된 버튼), `--radius-sm`
+- 미선택: `--text-secondary` / 선택됨: `--text-primary` + `--green-primary` 테두리
+- VoiceOver: "{서브코스명} 선택됨" / "두 번 탭하여 {서브코스명} 선택"
 
 ---
 

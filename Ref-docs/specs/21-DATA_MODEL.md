@@ -64,7 +64,7 @@
 | date | Date | 아니오 | spec_3.md:492 | 라운드 날짜 |
 | courseId | String | 아니오 | spec_3.md:493 | GolfCourse.id 외래키 참조 |
 | courseName | String | 아니오 | spec_3.md:494 | 코스 표시명 (비정규화 복사) |
-| courseSubName | String | 예 | spec_3.md:495 | 코스 부제 (예: "동코스") |
+| courseSubName | String | 예 | spec_3.md:495 | 수동 입력 또는 GPS 서브코스 감지 결과 (예: "동코스"). SubCourseSelector에서 선택한 SubCourse.name 저장. |
 | players | [Player] | 아니오 | spec_3.md:496 | 동반자 목록 |
 | holes | [HoleScore] | 아니오 | spec_3.md:497 | 홀별 점수 |
 | photos | [RoundPhoto] | 아니오 | spec_3.md:498 | 첨부 사진 |
@@ -155,31 +155,64 @@ spec_3.md §6에 `@Relationship` 어노테이션 정의 없음 (spec 미정의).
 final class GolfCourse {
     var id: String
     var name: String
-    var subName: String?
     var region: String
     var clubhouseLat: Double
     var clubhouseLng: Double
-    var holes: [HoleInfo]
+    var holesCount: Int?          // 총 홀 수 (nil: 638곳은 미기재 → 라운드 시작 시 사용자 입력)
+    var courseType: String?       // "CC", "GC" 등
+    var phone: String?            // 전화번호 (카카오 enrichment)
+    var kakaoPlaceUrl: String?    // 카카오 장소 URL
+    var subCourses: [SubCourse]?  // 서브코스 목록 (후속 데이터 보강 필요)
+    var holes: [HoleInfo]         // 홀별 정보 (complete/partial/minimal 코스에만 존재)
+    var dataQuality: DataQuality  // complete / partial / minimal / low / unknown
 }
 ```
 
 | 필드 | 타입 | Optional | 출처 |
 |------|------|----------|------|
-| id | String | 아니오 | spec_3.md:543 |
-| name | String | 아니오 | spec_3.md:544 |
-| subName | String | 예 | spec_3.md:545 |
-| region | String | 아니오 | spec_3.md:546 |
-| clubhouseLat | Double | 아니오 | spec_3.md:547 |
-| clubhouseLng | Double | 아니오 | spec_3.md:548 |
-| holes | [HoleInfo] | 아니오 | spec_3.md:549 |
+| id | String | 아니오 | spec_3.md §6 |
+| name | String | 아니오 | spec_3.md §6 |
+| region | String | 아니오 | spec_3.md §6 |
+| clubhouseLat | Double | 아니오 | spec_3.md §6 |
+| clubhouseLng | Double | 아니오 | spec_3.md §6 |
+| holesCount | Int | 예 | v3 신규 — 공공데이터/카카오 enrichment |
+| courseType | String | 예 | v3 신규 — 공공데이터 |
+| phone | String | 예 | v3 신규 — 카카오 enrichment |
+| kakaoPlaceUrl | String | 예 | v3 신규 — 카카오 enrichment |
+| subCourses | [SubCourse] | 예 | v3 신규 — 후속 데이터 보강 필요 |
+| holes | [HoleInfo] | 아니오 | spec_3.md §6 |
+| dataQuality | DataQuality | 아니오 | v3 재정의 |
+
+### 신규 값 타입: SubCourse
+
+```swift
+/// 서브코스 값 타입 (동/서/남/북 또는 전반/후반 라벨)
+struct SubCourse: Codable {
+    var name: String          // 서브코스 라벨 — 서브코스 라벨 (동/서/남/북 또는 전반/후반)
+    var holes: [HoleInfo]     // 해당 서브코스의 홀 정보 (v3에서는 비어있음, 후속 보강 예정)
+}
+```
 
 ### 번들 JSON 방식
 
-`Ref-docs/golf-db-pack/` 에 정의된 번들 JSON (`courses.json`) 은 546개 한국 골프장 데이터를 앱 번들에 포함하는 방식이다. 스키마 상세는 [40-COURSE_DB_SCHEMA.md](../golf-db-pack/40-COURSE_DB_SCHEMA.md) 참조. 데이터 소스는 OpenStreetMap (ODbL 1.0) 이며, 앱 내 설정 → 정보에 라이선스 표기 필수 (CLAUDE.md §PROJECT).
+`Ref-docs/golf-db-pack/` 에 정의된 번들 JSON (`courses.json`) 은 한국 골프장 DB v3 (1,163곳, 2026-05-12 빌드) 데이터를 앱 번들에 포함하는 방식이다. 스키마 상세는 [40-COURSE_DB_SCHEMA.md](../golf-db-pack/40-COURSE_DB_SCHEMA.md) 참조. 데이터 소스는 OpenStreetMap (ODbL 1.0) + 공공데이터 + 카카오 enrichment이며, 앱 내 설정 → 정보에 라이선스 표기 필수 (CLAUDE.md §PROJECT).
 
-- 546개 코스 중 524개는 `dataQuality: low` (클럽하우스 좌표만 보유)
-- GPS 홀 자동 감지(F3)는 홀별 좌표가 있는 14개 코스에서만 동작
+- 1,163곳 중 1,139곳은 `dataQuality: low` (클럽하우스 좌표만 보유)
+- complete 3곳 (전체의 0.26%) / partial 12곳 / minimal 9곳
+- F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행)
 - `dataQuality` 값 기반 분기 처리 필수 (CLAUDE.md §PROJECT)
+
+### DataQuality enum (v3 재정의)
+
+```swift
+enum DataQuality: String, Codable {
+    case complete  // complete 3곳 (전체의 0.26%): 18홀 완전 매핑
+    case partial   // partial 12곳: 9홀 이상 매핑
+    case minimal   // minimal 9곳: 1~8홀 매핑
+    case low       // low 1139곳: 홀 정보 없음 — 골프장+서브코스 GPS 감지만 동작
+    case unknown   // 분류 미정 (안전 fallback)
+}
+```
 
 ### 두 정의의 병존
 
