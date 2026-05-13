@@ -21,6 +21,10 @@ secrets/
 .claude/.messenger_enabled
 .claude/scheduled_tasks.lock
 
+# macOS Finder
+.DS_Store
+**/.DS_Store
+
 # Xcode generated
 *.xcworkspace/
 *.xcodeproj/
