@@ -1,5 +1,7 @@
 # 41 - 한국 골프장 DB 수집 파이프라인
 
+> **관련 문서**: [../specs/01-SPEC.md](../specs/01-SPEC.md) · [../specs/21-DATA_MODEL.md](../specs/21-DATA_MODEL.md) · [40-COURSE_DB_SCHEMA.md](40-COURSE_DB_SCHEMA.md) · [README.md](README.md) · [../README.md](../README.md)
+
 > **목적**: 한국 골프장 데이터를 수집·통합·갱신하는 전 과정 문서  
 > **재현 가능성**: 이 문서대로 실행하면 동일한 `courses_seed_v3.json` 재생성 가능  
 > **마지막 빌드**: 2026-05-12 (v3, 965곳 — 좌표 중복 통합 후)

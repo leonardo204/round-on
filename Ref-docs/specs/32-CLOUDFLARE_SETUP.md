@@ -1,8 +1,10 @@
 # 32 — Cloudflare 인프라 셋업 (Cloudflare Setup)
 
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [30-API_SPEC](30-API_SPEC.md) · [31-VIEWER_HTML](31-VIEWER_HTML.md) · [33-SECURITY](33-SECURITY.md) · [21-DATA_MODEL](21-DATA_MODEL.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §3.2 (spec_3.md:244-258), §3.4 (spec_3.md:274-284)
+> **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §3.2 (01-SPEC.md:244-258), §3.4 (01-SPEC.md:274-284)
 > **관련 문서**: `30-API_SPEC.md`, `31-VIEWER_HTML.md`, `33-SECURITY.md`, `21-DATA_MODEL.md`, `50-PRIVACY_POLICY.md`
 
 ---
@@ -41,7 +43,7 @@
 
 ## 2. 아키텍처 개요
 
-라운드온 Cloudflare 인프라 구성 요소와 데이터 흐름 (spec_3.md §3.2):
+라운드온 Cloudflare 인프라 구성 요소와 데이터 흐름 (01-SPEC.md §3.2):
 
 ```
 [iPhone 앱] ──── HTTPS POST/PUT ──► golf.zerolive.co.kr
@@ -64,7 +66,7 @@
                               사진: R2 직접 응답
 ```
 
-**무료 티어 기준** (spec_3.md:254): KV 100k reads/day · 1k writes/day, R2 10GB + 1M class A/월, Workers 100k req/day.
+**무료 티어 기준** (01-SPEC.md:254): KV 100k reads/day · 1k writes/day, R2 10GB + 1M class A/월, Workers 100k req/day.
 
 ---
 
@@ -113,7 +115,7 @@ wrangler kv:namespace create roundon-session
 
 **키 스키마**: `{shortId}/{photoId}.jpg` (photoId = 앱 측 UUID, 21-DATA_MODEL §3 `RoundPhoto.id`)
 
-**생성 및 Lifecycle Rule** (21-DATA_MODEL §8, spec_3.md:250):
+**생성 및 Lifecycle Rule** (21-DATA_MODEL §8, 01-SPEC.md:250):
 
 ```bash
 wrangler r2 bucket create roundon-photos
@@ -207,7 +209,7 @@ export interface Env {
 
 ## 6. DNS 및 라우트 설정
 
-`golf.zerolive.co.kr` Worker 라우트 설정 절차 (CLAUDE.md §PROJECT, spec_3.md:252).
+`golf.zerolive.co.kr` Worker 라우트 설정 절차 (CLAUDE.md §PROJECT, 01-SPEC.md:252).
 
 **CNAME 레코드** (Cloudflare 대시보드 → DNS → Add Record):
 
@@ -234,7 +236,7 @@ wrangler route list --env production
 | 항목 | 권장값 |
 |------|-------|
 | SSL/TLS 모드 | Full (strict) |
-| Always Use HTTPS | ON (spec_3.md:281) |
+| Always Use HTTPS | ON (01-SPEC.md:281) |
 | HSTS | 활성화 권장 (§8 HSTS 헤더와 이중 적용) |
 | Minimum TLS | 1.2 이상 |
 

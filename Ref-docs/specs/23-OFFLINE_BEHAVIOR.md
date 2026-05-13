@@ -1,8 +1,10 @@
 # 23 — 오프라인 동작 (Offline Behavior)
 
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [20-ARCHITECTURE](20-ARCHITECTURE.md) · [21-DATA_MODEL](21-DATA_MODEL.md) · [22-STATE_MANAGEMENT](22-STATE_MANAGEMENT.md) · [30-API_SPEC](30-API_SPEC.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §F6 (107-109), §F7 (111-114), §F9 (121-129), §3.4 (277-284), §9 (655-672)
+> **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §F6 (107-109), §F7 (111-114), §F9 (121-129), §3.4 (277-284), §9 (655-672)
 > **관련 문서**: `20-ARCHITECTURE.md`, `21-DATA_MODEL.md`, `22-STATE_MANAGEMENT.md`, `30-API_SPEC.md`, `13-HAPTICS_AND_MOTION.md`, `53-PERMISSIONS.md`
 
 ---
@@ -31,7 +33,7 @@ NetworkMonitor 상태 감지, PendingOperation 오프라인 큐, CloudKit 복구
 
 ## 2. 네트워크 상태 모니터링
 
-`NWPathMonitor`를 래핑한 actor `NetworkMonitor.shared` 가 앱 전역 네트워크 상태를 단일 소스로 관리한다. (spec_3.md:111-114 F7 로컬 우선 원칙)
+`NWPathMonitor`를 래핑한 actor `NetworkMonitor.shared` 가 앱 전역 네트워크 상태를 단일 소스로 관리한다. (01-SPEC.md:111-114 F7 로컬 우선 원칙)
 
 ### 네트워크 상태 enum
 
@@ -119,7 +121,7 @@ enum OperationType: String, Codable {
 
 ## 4. CloudKit 복구 시 sync 전략
 
-22-STATE §6.2 충돌 해결 정책을 위임받아 구현 상세를 명세한다. iOS 17 SwiftData + CloudKit 자동 sync 전제 (spec_3.md:111-114 F7).
+22-STATE §6.2 충돌 해결 정책을 위임받아 구현 상세를 명세한다. iOS 17 SwiftData + CloudKit 자동 sync 전제 (01-SPEC.md:111-114 F7).
 
 ### 시나리오 A: 음영 지역 단방향 편집 후 복귀
 
@@ -172,7 +174,7 @@ iPhone (오프라인) → SwiftData(local write) → CloudKit push 시도
 
 ### F6 cold start 재개 시점
 
-앱 재시작 후 라운드 재개 시 충돌이 있으면 **LWW 자동 적용** (spec_3.md:108-109). 사용자를 차단하지 않는다. (22-STATE §6.2 재개 시점 행)
+앱 재시작 후 라운드 재개 시 충돌이 있으면 **LWW 자동 적용** (01-SPEC.md:108-109). 사용자를 차단하지 않는다. (22-STATE §6.2 재개 시점 행)
 
 ---
 
@@ -312,16 +314,16 @@ Watch 입력이 WC `sendMessage` 실패 → `transferUserInfo` 큐잉 (22-STATE 
 
 | 항목 | 현황 | 본 문서 결정 또는 보류 |
 |------|------|----------------------|
-| PendingOperation CloudKit sync 여부 | spec_3.md 미정의 | **로컬 전용** — 디바이스별 큐 분리, 중복 실행 방지 |
-| 오프라인 큐 최대 크기 | spec_3.md 미정의 | **500건 권장** — 초과 시 오래된 uploadPhoto부터 폐기 |
-| BGAppRefreshTask 실행 간격 | spec_3.md 미정의 | **6시간 권장** (iOS 정책상 best-effort, 실행 보장 없음) |
-| D-1 만료 알림 발송 여부 | spec_3.md 미정의 | **보류** — UX 결정 + 53-PERMISSIONS §6 알림 권한 확보 후 진행 |
-| 충돌 모달 컴포넌트 디자인 | spec_3.md 미정의 | **11-COMPONENTS 후속 보완 TODO** |
-| `.offlineAirplane` vs `.offlineCellularOff` 판별 로직 | spec_3.md 미정의 | 구현 단계에서 NWPath 인터페이스 분석으로 확정 |
+| PendingOperation CloudKit sync 여부 | 01-SPEC.md 미정의 | **로컬 전용** — 디바이스별 큐 분리, 중복 실행 방지 |
+| 오프라인 큐 최대 크기 | 01-SPEC.md 미정의 | **500건 권장** — 초과 시 오래된 uploadPhoto부터 폐기 |
+| BGAppRefreshTask 실행 간격 | 01-SPEC.md 미정의 | **6시간 권장** (iOS 정책상 best-effort, 실행 보장 없음) |
+| D-1 만료 알림 발송 여부 | 01-SPEC.md 미정의 | **보류** — UX 결정 + 53-PERMISSIONS §6 알림 권한 확보 후 진행 |
+| 충돌 모달 컴포넌트 디자인 | 01-SPEC.md 미정의 | **11-COMPONENTS 후속 보완 TODO** |
+| `.offlineAirplane` vs `.offlineCellularOff` 판별 로직 | 01-SPEC.md 미정의 | 구현 단계에서 NWPath 인터페이스 분석으로 확정 |
 
 ### 구현 제안 (spec 외, 비규범)
 
-본 섹션은 spec_3.md에 없는 구현 권장안이다. 실제 결정은 구현 단계에서 확정.
+본 섹션은 01-SPEC.md에 없는 구현 권장안이다. 실제 결정은 구현 단계에서 확정.
 
 **OperationQueueProcessor drain 로직 핵심 패턴:**
 

@@ -1,9 +1,13 @@
 # 31 — Viewer HTML 구조 및 사진 저장 명세
 
+> **상태**: DRAFT · 브라우저 호환성 매트릭스(62-COMPAT_MATRIX.md) 미작성 — 현재 본 문서 §9에 임시 포함
+
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [10-DESIGN_SYSTEM](10-DESIGN_SYSTEM.md) · [30-API_SPEC](30-API_SPEC.md) · [32-CLOUDFLARE_SETUP](32-CLOUDFLARE_SETUP.md) · [33-SECURITY](33-SECURITY.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §F9 (spec_3.md:121-143), §F10 (spec_3.md:144-220), §3.1 (spec_3.md:224-242)
-> **관련 문서**: `30-API_SPEC.md`, `10-DESIGN_SYSTEM.md`, `32-CLOUDFLARE_SETUP.md` (작성 예정), `33-SECURITY.md`, `62-COMPAT_MATRIX.md` (작성 예정)
+> **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §F9 (01-SPEC.md:121-143), §F10 (01-SPEC.md:144-220), §3.1 (01-SPEC.md:224-242)
+> **관련 문서**: `30-API_SPEC.md`, `10-DESIGN_SYSTEM.md`, `32-CLOUDFLARE_SETUP.md`, `33-SECURITY.md`, `62-COMPAT_MATRIX.md` (미작성 — §9 임시 포함)
 
 ---
 
@@ -43,7 +47,7 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <!-- viewport-fit=cover: safe-area-inset 요구 충족 (spec_3.md:149) -->
+  <!-- viewport-fit=cover: safe-area-inset 요구 충족 (01-SPEC.md:149) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#7FB069" />
   <style>
@@ -59,13 +63,13 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 </html>
 ```
 
-`user-scalable` 제한을 두지 않으며 핀치 줌을 허용한다. (spec_3.md:161)
+`user-scalable` 제한을 두지 않으며 핀치 줌을 허용한다. (01-SPEC.md:161)
 
 ---
 
 ## 3. 헤더 / 푸터 / 정보 영역
 
-**헤더** (200 정상 + PIN 잠금에 표시): 골프장명(`courseName`, 미매핑 시 "코스 정보 없음"), 라운드 날짜(`roundDate`), 플레이어 이름(`nameVisibility == "real"` → 실명 / `"anonymous"` → A/B/C/D). (spec_3.md:131)
+**헤더** (200 정상 + PIN 잠금에 표시): 골프장명(`courseName`, 미매핑 시 "코스 정보 없음"), 라운드 날짜(`roundDate`), 플레이어 이름(`nameVisibility == "real"` → 실명 / `"anonymous"` → A/B/C/D). (01-SPEC.md:131)
 
 ```html
 <header class="viewer-header">
@@ -74,7 +78,7 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 </header>
 ```
 
-**푸터** (200 정상만): 만료 시각(ISO 8601 UTC) + OSM ODbL 표기. OSM ODbL은 viewer에도 반드시 포함한다. (spec_3.md:126, CLAUDE.md §PROJECT, golf-db-pack/README.md:94-100)
+**푸터** (200 정상만): 만료 시각(ISO 8601 UTC) + OSM ODbL 표기. OSM ODbL은 viewer에도 반드시 포함한다. (01-SPEC.md:126, CLAUDE.md §PROJECT, golf-db-pack/README.md:94-100)
 
 ```html
 <footer class="viewer-footer">
@@ -83,7 +87,7 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 </footer>
 ```
 
-**데이터 품질 배지**: `dataQuality: "low"` 코스는 헤더 하단에 안내를 표시한다. 546개 중 524개가 low 품질(클럽하우스 위치만)이므로 분기 처리가 필수다. F3 GPS 홀 자동 감지는 14개 코스에서만 동작한다. (CLAUDE.md §PROJECT)
+**데이터 품질 배지**: `dataQuality: "low"` 코스는 헤더 하단에 안내를 표시한다. 965곳 중 941곳이 low 품질(클럽하우스 위치만)이므로 분기 처리가 필수다. F3 GPS 자동 감지는 골프장+서브코스 단위만 동작하며 홀 단위 자동 감지는 미제공이다. (CLAUDE.md §PROJECT)
 
 ```html
 <div class="data-quality-badge" data-quality="low">
@@ -95,15 +99,15 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 
 ## 4. 스코어카드 모바일 표시
 
-(spec_3.md §10.4)
+(01-SPEC.md §10.4)
 
 **디폴트: 9홀 2단 (OUT/IN)** — 단일 접근으로 헌신한다.
 
-9홀 2단 디폴트를 선택한 근거: 모바일 세로 화면에서 18홀 가로 스크롤은 (1) 합계 행 sticky 처리가 복잡하고 scroll-end 이벤트 없이 행 고정이 깨질 수 있으며, (2) 9홀 단위로 분리하면 한 화면에 전체 홀이 들어와 좌우 스크롤 없이 읽을 수 있다. spec_3.md:206은 "가로 스크롤 허용 또는 9홀씩 2단"으로 양자를 허용하지만, 본 문서는 모바일 가독성과 sticky 합계 행 호환성을 근거로 9홀 2단을 디폴트로 결정한다. 18홀 가로 스크롤 옵션은 §9 구현 제안으로 강등한다.
+9홀 2단 디폴트를 선택한 근거: 모바일 세로 화면에서 18홀 가로 스크롤은 (1) 합계 행 sticky 처리가 복잡하고 scroll-end 이벤트 없이 행 고정이 깨질 수 있으며, (2) 9홀 단위로 분리하면 한 화면에 전체 홀이 들어와 좌우 스크롤 없이 읽을 수 있다. 01-SPEC.md:206은 "가로 스크롤 허용 또는 9홀씩 2단"으로 양자를 허용하지만, 본 문서는 모바일 가독성과 sticky 합계 행 호환성을 근거로 9홀 2단을 디폴트로 결정한다. 18홀 가로 스크롤 옵션은 §9 구현 제안으로 강등한다.
 
 ### 점수 셀 색상 클래스 매트릭스
 
-(spec_3.md:209-213)
+(01-SPEC.md:209-213)
 
 | par 대비 | 클래스 | 시각 표현 |
 |---------|--------|---------|
@@ -113,7 +117,7 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 | +1 | `.bogey` | 옅은 회색 사각형 |
 | +2 이상 | `.double-plus` | 진한 회색 사각형 |
 
-터치 타깃 최소 44×44pt (spec_3.md:150, 10-DESIGN_SYSTEM §4).
+터치 타깃 최소 44×44pt (01-SPEC.md:150, 10-DESIGN_SYSTEM §4).
 
 ### HTML 예시
 
@@ -137,7 +141,7 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 
 ## 5. 사진 갤러리 — 썸네일 그리드
 
-(spec_3.md:197, §F9)
+(01-SPEC.md:197, §F9)
 
 3열 그리드 썸네일, 탭하면 §7 라이트박스가 열린다. 빈 갤러리 fallback: "이 라운드에 첨부된 사진이 없습니다." 사진 URL은 R2 직접 URL이 아닌 Worker 경유(`/{shortId}/photo/{photoId}`)를 사용한다. (30-API_SPEC §6.2) ZIP 다운로드는 `GET /:shortId/photos.zip`. (30-API_SPEC §6.4)
 
@@ -167,7 +171,7 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 
 ## 6. 사진 long-press 저장 — 핵심 명세
 
-(spec_3.md §10.2)
+(01-SPEC.md §10.2)
 
 > **Responsibility Boundary**
 >
@@ -177,12 +181,12 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 
 ### 규범적 MUST
 
-1. **`<img>` 직접 표시 필수** — `background-image` CSS 사용 금지. iOS Safari "사진에 저장" 컨텍스트 메뉴는 `<img>` 태그에서만 동작한다. (spec_3.md:159)
-2. **`touch-action: pinch-zoom` 인라인 설정** — 핀치 줌 활성화. (spec_3.md:161)
-3. **명시적 다운로드 버튼 제공** — `download` 속성, 파일명 패턴 `golf-YYYY-MM-DD-h{N}.jpg`. (spec_3.md:168-170)
-4. **사진 URL은 Worker 경유** — R2 직접 URL 노출 금지. (spec_3.md:182-185)
+1. **`<img>` 직접 표시 필수** — `background-image` CSS 사용 금지. iOS Safari "사진에 저장" 컨텍스트 메뉴는 `<img>` 태그에서만 동작한다. (01-SPEC.md:159)
+2. **`touch-action: pinch-zoom` 인라인 설정** — 핀치 줌 활성화. (01-SPEC.md:161)
+3. **명시적 다운로드 버튼 제공** — `download` 속성, 파일명 패턴 `golf-YYYY-MM-DD-h{N}.jpg`. (01-SPEC.md:168-170)
+4. **사진 URL은 Worker 경유** — R2 직접 URL 노출 금지. (01-SPEC.md:182-185)
 
-### HTML 코드 (spec_3.md:174-186 기반)
+### HTML 코드 (01-SPEC.md:174-186 기반)
 
 ```html
 <!-- 갤러리 사진: iOS long-press → "사진에 저장" 가능 -->
@@ -206,8 +210,8 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 
 | 환경 | long-press → 컨텍스트 메뉴 | "사진에 저장" 메뉴 | 다운로드 버튼 | 비고 |
 |------|--------------------------|------------------|------------|------|
-| iOS Safari | 표준 동작 | "사진에 저장" 표시 | `Content-Disposition` 헤더 동작 (30-API §6.3) | spec_3.md:157-160 |
-| Android Chrome | 표준 동작 | "이미지 다운로드" 표시 | 다운로드 폴더 자동 저장 | spec_3.md:163-165 |
+| iOS Safari | 표준 동작 | "사진에 저장" 표시 | `Content-Disposition` 헤더 동작 (30-API §6.3) | 01-SPEC.md:157-160 |
+| Android Chrome | 표준 동작 | "이미지 다운로드" 표시 | 다운로드 폴더 자동 저장 | 01-SPEC.md:163-165 |
 | 기타 (카톡 인앱, Samsung Internet, Firefox iOS 등) | [SPEC-UNDEFINED] | [SPEC-UNDEFINED] | 다운로드 버튼 fallback | spec §10.2 미명세 — `62-COMPAT_MATRIX.md` (작성 예정) |
 
 **Fallback 안전 기준**: long-press 동작이 [SPEC-UNDEFINED]인 환경에서도 §5 갤러리·§7 라이트박스의 **명시적 다운로드 버튼이 항상 표시**되므로, 사용자는 모든 환경에서 사진을 저장할 수 있다. 62 카탈로그가 부재해도 본 마크업만으로 회복 가능한 동작이 보장된다.
@@ -216,11 +220,11 @@ viewer 응답은 shortId 상태에 따라 4가지로 분기한다. 트리거 조
 
 ## 7. 라이트박스 (풀스크린 뷰어)
 
-(spec_3.md §10.3)
+(01-SPEC.md §10.3)
 
-spec_3.md:203이 "순수 HTML + 최소 JS (10KB 미만)"를 명세 범위에 포함한다. 외부 라이브러리를 사용하지 않는다.
+01-SPEC.md:203이 "순수 HTML + 최소 JS (10KB 미만)"를 명세 범위에 포함한다. 외부 라이브러리를 사용하지 않는다.
 
-기능 요건: 썸네일 탭 → 풀스크린 오픈, 좌/우 스와이프 이동, 핀치 줌, 우상단 X 닫기, 하단 "사진 저장"/"다운로드" 버튼. 풀스크린에서도 `<img>` 직접 표시를 유지하여 long-press 저장을 보존한다. (spec_3.md:159, 198-202)
+기능 요건: 썸네일 탭 → 풀스크린 오픈, 좌/우 스와이프 이동, 핀치 줌, 우상단 X 닫기, 하단 "사진 저장"/"다운로드" 버튼. 풀스크린에서도 `<img>` 직접 표시를 유지하여 long-press 저장을 보존한다. (01-SPEC.md:159, 198-202)
 
 **상호작용 규약**:
 - 왼쪽 스와이프 = 다음 사진, 오른쪽 스와이프 = 이전 사진 (한국어 가로쓰기 관습)
@@ -239,7 +243,7 @@ spec_3.md:203이 "순수 HTML + 최소 JS (10KB 미만)"를 명세 범위에 포
           style="position:absolute;top:1rem;right:1rem;background:none;
                  border:none;color:#fff;font-size:1.5rem;
                  min-width:44px;min-height:44px;">&#x2715;</button>
-  <!-- display:block 필수 — background-image 미사용 (spec_3.md:159) -->
+  <!-- display:block 필수 — background-image 미사용 (01-SPEC.md:159) -->
   <!-- alt는 open()에서 동적 채움. aria-live로 SR 갱신 -->
   <img id="lb-img" alt="라운드 사진" aria-live="polite"
        style="max-width:100%;max-height:80vh;object-fit:contain;
@@ -300,7 +304,7 @@ spec_3.md:203이 "순수 HTML + 최소 JS (10KB 미만)"를 명세 범위에 포
 
 ## 8. PIN 잠금 화면
 
-(spec_3.md:239-240, 33-SECURITY §5 정식 확정)
+(01-SPEC.md:239-240, 33-SECURITY §5 정식 확정)
 
 `accessControl == "pin"` viewer 최초 접근 시 스코어카드 대신 이 화면을 렌더링한다.
 
@@ -368,15 +372,15 @@ document.getElementById('pin-form').addEventListener('submit', function (e) {
 
 ## 9. 구현 제안 (spec 외)
 
-본 섹션은 `spec_3.md`에 없는 구현 권장안이며, 실제 결정은 구현 단계 또는 후속 문서에서 확정한다. 본 문서가 명세화하지 않는다.
+본 섹션은 `01-SPEC.md`에 없는 구현 권장안이며, 실제 결정은 구현 단계 또는 후속 문서에서 확정한다. 본 문서가 명세화하지 않는다.
 
 ### 18홀 가로 스크롤 옵션
 
-§4 디폴트(9홀 2단)의 대안이다. (spec_3.md:206) URL 파라미터(`?layout=wide`) 또는 뷰어 내 토글로 18열 단일 테이블 + `overflow-x: auto` 가로 스크롤을 선택할 수 있도록 검토한다. 이 경우 sticky는 `position: sticky; left: 0`으로 홀 번호 열을 고정하는 방식을 사용한다.
+§4 디폴트(9홀 2단)의 대안이다. (01-SPEC.md:206) URL 파라미터(`?layout=wide`) 또는 뷰어 내 토글로 18열 단일 테이블 + `overflow-x: auto` 가로 스크롤을 선택할 수 있도록 검토한다. 이 경우 sticky는 `position: sticky; left: 0`으로 홀 번호 열을 고정하는 방식을 사용한다.
 
 ### PWA `manifest.json` (Optional)
 
-(spec_3.md:215-220) 안드로이드 "홈 화면에 추가" 지원. Service Worker 오프라인 캐싱은 만료성 콘텐츠이므로 구현하지 않는다. `<head>`에 `<link rel="manifest" href="/manifest.json" />`을 추가한다.
+(01-SPEC.md:215-220) 안드로이드 "홈 화면에 추가" 지원. Service Worker 오프라인 캐싱은 만료성 콘텐츠이므로 구현하지 않는다. `<head>`에 `<link rel="manifest" href="/manifest.json" />`을 추가한다.
 
 ```json
 { "name":"라운드온 Viewer", "short_name":"라운드온", "start_url":"/{shortId}",

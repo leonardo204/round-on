@@ -1,11 +1,13 @@
 # 14 — 접근성 (Accessibility)
 
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [10-DESIGN_SYSTEM](10-DESIGN_SYSTEM.md) · [11-COMPONENTS](11-COMPONENTS.md) · [12-SCREENS](12-SCREENS.md) · [13-HAPTICS_AND_MOTION](13-HAPTICS_AND_MOTION.md) · [전체 인덱스](README.md)
+
 | 항목 | 값 |
 |------|----|
 | 문서 번호 | 14 |
 | 상태 | 확정 (v1) |
 | 작성일 | 2026-05-12 |
-| 원본 출처 | spec_3.md §5.5 (spec_3.md:478-484) |
+| 원본 출처 | [01-SPEC.md](01-SPEC.md) §5.5 (line:478-484) |
 | 관련 문서 | 10-DESIGN_SYSTEM, 11-COMPONENTS, 12-SCREENS, 13-HAPTICS_AND_MOTION, 53-PERMISSIONS |
 
 ---
@@ -26,7 +28,7 @@
 
 ### WCAG 2.1 AA 준수 선언
 
-라운드온은 모든 화면에서 WCAG 2.1 AA를 준수한다. (spec_3.md:480)
+라운드온은 모든 화면에서 WCAG 2.1 AA를 준수한다. (01-SPEC.md:480)
 
 - 일반 텍스트: 최소 명도 대비 4.5:1
 - 큰 텍스트(18pt 이상 Regular / 14pt 이상 Bold): 최소 3.0:1
@@ -171,7 +173,7 @@ xSmall / Small / Medium / **Large(기본)** / xLarge / xxLarge / xxxLarge / Acce
 | **`--score-watch`** | **56pt (600)** | **고정 (no scale)** | 야외 가독성 우선, Dynamic Type 무시 |
 | **`--score-iphone`** | **44pt (600)** | **고정 (no scale)** | 야외 가독성 우선, Dynamic Type 무시 |
 
-점수 토큰 고정 근거: 야외 직사광선 환경에서 이미 시스템 기본 대비 충분히 크고, AccessibilityXXXL 적용 시 Watch 화면을 초과한다. (spec_3.md:482, 10-DESIGN_SYSTEM §3)
+점수 토큰 고정 근거: 야외 직사광선 환경에서 이미 시스템 기본 대비 충분히 크고, AccessibilityXXXL 적용 시 Watch 화면을 초과한다. (01-SPEC.md:482, 10-DESIGN_SYSTEM §3)
 
 ### 한글 줄바꿈
 
@@ -206,7 +208,7 @@ xSmall / Small / Medium / **Large(기본)** / xLarge / xxLarge / xxxLarge / Acce
 | `primary` on `surface-elevated` | `#7FB069` / `#FFFFFF` | 2.7:1 | ✗ | 큰 텍스트(≥18pt) 한정 허용 |
 | `border` on `surface` | `#E8EFE0` | 1.1:1 | ✗ | 비텍스트 1pt 구분선 — 텍스트 대비 기준 미적용 |
 
-**Primary 버튼 라벨 결정 (2026-05-12)**: `filled` 버튼 라벨 색상은 **`text-primary #1F2A1B`** 정식 채택 (10-DESIGN_SYSTEM §5.4 + 11-COMPONENTS §2 동기 패치 완료). 흰색 라벨은 2.9:1로 AA 미충족이므로 금지. (spec_3.md:480)
+**Primary 버튼 라벨 결정 (2026-05-12)**: `filled` 버튼 라벨 색상은 **`text-primary #1F2A1B`** 정식 채택 (10-DESIGN_SYSTEM §5.4 + 11-COMPONENTS §2 동기 패치 완료). 흰색 라벨은 2.9:1로 AA 미충족이므로 금지. (01-SPEC.md:480)
 
 ### Winter 팔레트 검증
 
@@ -221,7 +223,7 @@ xSmall / Small / Medium / **Large(기본)** / xLarge / xxLarge / xxxLarge / Acce
 
 **[SPEC-UNDEFINED]**: Summer(`#F0F7F1` surface) / Autumn(`#FAF7F0` surface) 팔레트는 `--text-secondary`, `--border` hex 미정의 상태. 10-DESIGN_SYSTEM §2 보완 후 본 §6 갱신 필요.
 
-**야외 강화**: 점수 숫자 `.semibold`(600) 이상 — `--score-watch`, `--score-iphone` 토큰이 이미 600 weight로 충족. (spec_3.md:482, 10-DESIGN_SYSTEM §3)
+**야외 강화**: 점수 숫자 `.semibold`(600) 이상 — `--score-watch`, `--score-iphone` 토큰이 이미 600 weight로 충족. (01-SPEC.md:482, 10-DESIGN_SYSTEM §3)
 
 ---
 

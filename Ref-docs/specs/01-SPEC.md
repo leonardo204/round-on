@@ -1,4 +1,6 @@
-# 🏌️ 라운드온 (Round-On) — 기능 명세서 (v4)
+# 01 — 기능 명세서 v4 (Spec)
+
+> **관련 문서**: [00-OVERVIEW](00-OVERVIEW.md) · [02-USER_FLOWS](02-USER_FLOWS.md) · [20-ARCHITECTURE](20-ARCHITECTURE.md) · [21-DATA_MODEL](21-DATA_MODEL.md) · [전체 인덱스](README.md)
 
 > **앱 이름**: **라운드온 (Round-On)** — 2026-05-11 확정
 > **목적**: iPhone + Apple Watch 기반의 간단한 골프 스코어 카운터 앱 개발  

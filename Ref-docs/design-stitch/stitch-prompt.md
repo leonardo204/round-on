@@ -2,7 +2,7 @@
 
 > **작성일**: 2026-05-12
 > **버전**: v2 (디자인 강도 보강)
-> **출처**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §10.2 (704-762), specs/ 시리즈 15종
+> **출처**: [기능 명세서 v4](../specs/01-SPEC.md) §10.2 (704-762), specs/ 시리즈 15종
 > **Stitch URL**: https://stitch.withgoogle.com/
 > **참고**: getdesign.md (모던 앱 디자인 트렌드 분석) — 2026-05-12 추가 반영
 
@@ -20,7 +20,7 @@
     magazine 레이아웃, asymmetric, 가운데 정렬 일러스트 제거
   - **§3.1 Watch 메인 재작성**: sports broadcast 톤, 다크 모드 디폴트
   - **§4.1 Viewer 메인 재작성**: editorial sharing, full-bleed photo
-- **v1 (2026-05-12)** — 초안 작성. spec_3.md §10.2 기반 18화면 프롬프트.
+- **v1 (2026-05-12)** — 초안 작성. 01-SPEC.md §10.2 기반 18화면 프롬프트.
 
 ---
 
@@ -842,7 +842,7 @@ viewer는 <img> 태그만 제공하면 됩니다."
 
 Mobile web viewer error states. Three frames side by side:
 
-Frame A — 410 Expired (manfest for spec_3.md:126 7-day TTL):
+Frame A — 410 Expired (manfest for 01-SPEC.md:126 7-day TTL):
 - Centered card with grass-leaf-faded illustration
 - Headline: "이 라운드는 만료되었습니다"
 - Sub: "공유 링크는 생성 후 7일 동안 유효합니다."

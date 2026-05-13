@@ -1,9 +1,11 @@
 # 33 — 보안 정책 (Security)
 
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [30-API_SPEC](30-API_SPEC.md) · [31-VIEWER_HTML](31-VIEWER_HTML.md) · [32-CLOUDFLARE_SETUP](32-CLOUDFLARE_SETUP.md) · [50-PRIVACY_POLICY](50-PRIVACY_POLICY.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §3.4 (spec_3.md:274-284), §9 (spec_3.md:655-672)
-> **관련 문서**: `30-API_SPEC.md`, `21-DATA_MODEL.md`, `31-VIEWER_HTML.md`, `32-CLOUDFLARE_SETUP.md` (작성 예정), `53-PERMISSIONS.md`
+> **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §3.4 (01-SPEC.md:274-284), §9 (01-SPEC.md:655-672)
+> **관련 문서**: `30-API_SPEC.md`, `21-DATA_MODEL.md`, `31-VIEWER_HTML.md`, `32-CLOUDFLARE_SETUP.md`, `53-PERMISSIONS.md`
 
 ---
 
@@ -41,7 +43,7 @@
 
 ### 2.1 포맷
 
-- 문자 집합: base62 (`a-z`, `A-Z`, `0-9`) 8자 (spec_3.md:276)
+- 문자 집합: base62 (`a-z`, `A-Z`, `0-9`) 8자 (01-SPEC.md:276)
 - 경우의 수: 62^8 = 약 218조 (218,340,105,584,896)
 
 ### 2.2 생성 알고리즘
@@ -81,7 +83,7 @@ Authorization: Bearer {editToken}
 ### 3.3 서버측 저장
 
 - **KV 키**: `share:{shortId}` 메타 객체 내 `editToken` 필드 (평문)
-- **TTL**: 7일 (21-DATA_MODEL §8, spec_3.md:669)
+- **TTL**: 7일 (21-DATA_MODEL §8, 01-SPEC.md:669)
 - editToken은 서버측 비밀이다. viewer HTML·사진 응답에 절대 노출하지 않는다.
 - `31-VIEWER_HTML.md`의 CSP가 editToken 노출을 방어한다.
 
@@ -104,7 +106,7 @@ Authorization: Bearer {editToken}
 
 | 항목 | 값 | 근거 |
 |------|-----|------|
-| 알고리즘 | bcrypt | spec_3.md:278 |
+| 알고리즘 | bcrypt | 01-SPEC.md:278 |
 | cost factor | **12** (사용자 확정) | Workers Unbound 환경 적합 |
 | 라이브러리 | `bcryptjs` (WASM 없는 pure-JS 구현) | Workers 환경 호환 |
 
@@ -144,7 +146,7 @@ Authorization: Bearer {editToken}
 
 ### 5.1 잠금 정책
 
-- 5회 오답 누적 시 1시간 잠금 (spec_3.md:278)
+- 5회 오답 누적 시 1시간 잠금 (01-SPEC.md:278)
 - KV 값: `{ "attempts": <int>, "firstAttemptAt": <unix_ts> }`
 - TTL: 3600초 (1시간). 잠금 해제는 TTL 만료로 자동 처리한다.
 
@@ -236,7 +238,7 @@ GET /:shortId
 
 | 엔드포인트 | 한도 | KV 키 패턴 | 출처 |
 |----------|------|-----------|------|
-| `POST /api/share` | 1분 5건 | `rl:share:{deviceToken}:{yyyyMMddHHmm}` | spec_3.md:280 |
+| `POST /api/share` | 1분 5건 | `rl:share:{deviceToken}:{yyyyMMddHHmm}` | 01-SPEC.md:280 |
 | `POST /api/share/{shortId}/photos` | 1분 30건 | `rl:photos:{deviceToken}:{yyyyMMddHHmm}` | 30-API §9.5 정식 확정 |
 | `POST /:shortId/verify-pin` | §5 PIN 잠금 정책에 흡수 | `pinlock:{shortId}:{ip}` | 본 문서 §5 |
 
@@ -310,7 +312,7 @@ Content-Type: application/json
 
 ### 8.1 HTTPS
 
-- HTTPS only: Cloudflare 자동 적용 (spec_3.md:281)
+- HTTPS only: Cloudflare 자동 적용 (01-SPEC.md:281)
 - HTTP 요청은 Cloudflare에서 자동으로 HTTPS로 리다이렉트된다.
 
 ### 8.2 HSTS
@@ -338,9 +340,9 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 | 데이터 | TTL | KV/R2 | 출처 |
 |--------|-----|--------|------|
-| viewer 메타 (shortId, PIN 해시 등) | 7일 | KV | spec_3.md:669, 21-DATA_MODEL §8 |
-| viewer 사진 | 7일 | R2 | spec_3.md:669 |
-| PIN 오답 잠금 카운터 | 1시간 | KV | spec_3.md:278 |
+| viewer 메타 (shortId, PIN 해시 등) | 7일 | KV | 01-SPEC.md:669, 21-DATA_MODEL §8 |
+| viewer 사진 | 7일 | R2 | 01-SPEC.md:669 |
+| PIN 오답 잠금 카운터 | 1시간 | KV | 01-SPEC.md:278 |
 | Rate limit 카운터 | 70초 | KV | 본 문서 §6 |
 | 세션 쿠키 | 15분 | 브라우저 | 본 문서 §5.4 |
 | Idempotency-Key | 24시간 | KV | 30-API §9.7 |
@@ -364,7 +366,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 ### 9.4 deviceToken 처리
 
-- 익명 UUID (spec_3.md:670)
+- 익명 UUID (01-SPEC.md:670)
 - Rate limit 카운터 키에만 사용
 - 외부 서비스 전송 금지. 서버 로그에 원본 기록 금지.
 
@@ -372,7 +374,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 ## 10. 책임 경계 + 구현 제안 (spec 외)
 
-본 §10 일부 항목은 spec_3.md에 없는 보강 권장안이며, 실제 결정은 구현 단계에서 확정한다. 본 문서가 명세화하지 않는다.
+본 §10 일부 항목은 01-SPEC.md에 없는 보강 권장안이며, 실제 결정은 구현 단계에서 확정한다. 본 문서가 명세화하지 않는다.
 
 ### 10.1 본 문서가 확정한 위임 결정 5건
 
@@ -399,7 +401,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 ### 10.3 구현 제안 (spec 외)
 
-아래 항목은 spec_3.md에 없는 보강 권장안이다.
+아래 항목은 01-SPEC.md에 없는 보강 권장안이다.
 
 **bcryptjs Workers 벤치마크**: cost 12 기준 실측 응답 시간을 Workers 환경에서 측정하여 p50/p95/p99를 기록한다. 300ms 고정 지연 정책(§4.3)의 적정성을 실측값으로 검증한다.
 

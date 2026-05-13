@@ -1,8 +1,10 @@
 # 11 — 컴포넌트 카탈로그 (Components)
 
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [10-DESIGN_SYSTEM](10-DESIGN_SYSTEM.md) · [12-SCREENS](12-SCREENS.md) · [14-ACCESSIBILITY](14-ACCESSIBILITY.md) · [22-STATE_MANAGEMENT](22-STATE_MANAGEMENT.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **출처**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §5.4, §7, §F4 / [디자인 시스템](10-DESIGN_SYSTEM.md) / [CLAUDE.md §PROJECT]
+> **출처**: [기능 명세서 v4](01-SPEC.md) §5.4, §7, §F4 / [디자인 시스템](10-DESIGN_SYSTEM.md) / [CLAUDE.md §PROJECT]
 
 ---
 
@@ -24,23 +26,23 @@
 
 | # | 컴포넌트 | 플랫폼 | 기능 / 출처 |
 |---|----------|--------|------------|
-| 1 | `CourseCard` | iOS | F1 자동 매칭 (spec_3.md:57-62) |
-| 2 | `PlayerChip` | 공통 | F2 동반자 입력 (spec_3.md:63-67) |
-| 3 | `ScoreCell` | iOS | F4 그리드 셀 (spec_3.md:103-105) |
-| 4 | `HoleProgress` | iOS | F4 홀 진행 표시 (spec_3.md:570) |
-| 5 | `ShotButton` | Watch | F4 타수 카운터 (spec_3.md:75-90) |
-| 6 | `PenaltyButton` | Watch | F4 벌타 입력 (spec_3.md:83-85) |
-| 7 | `PhotoGalleryGrid` | iOS | F9 사진 첨부 (spec_3.md:134-138) |
-| 8 | `ShareSheet` | iOS | F9 공유 옵션 (spec_3.md:130-142) |
+| 1 | `CourseCard` | iOS | F1 자동 매칭 (01-SPEC.md:57-62) |
+| 2 | `PlayerChip` | 공통 | F2 동반자 입력 (01-SPEC.md:63-67) |
+| 3 | `ScoreCell` | iOS | F4 그리드 셀 (01-SPEC.md:103-105) |
+| 4 | `HoleProgress` | iOS | F4 홀 진행 표시 (01-SPEC.md:570) |
+| 5 | `ShotButton` | Watch | F4 타수 카운터 (01-SPEC.md:75-90) |
+| 6 | `PenaltyButton` | Watch | F4 벌타 입력 (01-SPEC.md:83-85) |
+| 7 | `PhotoGalleryGrid` | iOS | F9 사진 첨부 (01-SPEC.md:134-138) |
+| 8 | `ShareSheet` | iOS | F9 공유 옵션 (01-SPEC.md:130-142) |
 | 9 | `BannerNotice` | 공통 | 시스템 안내 (20-ARCHITECTURE §7) |
 | 10 | `DataQualityBadge` | iOS | F1/F3 분기 (CLAUDE.md §PROJECT) |
-| 11 | `SubCourseSelector` | iOS | F3 서브코스 라벨 선택 (spec_3.md §F3, 21-DATA_MODEL §5) |
+| 11 | `SubCourseSelector` | iOS | F3 서브코스 라벨 선택 (01-SPEC.md §F3, 21-DATA_MODEL §5) |
 
 ---
 
 ## 2. 공통 규약
 
-모든 컴포넌트는 아래 패딩 토큰과 6단 구조 규약을 따른다. (spec_3.md §5.4)
+모든 컴포넌트는 아래 패딩 토큰과 6단 구조 규약을 따른다. (01-SPEC.md §5.4)
 
 ### 패딩 토큰
 
@@ -50,7 +52,7 @@
 | 버튼 수직 | 12pt | — (최소 44pt 터치 영역 충족) |
 | 그리드 셀 간격 | 8pt | `--space-xs` |
 
-**버튼 변형** (spec_3.md:473): `filled` Primary CTA / `tinted` Secondary / `plain` Tertiary
+**버튼 변형** (01-SPEC.md:473): `filled` Primary CTA / `tinted` Secondary / `plain` Tertiary
 
 **버튼 라벨 색상 (10-DESIGN_SYSTEM §5.4 위임 수신, 14-ACCESSIBILITY §6 AA 해소)**:
 - `filled` Primary: 배경 `--green-primary` + 라벨 **`--text-primary` `#1F2A1B`** (대비 10.4:1 AAA). 흰색 라벨 금지.
@@ -74,7 +76,7 @@
 
 ## 3. 그림자 단계 (Elevation)
 
-spec_3.md:469 "최소 1–2단계" 수신. Apple HIG / Material 3 Level 1·2 정합.
+01-SPEC.md:469 "최소 1–2단계" 수신. Apple HIG / Material 3 Level 1·2 정합.
 
 | 토큰 | 용도 | y-offset | blur | opacity | 출처 |
 |------|------|----------|------|---------|------|
@@ -89,7 +91,7 @@ spec_3.md:469 "최소 1–2단계" 수신. Apple HIG / Material 3 Level 1·2 정
 
 **플랫폼**: iOS
 
-**용도**: F1 자동 골프장 매칭 결과 표시. 수동 변경 진입점. (spec_3.md:57-62)
+**용도**: F1 자동 골프장 매칭 결과 표시. 수동 변경 진입점. (01-SPEC.md:57-62)
 
 **props**:
 ```swift
@@ -126,7 +128,7 @@ struct CourseCard: View {
 
 **플랫폼**: 공통 (iPhone + Watch)
 
-**용도**: F2 동반자 별명 칩 표시. 현재 입력 대상 플레이어 강조 + 이름 수정 진입점. (spec_3.md:63-67)
+**용도**: F2 동반자 별명 칩 표시. 현재 입력 대상 플레이어 강조 + 이름 수정 진입점. (01-SPEC.md:63-67)
 
 **props**:
 ```swift
@@ -160,9 +162,9 @@ struct PlayerChip: View {
 
 ### ScoreCell
 
-**용도**: F4 4인 × 18홀 스코어카드 그리드 셀. 탭 +1, 길게 누르기 -1. (spec_3.md:103-105)
+**용도**: F4 4인 × 18홀 스코어카드 그리드 셀. 탭 +1, 길게 누르기 -1. (01-SPEC.md:103-105)
 
-**ScoreCell 변형 2종** (spec_3.md:206 양자 허용):
+**ScoreCell 변형 2종** (01-SPEC.md:206 양자 허용):
 
 - `.horizontalScroll`: 4명 × 18홀 가로 스크롤 — 한 화면에 4–5홀 표시
 - `.split9x2`: OUT(1-9) / IN(10-18) 2단 분리 — 9홀 블록을 상하로 배치
@@ -179,7 +181,7 @@ struct ScoreCell: View {
     let isCurrentHole: Bool
     let style: ScoreCellStyle    // .horizontalScroll / .split9x2
     let onTap: () -> Void        // +1
-    let onLongPress: () -> Void  // -1 (spec_3.md:103-105)
+    let onLongPress: () -> Void  // -1 (01-SPEC.md:103-105)
 }
 
 enum ScoreCellStyle {
@@ -204,7 +206,7 @@ enum ScoreCellStyle {
 
 ### HoleProgress
 
-**용도**: 현재 홀 번호 / par / 진행률 가로 진행 바. 라운드 진행 화면 상단. (spec_3.md:570)
+**용도**: 현재 홀 번호 / par / 진행률 가로 진행 바. 라운드 진행 화면 상단. (01-SPEC.md:570)
 
 **상태**: 해당 없음 (표시 전용) / **변형**: 해당 없음 (표시 전용)
 
@@ -218,7 +220,7 @@ enum ScoreCellStyle {
 
 ### ShotButton
 
-**용도**: F4 핵심 — "0에서 시작, 샷마다 +1" 카운터 큰 버튼. Watch 화면 대부분, 장갑 착용 시도 조작 가능. (spec_3.md:75-90)
+**용도**: F4 핵심 — "0에서 시작, 샷마다 +1" 카운터 큰 버튼. Watch 화면 대부분, 장갑 착용 시도 조작 가능. (01-SPEC.md:75-90)
 
 **props**:
 ```swift
@@ -246,7 +248,7 @@ struct ShotButton: View {
 
 ### PenaltyButton
 
-**용도**: F4 OB / 해저드 / OK(컨시드) 벌타 입력. Watch 화면 하단 3개 배치. (spec_3.md:83-85)
+**용도**: F4 OB / 해저드 / OK(컨시드) 벌타 입력. Watch 화면 하단 3개 배치. (01-SPEC.md:83-85)
 
 **props**:
 ```swift
@@ -256,9 +258,9 @@ struct PenaltyButton: View {
 }
 
 enum PenaltyType {
-    case ob       // 카운트 변화 +2 (1벌타 + 1샷 재타). spec_3.md:83의 "1벌타"는 페널티 의미이고, 카운트는 1벌타+1샷=+2
-    case hazard   // +1: 벌타만 (spec_3.md:84)
-    case ok       // +1: 컨시드 (spec_3.md:85)
+    case ob       // 카운트 변화 +2 (1벌타 + 1샷 재타). 01-SPEC.md:83의 "1벌타"는 페널티 의미이고, 카운트는 1벌타+1샷=+2
+    case hazard   // +1: 벌타만 (01-SPEC.md:84)
+    case ok       // +1: 컨시드 (01-SPEC.md:85)
 }
 ```
 
@@ -287,13 +289,13 @@ enum PenaltyType {
 
 **플랫폼**: iOS
 
-**용도**: F9 라운드 중/후 사진 첨부 + 그리드 미리보기. PHPicker 또는 카메라, 최대 30장. (spec_3.md:134-138)
+**용도**: F9 라운드 중/후 사진 첨부 + 그리드 미리보기. PHPicker 또는 카메라, 최대 30장. (01-SPEC.md:134-138)
 
 **props**:
 ```swift
 struct PhotoGalleryGrid: View {
     @Binding var photos: [RoundPhoto]   // 21-DATA_MODEL
-    let maxCount: Int                   // 기본값 30 (spec_3.md:279)
+    let maxCount: Int                   // 기본값 30 (01-SPEC.md:279)
     let onAdd: () -> Void               // PHPicker 또는 카메라 실행
     let onDelete: (RoundPhoto) -> Void
 }
@@ -312,7 +314,7 @@ struct PhotoGalleryGrid: View {
 
 ### ShareSheet
 
-**플랫폼**: iOS / **용도**: F9 viewer 공유 옵션(이름 공개/접근 권한) 선택 + 공유 링크 생성 모달. (spec_3.md:130-142)
+**플랫폼**: iOS / **용도**: F9 viewer 공유 옵션(이름 공개/접근 권한) 선택 + 공유 링크 생성 모달. (01-SPEC.md:130-142)
 
 **props**:
 ```swift
@@ -378,7 +380,7 @@ enum BannerLevel {
 
 **플랫폼**: iOS (코스 카드 하위)
 
-**용도**: F3 GPS 골프장+서브코스 자동 감지 가능 여부 표시. 한국 골프장 DB v3 (965곳) 기준: complete 3곳 (전체의 0.31%) / partial 12곳 / minimal 9곳 / low 941곳. (CLAUDE.md §PROJECT, spec_3.md F3)
+**용도**: F3 GPS 골프장+서브코스 자동 감지 가능 여부 표시. 한국 골프장 DB v3 (965곳) 기준: complete 3곳 (전체의 0.31%) / partial 12곳 / minimal 9곳 / low 941곳. (CLAUDE.md §PROJECT, 01-SPEC.md §F3)
 
 **props**:
 ```swift
@@ -415,7 +417,7 @@ enum DataQuality: String, Codable {
 
 **플랫폼**: iOS
 
-**용도**: 27/36홀 골프장(holesCount > 18)에서 서브코스 라벨 (동/서/남/북 또는 전반/후반) 선택. 라운드 시작 화면에서 표시. (spec_3.md §F3, 21-DATA_MODEL §5)
+**용도**: 27/36홀 골프장(holesCount > 18)에서 서브코스 라벨 (동/서/남/북 또는 전반/후반) 선택. 라운드 시작 화면에서 표시. (01-SPEC.md §F3, 21-DATA_MODEL §5)
 
 **props**:
 ```swift

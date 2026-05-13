@@ -1,14 +1,16 @@
 # 00 — 제품 개요 (Overview)
 
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [02-USER_FLOWS](02-USER_FLOWS.md) · [20-ARCHITECTURE](20-ARCHITECTURE.md) · [21-DATA_MODEL](21-DATA_MODEL.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md)
+> **출처 명세서**: [기능 명세서 v4](01-SPEC.md)
 
-후속 사전 문서 (spec_3.md §10.3 최소 권장 8종):
+사전 설계 문서 (전체 인덱스: [specs/README.md](README.md)):
 
-- 작성 예정: `02-USER_FLOWS.md`, `10-DESIGN_SYSTEM.md`, `21-DATA_MODEL.md`, `30-API_SPEC.md`, `31-VIEWER_HTML.md`, `53-PERMISSIONS.md`
-- 기작성: `40-COURSE_DB_SCHEMA.md` (`Ref-docs/golf-db-pack/`)
-- 본 시리즈 범위 외(spec_3.md §10.3 권장): `01-USER_STORIES.md` (별도 작성 시 §3 타겟 사용자 디테일 보강용)
+- 기작성(specs/): `02-USER_FLOWS.md`, `10-DESIGN_SYSTEM.md`, `11-COMPONENTS.md`, `12-SCREENS.md`, `13-HAPTICS_AND_MOTION.md`, `14-ACCESSIBILITY.md`, `20-ARCHITECTURE.md`, `21-DATA_MODEL.md`, `22-STATE_MANAGEMENT.md`, `23-OFFLINE_BEHAVIOR.md`, `30-API_SPEC.md`, `31-VIEWER_HTML.md`, `32-CLOUDFLARE_SETUP.md`, `33-SECURITY.md`, `50-PRIVACY_POLICY.md`, `53-PERMISSIONS.md`
+- 기작성(golf-db-pack/): `40-COURSE_DB_SCHEMA.md`, `41-COURSE_DB_PIPELINE.md`
+- 미작성: `01-USER_STORIES.md` (별도 작성 시 §3 타겟 사용자 디테일 보강용)
 
 ---
 
@@ -16,21 +18,21 @@
 
 | 항목 | 값 |
 |------|-----|
-| 앱 이름 | **라운드온 (Round-On)** — 2026-05-11 확정 (spec_3.md:3) |
-| 한 줄 컨셉 | "한 번 탭할 때마다 한 타. 라운드 끝나면 사진과 함께 친구들에게 공유." (spec_3.md:17) |
-| 플랫폼 | iOS 17+ / watchOS 10+ (spec_3.md:5) |
+| 앱 이름 | **라운드온 (Round-On)** — 2026-05-11 확정 (01-SPEC.md:3) |
+| 한 줄 컨셉 | "한 번 탭할 때마다 한 타. 라운드 끝나면 사진과 함께 친구들에게 공유." (01-SPEC.md:17) |
+| 플랫폼 | iOS 17+ / watchOS 10+ (01-SPEC.md:5) |
 | 기술 스택 | SwiftUI, SwiftData, CloudKit, HealthKit, WatchConnectivity, Cloudflare Workers + KV + R2 (CLAUDE.md §PROJECT) |
-| Viewer 도메인 | `golf.zerolive.co.kr` — 7일 만료 라운드 viewer URL (spec_3.md:6) |
-| 개발 방식 | 단일 Phase, 한 번에 전체 개발 (spec_3.md:7) |
+| Viewer 도메인 | `golf.zerolive.co.kr` — 7일 만료 라운드 viewer URL (01-SPEC.md:6) |
+| 개발 방식 | 단일 Phase, 한 번에 전체 개발 (01-SPEC.md:7) |
 | 현재 상태 | 기획/명세 단계 (v4) (CLAUDE.md §PROJECT) |
 
-**네이밍 의미**: "라운드 + ON" — 라운드가 켜져있다(진행 중) / "온 그린(on green)" 골프 용어 / 라운드를 시작/접속한다는 한국적 직관. 한국 골프 앱 카테고리 동명 앱 미확인(2026-05-11 1차 검증). (spec_3.md:11)
+**네이밍 의미**: "라운드 + ON" — 라운드가 켜져있다(진행 중) / "온 그린(on green)" 골프 용어 / 라운드를 시작/접속한다는 한국적 직관. 한국 골프 앱 카테고리 동명 앱 미확인(2026-05-11 1차 검증). (01-SPEC.md:11)
 
 ---
 
 ## 2. 배경 및 시장 인사이트
 
-App Store 주요 골프 스코어 카운터 앱 조사 결과 도출된 4대 핵심 인사이트 (spec_3.md:46-51):
+App Store 주요 골프 스코어 카운터 앱 조사 결과 도출된 4대 핵심 인사이트 (01-SPEC.md:46-51):
 
 | # | 인사이트 | 근거 |
 |---|---------|------|
@@ -39,13 +41,13 @@ App Store 주요 골프 스코어 카운터 앱 조사 결과 도출된 4대 핵
 | 3 | 그린 도착 자동 감지 같은 마이크로 자동화가 사용자 만족도에 큰 영향 | SwingU 사례 |
 | 4 | 공유 기능 약점 — 대부분 앱이 자기 앱 안에서만 공유 가능 → 링크 공유 + 사진 앨범은 명확한 차별 기회 | 경쟁 앱 분석 |
 
-한국 시장에서는 **스마트스코어**(360만+ 골퍼, 슈퍼앱)와 **야디지북**이 주요 경쟁자이며, 라운드온은 이들이 다루지 않는 간결한 카운터 + 외부 링크 공유 방식으로 포지셔닝한다. (spec_3.md:43-44)
+한국 시장에서는 **스마트스코어**(360만+ 골퍼, 슈퍼앱)와 **야디지북**이 주요 경쟁자이며, 라운드온은 이들이 다루지 않는 간결한 카운터 + 외부 링크 공유 방식으로 포지셔닝한다. (01-SPEC.md:43-44)
 
 ---
 
 ## 3. 타겟 사용자
 
-**iPhone + Apple Watch를 일상적으로 사용하는 한국 아마추어 골퍼**. 라운드를 직접 기록하고 동반자와 결과를 공유하려는 사용자. (spec_3.md:17-20)
+**iPhone + Apple Watch를 일상적으로 사용하는 한국 아마추어 골퍼**. 라운드를 직접 기록하고 동반자와 결과를 공유하려는 사용자. (01-SPEC.md:17-20)
 
 세부 페르소나·사용자 시나리오는 본 시리즈 외 후속 문서 `01-USER_STORIES.md`(작성 예정) 참조. 기능 범위 배제 항목은 §6 참조.
 
@@ -53,22 +55,22 @@ App Store 주요 골프 스코어 카운터 앱 조사 결과 도출된 4대 핵
 
 ## 4. 핵심 가치 제안
 
-라운드온의 두 축 (spec_3.md:19-20):
+라운드온의 두 축 (01-SPEC.md:19-20):
 
 ### (a) 자동화된 점수 기록
 
-- 앱 실행 시 GPS로 한국 골프장 자동 매칭 (반경 3km, 한국 골프장 DB v3 965곳) (spec_3.md:58-61)
-- **F4 카운터 핵심**: par에서 시작하는 게 아니라 **0에서 시작해서 샷마다 +1** (spec_3.md:77)
+- 앱 실행 시 GPS로 한국 골프장 자동 매칭 (반경 3km, 한국 골프장 DB v3 965곳) (01-SPEC.md:58-61)
+- **F4 카운터 핵심**: par에서 시작하는 게 아니라 **0에서 시작해서 샷마다 +1** (01-SPEC.md:77)
   - 티샷 +1, 세컨샷 +1, 어프로치 +1 ... 최종 카운트 = 타수
   - OB +2 / 해저드 +1 / OK(컨시드) +1 벌타 버튼 별도 제공
   - par 대비 실시간 표시 (예: "5 (+1)") + 수동 ±1 조정 가능
-- Apple Watch Digital Crown으로 장갑 낀 채로도 한 손 카운팅 (spec_3.md:93-100)
+- Apple Watch Digital Crown으로 장갑 낀 채로도 한 손 카운팅 (01-SPEC.md:93-100)
 
 ### (b) 사진 포함 viewer 링크 7일 공유
 
-- 라운드 종료 후 스코어카드 + 사진을 viewer URL(`golf.zerolive.co.kr/{shortId}`)로 생성 (spec_3.md:130-142)
+- 라운드 종료 후 스코어카드 + 사진을 viewer URL(`golf.zerolive.co.kr/{shortId}`)로 생성 (01-SPEC.md:130-142)
 - 카카오톡 등으로 링크 공유 → 모바일 브라우저에서 바로 열림
-- 방문자가 사진 long-press로 사진앱 직접 저장 가능 (iOS/Android 모두) (spec_3.md:157-170)
+- 방문자가 사진 long-press로 사진앱 직접 저장 가능 (iOS/Android 모두) (01-SPEC.md:157-170)
 - 7일 후 Cloudflare KV/R2 자동 만료 삭제 (CLAUDE.md §PROJECT)
 
 ---
@@ -77,15 +79,15 @@ App Store 주요 골프 스코어 카운터 앱 조사 결과 도출된 4대 핵
 
 | 포인트 | 설명 | 출처 |
 |--------|------|------|
-| F4 "0에서 시작" 카운터 | 매 샷마다 누르는 행위가 카운트 + 박자. "내가 몇 타째인지" 까먹는 일반 골퍼에게 직관적 | spec_3.md:77 |
-| 모바일 viewer + long-press 저장 | 경쟁 앱 대비 외부 링크 공유 + iOS/Android 사진앱 저장이 동시 지원 | spec_3.md:144-203 |
-| 한국 골프장 + 서브코스 자동 감지 | 앱 실행 시 GPS로 한국 골프장 DB v3 (965곳)와 즉시 매칭. F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행). 수동 변경 가능 | spec_3.md:57-62 |
+| F4 "0에서 시작" 카운터 | 매 샷마다 누르는 행위가 카운트 + 박자. "내가 몇 타째인지" 까먹는 일반 골퍼에게 직관적 | 01-SPEC.md:77 |
+| 모바일 viewer + long-press 저장 | 경쟁 앱 대비 외부 링크 공유 + iOS/Android 사진앱 저장이 동시 지원 | 01-SPEC.md:144-203 |
+| 한국 골프장 + 서브코스 자동 감지 | 앱 실행 시 GPS로 한국 골프장 DB v3 (965곳)와 즉시 매칭. F3 GPS 자동 감지 — 골프장 + 서브코스 단위 (홀 단위 자동 감지는 미제공, 수동 진행). 수동 변경 가능 | 01-SPEC.md:57-62 |
 
 ---
 
 ## 6. Non-Goals
 
-spec_3.md:19 원문 표현 그대로:
+01-SPEC.md:19 원문 표현 그대로:
 
 > **"거리 측정, 게임 모드, 핸디캡 계산, 정산 등 부가 기능을 모두 배제하고"**
 
@@ -104,7 +106,7 @@ spec_3.md:19 원문 표현 그대로:
 
 ### 네이밍 리스크
 
-영어 숙어 "round on"은 부정 의미("공격하다")가 있어 **영어권 출시 시 별도 브랜드 재고 권장**. (spec_3.md:11)
+영어 숙어 "round on"은 부정 의미("공격하다")가 있어 **영어권 출시 시 별도 브랜드 재고 권장**. (01-SPEC.md:11)
 
 ### DB 품질 분기
 
@@ -124,8 +126,8 @@ https://www.openstreetmap.org/copyright
 ### Viewer 만료 및 개인정보
 
 - Viewer 데이터(KV/R2)는 생성 후 **7일 자동 삭제** (CLAUDE.md §PROJECT)
-- 동반자 이름은 별명(닉네임)만 허용. **실명·연락처 외부 업로드 절대 금지** (spec_3.md:282 + CLAUDE.md §PROJECT)
-- PIN 보호 viewer의 PIN은 bcrypt 해시 저장, 5회 오답 시 1시간 잠금 (spec_3.md:278-280)
+- 동반자 이름은 별명(닉네임)만 허용. **실명·연락처 외부 업로드 절대 금지** (01-SPEC.md:282 + CLAUDE.md §PROJECT)
+- PIN 보호 viewer의 PIN은 bcrypt 해시 저장, 5회 오답 시 1시간 잠금 (01-SPEC.md:278-280)
 
 ### 부록: v3 → v4 변경 이력 (참고용)
 
@@ -138,4 +140,4 @@ https://www.openstreetmap.org/copyright
 | 작업 분담 | 미정 | Claude Code / Stitch / 사전 문서 명확 분리 |
 | 사전 문서 | 없음 | 15+ 종류의 마크다운 문서 리스트 |
 
-(spec_3.md:916-926)
+(01-SPEC.md:916-926)

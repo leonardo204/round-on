@@ -1,5 +1,7 @@
 # 40 - 한국 골프장 DB 스키마
 
+> **관련 문서**: [../specs/01-SPEC.md](../specs/01-SPEC.md) · [../specs/21-DATA_MODEL.md](../specs/21-DATA_MODEL.md) · [41-COURSE_DB_PIPELINE.md](41-COURSE_DB_PIPELINE.md) · [README.md](README.md) · [../README.md](../README.md)
+
 > **목적**: **라운드온 (Round-On)** 앱이 사용하는 한국 골프장 데이터 JSON 스키마 명세
 > **버전**: 2026.05.12-v3  
 > **데이터 소스**: OpenStreetMap (ODbL 라이선스) + 공공데이터 + 카카오 enrichment  

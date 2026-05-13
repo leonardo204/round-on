@@ -1,9 +1,13 @@
 # 50 — 개인정보 처리방침 (Privacy Policy)
 
+> **상태**: DRAFT · 법적 검수 필요 · placeholder 6건 미확정 · 2026-05-13 작성
+
+> **관련 문서**: [01-SPEC](01-SPEC.md) · [33-SECURITY](33-SECURITY.md) · [53-PERMISSIONS](53-PERMISSIONS.md) · [21-DATA_MODEL](21-DATA_MODEL.md) · [30-API_SPEC](30-API_SPEC.md) · [전체 인덱스](README.md)
+
 > **작성일**: 2026-05-11
 > **버전**: v4 기반
-> **상태**: 정책 본문 (Public) — App Store 제출 전 법적 검토 권장
-> **출처 명세서**: [기능 명세서 v4](../golf-scorecard-app-spec_3.md) §9 (spec_3.md:655-672), §3.4 (spec_3.md:274-284)
+> **상태**: DRAFT — App Store 제출 전 법적 검토 필수
+> **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §9 (01-SPEC.md:655-672), §3.4 (01-SPEC.md:274-284)
 > **관련 문서**: `33-SECURITY.md`, `53-PERMISSIONS.md`, `21-DATA_MODEL.md`, `30-API_SPEC.md`
 
 ---
@@ -73,12 +77,12 @@
 
 | 항목 | 수집 시점 | 저장 위치 | 외부 전송 | 출처 |
 |------|---------|---------|---------|------|
-| 위치 정보 (GPS, Precise) | 앱 실행 시 골프장 자동 매칭 (F1) | 기기 RAM 일시 보관 | 없음 — 기기 외부로 절대 전송하지 않음 | spec_3.md:57-62, CLAUDE.md §PROJECT |
-| HealthKit (걸음 수·칼로리·심박수·활동 시간) | 라운드 시작 시 (F8) | 기기 HealthKit (OS 관리) | 없음 — 기기 내 처리 전용 | spec_3.md:116-119 |
-| 사진 (사용자가 선택 또는 촬영) | 사진 첨부 시 (F9) | 기기 → Cloudflare R2 (viewer 공유 시, 7일) | viewer 공유 시 R2 업로드 (EXIF GPS strip 후 전송) | spec_3.md:134-138 |
-| 동반자 별명 (실명·연락처 업로드 금지) | 라운드 시작 시 | 기기 SwiftData → Cloudflare KV (viewer 공유 시, 7일) | viewer 공유 시 KV 저장 | spec_3.md:282 |
-| 디바이스 식별자 (deviceToken, 익명 UUID) | 앱 최초 실행 시 | 기기 | viewer 생성 시 Cloudflare Worker로 전송 (Rate limit 카운터에만 사용) | spec_3.md:670 |
-| iCloud 계정 (CloudKit private DB) | 라운드 저장 시 (F7) | 사용자 본인 iCloud (Apple 관리) | 사용자 본인 계정 영역 — 외부 제3자 전송 아님 | spec_3.md:111-114 |
+| 위치 정보 (GPS, Precise) | 앱 실행 시 골프장 자동 매칭 (F1) | 기기 RAM 일시 보관 | 없음 — 기기 외부로 절대 전송하지 않음 | 01-SPEC.md:57-62, CLAUDE.md §PROJECT |
+| HealthKit (걸음 수·칼로리·심박수·활동 시간) | 라운드 시작 시 (F8) | 기기 HealthKit (OS 관리) | 없음 — 기기 내 처리 전용 | 01-SPEC.md:116-119 |
+| 사진 (사용자가 선택 또는 촬영) | 사진 첨부 시 (F9) | 기기 → Cloudflare R2 (viewer 공유 시, 7일) | viewer 공유 시 R2 업로드 (EXIF GPS strip 후 전송) | 01-SPEC.md:134-138 |
+| 동반자 별명 (실명·연락처 업로드 금지) | 라운드 시작 시 | 기기 SwiftData → Cloudflare KV (viewer 공유 시, 7일) | viewer 공유 시 KV 저장 | 01-SPEC.md:282 |
+| 디바이스 식별자 (deviceToken, 익명 UUID) | 앱 최초 실행 시 | 기기 | viewer 생성 시 Cloudflare Worker로 전송 (Rate limit 카운터에만 사용) | 01-SPEC.md:670 |
+| iCloud 계정 (CloudKit private DB) | 라운드 저장 시 (F7) | 사용자 본인 iCloud (Apple 관리) | 사용자 본인 계정 영역 — 외부 제3자 전송 아님 | 01-SPEC.md:111-114 |
 
 **수집하지 않는 정보**: 회원 ID, 비밀번호, 실명, 이메일, 전화번호, 생년월일, 성별, 결제 정보, 광고 식별자(IDFA/GAID) 등은 수집하지 않습니다. 동반자 이름 필드에 실명·연락처·주민번호 등 개인식별정보를 입력해도 서버측 PII 마스킹 정책(33-SECURITY §7)에 의해 자동 마스킹 처리됩니다.
 
@@ -195,7 +199,7 @@ Cloudflare 개인정보 처리방침: https://www.cloudflare.com/ko-kr/privacypo
 
 ### 7.1 기술적 조치
 
-- **전송 구간 암호화**: HTTPS 전 구간 강제 적용. Cloudflare 자동 적용 (spec_3.md:281)
+- **전송 구간 암호화**: HTTPS 전 구간 강제 적용. Cloudflare 자동 적용 (01-SPEC.md:281)
 - **HSTS**: `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` (33-SECURITY §8.2)
 - **PIN 암호화 저장**: bcrypt cost 12 해싱 적용 (33-SECURITY §4)
 - **PII 패턴 서버측 마스킹**: 휴대전화·이메일·주민번호·신용카드 4종 정규식 매칭 시 마스킹 후 저장. 평문 저장하지 않음 (33-SECURITY §7)
@@ -396,7 +400,7 @@ SDK 단위 Privacy Manifest (서드파티 SDK 포함 목록)는 [SPEC-UNDEFINED]
 
 ---
 
-**ODbL 라이선스 표기**: 본 앱에서 사용하는 한국 골프장 데이터(546개)는 OpenStreetMap(OSM) ODbL 라이선스 데이터를 기반으로 합니다. 이 데이터는 골프장 매칭(F1)에만 사용하며, 위치 정보와 결합하여 외부로 전송하지 않습니다. 라이선스 정보는 앱 내 설정 → 정보에 표기됩니다. (CLAUDE.md §PROJECT)
+**ODbL 라이선스 표기**: 본 앱에서 사용하는 한국 골프장 데이터(965곳, v3, 2026-05-12 빌드)는 OpenStreetMap(OSM) ODbL 라이선스 데이터를 기반으로 합니다. 이 데이터는 골프장 매칭(F1)에만 사용하며, 위치 정보와 결합하여 외부로 전송하지 않습니다. 라이선스 정보는 앱 내 설정 → 정보에 표기됩니다. (CLAUDE.md §PROJECT)
 
 ---
 
