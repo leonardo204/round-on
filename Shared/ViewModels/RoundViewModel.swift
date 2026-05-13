@@ -124,6 +124,32 @@ public final class RoundViewModel {
         scoreCardViewModel?.refresh(from: round)
     }
 
+    // MARK: F7 — 사후 편집 API
+
+    /// 완료된 라운드 편집 진입. ScoreCardViewModel 재생성.
+    public func editRound(_ round: Round) {
+        self.currentRound = round
+        self.scoreCardViewModel = ScoreCardViewModel(round: round)
+        self.playerListViewModel = PlayerListViewModel(players: round.players)
+    }
+
+    /// 편집 내용 저장. SwiftData에 쓰기 후 scoreCardViewModel 갱신.
+    /// - Returns: 저장 성공 여부
+    @discardableResult
+    public func commitEdit() throws -> Bool {
+        guard let round = currentRound else { return false }
+        try modelContext.save()
+        scoreCardViewModel?.refresh(from: round)
+        // 편집 완료 후 currentRound 초기화 (홈으로 돌아갈 때 활성 라운드 오판 방지)
+        // isFinished == true인 경우만 deactivate
+        if round.isFinished {
+            self.currentRound = nil
+            self.scoreCardViewModel = nil
+            self.playerListViewModel = nil
+        }
+        return true
+    }
+
     /// 카운트 -1
     public func decrement(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
