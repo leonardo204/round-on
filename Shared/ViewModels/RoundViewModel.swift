@@ -5,6 +5,7 @@ import Observation
 // MARK: - RoundViewModel
 // 라운드 라이프사이클 관리 (22-STATE_MANAGEMENT §3)
 // F6: 앱 재시작 시 진행 중인 라운드 자동 복구
+// A1: WorkoutCoordinator는 클로저 DI로 연결 (Shared → App-iOS 역방향 의존성 방지)
 
 @Observable
 @MainActor
@@ -15,10 +16,24 @@ public final class RoundViewModel {
     public var currentRound: Round?
     public var isRoundActive: Bool { currentRound != nil && !(currentRound?.isFinished ?? true) }
 
+    /// HealthKit 권한 실패 등 배너 표시용 메시지
+    public var bannerMessage: String?
+
     // 하위 VM (RoundViewModel이 소유)
     public private(set) var holeViewModel: HoleViewModel?
     public private(set) var scoreCardViewModel: ScoreCardViewModel?
     public private(set) var playerListViewModel: PlayerListViewModel?
+
+    // MARK: HealthKit DI (A1)
+
+    /// App-iOS에서 WorkoutCoordinator.shared.startWorkout(courseName:)를 주입
+    public var onWorkoutStart: ((String) async -> Void)?
+
+    /// App-iOS에서 WorkoutCoordinator.shared.endWorkout()를 주입
+    public var onWorkoutEnd: (() async -> Void)?
+
+    /// App-iOS에서 WorkoutCoordinator.bannerMessage를 수신해 여기에 반영하도록 주입
+    public var onWorkoutBannerUpdate: (() -> String?)?
 
     // MARK: Private
 
@@ -70,6 +85,15 @@ public final class RoundViewModel {
         try? modelContext.save()
 
         activate(round: round)
+
+        // A1: HealthKit 운동 시작 (권한 실패 시에도 라운드는 정상 진행)
+        Task {
+            await onWorkoutStart?(courseName)
+            // 배너 메시지 수신
+            if let msg = onWorkoutBannerUpdate?(), !msg.isEmpty {
+                bannerMessage = msg
+            }
+        }
     }
 
     /// 라운드 종료
@@ -79,6 +103,11 @@ public final class RoundViewModel {
         round.finishedAt = .now
         try? modelContext.save()
         deactivate()
+
+        // A1: HealthKit 운동 종료
+        Task {
+            await onWorkoutEnd?()
+        }
     }
 
     /// 카운트 +1

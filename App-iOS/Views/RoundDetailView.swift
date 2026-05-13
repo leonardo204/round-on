@@ -5,6 +5,7 @@ import Shared
 // MARK: - RoundDetailView
 // iphone-2.8: 완료 라운드 사후 보기 (12-SCREENS 2.8)
 // viewer URL 복사 + 만료 표시 + 재공유 진입
+// B3: 이미 공유된 라운드에 사진 추가 시 uploadPhoto 자동 호출
 
 struct RoundDetailView: View {
 
@@ -21,6 +22,10 @@ struct RoundDetailView: View {
     @State private var showPhotoAttach = false
     @State private var bannerMessage: String?
     @State private var bannerSeverity: BannerNotice.Severity = .info
+
+    private let apiClient = ShareAPIClient()
+    private let photoStore = PhotoStore()
+    private let keychainStore = KeychainStore.shared
 
     // MARK: Init
 
@@ -77,9 +82,19 @@ struct RoundDetailView: View {
             })
         }
         .sheet(isPresented: $showPhotoAttach) {
-            PhotoAttachView(round: round, onDismiss: { showPhotoAttach = false })
+            PhotoAttachView(round: round, onDismiss: {
+                showPhotoAttach = false
+                // B3: 이미 공유된 라운드면 새로 추가된 사진을 업로드
+                if round.sharedShortId != nil {
+                    Task { await uploadNewPhotosIfShared() }
+                }
+            })
         }
         .task {
+            // C2: 기존 평문 editToken Keychain 마이그레이션
+            keychainStore.migrateIfNeeded(round: round)
+            try? modelContext.save()
+
             // C4: 만료 자동 감지
             let expired = round.sharedExpiresAt.map { $0 < .now } ?? false
             if expired {
@@ -290,6 +305,52 @@ struct RoundDetailView: View {
                 endPoint: .bottom
             )
         )
+    }
+
+    // MARK: B3: 이미 공유된 라운드에 사진 추가
+
+    /// 이미 공유된 라운드에서 remoteURL이 없는 (아직 업로드 안 된) 사진을 업로드
+    private func uploadNewPhotosIfShared() async {
+        guard let shortId = round.sharedShortId,
+              let editToken = keychainStore.editToken(for: shortId) else { return }
+
+        // remoteURL 없는 = 아직 업로드 안 된 사진만 대상
+        let pending = round.photos.filter { $0.remoteURL == nil }
+        guard !pending.isEmpty else { return }
+
+        var successCount = 0
+        var failedCount = 0
+
+        for photo in pending {
+            guard let imageData = photoStore.jpegData(for: photo) else {
+                failedCount += 1
+                continue
+            }
+            do {
+                let response = try await apiClient.uploadPhoto(
+                    shortId: shortId,
+                    editToken: editToken,
+                    imageData: imageData,
+                    holeNumber: photo.holeNumber,
+                    caption: photo.caption
+                )
+                photo.remoteURL = response.remoteURL
+                successCount += 1
+            } catch {
+                failedCount += 1
+            }
+        }
+
+        try? modelContext.save()
+
+        if successCount > 0 {
+            bannerMessage = "사진 \(successCount)장을 viewer에 업로드했어요."
+            bannerSeverity = .success
+        }
+        if failedCount > 0 {
+            bannerMessage = (bannerMessage ?? "") + " \(failedCount)장 업로드 실패."
+            bannerSeverity = failedCount == pending.count ? .error : .warning
+        }
     }
 
     // MARK: Helpers

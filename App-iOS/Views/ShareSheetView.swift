@@ -4,6 +4,8 @@ import Shared
 // MARK: - ShareSheetView
 // iphone-2.7: 공유 옵션 + 링크 생성 (12-SCREENS 2.7)
 // 이름 공개 토글 + PIN 입력 + "공유 링크 생성" CTA
+// B2: 링크 생성 성공 후 사진 자동 업로드
+// C3: editToken은 Keychain을 통해 조회
 
 struct ShareSheetView: View {
 
@@ -21,6 +23,8 @@ struct ShareSheetView: View {
     @State private var activityURL: URL?
 
     private let apiClient = ShareAPIClient()
+    private let photoStore = PhotoStore()
+    private let keychainStore = KeychainStore.shared
 
     // MARK: Body
 
@@ -78,6 +82,11 @@ struct ShareSheetView: View {
                     ActivityShareSheet(url: url)
                         .presentationDetents([.medium, .large])
                 }
+            }
+            .task {
+                // C2: 앱 진입 시 기존 평문 editToken을 Keychain으로 마이그레이션
+                keychainStore.migrateIfNeeded(round: round)
+                try? modelContext.save()
             }
         }
     }
@@ -224,9 +233,9 @@ struct ShareSheetView: View {
                     .foregroundStyle(Color.springTextSecondary)
             }
 
-            // viewer 회수 버튼
+            // viewer 회수 버튼 (C3: Keychain에서 editToken 조회)
             if let shortId = round.sharedShortId,
-               let editToken = round.sharedEditToken {
+               let editToken = keychainStore.editToken(for: shortId) {
                 Button {
                     Task { await deleteShare(shortId: shortId, editToken: editToken) }
                 } label: {
@@ -246,6 +255,18 @@ struct ShareSheetView: View {
 
     private var ctaButton: some View {
         VStack(spacing: 0) {
+            // 사진 업로드 진행 표시 (B2)
+            if shareVM.isUploadingPhotos {
+                HStack(spacing: 8) {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("사진 업로드 중 \(shareVM.photoUploadCurrent)/\(shareVM.photoUploadTotal)")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                .padding(.bottom, 8)
+            }
+
             Button {
                 Task { await performShare() }
             } label: {
@@ -302,13 +323,14 @@ struct ShareSheetView: View {
         defer { shareVM.isLoading = false }
 
         let options = shareVM.currentOptions()
-        let deviceToken = UUID().uuidString  // 1차: 임시 UUID (33-SECURITY §3.4 후속에서 Keychain 이관)
+        // C3: Keychain 기반 deviceToken 생성 (shortId 없으면 신규 UUID)
+        let deviceToken = UUID().uuidString
 
         do {
             if shareVM.isUpdateMode,
                let shortId = round.sharedShortId,
-               let editToken = round.sharedEditToken {
-                // 업데이트 모드
+               let editToken = keychainStore.editToken(for: shortId) {
+                // 업데이트 모드 (C3: Keychain에서 editToken 조회)
                 let payload = UpdateShareRequest(
                     round: RoundPayload(from: round, nameVisibility: options.nameVisibility),
                     options: ShareOptionsPayload(from: options)
@@ -330,11 +352,16 @@ struct ShareSheetView: View {
                     options: ShareOptionsPayload(from: options)
                 )
                 let response = try await apiClient.createShare(request: payload)
+
+                // C2: editToken을 Keychain에 저장 (평문 필드 사용 안 함)
+                try? keychainStore.setEditToken(response.editToken, for: response.shortId)
+
                 round.sharedShortId = response.shortId
                 round.sharedURL = response.url
-                round.sharedEditToken = response.editToken
                 round.sharedExpiresAt = response.expiresAt
                 round.sharedOptions = options
+                // Deprecated 필드는 nil 유지 (Keychain으로 이관 완료)
+                round.sharedEditToken = nil
                 try? modelContext.save()
 
                 if let url = URL(string: response.url) {
@@ -342,6 +369,9 @@ struct ShareSheetView: View {
                     onShared?(url)
                 }
                 Task { await HapticEngine.shared.play(.shareSuccess) }
+
+                // B2: 공유 링크 생성 성공 후 사진 자동 업로드
+                await uploadPhotosIfNeeded(shortId: response.shortId, editToken: response.editToken)
             }
         } catch let error as ShareAPIError {
             shareVM.errorMessage = error.localizedDescription
@@ -352,9 +382,60 @@ struct ShareSheetView: View {
         }
     }
 
+    /// B2: photos를 순회하며 업로드. 실패 사진은 skip + 배너 알림.
+    private func uploadPhotosIfNeeded(shortId: String, editToken: String) async {
+        let photos = round.photos
+        guard !photos.isEmpty else { return }
+
+        shareVM.photoUploadTotal = photos.count
+        shareVM.photoUploadCurrent = 0
+        shareVM.isUploadingPhotos = true
+        defer { shareVM.isUploadingPhotos = false }
+
+        var failedCount = 0
+
+        for photo in photos {
+            guard let imageData = photoStore.jpegData(for: photo) else {
+                failedCount += 1
+                shareVM.photoUploadCurrent += 1
+                continue
+            }
+
+            do {
+                let response = try await apiClient.uploadPhoto(
+                    shortId: shortId,
+                    editToken: editToken,
+                    imageData: imageData,
+                    holeNumber: photo.holeNumber,
+                    caption: photo.caption
+                )
+                // remoteURL 업데이트
+                photo.remoteURL = response.remoteURL
+                shareVM.photoUploadCurrent += 1
+            } catch {
+                failedCount += 1
+                shareVM.photoUploadCurrent += 1
+            }
+        }
+
+        try? modelContext.save()
+
+        let successCount = photos.count - failedCount
+        if failedCount > 0 && successCount > 0 {
+            shareVM.errorMessage = "사진 \(successCount)장 업로드 완료. \(failedCount)장은 실패했어요."
+        } else if failedCount == 0 {
+            // 성공 토스트 (에러 아님 — 배너 severity .info)
+            shareVM.errorMessage = nil
+        } else {
+            shareVM.errorMessage = "사진 업로드에 실패했어요."
+        }
+    }
+
     private func deleteShare(shortId: String, editToken: String) async {
         do {
             try await apiClient.deleteShare(shortId: shortId, editToken: editToken)
+            // C2: Keychain에서도 삭제
+            try? keychainStore.deleteEditToken(for: shortId)
             round.sharedShortId = nil
             round.sharedURL = nil
             round.sharedEditToken = nil

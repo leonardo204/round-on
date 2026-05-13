@@ -45,6 +45,7 @@ struct ContentView: View {
             // F6: 앱 시작 시 미완료 라운드 복구
             if roundViewModel == nil {
                 let vm = RoundViewModel(modelContext: modelContext)
+                vm.attachWorkoutCoordinator()
                 vm.resumeIfNeeded()
                 if vm.isRoundActive {
                     roundViewModel = vm

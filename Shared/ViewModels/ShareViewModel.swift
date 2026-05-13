@@ -5,6 +5,7 @@ import SwiftData
 // MARK: - ShareViewModel
 // F6 공유 상태 관리 (22-STATE §3)
 // 공유 옵션 + 링크 생성/업데이트/삭제 오케스트레이션
+// 실제 API 호출(ShareAPIClient)은 App-iOS 레이어(ShareSheetView)에서 수행
 
 @Observable
 @MainActor
@@ -27,8 +28,13 @@ public final class ShareViewModel {
     /// 현재 라운드
     public var round: Round?
 
-    /// 로딩 상태
+    /// 로딩 상태 (공유 링크 생성 중)
     public var isLoading: Bool = false
+
+    /// 사진 업로드 진행 상태 (B2)
+    public var photoUploadCurrent: Int = 0
+    public var photoUploadTotal: Int = 0
+    public var isUploadingPhotos: Bool = false
 
     /// 에러 메시지
     public var errorMessage: String?
@@ -57,7 +63,7 @@ public final class ShareViewModel {
     }
 
     public var canShare: Bool {
-        isPinValid && !isLoading
+        isPinValid && !isLoading && !isUploadingPhotos
     }
 
     // MARK: Public API
@@ -90,12 +96,20 @@ public final class ShareViewModel {
         clearShareFields(in: round)
     }
 
+    /// 사진 업로드 진행 상태 리셋
+    public func resetPhotoUploadProgress() {
+        photoUploadCurrent = 0
+        photoUploadTotal = 0
+        isUploadingPhotos = false
+    }
+
     // MARK: Private
 
     private func clearShareFields(in round: Round) {
         round.sharedShortId = nil
         round.sharedURL = nil
-        round.sharedEditToken = nil
+        // swiftlint:disable:next deprecated_usage
+        round.sharedEditToken = nil  // deprecated 필드 nil 처리 (마이그레이션 완료 표시)
         round.sharedExpiresAt = nil
         round.sharedOptions = nil
     }

@@ -369,6 +369,7 @@ struct NewRoundView: View {
 
         // RoundViewModel 생성 후 라운드 시작
         let vm = RoundViewModel(modelContext: modelContext)
+        vm.attachWorkoutCoordinator()
         vm.startRound(
             courseId: course.id,
             courseName: course.name,

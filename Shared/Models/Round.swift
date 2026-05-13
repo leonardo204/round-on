@@ -17,7 +17,13 @@ public final class Round {
     public var sharedShortId: String?
     public var sharedURL: String?
     public var sharedExpiresAt: Date?
+
+    /// Deprecated: editToken은 Keychain(KeychainStore)에 저장됩니다 (C2, 33-SECURITY §3.4).
+    /// 기존 데이터 마이그레이션을 위해 Optional로 유지하며, 마이그레이션 완료 후 nil로 처리됩니다.
+    /// 새 코드에서는 `KeychainStore.shared.editToken(for: sharedShortId)` 를 사용하세요.
+    @available(*, deprecated, renamed: "KeychainStore.shared.editToken(for:)")
     public var sharedEditToken: String?
+
     public var sharedOptionsData: Data?  // ShareOptions을 Codable → Data로 저장
 
     public init(
