@@ -66,6 +66,17 @@ struct HomeView: View {
             }
             .navigationTitle("라운드온")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        StatsView()
+                    } label: {
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundStyle(Color.springGreenPrimary)
+                            .accessibilityLabel("통계")
+                    }
+                }
+            }
         }
         .fullScreenCover(isPresented: $showNewRound) {
             NewRoundView(roundViewModel: $roundViewModel, isPresented: $showNewRound)
