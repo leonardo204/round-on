@@ -38,7 +38,6 @@ struct NewRoundView: View {
     @State private var playerCount: Int = 1
 
     // Location
-    @State private var locationManager = CLLocationManager()
     @State private var userLocation: CLLocation?
 
     var body: some View {
@@ -320,36 +319,47 @@ struct NewRoundView: View {
         isMatching = true
         defer { isMatching = false }
 
-        // 위치 권한 및 취득
-        let status = locationManager.authorizationStatus
-        guard status == .authorizedWhenInUse || status == .authorizedAlways else {
+        // 위치 권한 요청 (미결정 상태면 시스템 팝업 표시)
+        let locationService = LocationService.shared
+        let authStatus = await locationService.requestAuthorization()
+
+        guard authStatus == .authorizedWhenInUse || authStatus == .authorizedAlways else {
             matchError = "위치 권한이 없어요. 직접 검색하세요"
+            Task { await HapticEngine.shared.play(.permissionDenied) }
             return
         }
 
-        // CoreLocation은 delegate 기반이라 여기서는 마지막 위치 사용
-        guard let loc = locationManager.location else {
+        // 현재 위치 획득 (5초 타임아웃)
+        guard let loc = await locationService.currentLocation() else {
             matchError = "위치를 가져올 수 없어요. 직접 검색하세요"
             return
         }
 
-        // Haversine 3km 이내 가장 가까운 골프장 (spec_3.md §8.1)
-        let maxDistKm = 3.0
-        var bestCourse: GolfCourse?
-        var bestDist = Double.infinity
+        userLocation = loc
 
-        for course in allCourses {
-            guard let ch = course.clubhouse else { continue }
-            let courseLoc = CLLocation(latitude: ch.lat, longitude: ch.lng)
-            let distKm = loc.distance(from: courseLoc) / 1000.0
-            if distKm < maxDistKm && distKm < bestDist {
-                bestDist = distKm
-                bestCourse = course
-            }
+        // CourseRepository.nearestCourses: haversine 거리 오름차순
+        // 3km 이내 가장 가까운 1개만 자동 매칭 (F1 스펙)
+        let maxDistKm = 3.0
+        let nearest = (try? await CourseRepository.shared.nearestCourses(
+            to: (lat: loc.coordinate.latitude, lng: loc.coordinate.longitude),
+            limit: 1
+        )) ?? []
+
+        guard let best = nearest.first,
+              let ch = best.clubhouse else {
+            matchError = "반경 3km 이내 골프장이 없어요. 직접 검색하세요"
+            return
         }
 
-        if let best = bestCourse {
+        let distKm = haversineKm(
+            lat1: loc.coordinate.latitude, lng1: loc.coordinate.longitude,
+            lat2: ch.lat, lng2: ch.lng
+        )
+
+        if distKm <= maxDistKm {
             matchedCourse = best
+            // F3 GPS 매칭 성공 햅틱
+            Task { await HapticEngine.shared.play(.gpsMatchComplete) }
         } else {
             matchError = "반경 3km 이내 골프장이 없어요. 직접 검색하세요"
         }

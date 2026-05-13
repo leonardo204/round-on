@@ -42,6 +42,36 @@ public actor CourseRepository {
         let all = try await loadAll()
         return all.filter { $0.region == region }
     }
+
+    /// 특정 좌표 근처 골프장 목록 반환 (haversine 거리 기준 오름차순 정렬).
+    /// clubhouse 좌표가 없는 코스는 제외된다.
+    ///
+    /// - Parameters:
+    ///   - coord: 기준 좌표 (lat, lng)
+    ///   - limit: 반환할 최대 개수 (기본 20)
+    /// - Returns: 거리 오름차순으로 정렬된 골프장 목록
+    public func nearestCourses(
+        to coord: (lat: Double, lng: Double),
+        limit: Int = 20
+    ) async throws -> [GolfCourse] {
+        let all = try await loadAll()
+
+        // clubhouse 좌표 있는 코스만 대상
+        let withCoord = all.compactMap { course -> (GolfCourse, Double)? in
+            guard let ch = course.clubhouse else { return nil }
+            let dist = haversineKm(
+                lat1: coord.lat, lng1: coord.lng,
+                lat2: ch.lat, lng2: ch.lng
+            )
+            return (course, dist)
+        }
+
+        // 거리 오름차순 정렬 후 limit 개수 반환
+        return withCoord
+            .sorted { $0.1 < $1.1 }
+            .prefix(limit)
+            .map { $0.0 }
+    }
 }
 
 // MARK: - CourseRepositoryError
