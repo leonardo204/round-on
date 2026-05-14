@@ -1,16 +1,16 @@
 {
-  "totalCandidates": 116,
-  "fetched": 116,
-  "matched": 54,
-  "matchRate": 0.4655,
+  "totalCandidates": 247,
+  "fetched": 146,
+  "matched": 78,
+  "matchRate": 0.3158,
   "patternDistribution": {
-    "theme": 30,
-    "newold": 1,
-    "hanja": 15,
-    "en_word": 7,
-    "alpha": 1
+    "hanja": 8,
+    "theme": 13,
+    "alpha": 6,
+    "en_full": 4,
+    "manual": 47
   },
   "note": "",
   "fallbackUsed": "none",
-  "generatedAt": "2026-05-12T07:47:46Z"
+  "generatedAt": "2026-05-14T02:09:48Z"
 }

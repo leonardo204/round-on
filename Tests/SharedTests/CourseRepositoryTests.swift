@@ -31,8 +31,8 @@ final class CourseRepositoryTests: XCTestCase {
     func testHolesCountCoverage() async throws {
         let courses = try await CourseRepository.shared.loadAll()
         let withHolesCount = courses.filter { $0.holesCount != nil }.count
-        XCTAssertEqual(withHolesCount, 525,
-                       "holesCount가 기록된 골프장은 525개여야 함")
+        XCTAssertEqual(withHolesCount, 818,
+                       "holesCount가 기록된 골프장은 818개여야 함 (네이버 검색 보강 후)")
     }
 
     // MARK: 지역 필터
@@ -42,13 +42,23 @@ final class CourseRepositoryTests: XCTestCase {
         XCTAssertGreaterThan(gyeonggi.count, 0, "경기 지역 골프장이 존재해야 함")
     }
 
+    // MARK: region 보강 검증
+
+    func testRegionCoverage() async throws {
+        let courses = try await CourseRepository.shared.loadAll()
+        let withRegion = courses.filter { !$0.region.isEmpty }.count
+        // normalize_region.py 결과: 708 → 859 (주소 파싱으로 151건 추가)
+        XCTAssertGreaterThanOrEqual(withRegion, 850,
+            "region이 기록된 골프장이 850개 이상이어야 함 (normalize_region.py 결과 859건)")
+    }
+
     // MARK: 카카오 URL
 
     func testKakaoUrlPresence() async throws {
         let courses = try await CourseRepository.shared.loadAll()
         let withKakao = courses.filter { $0.kakaoPlaceUrl != nil }.count
         XCTAssertEqual(withKakao, 664,
-                       "kakaoPlaceUrl이 기록된 골프장은 664개여야 함")
+                       "kakaoPlaceUrl이 기록된 골프장은 664개여야 함 (카카오 API 보강 결과)")
     }
 
     // MARK: 이름 검색
@@ -108,9 +118,9 @@ final class CourseRepositoryTests: XCTestCase {
     func testSubCoursesPopulated() async throws {
         let courses = try await CourseRepository.shared.loadAll()
         let withSub = courses.filter { ($0.subCourses ?? []).count >= 2 }.count
-        // enrich_subcourses.py v2 결과: 116개 후보 중 53건 매칭 (45.7%)
-        // 네이버 검색 HTML 패턴 추출 방식 (hanja/theme/newold/num/alpha 5종 패턴)
-        XCTAssertGreaterThanOrEqual(withSub, 50,
-            "subCourses 보유 코스가 50개 이상이어야 함 (enrich_subcourses.py v2 결과 53건)")
+        // enrich_subcourses.py v3 결과: 수동 매핑 47건 + 네이버 31건 = 78건 (기존 54건 포함 총 132건)
+        // 패턴: hanja/theme/trad/newold/num/alpha/en_full 7종 + manual_subcourses.json
+        XCTAssertGreaterThanOrEqual(withSub, 100,
+            "subCourses 보유 코스가 100개 이상이어야 함 (enrich_subcourses.py v3 결과 132건)")
     }
 }

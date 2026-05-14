@@ -33,6 +33,20 @@
         "mois_coord",
         "osm",
         "osm_coord"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -442,7 +456,21 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070441"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070441",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "북"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "태광cc_경기_2",
@@ -622,6 +650,20 @@
       "sources": [
         "mcst",
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -925,6 +967,20 @@
         "mcst",
         "mois_coord",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "챌린지"
+        },
+        {
+          "name": "크리크"
+        },
+        {
+          "name": "한국"
+        }
       ]
     },
     {
@@ -1680,6 +1736,20 @@
         "mcst",
         "mois_coord",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -1703,6 +1773,20 @@
         "mcst",
         "mois_coord",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -2490,6 +2574,17 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "웨스트"
+        },
+        {
+          "name": "사우스"
+        }
       ]
     },
     {
@@ -3126,7 +3221,21 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10270089"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10270089",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "뉴스프링빌cc_경기_2",
@@ -3174,7 +3283,21 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/21489824"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/21489824",
+      "subCourses": [
+        {
+          "name": "마운틴A"
+        },
+        {
+          "name": "마운틴B"
+        },
+        {
+          "name": "밸리A"
+        },
+        {
+          "name": "밸리B"
+        }
+      ]
     },
     {
       "id": "비에이비스타cc_경기_2",
@@ -3306,6 +3429,14 @@
       "dataQuality": "low",
       "sources": [
         "mcst"
+      ],
+      "subCourses": [
+        {
+          "name": "E"
+        },
+        {
+          "name": "e"
+        }
       ]
     },
     {
@@ -3355,7 +3486,15 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25772476"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25772476",
+      "subCourses": [
+        {
+          "name": "B"
+        },
+        {
+          "name": "E"
+        }
+      ]
     },
     {
       "id": "더크로스비gc_경기",
@@ -3402,6 +3541,17 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "파인"
+        },
+        {
+          "name": "크릭"
+        },
+        {
+          "name": "레이크"
+        }
       ]
     },
     {
@@ -3521,6 +3671,20 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "EAST"
+        },
+        {
+          "name": "NORTH"
+        },
+        {
+          "name": "SOUTH"
+        },
+        {
+          "name": "WEST"
+        }
       ]
     },
     {
@@ -3741,6 +3905,17 @@
       "sources": [
         "mcst",
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "A"
+        },
+        {
+          "name": "B"
+        },
+        {
+          "name": "C"
+        }
       ]
     },
     {
@@ -3767,7 +3942,15 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070360"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070360",
+      "subCourses": [
+        {
+          "name": "EAST"
+        },
+        {
+          "name": "WEST"
+        }
+      ]
     },
     {
       "id": "포천아도니스cc_경기_2",
@@ -3895,6 +4078,14 @@
         "mois",
         "mois_coord",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "힐"
+        }
       ]
     },
     {
@@ -3979,7 +4170,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/10023479"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/10023479",
+      "subCourses": [
+        {
+          "name": "파인"
+        },
+        {
+          "name": "힐"
+        },
+        {
+          "name": "레이크"
+        }
+      ]
     },
     {
       "id": "포레스트힐cc_경기",
@@ -4073,6 +4275,17 @@
       "sources": [
         "mcst",
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
       ]
     },
     {
@@ -4305,7 +4518,21 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8539802"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8539802",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "빅토리아_경기",
@@ -4853,6 +5080,17 @@
       "dataQuality": "low",
       "sources": [
         "mcst"
+      ],
+      "subCourses": [
+        {
+          "name": "BIRCH"
+        },
+        {
+          "name": "MAPLE"
+        },
+        {
+          "name": "PINE"
+        }
       ]
     },
     {
@@ -5121,6 +5359,14 @@
       "dataQuality": "low",
       "sources": [
         "mcst"
+      ],
+      "subCourses": [
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "파인"
+        }
       ]
     },
     {
@@ -5221,6 +5467,14 @@
       "dataQuality": "low",
       "sources": [
         "mcst"
+      ],
+      "subCourses": [
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "오션"
+        }
       ]
     },
     {
@@ -5315,6 +5569,14 @@
       "sources": [
         "mcst",
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
       ]
     },
     {
@@ -5531,7 +5793,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/27389031"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/27389031",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "파크"
+        }
+      ]
     },
     {
       "id": "드림파크_인천",
@@ -5955,6 +6228,14 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        }
       ]
     },
     {
@@ -6333,7 +6614,21 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/12108104"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/12108104",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "베어크리크춘천_강원",
@@ -6381,6 +6676,20 @@
         "mcst",
         "mois",
         "osm_coord"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "리버"
+        },
+        {
+          "name": "포레스트"
+        }
       ]
     },
     {
@@ -7489,7 +7798,15 @@
         "mcst",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/24050819"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/24050819",
+      "subCourses": [
+        {
+          "name": "E"
+        },
+        {
+          "name": "e"
+        }
+      ]
     },
     {
       "id": "설해원_강원",
@@ -9054,6 +9371,17 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "오션"
+        }
       ]
     },
     {
@@ -9259,6 +9587,20 @@
         "mcst",
         "mois",
         "mois_coord"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -9306,6 +9648,14 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "E"
+        },
+        {
+          "name": "a"
+        }
       ]
     },
     {
@@ -9419,6 +9769,20 @@
         "mois",
         "mois_coord",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -10124,7 +10488,7 @@
         "lat": 35.90503447114463,
         "lng": 128.84803050382445
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -10892,7 +11256,24 @@
         "mois_coord",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/27302337"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/27302337",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        },
+        {
+          "name": "중"
+        }
+      ]
     },
     {
       "id": "가야cc_경남_2",
@@ -12537,6 +12918,17 @@
         "mcst",
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -12844,7 +13236,21 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1986185942"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1986185942",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "순천부영cc_전남",
@@ -14717,7 +15123,18 @@
         "kakao_phone",
         "mcst"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/18193311"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/18193311",
+      "subCourses": [
+        {
+          "name": "레이크A"
+        },
+        {
+          "name": "레이크B"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "아덴힐_제주",
@@ -14746,7 +15163,7 @@
     {
       "id": "재한국군사문제연구원남성대쌍둥이골프연습장_kr",
       "name": "(재)한국군사문제연구원남성대쌍둥이골프연습장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 성남시 수정구 창곡동 92-1",
       "phone": null,
       "clubhouse": null,
@@ -14764,14 +15181,14 @@
     {
       "id": "더헤븐cc_kr",
       "name": "더헤븐 컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 안산시 단원구 대선로 466, ㈜더헤븐리조트 (대부남동)",
       "phone": "0328841004",
       "clubhouse": {
         "lat": 37.232511,
         "lng": 126.5629
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14785,14 +15202,14 @@
     {
       "id": "아일랜드cc_kr",
       "name": "아일랜드컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 안산시 단원구 대부남동 1111",
       "phone": "0328851004",
       "clubhouse": {
         "lat": 37.233253,
         "lng": 126.564639
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14806,14 +15223,14 @@
     {
       "id": "제일cc_kr",
       "name": "제일C.C",
-      "region": "",
+      "region": "경기",
       "address": "경기도 안산시 상록구 태마당로 28 (부곡동)",
       "phone": "031-400-2500",
       "clubhouse": {
         "lat": 37.32632,
         "lng": 126.867736
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14830,14 +15247,14 @@
     {
       "id": "광릉레져개발주광릉cc_kr_1",
       "name": "광릉레져개발(주) 광릉CC",
-      "region": "",
+      "region": "경기",
       "address": "경기도 남양주시 진접읍 팔야로 280",
       "phone": "031-528-7001",
       "clubhouse": {
         "lat": 37.762575,
         "lng": 127.244147
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14854,14 +15271,14 @@
     {
       "id": "광릉레져개발주광릉cc_kr_2",
       "name": "광릉레져개발(주)  광릉CC",
-      "region": "",
+      "region": "경기",
       "address": "경기도 남양주시 진접읍 팔야로 280",
       "phone": "0315287001",
       "clubhouse": {
         "lat": 37.762575,
         "lng": 127.244147
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14875,14 +15292,14 @@
     {
       "id": "주캐슬렉스서울캐슬렉스gc_kr",
       "name": "(주)캐슬렉스서울 캐슬렉스골프클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 하남시 감이로 317 (감이동)",
       "phone": "024805660",
       "clubhouse": {
         "lat": 37.498047,
         "lng": 127.167061
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14897,7 +15314,7 @@
     {
       "id": "한성_kr",
       "name": "한성",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 기흥구 구교동로 151 (마북동)",
       "phone": "031-284-3831",
       "clubhouse": {
@@ -14921,14 +15338,14 @@
     {
       "id": "레이크사이드대중_kr",
       "name": "레이크사이드대중",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 처인구 모현읍 능원로 181",
       "phone": null,
       "clubhouse": {
         "lat": 37.327347,
         "lng": 127.177138
       },
-      "holesCount": null,
+      "holesCount": 54,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14937,19 +15354,39 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크A"
+        },
+        {
+          "name": "레이크B"
+        },
+        {
+          "name": "마운틴A"
+        },
+        {
+          "name": "마운틴B"
+        },
+        {
+          "name": "파크A"
+        },
+        {
+          "name": "파크B"
+        }
       ]
     },
     {
       "id": "용인씨씨_kr",
       "name": "용인씨씨",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 처인구 백암면 황새울로 255",
       "phone": "031-332-3323",
       "clubhouse": {
         "lat": 37.112319,
         "lng": 127.342732
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14965,14 +15402,14 @@
     {
       "id": "코리아대중cc_kr",
       "name": "코리아대중CC",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 기흥구 기흥단지로 224 (고매동)",
       "phone": null,
       "clubhouse": {
         "lat": 37.223735,
         "lng": 127.118596
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -14987,14 +15424,14 @@
     {
       "id": "레이크사이드회원_kr",
       "name": "레이크사이드회원",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 처인구 모현읍 능원로 181",
       "phone": null,
       "clubhouse": {
         "lat": 37.327347,
         "lng": 127.177138
       },
-      "holesCount": null,
+      "holesCount": 54,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15003,12 +15440,32 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크A"
+        },
+        {
+          "name": "레이크B"
+        },
+        {
+          "name": "마운틴A"
+        },
+        {
+          "name": "마운틴B"
+        },
+        {
+          "name": "파크A"
+        },
+        {
+          "name": "파크B"
+        }
       ]
     },
     {
       "id": "한림용인_kr",
       "name": "한림용인",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 처인구 남사면 경기동로 628",
       "phone": "031-336-8350",
       "clubhouse": {
@@ -15032,14 +15489,14 @@
     {
       "id": "주베스트밸리gc_kr",
       "name": "(주)베스트밸리골프클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 파주시 광탄면 장지산로200번길 32-41",
       "phone": "0319507700",
       "clubhouse": {
         "lat": 37.756759,
         "lng": 126.883624
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15054,7 +15511,7 @@
     {
       "id": "파주jpublic_kr",
       "name": "파주 J-Public 골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 파주시 조리읍 장곡로 100",
       "phone": "031-8071-0808",
       "clubhouse": {
@@ -15078,14 +15535,14 @@
     {
       "id": "주파주cc_kr",
       "name": "(주) 파주컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 파주시 법원읍 화합로 306",
       "phone": "0319599999",
       "clubhouse": {
         "lat": 37.843697,
         "lng": 126.903902
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15099,14 +15556,14 @@
     {
       "id": "서원밸리gc_kr",
       "name": "서원밸리골프클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 파주시 광탄면 서원길 333, 서원밸리G.C클럽",
       "phone": "031-940-9400",
       "clubhouse": {
         "lat": 37.821899,
         "lng": 126.897717
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15123,14 +15580,14 @@
     {
       "id": "호반서서울주식회사_kr",
       "name": "호반서서울 주식회사",
-      "region": "",
+      "region": "경기",
       "address": "경기도 파주시 광탄면 혜음로 324",
       "phone": null,
       "clubhouse": {
         "lat": 37.733412,
         "lng": 126.901952
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15146,14 +15603,14 @@
     {
       "id": "서원밸리대중_kr",
       "name": "서원밸리 대중골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 파주시 광탄면 서원길 333",
       "phone": null,
       "clubhouse": {
         "lat": 37.821899,
         "lng": 126.897717
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15167,14 +15624,14 @@
     {
       "id": "뉴스프링빌_kr",
       "name": "뉴스프링빌골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 모가면 사실로527번길 158, 뉴스프링빌C.C.",
       "phone": "0316307500",
       "clubhouse": {
         "lat": 37.154434,
         "lng": 127.43153
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15184,12 +15641,26 @@
       "sources": [
         "mois",
         "osm_coord"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
       "id": "백암비스타_kr",
       "name": "백암비스타골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 모가면 어농리 산 86",
       "phone": null,
       "clubhouse": null,
@@ -15207,14 +15678,14 @@
     {
       "id": "뉴스프링빌대중형_kr",
       "name": "뉴스프링빌골프장(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 모가면 사실로527번길 158, 뉴스프링빌C.C.",
       "phone": null,
       "clubhouse": {
         "lat": 37.154434,
         "lng": 127.43153
       },
-      "holesCount": null,
+      "holesCount": 54,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15223,19 +15694,39 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        },
+        {
+          "name": "중"
+        },
+        {
+          "name": "A"
+        }
       ]
     },
     {
       "id": "비에이비스타cc대중형_kr",
       "name": "비에이비스타C.C.(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 모가면 어농로 272",
       "phone": null,
       "clubhouse": {
         "lat": 37.182044,
         "lng": 127.417748
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15249,14 +15740,14 @@
     {
       "id": "비에이비스타회원제_kr",
       "name": "비에이비스타 골프장(회원제)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 모가면 어농로 272",
       "phone": null,
       "clubhouse": {
         "lat": 37.182044,
         "lng": 127.417748
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15265,19 +15756,33 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "마운틴A"
+        },
+        {
+          "name": "마운틴B"
+        },
+        {
+          "name": "밸리A"
+        },
+        {
+          "name": "밸리B"
+        }
       ]
     },
     {
       "id": "더반gc대중형_kr",
       "name": "더반 골프클럽(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 대월면 대월로 627-141",
       "phone": null,
       "clubhouse": {
         "lat": 37.207067,
         "lng": 127.490543
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15291,14 +15796,14 @@
     {
       "id": "블랙스톤회원제_kr",
       "name": "블랙스톤골프장(회원제)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 장호원읍 장여로 459-160",
       "phone": null,
       "clubhouse": {
         "lat": 37.161666,
         "lng": 127.616728
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15313,7 +15818,7 @@
     {
       "id": "대중제9홀_kr",
       "name": "대중제 골프장(9홀)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 장호원읍 풍계리 산 52",
       "phone": "0316432000",
       "clubhouse": null,
@@ -15331,7 +15836,7 @@
     {
       "id": "이천실크밸리gc대중형_kr",
       "name": "이천실크밸리골프클럽(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 율면 임오산로 296",
       "phone": null,
       "clubhouse": null,
@@ -15349,7 +15854,7 @@
     {
       "id": "이천마이다스골프앤리조트대중형_kr",
       "name": "이천마이다스골프앤리조트(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 설성면 설가로 602",
       "phone": null,
       "clubhouse": null,
@@ -15367,14 +15872,14 @@
     {
       "id": "마이다스레이크이천골프리조트_kr",
       "name": "마이다스 레이크 이천 골프& 리조트",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 설성면 설가로 602",
       "phone": "031-640-0123",
       "clubhouse": {
         "lat": 37.177067,
         "lng": 127.524471
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15391,14 +15896,14 @@
     {
       "id": "블랙스톤대중형_kr",
       "name": "블랙스톤골프장(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 장호원읍 장여로 459-160",
       "phone": "0316300815",
       "clubhouse": {
         "lat": 37.161666,
         "lng": 127.616728
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15407,12 +15912,26 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "웨스트"
+        },
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "힐"
+        }
       ]
     },
     {
       "id": "더크로스비gc대중형_kr",
       "name": "더크로스비골프클럽(대중형)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 이천시 호법면 중부대로798번길 177, 클럽하우스",
       "phone": "0316388374",
       "clubhouse": null,
@@ -15430,14 +15949,14 @@
     {
       "id": "한일_kr",
       "name": "한일골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주군 가남면 양귀리 산 59",
       "phone": "031-880-7000",
       "clubhouse": {
         "lat": 37.191521,
         "lng": 127.580234
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15454,14 +15973,14 @@
     {
       "id": "지산_kr",
       "name": "지산골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 용인시 원삼면 맹리 산 29-8",
       "phone": "031-330-1412",
       "clubhouse": {
         "lat": 37.216065,
         "lng": 127.336554
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15478,14 +15997,14 @@
     {
       "id": "크리스밸리cc_kr",
       "name": "크리스밸리CC",
-      "region": "",
+      "region": "경기",
       "address": "경기도 안성시 일죽면 일생로 212-41",
       "phone": "0316716633",
       "clubhouse": {
         "lat": 37.069888,
         "lng": 127.488786
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15499,14 +16018,14 @@
     {
       "id": "가평베네스트gc_kr",
       "name": "가평베네스트G.C",
-      "region": "",
+      "region": "경기",
       "address": "경기도 가평군 상면 둔덕말길 232",
       "phone": "15779727",
       "clubhouse": {
         "lat": 37.797874,
         "lng": 127.303447
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15516,19 +16035,30 @@
       "sources": [
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "스카이"
+        }
       ]
     },
     {
       "id": "가평리조트_kr",
       "name": "가평리조트 골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 가평군 조종면 운악청계로 702-24, 리앤리컨트리클럽",
       "phone": "0315809000",
       "clubhouse": {
         "lat": 37.878442,
         "lng": 127.348783
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15544,14 +16074,14 @@
     {
       "id": "양평tpcgc_kr",
       "name": "양평TPC GC",
-      "region": "",
+      "region": "경기",
       "address": "경기도 양평군 지평면 대평평장길 113-8 (양평TPC골프클럽)",
       "phone": "0317723000",
       "clubhouse": {
         "lat": 37.415665,
         "lng": 127.653566
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "공립",
       "areaM2": null,
@@ -15566,7 +16096,7 @@
     {
       "id": "제이드팰리스솔프클럽_kr",
       "name": "제이드팰리스솔프클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 춘천시 남산면 서천리 산 35",
       "phone": null,
       "clubhouse": null,
@@ -15584,7 +16114,7 @@
     {
       "id": "동서울레스피아대중_kr",
       "name": "동서울레스피아대중골프장",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 지정면 신평석화로 236",
       "phone": null,
       "clubhouse": null,
@@ -15602,14 +16132,14 @@
     {
       "id": "오크밸리_kr",
       "name": "오크밸리골프장",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 지정면 월송리 산 171",
       "phone": "1588-7676",
       "clubhouse": {
         "lat": 37.438091,
         "lng": 127.813759
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15626,7 +16156,7 @@
     {
       "id": "오투리조트골프대중제18홀_kr",
       "name": "오투리조트 골프(대중제 18홀)",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 태백시 서학로 861 (황지동, 오투리조트)",
       "phone": null,
       "clubhouse": null,
@@ -15644,7 +16174,7 @@
     {
       "id": "휘닉스파크회원제_kr",
       "name": "휘닉스파크골프장(회원제)",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 평창군 봉평면 면온리 산 249",
       "phone": null,
       "clubhouse": null,
@@ -15662,7 +16192,7 @@
     {
       "id": "용평리조트gc회원제_kr",
       "name": "용평리조트골프클럽(회원제)",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 평창군 대관령면 수하리",
       "phone": "0333355757",
       "clubhouse": null,
@@ -15680,7 +16210,7 @@
     {
       "id": "휘닉스파크대중_kr",
       "name": "휘닉스파크대중골프장",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 평창군 봉평면 무이리 산 268",
       "phone": null,
       "clubhouse": null,
@@ -15705,7 +16235,7 @@
         "lat": 36.948327,
         "lng": 127.840019
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15727,7 +16257,7 @@
         "lat": 37.018125,
         "lng": 127.813026
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "공립",
       "areaM2": null,
@@ -15749,7 +16279,7 @@
         "lat": 37.018125,
         "lng": 127.813026
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15770,7 +16300,7 @@
         "lat": 37.176523,
         "lng": 127.739335
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15903,7 +16433,7 @@
         "lat": 36.945267,
         "lng": 127.386798
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -15927,7 +16457,7 @@
         "lat": 36.937728,
         "lng": 127.339036
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16060,7 +16590,7 @@
         "lat": 36.867702,
         "lng": 127.258048
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16082,7 +16612,7 @@
         "lat": 36.867702,
         "lng": 127.258048
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -16105,7 +16635,7 @@
         "lat": 36.864048,
         "lng": 127.252453
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -16126,7 +16656,7 @@
         "lat": 36.74352060671802,
         "lng": 127.28063472435369
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16138,7 +16668,18 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8089904"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8089904",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "중"
+        }
+      ]
     },
     {
       "id": "솔라고cc라고_kr",
@@ -16150,7 +16691,7 @@
         "lat": 36.690346,
         "lng": 126.325897
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16173,7 +16714,7 @@
         "lat": 36.699294,
         "lng": 126.318739
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16195,7 +16736,7 @@
         "lat": 36.720485,
         "lng": 126.337941
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16205,6 +16746,20 @@
       "sources": [
         "mois",
         "osm_coord"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크A"
+        },
+        {
+          "name": "레이크B"
+        },
+        {
+          "name": "마운틴A"
+        },
+        {
+          "name": "마운틴B"
+        }
       ]
     },
     {
@@ -16231,7 +16786,7 @@
     {
       "id": "송산_kr",
       "name": "송산",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 익산시 석암로 207  (석암동)",
       "phone": "031-369-8315",
       "clubhouse": {
@@ -16254,14 +16809,14 @@
     {
       "id": "주송산골프랜드_kr",
       "name": "(주)송산골프랜드",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 익산시 석암로 207  (석암동)",
       "phone": null,
       "clubhouse": {
         "lat": 35.941265,
         "lng": 127.013334
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16275,7 +16830,7 @@
     {
       "id": "태흥골프연습장_kr",
       "name": "태흥골프연습장",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 익산시 부송로 119  (부송동)",
       "phone": "0638385066",
       "clubhouse": {
@@ -16303,7 +16858,7 @@
         "lat": 34.779045,
         "lng": 127.692361
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16325,7 +16880,7 @@
         "lat": 34.633034,
         "lng": 127.290626
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16347,7 +16902,7 @@
         "lat": 34.741071,
         "lng": 126.42213
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16369,7 +16924,7 @@
         "lat": 35.773169,
         "lng": 129.486115
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16410,7 +16965,7 @@
         "lat": 35.787821,
         "lng": 129.32173
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16426,14 +16981,14 @@
     {
       "id": "주라비돌라비돌cc_kr",
       "name": "(주)라비돌 라비돌컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 화성시 효행구 정남면 세자로 286",
       "phone": "0313527150",
       "clubhouse": {
         "lat": 37.190427,
         "lng": 126.983333
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16448,7 +17003,7 @@
     {
       "id": "신창기업주발리오스cc비회원제업_kr",
       "name": "신창기업(주)발리오스컨트리클럽(비회원제골프장업)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 화성시 만세구 팔탄면 3.1만세로 641-28",
       "phone": "0313525061",
       "clubhouse": null,
@@ -16466,7 +17021,7 @@
     {
       "id": "신창기업주발리오스cc회원제_kr",
       "name": "신창기업(주)발리오스컨트리클럽(회원제)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 화성시 만세구 팔탄면 3.1만세로 641-28",
       "phone": null,
       "clubhouse": null,
@@ -16484,14 +17039,14 @@
     {
       "id": "화성상록gc_kr",
       "name": "화성 상록 G.C",
-      "region": "",
+      "region": "경기",
       "address": "경기도 화성시 동탄구 풀무골로60번길 80 (중동)",
       "phone": null,
       "clubhouse": {
         "lat": 37.19711809310345,
         "lng": 127.13334860344827
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16501,19 +17056,30 @@
       "sources": [
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
       ]
     },
     {
       "id": "로제비앙gc_kr",
       "name": "로제비앙GC",
-      "region": "",
+      "region": "경기",
       "address": "경기도 광주시 곤지암읍 오향길 180",
       "phone": "031-799-6000",
       "clubhouse": {
         "lat": 37.378405,
         "lng": 127.372071
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16537,7 +17103,7 @@
         "lat": 36.845261,
         "lng": 127.583705
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16661,14 +17227,14 @@
     {
       "id": "로얄개발주레이크우드_kr_1",
       "name": "로얄개발(주) 레이크우드 골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 양주시 만송로 244 (만송동)",
       "phone": "031-820-1500",
       "clubhouse": {
         "lat": 37.782087,
         "lng": 127.087821
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16685,14 +17251,14 @@
     {
       "id": "로얄개발주레이크우드_kr_2",
       "name": "로얄개발(주) 레이크우드 골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 양주시 만송로 244 (만송동)",
       "phone": "0318201515",
       "clubhouse": {
         "lat": 37.784351,
         "lng": 127.087887
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16706,14 +17272,14 @@
     {
       "id": "주티에스개발송추cc_kr",
       "name": "(주)티에스개발 송추컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 양주시 광적면 쇠장이길 435",
       "phone": "031-871-9410",
       "clubhouse": {
         "lat": 37.796647,
         "lng": 126.911093
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16730,7 +17296,7 @@
     {
       "id": "coveswing_kr",
       "name": "COVE Swing",
-      "region": "",
+      "region": "경기",
       "address": "경기도 포천시 삼육사로 1982 (설운동)",
       "phone": "0315380333",
       "clubhouse": {
@@ -16753,14 +17319,14 @@
     {
       "id": "힐마루골프앤리조트포천_kr",
       "name": "힐마루 골프앤리조트 포천",
-      "region": "",
+      "region": "경기",
       "address": "경기도 포천시 영중면 금화봉4길 77",
       "phone": "0315380777",
       "clubhouse": {
         "lat": 37.98859,
         "lng": 127.224687
       },
-      "holesCount": null,
+      "holesCount": 45,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16769,19 +17335,36 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "파인"
+        },
+        {
+          "name": "힐"
+        },
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "포레스트"
+        },
+        {
+          "name": "A"
+        }
       ]
     },
     {
       "id": "페럼클럽_kr",
       "name": "페럼클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 점동면 점동로 181",
       "phone": "031-887-7000",
       "clubhouse": {
         "lat": 37.208379,
         "lng": 127.685236
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16798,14 +17381,14 @@
     {
       "id": "yjcgc_kr",
       "name": "YJC골프클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 월평로 78 (월송동)",
       "phone": "031-883-7000",
       "clubhouse": {
         "lat": 37.279829,
         "lng": 127.605736
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16822,7 +17405,7 @@
     {
       "id": "블루헤런gc_kr",
       "name": "블루헤런G.C",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 대신면 고달사로 67",
       "phone": "0318840701",
       "clubhouse": {
@@ -16844,14 +17427,14 @@
     {
       "id": "금강cc_kr",
       "name": "금강컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 가남읍 여주남로 541",
       "phone": "031-880-6000",
       "clubhouse": {
         "lat": 37.244223,
         "lng": 127.594004
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16863,19 +17446,27 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/12457489"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/12457489",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "자유cc_kr",
       "name": "자유컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 가남읍 자유그린길 69",
       "phone": "0318848400",
       "clubhouse": {
         "lat": 37.209254,
         "lng": 127.568299
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16890,14 +17481,14 @@
     {
       "id": "신라cc_kr",
       "name": "신라컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 북내면 신라그린길 84",
       "phone": "1833-8800",
       "clubhouse": {
         "lat": 37.365368,
         "lng": 127.704501
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16909,19 +17500,33 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8412181"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8412181",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "남여주대중_kr",
       "name": "남여주대중골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 가여로 532 (하거동)",
       "phone": "0318806700",
       "clubhouse": {
         "lat": 37.218497,
         "lng": 127.625858
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16936,14 +17541,14 @@
     {
       "id": "렉스필드cc_kr",
       "name": "렉스필드 컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 산북면 광여로 1115",
       "phone": "031-880-8700",
       "clubhouse": {
         "lat": 37.398869,
         "lng": 127.421508
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16960,14 +17565,14 @@
     {
       "id": "캐슬파인리조트주식회사_kr",
       "name": "캐슬파인리조트주식회사",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 강천면 부평로 580",
       "phone": "0318808656",
       "clubhouse": {
         "lat": 37.30734,
         "lng": 127.742058
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -16982,14 +17587,14 @@
     {
       "id": "빅토리아일반대중_kr",
       "name": "빅토리아일반대중골프장",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 가남읍 송삼로 191",
       "phone": null,
       "clubhouse": {
         "lat": 37.179193,
         "lng": 127.630146
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -17004,14 +17609,14 @@
     {
       "id": "해슬리나인브릿지cc_kr",
       "name": "해슬리나인브릿지 컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 명품1로 76 (연라동)",
       "phone": "031-887-9900",
       "clubhouse": {
         "lat": 37.250247,
         "lng": 127.618856
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -17028,14 +17633,14 @@
     {
       "id": "더시에나벨루토cc_kr",
       "name": "더시에나벨루토 컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 여양로 530 (오금동)",
       "phone": "031-887-8700",
       "clubhouse": {
         "lat": 37.327092,
         "lng": 127.655537
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -17052,14 +17657,14 @@
     {
       "id": "360도cc_kr",
       "name": "360도 컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 강천면 부평로 609",
       "phone": "031-880-3600",
       "clubhouse": {
         "lat": 37.297064,
         "lng": 127.736513
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -17076,14 +17681,14 @@
     {
       "id": "여주썬밸리cc_kr",
       "name": "여주썬밸리 컨트리클럽",
-      "region": "",
+      "region": "경기",
       "address": "경기도 여주시 강천면 강문로 872",
       "phone": "031-887-5300",
       "clubhouse": {
         "lat": 37.269027,
         "lng": 127.737215
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -17100,14 +17705,14 @@
     {
       "id": "아시아드cc_kr",
       "name": "아시아드컨트리클럽",
-      "region": "",
+      "region": "부산",
       "address": "부산광역시 기장군 일광면 차양길 26",
       "phone": "051-720-6000",
       "clubhouse": {
         "lat": 35.284475,
         "lng": 129.241565
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17124,14 +17729,14 @@
     {
       "id": "기장동원로얄_kr",
       "name": "기장동원로얄골프장",
-      "region": "",
+      "region": "부산",
       "address": "부산광역시 기장군 기장읍 반송로 1345-52",
       "phone": "0516304134",
       "clubhouse": {
         "lat": 35.25251,
         "lng": 129.189199
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17147,14 +17752,14 @@
     {
       "id": "베이사이드gc_kr",
       "name": "베이사이드골프클럽",
-      "region": "",
+      "region": "부산",
       "address": "부산광역시 기장군 일광면 이천8길 100",
       "phone": "0516425100",
       "clubhouse": {
         "lat": 35.276268,
         "lng": 129.241864
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17168,14 +17773,14 @@
     {
       "id": "부산칸트리클럽_kr",
       "name": "부산칸트리클럽",
-      "region": "",
+      "region": "부산",
       "address": "부산광역시 금정구 중앙대로2327번길 112 (노포동)",
       "phone": "051-509-0707",
       "clubhouse": {
         "lat": 35.298267,
         "lng": 129.093582
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17191,14 +17796,14 @@
     {
       "id": "하이스트ccjs강서_kr",
       "name": "하이스트컨트리클럽(JS강서)",
-      "region": "",
+      "region": "부산",
       "address": "부산광역시 강서구 과학산단1로 172 (지사동)",
       "phone": "0519417791",
       "clubhouse": {
         "lat": 35.137741,
         "lng": 128.812227
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17212,14 +17817,14 @@
     {
       "id": "냉천개발주윤상락_kr",
       "name": "냉천개발(주) 윤상락",
-      "region": "",
+      "region": "대구",
       "address": "대구광역시 달성군 가창면 가창로 1037-9",
       "phone": null,
       "clubhouse": {
         "lat": 35.794121,
         "lng": 128.623817
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17233,14 +17838,14 @@
     {
       "id": "산타크로스_kr",
       "name": "산타크로스골프장",
-      "region": "",
+      "region": "대구",
       "address": "대구광역시 군위군 소보면 서금로 342-0",
       "phone": null,
       "clubhouse": {
         "lat": 36.211056,
         "lng": 128.522683
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17255,14 +17860,14 @@
     {
       "id": "인천국제공항스카이칠십이_kr",
       "name": "인천국제공항스카이칠십이골프장",
-      "region": "",
+      "region": "인천",
       "address": "인천광역시 중구 공항동로 392 (운서동)",
       "phone": "1599-0072",
       "clubhouse": {
         "lat": 37.485877,
         "lng": 126.466469
       },
-      "holesCount": null,
+      "holesCount": 54,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17274,19 +17879,39 @@
         "mois",
         "osm_coord"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070550"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070550",
+      "subCourses": [
+        {
+          "name": "스카이A"
+        },
+        {
+          "name": "스카이B"
+        },
+        {
+          "name": "스카이C"
+        },
+        {
+          "name": "스카이D"
+        },
+        {
+          "name": "스카이E"
+        },
+        {
+          "name": "스카이F"
+        }
+      ]
     },
     {
       "id": "베르힐cc영종_kr",
       "name": "베르힐cc 영종",
-      "region": "",
+      "region": "인천",
       "address": "인천광역시 중구 한상중앙로 66-0 (중산동)",
       "phone": "0221907696",
       "clubhouse": {
         "lat": 37.52645844409019,
         "lng": 126.56320638166369
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17296,19 +17921,33 @@
       "sources": [
         "mois",
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "스카이"
+        },
+        {
+          "name": "오션"
+        },
+        {
+          "name": "힐"
+        }
       ]
     },
     {
       "id": "드림아일랜드_kr",
       "name": "드림아일랜드골프장",
-      "region": "",
+      "region": "인천",
       "address": "인천광역시 중구 은하수로29번길 36-0 (중산동)",
       "phone": null,
       "clubhouse": {
         "lat": 37.490259,
         "lng": 126.581465
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17317,12 +17956,26 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "웨스트"
+        },
+        {
+          "name": "사우스"
+        },
+        {
+          "name": "노스"
+        }
       ]
     },
     {
       "id": "오렌지듄스영종gc_kr",
       "name": "오렌지듄스 영종 골프클럽",
-      "region": "",
+      "region": "인천",
       "address": "인천광역시 중구 운서동 2850번지 43호",
       "phone": "032-745-3000",
       "clubhouse": {
@@ -17346,7 +17999,7 @@
     {
       "id": "광산친환경대중_kr",
       "name": "광산 친환경대중골프장",
-      "region": "",
+      "region": "광주",
       "address": "광주광역시 광산구 오목내길 26 (연산동)",
       "phone": null,
       "clubhouse": null,
@@ -17364,14 +18017,14 @@
     {
       "id": "한미르대덕밸리cc_kr",
       "name": "한미르대덕밸리 컨트리클럽",
-      "region": "",
+      "region": "대전",
       "address": "대전광역시 유성구 테크노중앙로 210-0, 1동 (용산동,한미르대덕밸리컨트리클럽)",
       "phone": "042-250-6565",
       "clubhouse": {
         "lat": 36.418904,
         "lng": 127.401392
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17388,14 +18041,14 @@
     {
       "id": "삼남대중_kr",
       "name": "삼남대중골프장",
-      "region": "",
+      "region": "울산",
       "address": "울산광역시 울주군 삼남면 방기가천로 179",
       "phone": null,
       "clubhouse": {
         "lat": 35.507537,
         "lng": 129.074193
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17410,14 +18063,14 @@
     {
       "id": "울산cc_kr",
       "name": "울산컨트리클럽",
-      "region": "",
+      "region": "울산",
       "address": "울산광역시 울주군 웅촌면 웅촌로 1",
       "phone": "052-225-0707",
       "clubhouse": {
         "lat": 35.439427,
         "lng": 129.184972
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17429,19 +18082,30 @@
         "mois",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8034159"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8034159",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        }
+      ]
     },
     {
       "id": "골프존카운티더골프_kr",
       "name": "골프존카운티 더골프",
-      "region": "",
+      "region": "울산",
       "address": "울산광역시 울주군 서생면 용연길 206-52",
       "phone": "052-240-0100",
       "clubhouse": {
         "lat": 35.362912,
         "lng": 129.311243
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17457,14 +18121,14 @@
     {
       "id": "보라cc_kr",
       "name": "보라컨트리클럽",
-      "region": "",
+      "region": "울산",
       "address": "울산광역시 울주군 삼동면 삼동로 404",
       "phone": "052-255-1000",
       "clubhouse": {
         "lat": 35.493255,
         "lng": 129.133603
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17481,14 +18145,14 @@
     {
       "id": "오르비스gc_kr",
       "name": "오르비스 골프클럽",
-      "region": "",
+      "region": "울산",
       "address": "울산광역시 울주군 온양읍 남창로 813-70",
       "phone": "052-939-2000",
       "clubhouse": {
         "lat": 35.44923825846751,
         "lng": 129.27601436009078
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17505,14 +18169,14 @@
     {
       "id": "안성아덴힐cc변경후안성루나힐스_kr",
       "name": "안성 아덴힐 C.C (변경 후 안성 루나힐스)",
-      "region": "",
+      "region": "경기",
       "address": "경기도 안성시 양성면 약산길 67-6 (안성아덴힐CC)",
       "phone": null,
       "clubhouse": {
         "lat": 37.119391,
         "lng": 127.268449
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17533,7 +18197,7 @@
         "lat": 37.030417,
         "lng": 127.465085
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17609,7 +18273,7 @@
         "lat": 36.990739,
         "lng": 127.681319
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17654,7 +18318,7 @@
         "lat": 36.954309,
         "lng": 127.854615
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17678,7 +18342,7 @@
         "lat": 37.177934,
         "lng": 128.210254
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17699,7 +18363,7 @@
         "lat": 36.904501,
         "lng": 127.312005
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17710,7 +18374,15 @@
         "kakao_coord",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/21286333"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/21286333",
+      "subCourses": [
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "스카이"
+        }
+      ]
     },
     {
       "id": "코스카cc_kr_1",
@@ -17722,7 +18394,7 @@
         "lat": 36.931865,
         "lng": 127.621127
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17746,7 +18418,7 @@
         "lat": 36.931865,
         "lng": 127.621127
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17770,7 +18442,7 @@
         "lat": 37.177934,
         "lng": 128.210254
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17791,7 +18463,7 @@
         "lat": 36.503941,
         "lng": 127.690352
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17813,7 +18485,7 @@
         "lat": 37.176523,
         "lng": 127.739335
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17834,7 +18506,7 @@
         "lat": 37.176523,
         "lng": 127.739335
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17855,7 +18527,7 @@
         "lat": 36.527075,
         "lng": 127.687534
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17864,6 +18536,20 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -17876,7 +18562,7 @@
         "lat": 37.09244161378835,
         "lng": 127.73746107338067
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17900,7 +18586,7 @@
         "lat": 37.108467,
         "lng": 127.787305
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17921,7 +18607,7 @@
         "lat": 37.007127882020065,
         "lng": 127.62707496113269
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17945,7 +18631,7 @@
         "lat": 36.527075,
         "lng": 127.687534
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17956,7 +18642,21 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1880598737"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1880598737",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "센테리움cc대중제_kr_1",
@@ -17968,7 +18668,7 @@
         "lat": 37.042971,
         "lng": 127.793645
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -17989,7 +18689,7 @@
         "lat": 37.042971,
         "lng": 127.793645
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18010,7 +18710,7 @@
         "lat": 36.929594,
         "lng": 127.77901
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18022,7 +18722,21 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/751199763"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/751199763",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "그랜드cc회원제_kr",
@@ -18034,7 +18748,7 @@
         "lat": 36.718882,
         "lng": 127.390572
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18056,7 +18770,7 @@
         "lat": 36.937728,
         "lng": 127.339036
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18113,7 +18827,7 @@
         "lat": 36.947447,
         "lng": 127.38673
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18173,7 +18887,7 @@
         "lat": 37.037503,
         "lng": 127.465487
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18197,7 +18911,7 @@
         "lat": 37.069336,
         "lng": 127.992689
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18219,7 +18933,7 @@
         "lat": 37.092033,
         "lng": 128.275893
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18241,7 +18955,7 @@
         "lat": 37.027548,
         "lng": 127.647514
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18281,7 +18995,7 @@
         "lat": 37.069336,
         "lng": 127.992689
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18338,7 +19052,7 @@
         "lat": 37.028548,
         "lng": 127.866456
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18360,7 +19074,7 @@
         "lat": 37.027548,
         "lng": 127.647514
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18453,7 +19167,7 @@
         "lat": 36.846192,
         "lng": 126.918652
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18477,7 +19191,7 @@
         "lat": 36.303972,
         "lng": 126.900729
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18499,7 +19213,7 @@
         "lat": 37.008995,
         "lng": 126.582523
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18510,7 +19224,21 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1404551021"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1404551021",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "내포gc_kr",
@@ -18522,7 +19250,7 @@
         "lat": 36.674324,
         "lng": 126.669818
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18564,7 +19292,7 @@
         "lat": 36.458508,
         "lng": 126.842429
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18587,7 +19315,7 @@
         "lat": 35.016885,
         "lng": 126.803689
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18634,7 +19362,7 @@
         "lat": 34.901191,
         "lng": 127.448608
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18676,7 +19404,7 @@
         "lat": 34.798814,
         "lng": 126.970122
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18688,7 +19416,21 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/142485327"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/142485327",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "여수경도골프앤리조트_kr",
@@ -18700,7 +19442,7 @@
         "lat": 34.707884,
         "lng": 127.730333
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18724,7 +19466,7 @@
         "lat": 34.941745,
         "lng": 126.459422
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18746,7 +19488,7 @@
         "lat": 34.953779,
         "lng": 126.925226
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18770,7 +19512,7 @@
         "lat": 34.548482,
         "lng": 126.758955
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18794,7 +19536,7 @@
         "lat": 37.525954,
         "lng": 126.562713
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18806,7 +19548,15 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1080935210"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1080935210",
+      "subCourses": [
+        {
+          "name": "E"
+        },
+        {
+          "name": "e"
+        }
+      ]
     },
     {
       "id": "포항대중18홀_kr",
@@ -18836,7 +19586,7 @@
         "lat": 36.28341,
         "lng": 127.871241
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18860,7 +19610,7 @@
         "lat": 36.28341,
         "lng": 127.871241
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18901,7 +19651,7 @@
         "lat": 35.682043,
         "lng": 128.293772
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18924,7 +19674,7 @@
         "lat": 36.223971,
         "lng": 129.342176
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18948,7 +19698,7 @@
         "lat": 35.730181,
         "lng": 129.372748
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18972,7 +19722,7 @@
         "lat": 36.171781,
         "lng": 128.485902
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -18993,7 +19743,7 @@
         "lat": 36.281826,
         "lng": 128.560148
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19014,7 +19764,7 @@
         "lat": 36.281826,
         "lng": 128.560148
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19035,7 +19785,7 @@
         "lat": 35.992307,
         "lng": 128.857125
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19057,7 +19807,7 @@
         "lat": 35.909747,
         "lng": 129.319582
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19081,7 +19831,7 @@
         "lat": 36.081685,
         "lng": 128.471842
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19104,7 +19854,7 @@
         "lat": 36.044711,
         "lng": 128.227507
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19113,6 +19863,20 @@
       "dataQuality": "low",
       "sources": [
         "mois"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -19125,7 +19889,7 @@
         "lat": 36.044711,
         "lng": 128.227507
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19147,7 +19911,7 @@
         "lat": 35.787821,
         "lng": 129.32173
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19170,7 +19934,7 @@
         "lat": 35.678748,
         "lng": 129.374587
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19193,7 +19957,7 @@
         "lat": 35.06986,
         "lng": 128.405289
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19217,7 +19981,7 @@
         "lat": 35.495807,
         "lng": 128.492101
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19239,7 +20003,7 @@
         "lat": 35.495807,
         "lng": 128.492101
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19260,7 +20024,7 @@
         "lat": 35.099325,
         "lng": 128.020863
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19281,7 +20045,7 @@
         "lat": 35.099325,
         "lng": 128.020863
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19302,7 +20066,7 @@
         "lat": 35.686483,
         "lng": 127.713834
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19324,7 +20088,7 @@
         "lat": 35.458709,
         "lng": 128.735087
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19348,7 +20112,7 @@
         "lat": 35.309451,
         "lng": 128.573471
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19365,7 +20129,7 @@
     {
       "id": "골프존카운티오라회원제_kr",
       "name": "골프존카운티 오라 (회원제)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 오라남로 130-16 (오라이동)",
       "phone": null,
       "clubhouse": null,
@@ -19383,7 +20147,7 @@
     {
       "id": "더시에나cc대중형18홀_kr",
       "name": "더시에나CC(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 516로 2695 (영평동)",
       "phone": null,
       "clubhouse": null,
@@ -19401,7 +20165,7 @@
     {
       "id": "골프존카운티오라대중형18홀_kr",
       "name": "골프존카운티오라 (대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 오라남로 130-16 (오라이동,오라칸트리클럽)",
       "phone": null,
       "clubhouse": null,
@@ -19419,7 +20183,7 @@
     {
       "id": "중문gc대중형18홀_kr",
       "name": "중문골프클럽(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 중문관광로72번길 60 (색달동)",
       "phone": null,
       "clubhouse": null,
@@ -19437,7 +20201,7 @@
     {
       "id": "캐슬렉스제주회원제18홀_kr",
       "name": "캐슬렉스제주(회원제18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 평화로 1241",
       "phone": null,
       "clubhouse": null,
@@ -19455,7 +20219,7 @@
     {
       "id": "크라운cc대중형27홀_kr",
       "name": "크라운컨트리클럽(대중형 27홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 조천읍 북선로 125",
       "phone": null,
       "clubhouse": null,
@@ -19473,7 +20237,7 @@
     {
       "id": "핀크스gc비회원제9홀_kr",
       "name": "핀크스GC (비회원제9홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 산록남로 863",
       "phone": null,
       "clubhouse": null,
@@ -19491,7 +20255,7 @@
     {
       "id": "핀크스gc회원제18홀_kr",
       "name": "핀크스GC(회원제 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 산록남로 863",
       "phone": null,
       "clubhouse": null,
@@ -19509,7 +20273,7 @@
     {
       "id": "나인브릿지gc회원제_kr",
       "name": "나인브릿지골프클럽(회원제)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 광평로 34-156",
       "phone": null,
       "clubhouse": null,
@@ -19527,14 +20291,14 @@
     {
       "id": "주볼카노골프앤리조트_kr",
       "name": "(주)볼카노골프앤리조트",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 산록남로 1391 (중문동)",
       "phone": "1533-3888",
       "clubhouse": {
         "lat": 33.301833,
         "lng": 126.435464
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19551,7 +20315,7 @@
     {
       "id": "플라자cc대중형9홀_kr",
       "name": "플라자CC(대중형9홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 명림로 575-107 (회천동,한화리조트)",
       "phone": null,
       "clubhouse": null,
@@ -19569,7 +20333,7 @@
     {
       "id": "라온gc대중형27홀_kr",
       "name": "라온골프클럽 (대중형 27홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 한경면 용금로 998",
       "phone": null,
       "clubhouse": null,
@@ -19587,7 +20351,7 @@
     {
       "id": "나인브릿지퍼블릭대중형6홀_kr",
       "name": "나인브릿지 퍼블릭(대중형6홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 광평로 34-156",
       "phone": null,
       "clubhouse": null,
@@ -19605,14 +20369,14 @@
     {
       "id": "엘리시안cc_kr",
       "name": "엘리시안컨트리클럽",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 애월읍 평화로 1738-116",
       "phone": "064-798-7000",
       "clubhouse": {
         "lat": 33.372334,
         "lng": 126.380847
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19624,12 +20388,26 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070202"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070202",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "롯데스카이힐제주cc회원제18홀_kr",
       "name": "롯데스카이힐제주CC(회원제 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 상예로 530 (색달동)",
       "phone": null,
       "clubhouse": null,
@@ -19647,7 +20425,7 @@
     {
       "id": "롯데스카이힐제주cc대중형18홀_kr",
       "name": "롯데스카이힐제주CC(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 상예로 530 (색달동)",
       "phone": null,
       "clubhouse": null,
@@ -19665,7 +20443,7 @@
     {
       "id": "샤인빌파크cc대중형18홀_kr",
       "name": "샤인빌파크CC(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 표선면 가시로 384-0 (샤인빌골프장)",
       "phone": null,
       "clubhouse": null,
@@ -19683,7 +20461,7 @@
     {
       "id": "엘리시안제주cc대중형18홀_kr",
       "name": "엘리시안제주CC(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 애월읍 어음리 3914번지 1호",
       "phone": null,
       "clubhouse": null,
@@ -19701,7 +20479,7 @@
     {
       "id": "블랙스톤제주cc대중형18홀_kr",
       "name": "블랙스톤제주CC(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 한림읍 한창로 925-122",
       "phone": null,
       "clubhouse": null,
@@ -19719,14 +20497,14 @@
     {
       "id": "그린필드cc_kr",
       "name": "그린필드 컨트리클럽",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 조천읍 번영로 1040-70",
       "phone": "064-720-7000",
       "clubhouse": {
         "lat": 33.463633975073314,
         "lng": 126.64447691589645
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19743,7 +20521,7 @@
     {
       "id": "사이프러스대중형18홀_kr",
       "name": "사이프러스(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 표선면 번영로 2300",
       "phone": null,
       "clubhouse": null,
@@ -19761,14 +20539,14 @@
     {
       "id": "에버리스cc_kr",
       "name": "에버리스컨트리클럽",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 애월읍 평화로 1693-75",
       "phone": "064-795-5000",
       "clubhouse": {
         "lat": 33.37449729396864,
         "lng": 126.36220503974754
       },
-      "holesCount": null,
+      "holesCount": 45,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19785,7 +20563,7 @@
     {
       "id": "에버리스cc대중형9홀_kr",
       "name": "에버리스CC(대중형 9홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 애월읍 평화로 1693-75",
       "phone": null,
       "clubhouse": null,
@@ -19803,7 +20581,7 @@
     {
       "id": "한라산cc대중형18홀_kr",
       "name": "한라산CC(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 선돌목동길 56-46 (오등동)",
       "phone": null,
       "clubhouse": null,
@@ -19821,14 +20599,14 @@
     {
       "id": "테디벨리_kr",
       "name": "테디벨리",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 한창로 365",
       "phone": "064-793-1000",
       "clubhouse": {
         "lat": 33.292611,
         "lng": 126.348527
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -19840,12 +20618,26 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/27455156"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/27455156",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "파크"
+        },
+        {
+          "name": "오션"
+        }
+      ]
     },
     {
       "id": "주동광주택제주부영cc대중형27홀_kr",
       "name": "(주)동광주택 제주부영CC (대중형 27홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 남원읍 남조로 960",
       "phone": null,
       "clubhouse": null,
@@ -19863,7 +20655,7 @@
     {
       "id": "아난티클럽제주cc대중형27홀_kr",
       "name": "아난티클럽제주CC(대중형 27홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 구좌읍 선유로 445-55",
       "phone": null,
       "clubhouse": null,
@@ -19881,7 +20673,7 @@
     {
       "id": "더클래식cc대중형18홀_kr",
       "name": "더클래식CC (대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 남원읍 남조로 1105-0 (더클래식골프리조트)",
       "phone": null,
       "clubhouse": null,
@@ -19899,7 +20691,7 @@
     {
       "id": "우리들리조트제주대중형18홀_kr",
       "name": "우리들리조트제주(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 산록남로 2914 (상효동)",
       "phone": null,
       "clubhouse": null,
@@ -19917,7 +20709,7 @@
     {
       "id": "에코랜드대중형27홀_kr",
       "name": "에코랜드(대중형 27홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 조천읍 번영로 1278-169",
       "phone": null,
       "clubhouse": null,
@@ -19935,7 +20727,7 @@
     {
       "id": "해비치호텔앤드리조트주해비치cc대중형18홀_kr",
       "name": "해비치호텔앤드리조트(주) 해비치컨트리클럽(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 남원읍 원님로399번길 319",
       "phone": null,
       "clubhouse": null,
@@ -19953,7 +20745,7 @@
     {
       "id": "해비치호텔앤드리조트주해비치cc회원제_kr",
       "name": "해비치호텔앤드리조트(주) 해비치컨트리클럽(회원제)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 남원읍 원님로399번길 319",
       "phone": null,
       "clubhouse": null,
@@ -19971,7 +20763,7 @@
     {
       "id": "아덴힐대중형18홀_kr",
       "name": "아덴힐(대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 한림읍 화전길 32",
       "phone": null,
       "clubhouse": null,
@@ -19989,7 +20781,7 @@
     {
       "id": "주그랜드부민꿈드림목장비회원제9홀_kr",
       "name": "(주)그랜드부민 꿈드림목장 (비회원제 9홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 516로 2596-117 (용강동)",
       "phone": null,
       "clubhouse": null,
@@ -20007,7 +20799,7 @@
     {
       "id": "스프링데일골프리조트대중형18홀_kr",
       "name": "스프링데일 골프&리조트 (대중형 18홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 남원읍 서성로 459",
       "phone": null,
       "clubhouse": null,
@@ -20025,7 +20817,7 @@
     {
       "id": "캐슬렉스제주대중형9홀_kr",
       "name": "캐슬렉스제주(대중형 9홀)",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 평화로 1241-0",
       "phone": null,
       "clubhouse": null,
@@ -20043,14 +20835,14 @@
     {
       "id": "아난티클럽제주cc_kr",
       "name": "아난티클럽제주CC",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 제주시 구좌읍 선유로 445-55",
       "phone": "064-786-3800",
       "clubhouse": {
         "lat": 33.520547,
         "lng": 126.738607
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20062,19 +20854,33 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1188532666"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1188532666",
+      "subCourses": [
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "웨스트"
+        },
+        {
+          "name": "사우스"
+        },
+        {
+          "name": "노스"
+        }
+      ]
     },
     {
       "id": "파라다이스_kr",
       "name": "파라다이스골프장",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 광평리 산 125",
       "phone": null,
       "clubhouse": {
         "lat": 34.979768,
         "lng": 127.552835
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -20090,14 +20896,14 @@
     {
       "id": "핀크스gc_kr",
       "name": "핀크스 골프클럽",
-      "region": "",
+      "region": "제주",
       "address": "제주특별자치도 서귀포시 안덕면 산록남로 863",
       "phone": "0647935007",
       "clubhouse": {
         "lat": 33.315328,
         "lng": 126.388628
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "사립",
       "areaM2": null,
@@ -20113,7 +20919,7 @@
     {
       "id": "벨라45마스터스cc_kr",
       "name": "벨라45 마스터스 컨트리클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 횡성군 서원면 서원남로 80-0",
       "phone": null,
       "clubhouse": null,
@@ -20131,14 +20937,14 @@
     {
       "id": "동강시스타_kr_1",
       "name": "동강시스타 골프장",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 영월군 영월읍 사지막길 160-0 (동강시스타)",
       "phone": "0339052030",
       "clubhouse": {
         "lat": 37.217737,
         "lng": 128.518782
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20152,14 +20958,14 @@
     {
       "id": "동강시스타_kr_2",
       "name": "동강시스타",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 영월군 영월읍 사지막길 160",
       "phone": "033-905-2030",
       "clubhouse": {
         "lat": 37.216688,
         "lng": 128.511401
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20176,14 +20982,14 @@
     {
       "id": "남한강에스파크cc_kr",
       "name": "남한강에스파크 컨트리클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 부론면 법천리 32번지 0호",
       "phone": null,
       "clubhouse": {
         "lat": 37.201348,
         "lng": 127.782747
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20198,7 +21004,7 @@
     {
       "id": "강촌리조트대중폐업_kr",
       "name": "강촌리조트 대중골프장(폐업)",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 춘천시 남산면 북한강변길 688",
       "phone": null,
       "clubhouse": {
@@ -20219,14 +21025,14 @@
     {
       "id": "올데이옥스필드_kr",
       "name": "올데이 옥스필드",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 횡성군 서원면 경강로유현6길 28",
       "phone": "033-340-7700",
       "clubhouse": {
         "lat": 37.515908,
         "lng": 127.842555
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20243,14 +21049,14 @@
     {
       "id": "알프스퍼블릭_kr",
       "name": "알프스퍼블릭",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 고성군 간성읍 흘리령길 52",
       "phone": "033-340-8000",
       "clubhouse": {
         "lat": 38.26313,
         "lng": 128.37861
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20266,7 +21072,7 @@
     {
       "id": "세레티니강촌cc_kr",
       "name": "세레티니 강촌C.C",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 춘천시 남면 소주고개로 145-14, 1층 (파가니카CC클럽하우스)",
       "phone": null,
       "clubhouse": null,
@@ -20284,14 +21090,14 @@
     {
       "id": "미사용_kr_1",
       "name": "미사용",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 소초면 바우실길 281",
       "phone": "031-591-5236",
       "clubhouse": {
         "lat": 37.391756,
         "lng": 128.015262
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20307,14 +21113,14 @@
     {
       "id": "미사용_kr_2",
       "name": "미사용",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 양양군 손양면 학포리 84번지 1호",
       "phone": "031-591-5236",
       "clubhouse": {
         "lat": 37.764148,
         "lng": 127.289219
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20331,14 +21137,14 @@
     {
       "id": "월송리cc_kr",
       "name": "월송리 컨트리클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 지정면 오크밸리2길 250-0 (퍼블릭클럽하우스)",
       "phone": "1588-7676",
       "clubhouse": {
         "lat": 37.413939,
         "lng": 127.822142
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20355,14 +21161,14 @@
     {
       "id": "오크힐스cc_kr",
       "name": "오크힐스 컨트리클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 지정면 오크밸리2길 58-0 (오크힐스클럽하우스)",
       "phone": "1588-7676",
       "clubhouse": {
         "lat": 37.417447,
         "lng": 127.829799
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20379,14 +21185,14 @@
     {
       "id": "카스카디아gc_kr",
       "name": "카스카디아 골프클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 홍천군 북방면 팔봉산로 1759-0",
       "phone": "033-430-0000",
       "clubhouse": {
         "lat": 37.720712,
         "lng": 127.759305
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20402,14 +21208,14 @@
     {
       "id": "성문안cc_kr",
       "name": "성문안 컨트리클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 지정면 월송석화로 431-0 (성문안C.C)",
       "phone": "1588-7676",
       "clubhouse": {
         "lat": 37.397322,
         "lng": 127.833435
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20426,14 +21232,14 @@
     {
       "id": "오로라골프앤리조트_kr",
       "name": "오로라 골프 앤 리조트",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 원주시 신림면 구학산로 1520-0",
       "phone": "033-810-8800",
       "clubhouse": {
         "lat": 37.202911,
         "lng": 128.043155
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20450,14 +21256,14 @@
     {
       "id": "벨라45오너스cc_kr",
       "name": "벨라45 오너스 컨트리클럽",
-      "region": "",
+      "region": "강원",
       "address": "강원특별자치도 횡성군 서원면 서원남로 80-0",
       "phone": "1551-2745",
       "clubhouse": {
         "lat": 37.477894,
         "lng": 127.85628
       },
-      "holesCount": null,
+      "holesCount": 45,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20469,19 +21275,33 @@
         "kakao_phone",
         "mois"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1769002908"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1769002908",
+      "subCourses": [
+        {
+          "name": "A"
+        },
+        {
+          "name": "B"
+        },
+        {
+          "name": "D"
+        },
+        {
+          "name": "E"
+        }
+      ]
     },
     {
       "id": "운선cc_kr",
       "name": "운선컨트리클럽",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 완주군 운주면 산북신복길 166",
       "phone": null,
       "clubhouse": {
         "lat": 36.077676,
         "lng": 127.353724
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20496,14 +21316,14 @@
     {
       "id": "무주안성cc_kr_1",
       "name": "무주안성CC",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 무주군 안성면 공진리 산 53번지 1호",
       "phone": "063-320-3200",
       "clubhouse": {
         "lat": 35.831322,
         "lng": 127.636554
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20520,14 +21340,14 @@
     {
       "id": "무주안성cc_kr_2",
       "name": "무주안성CC",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 무주군 안성면 공진리 산 53-1번지",
       "phone": "063-320-3200",
       "clubhouse": {
         "lat": 35.831322,
         "lng": 127.636554
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20544,14 +21364,14 @@
     {
       "id": "상떼힐익산간이_kr",
       "name": "상떼힐익산간이골프장",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 익산시 무왕로38길 111 (덕기동)",
       "phone": null,
       "clubhouse": {
         "lat": 35.961535,
         "lng": 127.02619
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": "",
       "areaM2": null,
@@ -20566,7 +21386,7 @@
     {
       "id": "써미트컨트리큽럽_kr",
       "name": "써미트컨트리큽럽",
-      "region": "",
+      "region": "전북",
       "address": "전북특별자치도 진안군 부귀면 부귀로 72-161",
       "phone": null,
       "clubhouse": null,
@@ -20591,7 +21411,7 @@
         "lat": 37.58747891880484,
         "lng": 127.2062213171891
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20615,7 +21435,7 @@
         "lat": 33.456436190874186,
         "lng": 126.61009618476416
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20627,7 +21447,21 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25042337"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25042337",
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "중문gcjoongmooncc_제주",
@@ -20769,7 +21603,7 @@
         "lat": 33.28782633210201,
         "lng": 126.40551866921112
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20778,6 +21612,20 @@
       "dataQuality": "low",
       "sources": [
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "동"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
       ]
     },
     {
@@ -20790,7 +21638,7 @@
         "lat": 35.898700168811025,
         "lng": 128.8147050782463
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20858,7 +21706,7 @@
         "lat": 37.40370010888889,
         "lng": 127.21239897462065
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20903,7 +21751,7 @@
         "lat": 37.381164558645295,
         "lng": 127.24402841043644
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20924,7 +21772,7 @@
         "lat": 37.469815599773824,
         "lng": 126.8787342340371
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20947,7 +21795,7 @@
         "lat": 37.35759315634492,
         "lng": 126.65330756964612
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -20992,7 +21840,7 @@
         "lat": 37.21702751064468,
         "lng": 127.00658473995163
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21016,7 +21864,7 @@
         "lat": 35.94217152351526,
         "lng": 126.68433779226052
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21040,7 +21888,7 @@
         "lat": 36.84962504363583,
         "lng": 127.20658601385743
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21064,7 +21912,7 @@
         "lat": 33.32944790883343,
         "lng": 126.63741503237043
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21088,7 +21936,7 @@
         "lat": 33.33949281263852,
         "lng": 126.34894615992634
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21112,7 +21960,7 @@
         "lat": 33.34567898985451,
         "lng": 126.36405157611941
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21136,7 +21984,7 @@
         "lat": 33.351330807873076,
         "lng": 126.3908315199792
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21160,7 +22008,7 @@
         "lat": 33.34091823489297,
         "lng": 126.40268231896528
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21185,7 +22033,15 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25021723"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25021723",
+      "subCourses": [
+        {
+          "name": "안"
+        },
+        {
+          "name": "밖"
+        }
+      ]
     },
     {
       "id": "우리들cc_제주",
@@ -21197,7 +22053,7 @@
         "lat": 33.307604915962926,
         "lng": 126.58834169926294
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21221,7 +22077,7 @@
         "lat": 33.4127234615428,
         "lng": 126.74458378289955
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21233,7 +22089,21 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070254"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070254",
+      "subCourses": [
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "웨스트"
+        },
+        {
+          "name": "사우스"
+        },
+        {
+          "name": "노스"
+        }
+      ]
     },
     {
       "id": "오라cc_제주",
@@ -21245,7 +22115,7 @@
         "lat": 33.445661053734966,
         "lng": 126.5102889704057
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21269,7 +22139,7 @@
         "lat": 33.33770483893425,
         "lng": 126.30854328079515
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21281,7 +22151,18 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1965155405"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1965155405",
+      "subCourses": [
+        {
+          "name": "이스트"
+        },
+        {
+          "name": "웨스트"
+        },
+        {
+          "name": "레이크"
+        }
+      ]
     },
     {
       "id": "샤인빌파크ccriver코스_제주",
@@ -21293,7 +22174,7 @@
         "lat": 33.34203233875401,
         "lng": 126.78316699561248
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21314,7 +22195,7 @@
         "lat": 33.461776826125785,
         "lng": 126.67123185404945
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21338,7 +22219,7 @@
         "lat": 33.28936859544254,
         "lng": 126.34338426004798
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21350,7 +22231,21 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/27455156"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/27455156",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "파크"
+        },
+        {
+          "name": "오션"
+        }
+      ]
     },
     {
       "id": "사천체력단련장_경남",
@@ -21362,7 +22257,7 @@
         "lat": 35.1026498,
         "lng": 128.08356519999998
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21386,7 +22281,7 @@
         "lat": 36.11342383277722,
         "lng": 128.4365591673405
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21410,7 +22305,7 @@
         "lat": 33.34904466037055,
         "lng": 126.79122529282445
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21431,7 +22326,7 @@
         "lat": 33.37901246845957,
         "lng": 126.24186346693823
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21455,7 +22350,7 @@
         "lat": 37.34908154063949,
         "lng": 126.61641283083593
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21479,7 +22374,7 @@
         "lat": 36.54724347291075,
         "lng": 127.38907518768004
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21503,7 +22398,7 @@
         "lat": 36.66629912328693,
         "lng": 127.32156302651771
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21515,7 +22410,15 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1056854965"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1056854965",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "북"
+        }
+      ]
     },
     {
       "id": "이천실크밸리gc_경기",
@@ -21527,7 +22430,7 @@
         "lat": 37.082406580073865,
         "lng": 127.57238434524209
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21551,7 +22454,7 @@
         "lat": 36.3178364538264,
         "lng": 127.23900599793241
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21574,7 +22477,7 @@
         "lat": 36.90708225181081,
         "lng": 127.30859273040326
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21586,7 +22489,15 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/21286333"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/21286333",
+      "subCourses": [
+        {
+          "name": "밸리"
+        },
+        {
+          "name": "스카이"
+        }
+      ]
     },
     {
       "id": "오창에딘버러cc_충북",
@@ -21598,7 +22509,7 @@
         "lat": 36.73434002519752,
         "lng": 127.42769783927874
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21622,7 +22533,7 @@
         "lat": 37.247959914450625,
         "lng": 127.18249266652475
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21646,7 +22557,7 @@
         "lat": 35.250915224181945,
         "lng": 126.59109172095654
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21670,7 +22581,7 @@
         "lat": 37.47824537089146,
         "lng": 127.15689087087182
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21717,7 +22628,7 @@
         "lat": 36.674791695302844,
         "lng": 127.48049506806633
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21741,7 +22652,7 @@
         "lat": 37.362768219443346,
         "lng": 127.16600965138315
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21765,7 +22676,7 @@
         "lat": 37.223500561931935,
         "lng": 129.06852214067288
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21774,6 +22685,20 @@
       "dataQuality": "low",
       "sources": [
         "osm"
+      ],
+      "subCourses": [
+        {
+          "name": "블랙"
+        },
+        {
+          "name": "베리"
+        },
+        {
+          "name": "파인"
+        },
+        {
+          "name": "힐"
+        }
       ]
     },
     {
@@ -21810,7 +22735,7 @@
         "lat": 37.224557213775206,
         "lng": 126.72943452911092
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21831,7 +22756,7 @@
         "lat": 37.542462821428046,
         "lng": 126.96785747275376
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21878,7 +22803,7 @@
         "lat": 36.15124875008139,
         "lng": 128.30180772100965
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21901,7 +22826,7 @@
         "lat": 36.6117190943353,
         "lng": 127.29432345061453
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21948,7 +22873,7 @@
         "lat": 37.681156813005515,
         "lng": 126.74240869236347
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -21972,7 +22897,7 @@
         "lat": 37.51579911950631,
         "lng": 126.85446880387545
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22020,7 +22945,7 @@
         "lat": 37.5810137465988,
         "lng": 126.90577654933236
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22068,7 +22993,7 @@
         "lat": 37.817627460418656,
         "lng": 127.1463958164236
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22092,7 +23017,7 @@
         "lat": 36.37705096397551,
         "lng": 127.39104124074066
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22116,7 +23041,7 @@
         "lat": 37.695573136480725,
         "lng": 126.84577757722839
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22140,7 +23065,7 @@
         "lat": 37.17749988121387,
         "lng": 128.19560832515654
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22164,7 +23089,7 @@
         "lat": 36.246019995764,
         "lng": 129.3512524703423
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22201,7 +23126,7 @@
         "lat": 36.08840733229457,
         "lng": 128.43161133726593
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22225,7 +23150,7 @@
         "lat": 37.18955498019798,
         "lng": 127.03832937497673
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22237,7 +23162,21 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/19935407"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/19935407",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "파인"
+        },
+        {
+          "name": "힐"
+        },
+        {
+          "name": "힐스"
+        }
+      ]
     },
     {
       "id": "unknown_대구",
@@ -22249,7 +23188,7 @@
         "lat": 35.89838230910336,
         "lng": 128.54574625396899
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22273,7 +23212,7 @@
         "lat": 37.35977375165767,
         "lng": 127.15055712804785
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22297,7 +23236,7 @@
         "lat": 35.84281901855247,
         "lng": 128.63298906674805
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22318,7 +23257,7 @@
         "lat": 34.9084525212567,
         "lng": 128.70561187754734
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22342,7 +23281,7 @@
         "lat": 35.82944674728029,
         "lng": 128.62655947428087
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22366,7 +23305,7 @@
         "lat": 34.75775888748792,
         "lng": 127.66417443243607
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22390,7 +23329,7 @@
         "lat": 34.77001098404154,
         "lng": 127.70303388069911
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22414,7 +23353,7 @@
         "lat": 36.13314097351365,
         "lng": 128.32317745738564
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22438,7 +23377,7 @@
         "lat": 34.95107956181446,
         "lng": 127.52266223727077
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22462,7 +23401,7 @@
         "lat": 37.45091157405286,
         "lng": 126.48297760153116
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22510,7 +23449,7 @@
         "lat": 36.11127049850924,
         "lng": 128.3336873176282
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22555,7 +23494,7 @@
         "lat": 36.99092602093927,
         "lng": 126.92247451080229
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22579,7 +23518,7 @@
         "lat": 36.68320496332637,
         "lng": 127.60506267821387
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22603,7 +23542,7 @@
         "lat": 36.61505093760069,
         "lng": 127.61872431336823
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22627,7 +23566,7 @@
         "lat": 37.331204780898375,
         "lng": 127.72875161936241
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22651,7 +23590,7 @@
         "lat": 35.285937812493984,
         "lng": 128.8673653711906
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22672,7 +23611,7 @@
         "lat": 34.834822244198484,
         "lng": 127.27287265687539
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22693,7 +23632,7 @@
         "lat": 35.33220250091303,
         "lng": 126.94775484386855
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22717,7 +23656,7 @@
         "lat": 37.293885673475714,
         "lng": 127.18121814276245
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22741,7 +23680,7 @@
         "lat": 37.156167458687506,
         "lng": 126.93995020698357
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22765,7 +23704,7 @@
         "lat": 37.662949228489865,
         "lng": 127.68614610703894
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22789,7 +23728,7 @@
         "lat": 35.10820820943529,
         "lng": 126.74271328366434
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22813,7 +23752,7 @@
         "lat": 34.93251038885623,
         "lng": 128.08398865046456
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22837,7 +23776,7 @@
         "lat": 37.57669686059618,
         "lng": 126.63428360655917
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22861,7 +23800,7 @@
         "lat": 37.17014491632999,
         "lng": 127.22098704207455
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22885,7 +23824,7 @@
         "lat": 36.1617464,
         "lng": 128.35107639999998
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22930,7 +23869,7 @@
         "lat": 37.38029198169068,
         "lng": 126.94804686394909
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22954,7 +23893,7 @@
         "lat": 35.271088855606486,
         "lng": 128.5175141507365
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -22978,7 +23917,7 @@
         "lat": 37.66450490017872,
         "lng": 127.45639890385829
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23002,7 +23941,7 @@
         "lat": 37.75194050234088,
         "lng": 127.61370335287609
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23023,7 +23962,7 @@
         "lat": 36.48337494853403,
         "lng": 127.1713926442032
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23047,7 +23986,7 @@
         "lat": 35.541569795338084,
         "lng": 129.09712842583
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23095,7 +24034,7 @@
         "lat": 35.22429103149606,
         "lng": 129.21993564451057
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23107,7 +24046,21 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/23699473"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/23699473",
+      "subCourses": [
+        {
+          "name": "오션"
+        },
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "마운틴"
+        },
+        {
+          "name": "가든"
+        }
+      ]
     },
     {
       "id": "동여주cc_경기",
@@ -23119,7 +24072,7 @@
         "lat": 37.218535019141925,
         "lng": 127.61705880047008
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23143,7 +24096,7 @@
         "lat": 36.845811945240015,
         "lng": 126.92082895090894
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23155,7 +24108,15 @@
         "kakao_phone",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1469957"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1469957",
+      "subCourses": [
+        {
+          "name": "레이크"
+        },
+        {
+          "name": "힐"
+        }
+      ]
     },
     {
       "id": "충성대체력단련장_경북",
@@ -23167,7 +24128,7 @@
         "lat": 35.99676559727748,
         "lng": 128.99436172608685
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23191,7 +24152,7 @@
         "lat": 37.175090492203616,
         "lng": 127.52478543057609
       },
-      "holesCount": null,
+      "holesCount": 27,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23215,7 +24176,7 @@
         "lat": 36.83976411411825,
         "lng": 127.04490398057706
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23263,7 +24224,7 @@
         "lat": 37.21929412256706,
         "lng": 126.80422957098536
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23311,7 +24272,7 @@
         "lat": 35.27929644377968,
         "lng": 128.35855637347157
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23335,7 +24296,7 @@
         "lat": 37.36822477683295,
         "lng": 126.7695667009688
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23356,7 +24317,7 @@
         "lat": 36.51968273972511,
         "lng": 127.4516683660343
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23380,7 +24341,7 @@
         "lat": 34.71288282077838,
         "lng": 127.72137994782567
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23401,7 +24362,7 @@
         "lat": 35.25080192799828,
         "lng": 129.01097372371984
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23425,7 +24386,7 @@
         "lat": 35.69350268169857,
         "lng": 128.05359825753305
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23446,7 +24407,7 @@
         "lat": 37.621380035688055,
         "lng": 127.31096137041749
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23493,7 +24454,7 @@
         "lat": 36.993289463587615,
         "lng": 126.91705563518103
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23516,7 +24477,7 @@
         "lat": 37.04033861268126,
         "lng": 127.51876189559499
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23540,7 +24501,7 @@
         "lat": 37.23422061377339,
         "lng": 127.15604355930661
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23564,7 +24525,7 @@
         "lat": 37.65887920894688,
         "lng": 127.52287572515603
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23588,7 +24549,7 @@
         "lat": 37.342637008685365,
         "lng": 127.09568468463543
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23612,7 +24573,7 @@
         "lat": 37.52237558055832,
         "lng": 127.61516266228679
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23636,7 +24597,7 @@
         "lat": 36.60411536062942,
         "lng": 127.29003653858149
       },
-      "holesCount": null,
+      "holesCount": 36,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23647,7 +24608,15 @@
         "kakao_address",
         "osm"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1388096669"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1388096669",
+      "subCourses": [
+        {
+          "name": "HILL"
+        },
+        {
+          "name": "LAKE"
+        }
+      ]
     },
     {
       "id": "서평택gc파3_경기",
@@ -23659,7 +24628,7 @@
         "lat": 36.9923244938233,
         "lng": 126.85909055755982
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23683,7 +24652,7 @@
         "lat": 36.76743328337396,
         "lng": 127.1177105783812
       },
-      "holesCount": null,
+      "holesCount": 9,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23707,7 +24676,7 @@
         "lat": 37.250161692501266,
         "lng": 127.08783575043253
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23731,7 +24700,7 @@
         "lat": 37.38498519707107,
         "lng": 128.66874292419058
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23754,7 +24723,7 @@
         "lat": 35.724104692243074,
         "lng": 126.74119792521803
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23801,7 +24770,7 @@
         "lat": 37.4028725451797,
         "lng": 126.92192781066898
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -23825,7 +24794,7 @@
         "lat": 36.97154434117647,
         "lng": 126.98640412941177
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,
@@ -24478,7 +25447,7 @@
         "lat": 35.212325209246245,
         "lng": 128.0673024886935
       },
-      "holesCount": null,
+      "holesCount": 18,
       "courseType": null,
       "ownerType": null,
       "areaM2": null,

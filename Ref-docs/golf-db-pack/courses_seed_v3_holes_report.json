@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-05-14T02:05:52Z",
+  "beforeHolesCount": 525,
+  "afterHolesCount": 818,
+  "filled": 293,
+  "patternDistribution": {
+    "n_hol": 242,
+    "label_colon": 51
+  },
+  "validHoles": [
+    9,
+    18,
+    27,
+    36,
+    45,
+    54
+  ],
+  "note": ""
+}

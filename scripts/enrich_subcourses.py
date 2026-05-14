@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """
-골프장 SubCourse 라벨 보강 스크립트 v2
+골프장 SubCourse 라벨 보강 스크립트 v3
 - 입력: courses_seed_v3.json (965곳)
-- 대상: holesCount in {27, 36, 45, 54} AND kakaoPlaceUrl != null
-- 방법: 네이버 검색 '{골프장명} 코스' HTML에서 코스명 패턴 추출
+- 대상: holesCount in {27, 36, 45, 54} (kakaoPlaceUrl 유무 무관)
+- 방법:
+    1순위: manual_subcourses.json 수동 매핑 (정확도 최우선)
+    2순위: 네이버 검색 '{골프장명} 코스' HTML 패턴 추출 (v2 기존 방식)
+    3순위: 카카오 장소 HTML 시도 (네이버 실패 시 — SPA라 성공률 낮음)
 - 캐시: Ref-docs/golf-db-pack/.naver_html_cache/ (재실행 시 재크롤 없음)
 - 출력: courses_seed_v3.json in-place 갱신 + 리포트 JSON
 - Rate limit: 0.4초 간격
 - 외부 라이브러리 금지 (urllib + re + json만)
+- 변경: v3 — 패턴 확장(한국 전통명/영문 풀네임/신구 강화/자음 약자) + 수동 매핑 + kakaoPlaceUrl 없어도 시도
 """
 from __future__ import annotations
 import json
@@ -25,6 +29,7 @@ DB_DIR = ROOT / "Ref-docs" / "golf-db-pack"
 INPUT_PATH = DB_DIR / "courses_seed_v3.json"
 OUTPUT_PATH = DB_DIR / "courses_seed_v3.json"
 REPORT_PATH = DB_DIR / "courses_seed_v3_subcourse_report.json"
+MANUAL_PATH = DB_DIR / "manual_subcourses.json"
 CACHE_DIR = DB_DIR / ".naver_html_cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
@@ -49,7 +54,12 @@ RATE_LIMIT = 0.4  # 초
 # (패턴이름, 컴파일된 정규식, desc전용여부)
 PATTERNS: list[tuple[str, re.Pattern, bool]] = [
     # 방위 코스: 동/서/남/북/중 + 방위쪽(남쪽/북쪽 등)
-    ("hanja",   re.compile(r"(동쪽?|서쪽?|남쪽?|북쪽?|중)\s*코스"), False),
+    ("hanja",   re.compile(r"(동쪽?|서쪽?|남쪽?|북쪽?|중앙?)\s*코스"), False),
+    # 한국 전통명 코스: 매/송/죽/국/란/송림 등
+    ("trad",    re.compile(
+        r"(매|송|죽|국|란|송림|매화|소나무|대나무|국화|난초"
+        r"|무궁화|진달래|철쭉|장미|모란|목련|벚꽃|개나리"
+        r")\s*코스"), False),
     # 숫자 코스: 1~5코스 — desc에서만 추출(노이즈 방지)
     ("num",     re.compile(r"([1-5])\s*코스"), True),
     # 신구/뉴올드 코스
@@ -64,15 +74,21 @@ PATTERNS: list[tuple[str, re.Pattern, bool]] = [
         r"|베어|크리크|버치|오크|힐스|리지|파크|비스타"
         r"|레이크힐|마운틴힐|밸리힐"
         r"|화이트|블랙|퍼플|그린|골든"
-        r"|이스트|웨스트|노스|사우스"
+        r"|이스트|웨스트|노스|사우스|센트럴|세트럴"
         r"|인터내셔널|챌린지|드림|비전|스카이|스타"
         r"|로즈|아이리스|라일락|코스모스|철쭉|진달래|목련|벚꽃"
-        r"|실크"
+        r"|실크|힐사이드|클리프|블루밍"
         r")\s*코스"), False),
-    # 영문 전체 단어 코스명: SPRING/SUMMER/EAST/CHERRY 등 (4자 이상 대문자)
+    # 영문 풀네임 코스: SOUTH/WEST/EAST/NORTH/CENTRAL/PINE/LAKE/HILL 등 (4자 이상 대문자)
+    ("en_full", re.compile(
+        r"\b(SOUTH|WEST|EAST|NORTH|CENTRAL|PINE|LAKE|HILL|VALLEY|OCEAN"
+        r"|SPRING|SUMMER|AUTUMN|FOREST|RIVER|GARDEN|ROYAL|CHAMPION"
+        r"|CLASSIC|GOLD|SILVER|PARADISE|CREEK|RIDGE|PARK|VISTA"
+        r"|SUNRISE|SUNSET|CHERRY|MAPLE|OAK|BIRCH|CEDAR)\s*코스"), False),
+    # 영문 4자 이상 대문자 코스명 (일반)
     ("en_word", re.compile(r"\b([A-Z]{4,10})\s*코스"), False),
-    # A~D 단일 알파벳 코스
-    ("alpha",   re.compile(r"([A-Da-d])\s*코스"), False),
+    # A~E 단일 알파벳 코스 (v3: E 추가)
+    ("alpha",   re.compile(r"([A-Ea-e])\s*코스"), False),
 ]
 
 # alpha / en_word 패턴 블랙리스트
@@ -80,6 +96,7 @@ ALPHA_BLACKLIST = {"C", "c", "Cc", "cC", "CC", "cc", "GC", "gc", "G", "g"}
 EN_WORD_BLACKLIST = {
     "GOLF", "CLUB", "COURSE", "HOLE", "YARD", "TOUR", "OPEN",
     "LPGA", "KPGA", "KLPGA", "JACK", "TYPE", "KPGA",
+    "WELL", "BEST", "NICE", "FINE", "GOOD", "STAR", "PLUS",
 }
 
 # 동의어 정규화 — '골드'/'골든' 등 같은 의미의 다른 표기 통일
@@ -148,7 +165,9 @@ def extract_courses(body: str, name: str, expected: int) -> tuple[list[str], str
     desc_text = " ".join(descs)
 
     # 골프장명에 포함된 알파벳 — alpha 패턴 false positive 방지
-    name_alpha = set(re.findall(r"[A-Da-d]", name))
+    name_alpha = set(re.findall(r"[A-Ea-e]", name))
+    # 최대 허용 코스 수: expected 기준이지만, 여유를 두어 expected+1까지 허용
+    max_courses = max(expected + 1, 4)
 
     for pname, pat, desc_only in PATTERNS:
         # desc_only 패턴은 desc_text에서만 시도
@@ -162,19 +181,19 @@ def extract_courses(body: str, name: str, expected: int) -> tuple[list[str], str
                      if k not in ALPHA_BLACKLIST
                      and k.upper() not in {a.upper() for a in name_alpha}
                      and v >= 2}
-        elif pname == "en_word":
+        elif pname in ("en_word", "en_full"):
             valid = {k for k, v in cnt.items()
                      if k not in EN_WORD_BLACKLIST
                      and v >= 2}
-        elif pname in ("newold", "theme"):
-            # 테마/신구는 1회도 수용 (desc에서 명확하게 나오면 OK)
+        elif pname in ("newold", "theme", "trad"):
+            # 테마/신구/전통명은 1회도 수용 (desc에서 명확하게 나오면 OK)
             if desc_text:
                 raw_desc = pat.findall(desc_text)
                 cnt_desc = Counter(raw_desc)
                 valid_desc = {k for k, v in cnt_desc.items() if v >= 1}
-                if 2 <= len(valid_desc) <= expected:
+                if 2 <= len(valid_desc) <= max_courses:
                     normed = normalize_synonyms(list(valid_desc))
-                    if 2 <= len(normed) <= expected:
+                    if 2 <= len(normed) <= max_courses:
                         return normed, pname
             # desc 실패 시 전체 body에서 2회 이상
             valid = {k for k, v in cnt.items() if v >= 2}
@@ -184,9 +203,9 @@ def extract_courses(body: str, name: str, expected: int) -> tuple[list[str], str
         else:
             valid = {k for k, v in cnt.items() if v >= 2}
 
-        if 2 <= len(valid) <= expected:
+        if 2 <= len(valid) <= max_courses:
             normed = normalize_synonyms(list(valid))
-            if 2 <= len(normed) <= expected:
+            if 2 <= len(normed) <= max_courses:
                 return normed, pname
 
     return [], ""
@@ -201,52 +220,74 @@ def main() -> None:
 
     courses = data if isinstance(data, list) else data.get("courses", [])
 
-    # 2. 후보 필터링
+    # 1-1. 수동 매핑 로드
+    manual_map: dict[str, list[str]] = {}
+    if MANUAL_PATH.exists():
+        with open(MANUAL_PATH, encoding="utf-8") as f:
+            manual_data = json.load(f)
+        manual_map = manual_data.get("courses", {})
+        print(f"[수동 매핑] {len(manual_map)}건 로드")
+
+    # 2. 후보 필터링 — v3: kakaoPlaceUrl 없어도 포함
     candidates = [
         c for c in courses
         if c.get("holesCount") in {27, 36, 45, 54}
-        and c.get("kakaoPlaceUrl")
     ]
-    print(f"[후보] {len(candidates)}건 (holesCount 27/36/45/54 + kakaoPlaceUrl)")
+    print(f"[후보] {len(candidates)}건 (holesCount 27/36/45/54)")
+
+    # 2-1. 수동 매핑 먼저 적용 (최우선)
+    manual_applied = 0
+    for c in candidates:
+        cid = c.get("id", "")
+        if cid in manual_map and manual_map[cid]:
+            c["subCourses"] = [{"name": n} for n in manual_map[cid]]
+            manual_applied += 1
+    print(f"[수동 매핑 적용] {manual_applied}건")
+
+    # 네이버 검색 대상: 수동 매핑 미적용 + subCourses 아직 없는 것
+    naver_candidates = [
+        c for c in candidates
+        if c.get("id", "") not in manual_map or not manual_map.get(c.get("id", ""))
+        if not c.get("subCourses")
+    ]
+    print(f"[네이버 후보] {len(naver_candidates)}건")
 
     # 3. 표본 30건 사전 테스트
-    sample = candidates[:30]
+    sample = naver_candidates[:30]
     print(f"\n[표본 테스트] {len(sample)}건 시작...")
     sample_results = _run_batch(sample)
     sample_matched = sum(1 for r in sample_results if r["found"])
     sample_rate = sample_matched / len(sample_results) if sample_results else 0
     print(f"[표본 매칭률] {sample_matched}/{len(sample_results)} = {sample_rate:.1%}")
 
-    if sample_rate < 0.30:
-        print("[중단] 표본 매칭률 30% 미만 — 전체 실행 생략")
-        _write_report(len(candidates), 0, 0, [], "샘플 매칭률 부족으로 조기 종료")
+    # 수동 매핑으로 이미 다수 확보했으므로 네이버 임계값 완화 (15%)
+    if sample_rate < 0.15:
+        print("[중단] 표본 매칭률 15% 미만 — 전체 실행 생략")
+        _write_report(len(naver_candidates), 0, manual_applied, [], "샘플 매칭률 부족으로 조기 종료")
         return
 
     # 4. 전체 실행
-    print(f"\n[전체 실행] {len(candidates)}건...")
-    # 표본 결과 재활용 (캐시 덕에 재요청 없음)
-    all_results = _run_batch(candidates, verbose=False)
+    print(f"\n[전체 실행] {len(naver_candidates)}건...")
+    all_results = _run_batch(naver_candidates, verbose=False)
 
     # 5. JSON 갱신
-    backup_path = OUTPUT_PATH.with_suffix(".json.bak2")
-    shutil.copy2(OUTPUT_PATH, backup_path)
-    print(f"[백업] {backup_path}")
-
     result_map: dict[str, list[str]] = {
         r["id"]: r["found"] for r in all_results if r["found"]
     }
 
-    updated = 0
+    naver_updated = 0
     for c in courses:
         cid = c.get("id", "")
         if cid in result_map:
             names = result_map[cid]
             c["subCourses"] = [{"name": n} for n in names]
-            updated += 1
+            naver_updated += 1
+
+    updated = manual_applied + naver_updated
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f"[갱신] {OUTPUT_PATH} ({updated}건 subCourses 추가)")
+    print(f"[갱신] {OUTPUT_PATH} (수동: {manual_applied} + 네이버: {naver_updated} = 총 {updated}건)")
 
     # 6. 번들 복사
     bundle_path = ROOT / "Shared" / "Resources" / "courses.json"
@@ -260,6 +301,7 @@ def main() -> None:
     pattern_dist: dict[str, int] = Counter(
         r["pattern"] for r in all_results if r["found"]
     )
+    pattern_dist["manual"] = manual_applied
     _write_report(
         total_candidates=len(candidates),
         fetched=len(all_results),
