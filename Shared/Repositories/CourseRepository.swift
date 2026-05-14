@@ -146,6 +146,85 @@ public actor CourseRepository {
             radiusKm: 5.0
         )
     }
+
+    // MARK: - 캐시 포함 적응형 매칭
+
+    /// 번들 GolfCourse + 영구 캐시된 DiscoveredCourse를 합산한 적응형 매칭.
+    ///
+    /// PersistedDiscoveredCourse는 호출자가 fetch해 GolfCourse로 변환한 뒤 전달한다.
+    /// 이 메서드는 두 소스를 병합 후 nearestCoursesAdaptive와 동일 알고리즘 적용.
+    ///
+    /// - Parameters:
+    ///   - coord: 기준 좌표 (lat, lng)
+    ///   - cachedDiscovered: PersistedDiscoveredCourse.toGolfCourse()로 변환된 목록
+    /// - Returns: AdaptiveMatchResult
+    public func nearestCoursesAdaptiveWithCache(
+        to coord: (lat: Double, lng: Double),
+        cachedDiscovered: [GolfCourse]
+    ) async throws -> AdaptiveMatchResult {
+        let bundleCourses = try await loadAll()
+
+        // 번들 ID 집합으로 중복 제거 (kakao: 접두 ID는 번들에 없으므로 자연 분리됨)
+        let merged = bundleCourses + cachedDiscovered
+
+        let withDistance: [(GolfCourse, Double)] = merged.compactMap { course in
+            guard let ch = course.clubhouse else { return nil }
+            let dist = haversineKm(
+                lat1: coord.lat, lng1: coord.lng,
+                lat2: ch.lat, lng2: ch.lng
+            )
+            return (course, dist)
+        }
+        let sorted = withDistance.sorted { $0.1 < $1.1 }
+
+        // 1단계: 1km 반경
+        let within1km = sorted.filter { $0.1 <= 1.0 }
+        if let best = within1km.first {
+            return AdaptiveMatchResult(matched: best.0, candidates: [best.0], radiusKm: 1.0)
+        }
+
+        // 2단계: 3km 반경
+        let within3km = sorted.filter { $0.1 <= 3.0 }
+        if within3km.count == 1 {
+            return AdaptiveMatchResult(matched: within3km[0].0, candidates: [within3km[0].0], radiusKm: 3.0)
+        } else if within3km.count > 1 {
+            return AdaptiveMatchResult(matched: nil, candidates: within3km.map { $0.0 }, radiusKm: 3.0)
+        }
+
+        // 3단계: 5km 반경
+        let within5km = sorted.filter { $0.1 <= 5.0 }
+        if !within5km.isEmpty {
+            return AdaptiveMatchResult(matched: nil, candidates: within5km.map { $0.0 }, radiusKm: 5.0)
+        }
+
+        // 4단계: 매칭 없음
+        return AdaptiveMatchResult(matched: nil, candidates: [], radiusKm: 5.0)
+    }
+
+    // MARK: - 통합 이름 검색
+
+    /// 번들 DB + 영구 캐시 GolfCourse를 병합해 prefix 검색한다.
+    ///
+    /// - Parameters:
+    ///   - prefix: 검색어. 빈 문자열이면 전체 반환.
+    ///   - cachedDiscovered: PersistedDiscoveredCourse.toGolfCourse()로 변환된 목록
+    /// - Returns: 이름 검색 결과 (번들 + 캐시 병합)
+    public func searchAll(
+        prefix: String,
+        cachedDiscovered: [GolfCourse]
+    ) async throws -> [GolfCourse] {
+        let bundleResults = try await search(byName: prefix)
+
+        if prefix.isEmpty {
+            return bundleResults + cachedDiscovered
+        }
+
+        let cachedResults = cachedDiscovered.filter {
+            $0.name.localizedCaseInsensitiveContains(prefix)
+        }
+
+        return bundleResults + cachedResults
+    }
 }
 
 // MARK: - AdaptiveMatchResult

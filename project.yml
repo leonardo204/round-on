@@ -109,8 +109,9 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: Tests/SharedTests
-      # KakaoVerificationService 직접 테스트를 위해 소스 포함
+      # KakaoVerificationService / CourseDiscoveryService 직접 테스트를 위해 소스 포함
       - path: App-iOS/Network/KakaoVerificationService.swift
+      - path: App-iOS/Network/CourseDiscoveryService.swift
     info:
       path: Tests/SharedTests/Info.plist
       properties:
@@ -119,7 +120,7 @@ targets:
       - target: Shared
     settings:
       base:
-        # CoreLocation 링킹 (KakaoVerificationService CLLocation 의존)
+        # CoreLocation 링킹 (KakaoVerificationService / CourseDiscoveryService CLLocation 의존)
         OTHER_LDFLAGS: "-framework CoreLocation"
 
   RoundOn-iOS:

@@ -15,8 +15,15 @@ struct RoundOnApp: App {
     }
 
     static func makeModelContainer() throws -> ModelContainer {
-        let schema = Schema([Round.self, Player.self, HoleScore.self, RoundPhoto.self])
+        let schema = Schema([
+            Round.self,
+            Player.self,
+            HoleScore.self,
+            RoundPhoto.self,
+            PersistedDiscoveredCourse.self  // 카카오 발견 골프장 영구 캐시 (신규)
+        ])
         // GolfCourse는 등록 안 함 (20-ARCHITECTURE §6 옵션 A — 번들 JSON 인메모리 로드)
+        // PersistedDiscoveredCourse는 신규 모델 추가 — 라이트웨이트 마이그레이션 안전
 
         // CloudKit 안전 토글:
         // - 시뮬레이터: 항상 비활성 (빌드 컨피그 무관 — Release QA 시뮬레이터에서도 안전)

@@ -57,6 +57,12 @@ struct NewRoundView: View {
     // Location
     @State private var userLocation: CLLocation?
 
+    // 카카오 발견 골프장 (옵션 A fallback + 옵션 B 검색 통합)
+    @State private var discoveredCandidates: [DiscoveredCourse] = []
+    @State private var isDiscovering: Bool = false
+    /// 현재 선택된 카카오 발견 코스 (startRound 시 영구 캐싱용)
+    @State private var selectedDiscoveredCourse: DiscoveredCourse?
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -113,10 +119,20 @@ struct NewRoundView: View {
             }
             .sheet(isPresented: $showCourseSearch) {
                 CourseSearchSheet(
-                    courses: filteredCourses,
+                    localCourses: allCourses,
                     searchText: $courseSearchText,
-                    onSelect: { course in
+                    userLocation: userLocation,
+                    modelContext: modelContext,
+                    onSelectLocal: { course in
                         matchedCourse = course
+                        selectedDiscoveredCourse = nil
+                        selectedFrontSubCourse = nil
+                        selectedBackSubCourse = nil
+                        showCourseSearch = false
+                    },
+                    onSelectDiscovered: { discovered in
+                        selectedDiscoveredCourse = discovered
+                        matchedCourse = discovered.asGolfCourse()
                         selectedFrontSubCourse = nil
                         selectedBackSubCourse = nil
                         showCourseSearch = false
@@ -194,6 +210,22 @@ struct NewRoundView: View {
             } else if !candidateCourses.isEmpty {
                 // 다중 후보: 사용자 선택 UI
                 candidateListSection
+            } else if isDiscovering {
+                // 카카오 발견 중 스피너
+                HStack {
+                    ProgressView()
+                        .tint(Color.springGreenPrimary)
+                    Text("카카오맵에서 근처 골프장 찾는 중...")
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(16)
+                .background(Color.springSurfaceElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            } else if !discoveredCandidates.isEmpty {
+                // 카카오 발견 골프장 fallback 섹션 (옵션 A)
+                discoveredCandidatesSection
             } else {
                 Button {
                     showCourseSearch = true
@@ -316,6 +348,91 @@ struct NewRoundView: View {
         }
         .background(Color.springSurfaceElevated.opacity(0.5))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - 카카오 발견 골프장 섹션 (옵션 A fallback)
+
+    private var discoveredCandidatesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                Image(systemName: "mappin.and.ellipse")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color(red: 0.9, green: 0.5, blue: 0.0))
+                Text("근처에 발견된 골프장이 있어요")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(Color.springTextPrimary)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+
+            Text("카카오맵 기준 — DB 미등록 골프장")
+                .font(.system(size: 12))
+                .foregroundStyle(Color.springTextSecondary)
+                .padding(.horizontal, 16)
+
+            ForEach(discoveredCandidates) { discovered in
+                Button {
+                    selectDiscoveredCourse(discovered)
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(discovered.name)
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(Color.springTextPrimary)
+                            if let address = discovered.address {
+                                Text(address)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(Color.springTextSecondary)
+                                    .lineLimit(1)
+                            }
+                            // "카카오맵에 등록됨" 배지
+                            Text("카카오맵에 등록됨")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(Color(red: 0.9, green: 0.5, blue: 0.0))
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.yellow.opacity(0.15))
+                                .clipShape(Capsule())
+                        }
+                        Spacer()
+                        if let dist = discovered.distanceKm {
+                            Text(String(format: "%.1fkm", dist))
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundStyle(Color.springGreenPrimary)
+                        }
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11))
+                            .foregroundStyle(Color.springTextSecondary)
+                    }
+                    .padding(14)
+                    .background(Color.springSurfaceElevated)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.horizontal, 16)
+                }
+            }
+
+            Button {
+                showCourseSearch = true
+            } label: {
+                Text("직접 검색하기")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.springTextSecondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 12)
+        }
+        .background(Color.springSurfaceElevated.opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - 카카오 발견 코스 선택
+
+    private func selectDiscoveredCourse(_ discovered: DiscoveredCourse) {
+        selectedDiscoveredCourse = discovered
+        matchedCourse = discovered.asGolfCourse()
+        discoveredCandidates = []
+        kakaoVerificationStatus = .idle
+        Task { await HapticEngine.shared.play(.gpsMatchComplete) }
     }
 
     // MARK: - 후보에서 코스 선택
@@ -537,8 +654,31 @@ struct NewRoundView: View {
             candidateCourses = candidates
             matchedCourse = nil
         } else {
-            // 매칭 없음 → 수동 검색 fallback
+            // 매칭 없음 → 카카오 발견 fallback (옵션 A)
+            await discoverNearbyWithKakao(location: loc)
+        }
+    }
+
+    /// GPS 매칭 실패 시 카카오 로컬 API로 근처 골프장 발견 시도.
+    private func discoverNearbyWithKakao(location: CLLocation) async {
+        isDiscovering = true
+        defer { isDiscovering = false }
+
+        do {
+            let discovered = try await CourseDiscoveryService.shared.searchNearby(
+                location: location,
+                radiusM: 2000
+            )
+            if discovered.isEmpty {
+                matchError = "반경 5km 이내 골프장이 없어요. 직접 검색하세요"
+            } else {
+                discoveredCandidates = discovered
+            }
+        } catch CourseDiscoveryError.unavailable {
+            // API 키 없음 — 수동 검색으로 안내
             matchError = "반경 5km 이내 골프장이 없어요. 직접 검색하세요"
+        } catch {
+            matchError = "골프장을 찾을 수 없어요. 직접 검색하세요"
         }
     }
 
@@ -567,6 +707,25 @@ struct NewRoundView: View {
         let courseHoles = course.holesCount ?? 0
         let holes = (courseHoles == 9 || courseHoles == 18) ? courseHoles : selectedHolesCount
 
+        // 카카오 발견 코스 영구 캐싱 (옵션 C)
+        // 사용자가 선택한 코스가 DiscoveredCourse이면 SwiftData에 insert
+        if let discovered = selectedDiscoveredCourse {
+            let persisted = PersistedDiscoveredCourse(
+                kakaoPlaceId: discovered.kakaoPlaceId,
+                name: discovered.name,
+                address: discovered.address,
+                phone: discovered.phone,
+                lat: discovered.lat,
+                lng: discovered.lng,
+                placeUrl: discovered.placeUrl,
+                firstUsedAt: .now
+            )
+            // @Attribute(.unique) kakaoPlaceId — 중복 시 try?로 안전 처리
+            try? modelContext.save()
+            modelContext.insert(persisted)
+            try? modelContext.save()
+        }
+
         // 플레이어 생성
         var players: [Player] = []
         for i in 0..<playerCount {
@@ -590,47 +749,219 @@ struct NewRoundView: View {
     }
 }
 
-// MARK: - CourseSearchSheet
+// MARK: - CourseSearchSheet (카카오 통합 검색 — 옵션 B)
 
+/// 로컬 DB + 영구 캐시 + 카카오 로컬 API 통합 검색 Sheet.
 private struct CourseSearchSheet: View {
-    let courses: [GolfCourse]
+    let localCourses: [GolfCourse]
     @Binding var searchText: String
-    let onSelect: (GolfCourse) -> Void
+    let userLocation: CLLocation?
+    let modelContext: ModelContext
+    let onSelectLocal: (GolfCourse) -> Void
+    let onSelectDiscovered: (DiscoveredCourse) -> Void
     @Environment(\.dismiss) private var dismiss
 
-    private var filtered: [GolfCourse] {
-        if searchText.isEmpty { return courses }
-        return courses.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+    // 검색 결과 상태
+    @State private var kakaoResults: [DiscoveredCourse] = []
+    @State private var persistedCourses: [GolfCourse] = []
+    @State private var isSearchingKakao: Bool = false
+    /// 카카오 검색 debounce 태스크
+    @State private var kakaoSearchTask: Task<Void, Never>?
+
+    // MARK: - 결과 분류
+
+    /// 로컬 DB + 캐시 결과 (이름 필터링)
+    private var localFiltered: [GolfCourse] {
+        let all = localCourses + persistedCourses
+        if searchText.isEmpty { return all }
+        return all.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
     }
+
+    /// 카카오 결과에서 로컬과 중복 제거 (이름+200m 이내면 제거)
+    private var deduplicatedKakaoResults: [DiscoveredCourse] {
+        kakaoResults.filter { kakao in
+            !localFiltered.contains { local in
+                guard let ch = local.clubhouse else { return false }
+                let nameMatch = local.name.localizedCaseInsensitiveContains(kakao.name) ||
+                               kakao.name.localizedCaseInsensitiveContains(local.name)
+                let dist = haversineKm(
+                    lat1: ch.lat, lng1: ch.lng,
+                    lat2: kakao.lat, lng2: kakao.lng
+                )
+                return nameMatch && dist < 0.2
+            }
+        }
+    }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationStack {
-            List(filtered) { course in
-                Button {
-                    onSelect(course)
-                } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(course.name)
-                            .foregroundStyle(Color.springTextPrimary)
-                        HStack(spacing: 8) {
-                            Text(course.region)
-                                .font(.system(size: 13))
-                                .foregroundStyle(Color.springTextSecondary)
-                            if let holes = course.holesCount {
-                                Text("\(holes)홀")
-                                    .font(.system(size: 13))
-                                    .foregroundStyle(Color.springTextSecondary)
+            List {
+                // 로컬 DB 결과
+                if !localFiltered.isEmpty {
+                    Section {
+                        ForEach(localFiltered) { course in
+                            Button {
+                                onSelectLocal(course)
+                            } label: {
+                                courseRowLocal(course)
                             }
                         }
+                    } header: {
+                        Text("등록 골프장 (\(localFiltered.count))")
+                    }
+                }
+
+                // 카카오 발견 결과
+                if isSearchingKakao {
+                    Section {
+                        HStack {
+                            ProgressView().scaleEffect(0.8)
+                            Text("카카오맵 검색 중...")
+                                .font(.system(size: 14))
+                                .foregroundStyle(Color.springTextSecondary)
+                        }
+                    } header: {
+                        Text("카카오맵 발견")
+                    }
+                } else if !deduplicatedKakaoResults.isEmpty {
+                    Section {
+                        ForEach(deduplicatedKakaoResults) { discovered in
+                            Button {
+                                onSelectDiscovered(discovered)
+                            } label: {
+                                courseRowDiscovered(discovered)
+                            }
+                        }
+                    } header: {
+                        Text("카카오맵 발견 (\(deduplicatedKakaoResults.count))")
                     }
                 }
             }
             .navigationTitle("골프장 검색")
             .searchable(text: $searchText, prompt: "골프장 이름")
+            .onChange(of: searchText) { _, newValue in
+                scheduleKakaoSearch(query: newValue)
+            }
+            .task {
+                loadPersistedCourses()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("취소") { dismiss() }
                 }
+            }
+        }
+    }
+
+    // MARK: - Row Builders
+
+    private func courseRowLocal(_ course: GolfCourse) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 6) {
+                Text(course.name)
+                    .foregroundStyle(Color.springTextPrimary)
+                // 출처 배지
+                sourceBadge(for: course)
+            }
+            HStack(spacing: 8) {
+                if !course.region.isEmpty {
+                    Text(course.region)
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                if let holes = course.holesCount {
+                    Text("\(holes)홀")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func sourceBadge(for course: GolfCourse) -> some View {
+        if course.sources?.contains("kakao_persisted") == true {
+            Text("발견 캐시")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color(red: 0.9, green: 0.5, blue: 0.0))
+                .padding(.horizontal, 5)
+                .padding(.vertical, 1)
+                .background(Color.yellow.opacity(0.15))
+                .clipShape(Capsule())
+        } else {
+            Text("DB 등록")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color.springGreenPrimary)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 1)
+                .background(Color.springGreenSecondary.opacity(0.2))
+                .clipShape(Capsule())
+        }
+    }
+
+    private func courseRowDiscovered(_ discovered: DiscoveredCourse) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 6) {
+                Text(discovered.name)
+                    .foregroundStyle(Color.springTextPrimary)
+                Text("카카오맵 발견")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(Color(red: 0.9, green: 0.5, blue: 0.0))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(Color.yellow.opacity(0.15))
+                    .clipShape(Capsule())
+            }
+            if let address = discovered.address {
+                Text(address)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Color.springTextSecondary)
+                    .lineLimit(1)
+            }
+            if let dist = discovered.distanceKm {
+                Text(String(format: "%.1fkm", dist))
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.springGreenPrimary)
+            }
+        }
+    }
+
+    // MARK: - Logic
+
+    /// 영구 캐시 PersistedDiscoveredCourse → GolfCourse로 변환해 로컬 목록에 병합
+    private func loadPersistedCourses() {
+        let fetched = (try? modelContext.fetch(FetchDescriptor<PersistedDiscoveredCourse>())) ?? []
+        persistedCourses = fetched.map { $0.toGolfCourse() }
+    }
+
+    /// 검색어 변경 → 300ms debounce → 카카오 API 호출
+    private func scheduleKakaoSearch(query: String) {
+        kakaoSearchTask?.cancel()
+        kakaoResults = []
+
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.count > 1 else { return }
+
+        kakaoSearchTask = Task {
+            // 300ms debounce
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            guard !Task.isCancelled else { return }
+
+            await MainActor.run { isSearchingKakao = true }
+            defer { Task { await MainActor.run { isSearchingKakao = false } } }
+
+            do {
+                let results = try await CourseDiscoveryService.shared.searchByKeyword(
+                    query: trimmed,
+                    location: userLocation
+                )
+                await MainActor.run { kakaoResults = results }
+            } catch CourseDiscoveryError.unavailable {
+                // API 키 없음 — 카카오 결과 없이 로컬만 표시
+            } catch {
+                // 기타 에러 — 조용히 무시
             }
         }
     }
