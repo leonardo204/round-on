@@ -99,7 +99,7 @@ struct RoundSummaryView: View {
                 .font(.system(size: 16))
                 .foregroundStyle(Color.springTextSecondary)
 
-            if let sub = round.courseSubName {
+            if let sub = round.displaySubLabel {
                 Text(sub)
                     .font(.system(size: 14))
                     .foregroundStyle(Color.springTextSecondary)

@@ -34,7 +34,8 @@ final class RoundViewModelHealthKitTests: XCTestCase {
         vm.startRound(
             courseId: "test-id",
             courseName: "남해 클럽",
-            courseSubName: nil,
+            frontCourseName: nil,
+            backCourseName: nil,
             players: [],
             holesCount: 18
         )
@@ -58,7 +59,8 @@ final class RoundViewModelHealthKitTests: XCTestCase {
         vm.startRound(
             courseId: "test-id",
             courseName: "남해 클럽",
-            courseSubName: nil,
+            frontCourseName: nil,
+            backCourseName: nil,
             players: [],
             holesCount: 9
         )
@@ -89,7 +91,8 @@ final class RoundViewModelHealthKitTests: XCTestCase {
         vm.startRound(
             courseId: "test-id",
             courseName: "서울 CC",
-            courseSubName: nil,
+            frontCourseName: nil,
+            backCourseName: nil,
             players: [],
             holesCount: 18
         )
@@ -112,7 +115,8 @@ final class RoundViewModelHealthKitTests: XCTestCase {
         vm.startRound(
             courseId: "test",
             courseName: "클럽",
-            courseSubName: nil,
+            frontCourseName: nil,
+            backCourseName: nil,
             players: [],
             holesCount: 18
         )

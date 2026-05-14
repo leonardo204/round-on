@@ -78,8 +78,8 @@ struct ActiveRoundView: View {
                     Text(roundVM.currentRound?.courseName ?? "")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color.springTextPrimary)
-                    if let subName = roundVM.currentRound?.courseSubName {
-                        Text(subName)
+                    if let subLabel = roundVM.currentRound?.displaySubLabel {
+                        Text(subLabel)
                             .font(.system(size: 13))
                             .foregroundStyle(Color.springTextSecondary)
                     }
@@ -116,10 +116,11 @@ struct ActiveRoundView: View {
     private func scoreCardGrid(scoreVM: ScoreCardViewModel) -> some View {
         ScrollView {
             VStack(spacing: 16) {
-                // OUT 구간 (1-9홀)
+                // OUT 구간 (1-9홀) — 전반 코스 라벨 사용
                 if !scoreVM.outHoles.isEmpty {
+                    let outLabel = roundVM.currentRound?.frontCourseName ?? "OUT"
                     scoreSection(
-                        title: "OUT",
+                        title: outLabel,
                         holes: scoreVM.outHoles,
                         scoreVM: scoreVM,
                         parTotal: scoreVM.outParTotal,
@@ -127,10 +128,11 @@ struct ActiveRoundView: View {
                     )
                 }
 
-                // IN 구간 (10-18홀)
+                // IN 구간 (10-18홀) — 후반 코스 라벨 사용. 9홀이면 inHoles 비어있어 자동 숨김.
                 if !scoreVM.inHoles.isEmpty {
+                    let inLabel = roundVM.currentRound?.backCourseName ?? "IN"
                     scoreSection(
-                        title: "IN",
+                        title: inLabel,
                         holes: scoreVM.inHoles,
                         scoreVM: scoreVM,
                         parTotal: scoreVM.inParTotal,

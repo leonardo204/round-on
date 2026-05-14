@@ -6,9 +6,12 @@ import Shared
 // MARK: - NewRoundView
 // iphone-2.2: 새 라운드 시작
 // - 골프장 자동 매칭 (Haversine 3km) + 수동 검색
-// - 서브코스 선택 (holesCount > 18 && subCourses 있으면)
+// - 서브코스 선택: 골프장 holesCount > 18 && subCourses 있으면 전반/후반 picker 표시
+//   - 18홀: 전반 코스 picker + 후반 코스 picker
+//   - 9홀: 전반 코스 picker만
+//   - 미선택 가능 — "전반"/"후반" 자동 라벨
 // - 동반자 입력 (최대 4인)
-// - holesCount nil이면 9/18/27/36 선택 프롬프트
+// - holesCount nil이면 9/18 선택 프롬프트 (라운드는 9 또는 18홀만)
 // 02-USER_FLOWS F-A → F-B
 
 @MainActor
@@ -39,12 +42,13 @@ struct NewRoundView: View {
         case unavailable    // API 없음, GPS 결과만 사용
     }
 
-    // 서브코스 선택
-    @State private var selectedSubCourse: SubCourse?
+    // 서브코스 선택 (전반/후반 각각)
+    @State private var selectedFrontSubCourse: SubCourse?
+    @State private var selectedBackSubCourse: SubCourse?
 
-    // holesCount nil 처리
+    // holesCount nil 처리 (라운드는 9 또는 18홀만)
     @State private var selectedHolesCount: Int = 18
-    private let holeOptions = [9, 18, 27, 36]
+    private let holeOptions = [9, 18]
 
     // 동반자 입력 (최대 4인)
     @State private var playerNames: [String] = ["나", "", "", ""]
@@ -62,9 +66,10 @@ struct NewRoundView: View {
                     VStack(spacing: 20) {
                         courseSection
                         if let course = matchedCourse {
-                            if let holesCount = course.holesCount, holesCount == 0 {
-                                holesPickerSection
-                            } else if course.holesCount == nil {
+                            // 골프장 holesCount가 9/18이 아니거나 nil이면 라운드 홀 수 picker 표시
+                            // (27/36홀 골프장도 라운드는 9 또는 18로 선택)
+                            let metaHoles = course.holesCount ?? 0
+                            if metaHoles != 9 && metaHoles != 18 {
                                 holesPickerSection
                             }
                             if shouldShowSubCourseSelector(course: course) {
@@ -112,7 +117,8 @@ struct NewRoundView: View {
                     searchText: $courseSearchText,
                     onSelect: { course in
                         matchedCourse = course
-                        selectedSubCourse = nil
+                        selectedFrontSubCourse = nil
+                        selectedBackSubCourse = nil
                         showCourseSearch = false
                     }
                 )
@@ -163,6 +169,9 @@ struct NewRoundView: View {
                         Spacer()
                         Button("변경") {
                             showCourseSearch = true
+                            // 골프장 변경 시 서브코스 선택 초기화
+                            selectedFrontSubCourse = nil
+                            selectedBackSubCourse = nil
                         }
                         .font(.system(size: 14))
                         .foregroundStyle(Color.springGreenPrimary)
@@ -343,23 +352,60 @@ struct NewRoundView: View {
         }
     }
 
+    /// 전반/후반 코스 picker 섹션.
+    /// - 18홀: 전반 picker + 후반 picker 둘 다 표시
+    /// - 9홀: 전반 picker만 표시
+    /// - 미선택 가능 (nil이면 화면에서 "전반"/"후반" 자동 라벨)
     private func subCourseSelectorSection(course: GolfCourse) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            sectionHeader("코스 선택")
-            let subCourses = course.subCourses ?? []
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+        let subCourses = course.subCourses ?? []
+
+        return VStack(alignment: .leading, spacing: 16) {
+            // 전반 코스 picker
+            VStack(alignment: .leading, spacing: 10) {
+                sectionHeader("전반 코스")
+                subCoursePickerRow(
+                    subCourses: subCourses,
+                    selected: selectedFrontSubCourse,
+                    onSelect: { selectedFrontSubCourse = $0 }
+                )
+            }
+
+            // 후반 코스 picker — 18홀일 때만
+            if selectedHolesCount == 18 {
+                VStack(alignment: .leading, spacing: 10) {
+                    sectionHeader("후반 코스")
+                    subCoursePickerRow(
+                        subCourses: subCourses,
+                        selected: selectedBackSubCourse,
+                        onSelect: { selectedBackSubCourse = $0 }
+                    )
+                }
+            }
+        }
+    }
+
+    /// 서브코스 후보 버튼 행 (선택/미선택 토글 가능)
+    private func subCoursePickerRow(
+        subCourses: [SubCourse],
+        selected: SubCourse?,
+        onSelect: @escaping (SubCourse?) -> Void
+    ) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
                 ForEach(subCourses) { sub in
+                    let isSelected = selected?.name == sub.name
                     Button {
-                        selectedSubCourse = sub
+                        // 이미 선택된 항목을 다시 탭하면 해제 (미선택으로 복귀)
+                        onSelect(isSelected ? nil : sub)
                     } label: {
                         Text(sub.name)
                             .font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(selectedSubCourse?.name == sub.name
+                            .foregroundStyle(isSelected
                                 ? Color.springTextPrimary
                                 : Color.springTextSecondary)
-                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, 16)
                             .frame(height: 44)
-                            .background(selectedSubCourse?.name == sub.name
+                            .background(isSelected
                                 ? Color.springGreenPrimary
                                 : Color.springSurfaceElevated)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -432,10 +478,13 @@ struct NewRoundView: View {
             .textCase(.uppercase)
     }
 
+    /// 서브코스 selector 표시 여부.
+    /// 골프장 holesCount가 18 초과이고 subCourses 데이터가 있으면 표시.
+    /// (라운드 홀 수와 무관 — 메타데이터 유무 기준)
     private func shouldShowSubCourseSelector(course: GolfCourse) -> Bool {
         guard let subs = course.subCourses, !subs.isEmpty else { return false }
-        let holes = course.holesCount ?? selectedHolesCount
-        return holes > 18
+        let metaHoles = course.holesCount ?? 0
+        return metaHoles > 18
     }
 
     // MARK: Logic
@@ -513,7 +562,10 @@ struct NewRoundView: View {
     private func startRound() {
         guard let course = matchedCourse else { return }
 
-        let holes = course.holesCount ?? selectedHolesCount
+        // 라운드는 9 또는 18홀만. 골프장 holesCount는 메타데이터용 — 라운드 홀 수에 직접 사용 안 함.
+        // holesCount가 nil이거나 9/18이 아닌 경우에는 selectedHolesCount(9 또는 18) 사용.
+        let courseHoles = course.holesCount ?? 0
+        let holes = (courseHoles == 9 || courseHoles == 18) ? courseHoles : selectedHolesCount
 
         // 플레이어 생성
         var players: [Player] = []
@@ -528,7 +580,8 @@ struct NewRoundView: View {
         vm.startRound(
             courseId: course.id,
             courseName: course.name,
-            courseSubName: selectedSubCourse?.name,
+            frontCourseName: selectedFrontSubCourse?.name,
+            backCourseName: selectedBackSubCourse?.name,
             players: players,
             holesCount: holes
         )

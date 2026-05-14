@@ -132,7 +132,7 @@ struct RoundDetailView: View {
         VStack(spacing: 8) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    if let sub = round.courseSubName {
+                    if let sub = round.displaySubLabel {
                         Text(sub)
                             .font(.system(size: 13))
                             .foregroundStyle(Color.springTextSecondary)
@@ -277,7 +277,7 @@ struct RoundDetailView: View {
             .padding(.horizontal, 16)
 
             if isEditMode {
-                Text("서브 코스: \(round.courseSubName ?? "기본")")
+                Text("서브 코스: \(round.displaySubLabel ?? "기본")")
                     .font(.system(size: 11))
                     .foregroundStyle(Color.springTextSecondary)
                     .padding(.horizontal, 20)

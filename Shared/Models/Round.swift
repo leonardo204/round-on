@@ -7,7 +7,20 @@ public final class Round {
     public var date: Date
     public var courseId: String
     public var courseName: String
+
+    /// Deprecated: frontCourseName / backCourseName을 사용하세요.
+    /// 기존 데이터 마이그레이션을 위해 Optional로 유지합니다.
+    @available(*, deprecated, message: "Use frontCourseName/backCourseName")
     public var courseSubName: String?
+
+    /// 전반 9홀 코스 라벨 (예: "동코스"). 미설정 시 "전반" 폴백.
+    /// SwiftData Optional 추가 — 라이트웨이트 마이그레이션 안전.
+    public var frontCourseName: String?
+
+    /// 후반 9홀 코스 라벨 (예: "남코스"). 9홀 라운드이거나 미선택 시 nil.
+    /// SwiftData Optional 추가 — 라이트웨이트 마이그레이션 안전.
+    public var backCourseName: String?
+
     @Relationship(deleteRule: .cascade) public var players: [Player]
     @Relationship(deleteRule: .cascade) public var holes: [HoleScore]
     @Relationship(deleteRule: .cascade) public var photos: [RoundPhoto]
@@ -32,6 +45,8 @@ public final class Round {
         courseId: String,
         courseName: String,
         courseSubName: String? = nil,
+        frontCourseName: String? = nil,
+        backCourseName: String? = nil,
         players: [Player] = [],
         holes: [HoleScore] = [],
         photos: [RoundPhoto] = [],
@@ -44,6 +59,8 @@ public final class Round {
         self.courseId = courseId
         self.courseName = courseName
         self.courseSubName = courseSubName
+        self.frontCourseName = frontCourseName
+        self.backCourseName = backCourseName
         self.players = players
         self.holes = holes
         self.photos = photos

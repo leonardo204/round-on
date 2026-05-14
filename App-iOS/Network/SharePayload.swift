@@ -68,7 +68,9 @@ public struct RoundPayload: Codable, Sendable {
     public init(from round: Round, nameVisibility: NameVisibility) {
         self.id = round.id.uuidString
         self.courseName = round.courseName
-        self.courseSubName = round.courseSubName
+        // 옵션 A: 클라이언트 합성 — Worker 코드 변경 없이 displaySubLabel 값으로 전송
+        // displaySubLabel: "동코스 / 남코스" 또는 단일 코스명 또는 nil
+        self.courseSubName = round.displaySubLabel
         self.date = round.date
         self.finishedAt = round.finishedAt
 

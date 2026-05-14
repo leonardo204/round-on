@@ -56,7 +56,12 @@ public struct ShotEvent: Codable, Sendable {
 public struct HoleChange: Codable, Sendable {
     public let newHoleNumber: Int
     public let trigger: ChangeTrigger
-    public let subCourseName: String?   // Round.courseSubName (서브코스 라벨)
+    /// 진행 중인 홀의 서브코스 라벨.
+    /// 발신 시 holeNumber 기반으로 front/back 분기:
+    ///   let label = newHoleNumber <= 9 ? round.frontCourseName : round.backCourseName
+    ///   subCourseName: label ?? round.displaySubLabel
+    /// (현재 발신 코드가 stub 상태이므로, 실 구현 시 위 분기 적용 필요)
+    public let subCourseName: String?
     public let timestamp: Date
     public let deviceId: String
     public let perDeviceCounter: UInt64

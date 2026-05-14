@@ -115,7 +115,7 @@ struct RoundSummaryCard: View {
                     Text(round.courseName)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color.springTextPrimary)
-                    if let subName = round.courseSubName {
+                    if let subName = round.displaySubLabel {
                         Text(subName)
                             .font(.system(size: 13))
                             .foregroundStyle(Color.springTextSecondary)

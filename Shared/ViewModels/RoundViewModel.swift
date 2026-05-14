@@ -60,17 +60,47 @@ public final class RoundViewModel {
     }
 
     /// 새 라운드 시작
+    /// - Parameters:
+    ///   - courseId: 골프장 DB ID
+    ///   - courseName: 골프장 이름
+    ///   - frontCourseName: 전반 9홀 코스 라벨 (예: "동코스"). nil이면 화면에서 "전반" 표시.
+    ///   - backCourseName: 후반 9홀 코스 라벨 (예: "남코스"). 9홀 라운드면 nil.
+    ///   - players: 참가 플레이어 목록
+    ///   - holesCount: 9 또는 18만 허용. 그 외 값은 release 빌드에서도 안전 거부.
     public func startRound(
         courseId: String,
         courseName: String,
-        courseSubName: String?,
+        frontCourseName: String? = nil,
+        backCourseName: String? = nil,
         players: [Player],
         holesCount: Int
     ) {
+        // 9/18 외 값은 모든 빌드에서 안전 거부 (라운드 미생성)
+        // 호출자 버그 추적용 로그는 DEBUG 빌드에서만 출력
+        guard holesCount == 9 || holesCount == 18 else {
+            #if DEBUG
+            print("[RoundViewModel] holesCount는 9 또는 18만 허용됩니다. 전달된 값: \(holesCount)")
+            #endif
+            return
+        }
+
+        // 9홀 라운드이면 backCourseName을 강제로 nil 처리 (UI 미리셋 누락 방어)
+        let normalizedBack = (holesCount == 9) ? nil : backCourseName
+
+        // legacy courseSubName: displaySubLabel과 동기화 (18홀 front+back 모두 보존)
+        let legacyJoined = [frontCourseName, normalizedBack]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: " / ")
+        let legacySubName: String? = legacyJoined.isEmpty ? nil : legacyJoined
+
         let round = Round(
             courseId: courseId,
             courseName: courseName,
-            courseSubName: courseSubName,
+            // legacy courseSubName: front/back 합성 값으로 동기화 (displaySubLabel과 일치)
+            courseSubName: legacySubName,
+            frontCourseName: frontCourseName,
+            backCourseName: normalizedBack,
             players: players,
             startedAt: .now
         )
