@@ -49,6 +49,35 @@ xcodebuild -scheme RoundOn build
 - 정식: `kr.zerolive.golf.roundon`
 - Team ID: `XU8HS9JUTS`
 
+### 카카오 API 키 설정 (개발 환경)
+
+GPS로 매칭된 골프장을 카카오 로컬 API로 재검증하는 기능 (F3)에 카카오 REST API 키가 필요하다.
+키가 없으면 GPS 단독 매칭만 동작하고 카카오 검증은 `.unavailable`로 스킵된다.
+
+**방법 1: `.api-keys.local` 파일 (개발 환경 권장)**
+
+```
+# .api-keys.local (프로젝트 루트, .gitignore됨)
+KAKAO_REST_API_KEY=여기에_키_입력
+```
+
+시뮬레이터 실행 시 앱이 자동으로 이 파일에서 키를 읽는다.
+
+**방법 2: Secrets.xcconfig → Info.plist 주입 (배포 환경)**
+
+1. `Secrets.xcconfig` 파일에 키 입력:
+   ```
+   KAKAO_REST_API_KEY = 여기에_키_입력
+   ```
+2. `xcodegen generate` 실행 — Info.plist에 `KAKAO_REST_API_KEY` 키가 자동 포함됨
+3. 앱 실행 시 `Bundle.main.object(forInfoDictionaryKey: "KAKAO_REST_API_KEY")`로 읽힘
+
+> **주의**: `Secrets.xcconfig`는 `.gitignore`에 포함됨. 절대 커밋 금지.
+>
+> 카카오 REST API 키 발급: https://developers.kakao.com → 애플리케이션 추가 → 앱 키 확인
+
+---
+
 ### Cloudflare Worker 로컬 실행
 
 ```bash

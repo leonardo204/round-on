@@ -109,12 +109,18 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: Tests/SharedTests
+      # KakaoVerificationService 직접 테스트를 위해 소스 포함
+      - path: App-iOS/Network/KakaoVerificationService.swift
     info:
       path: Tests/SharedTests/Info.plist
       properties:
         CFBundleDevelopmentRegion: ko
     dependencies:
       - target: Shared
+    settings:
+      base:
+        # CoreLocation 링킹 (KakaoVerificationService CLLocation 의존)
+        OTHER_LDFLAGS: "-framework CoreLocation"
 
   RoundOn-iOS:
     type: application
@@ -134,8 +140,14 @@ targets:
         ENABLE_PREVIEWS: YES
         CODE_SIGN_STYLE: Automatic
         SKIP_INSTALL: YES
+        # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
+        # 실 디바이스 배포 시 CI/CD 환경 변수 또는 Xcode Cloud 시크릿으로 대체
+        KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
     info:
       path: App-iOS/Info.plist
+      properties:
+        # 카카오 API 키를 Info.plist에 포함 (런타임 Bundle.main 읽기용)
+        KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
 
 schemes:
   RoundOn:
