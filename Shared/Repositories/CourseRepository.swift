@@ -72,6 +72,99 @@ public actor CourseRepository {
             .prefix(limit)
             .map { $0.0 }
     }
+
+    // MARK: - 적응형 임계값 매칭
+
+    /// 지역별 골프장 밀도를 고려한 적응형 임계값 기반 가장 가까운 골프장 탐색.
+    ///
+    /// 알고리즘:
+    /// 1. 1km 반경 검색 → 결과 있으면 가장 가까운 1건 자동 매칭
+    /// 2. 1km 없으면 3km 반경 → 1건이면 자동 매칭, 2건 이상이면 후보 목록 반환
+    /// 3. 3km 없으면 5km 반경 → 후보 목록만 (자동 매칭 X)
+    /// 4. 5km에도 없으면 matched: nil + candidates: []
+    ///
+    /// - Parameter coord: 기준 좌표 (lat, lng)
+    /// - Returns: (matched: 단일 자동 매칭 결과, candidates: 후보 목록, radiusKm: 실제 사용된 반경)
+    public func nearestCoursesAdaptive(
+        to coord: (lat: Double, lng: Double)
+    ) async throws -> AdaptiveMatchResult {
+        let all = try await loadAll()
+
+        // clubhouse 좌표 있는 코스만 거리와 함께 계산
+        let withDistance: [(GolfCourse, Double)] = all.compactMap { course in
+            guard let ch = course.clubhouse else { return nil }
+            let dist = haversineKm(
+                lat1: coord.lat, lng1: coord.lng,
+                lat2: ch.lat, lng2: ch.lng
+            )
+            return (course, dist)
+        }
+        let sorted = withDistance.sorted { $0.1 < $1.1 }
+
+        // 1단계: 1km 반경
+        let within1km = sorted.filter { $0.1 <= 1.0 }
+        if let best = within1km.first {
+            return AdaptiveMatchResult(
+                matched: best.0,
+                candidates: [best.0],
+                radiusKm: 1.0
+            )
+        }
+
+        // 2단계: 3km 반경
+        let within3km = sorted.filter { $0.1 <= 3.0 }
+        if within3km.count == 1 {
+            // 단일 결과 → 자동 매칭
+            return AdaptiveMatchResult(
+                matched: within3km[0].0,
+                candidates: [within3km[0].0],
+                radiusKm: 3.0
+            )
+        } else if within3km.count > 1 {
+            // 다중 결과 → 후보 목록, 자동 매칭 X
+            return AdaptiveMatchResult(
+                matched: nil,
+                candidates: within3km.map { $0.0 },
+                radiusKm: 3.0
+            )
+        }
+
+        // 3단계: 5km 반경
+        let within5km = sorted.filter { $0.1 <= 5.0 }
+        if !within5km.isEmpty {
+            return AdaptiveMatchResult(
+                matched: nil,
+                candidates: within5km.map { $0.0 },
+                radiusKm: 5.0
+            )
+        }
+
+        // 4단계: 매칭 없음
+        return AdaptiveMatchResult(
+            matched: nil,
+            candidates: [],
+            radiusKm: 5.0
+        )
+    }
+}
+
+// MARK: - AdaptiveMatchResult
+
+/// nearestCoursesAdaptive 반환 타입.
+/// matched가 nil이고 candidates가 비어있으면 "매칭 없음" 상태.
+public struct AdaptiveMatchResult: Sendable {
+    /// 단일 자동 매칭된 골프장. 다중 후보 또는 없음이면 nil.
+    public let matched: GolfCourse?
+    /// 반경 내 모든 후보 목록 (거리 오름차순).
+    public let candidates: [GolfCourse]
+    /// 실제 탐색에 사용된 반경 (km).
+    public let radiusKm: Double
+
+    public init(matched: GolfCourse?, candidates: [GolfCourse], radiusKm: Double) {
+        self.matched = matched
+        self.candidates = candidates
+        self.radiusKm = radiusKm
+    }
 }
 
 // MARK: - CourseRepositoryError

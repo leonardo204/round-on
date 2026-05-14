@@ -26,6 +26,19 @@ struct NewRoundView: View {
     @State private var allCourses: [GolfCourse] = []
     @State private var filteredCourses: [GolfCourse] = []
 
+    // 적응형 매칭 추가 상태
+    @State private var candidateCourses: [GolfCourse] = []
+    @State private var matchRadiusKm: Double = 3.0
+    @State private var kakaoVerificationStatus: KakaoMatchStatus = .idle
+
+    private enum KakaoMatchStatus: Equatable {
+        case idle
+        case verifying
+        case verified       // GPS + 카카오 모두 확인
+        case uncertain      // 사용자 확인 필요
+        case unavailable    // API 없음, GPS 결과만 사용
+    }
+
     // 서브코스 선택
     @State private var selectedSubCourse: SubCourse?
 
@@ -126,42 +139,52 @@ struct NewRoundView: View {
                 .background(Color.springSurfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             } else if let course = matchedCourse {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 6) {
+                                Text(course.name)
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(Color.springTextPrimary)
+                                matchBadge
+                            }
+                            if let region = course.region.nilIfEmpty,
+                               !region.isEmpty {
+                                Text(region)
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(Color.springTextSecondary)
+                            }
+                            if let holes = course.holesCount {
+                                Text("\(holes)홀")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(Color.springTextSecondary)
+                            }
+                        }
+                        Spacer()
+                        Button("변경") {
+                            showCourseSearch = true
+                        }
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color.springGreenPrimary)
+                    }
+                    // 카카오 검증 중 스피너
+                    if kakaoVerificationStatus == .verifying {
                         HStack(spacing: 6) {
-                            Text(course.name)
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(Color.springTextPrimary)
-                            Text("자동 선택됨")
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundStyle(Color.springGreenPrimary)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.springGreenSecondary.opacity(0.3))
-                                .clipShape(Capsule())
-                        }
-                        if let region = course.region.nilIfEmpty,
-                           !region.isEmpty {
-                            Text(region)
-                                .font(.system(size: 13))
-                                .foregroundStyle(Color.springTextSecondary)
-                        }
-                        if let holes = course.holesCount {
-                            Text("\(holes)홀")
-                                .font(.system(size: 13))
+                            ProgressView()
+                                .scaleEffect(0.7)
+                                .tint(Color.springTextSecondary)
+                            Text("카카오 위치 확인 중...")
+                                .font(.system(size: 12))
                                 .foregroundStyle(Color.springTextSecondary)
                         }
                     }
-                    Spacer()
-                    Button("변경") {
-                        showCourseSearch = true
-                    }
-                    .font(.system(size: 14))
-                    .foregroundStyle(Color.springGreenPrimary)
                 }
                 .padding(16)
                 .background(Color.springSurfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+            } else if !candidateCourses.isEmpty {
+                // 다중 후보: 사용자 선택 UI
+                candidateListSection
             } else {
                 Button {
                     showCourseSearch = true
@@ -182,6 +205,117 @@ struct NewRoundView: View {
                 }
             }
         }
+    }
+
+    // MARK: 매칭 배지
+
+    @ViewBuilder
+    private var matchBadge: some View {
+        switch kakaoVerificationStatus {
+        case .verified:
+            Text("GPS + 카카오 확인됨")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color.springGreenPrimary)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.springGreenSecondary.opacity(0.3))
+                .clipShape(Capsule())
+        case .uncertain:
+            Text("GPS 자동 선택됨")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color(red: 0.8, green: 0.5, blue: 0.0))
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.yellow.opacity(0.2))
+                .clipShape(Capsule())
+        default:
+            Text("자동 선택됨")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color.springGreenPrimary)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.springGreenSecondary.opacity(0.3))
+                .clipShape(Capsule())
+        }
+    }
+
+    // MARK: 다중 후보 선택 카드
+
+    private var candidateListSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                Image(systemName: "location.circle")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.springGreenPrimary)
+                Text("여러 후보가 있어요, 선택해주세요")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(Color.springTextPrimary)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+
+            Text("반경 \(String(format: "%.0f", matchRadiusKm * 1000))m 이내 골프장")
+                .font(.system(size: 12))
+                .foregroundStyle(Color.springTextSecondary)
+                .padding(.horizontal, 16)
+
+            ForEach(candidateCourses) { course in
+                Button {
+                    selectCourse(course)
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(course.name)
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(Color.springTextPrimary)
+                            if let region = course.region.nilIfEmpty {
+                                Text(region)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(Color.springTextSecondary)
+                            }
+                        }
+                        Spacer()
+                        if let userLoc = userLocation, let ch = course.clubhouse {
+                            let dist = haversineKm(
+                                lat1: userLoc.coordinate.latitude, lng1: userLoc.coordinate.longitude,
+                                lat2: ch.lat, lng2: ch.lng
+                            )
+                            Text(String(format: "%.1fkm", dist))
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundStyle(Color.springGreenPrimary)
+                        }
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11))
+                            .foregroundStyle(Color.springTextSecondary)
+                    }
+                    .padding(14)
+                    .background(Color.springSurfaceElevated)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.horizontal, 16)
+                }
+            }
+
+            Button {
+                showCourseSearch = true
+            } label: {
+                Text("직접 검색하기")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.springTextSecondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 12)
+        }
+        .background(Color.springSurfaceElevated.opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - 후보에서 코스 선택
+
+    private func selectCourse(_ course: GolfCourse) {
+        matchedCourse = course
+        candidateCourses = []
+        kakaoVerificationStatus = .idle
+        Task { await HapticEngine.shared.play(.gpsMatchComplete) }
     }
 
     private var holesPickerSection: some View {
@@ -337,31 +471,42 @@ struct NewRoundView: View {
 
         userLocation = loc
 
-        // CourseRepository.nearestCourses: haversine 거리 오름차순
-        // 3km 이내 가장 가까운 1개만 자동 매칭 (F1 스펙)
-        let maxDistKm = 3.0
-        let nearest = (try? await CourseRepository.shared.nearestCourses(
-            to: (lat: loc.coordinate.latitude, lng: loc.coordinate.longitude),
-            limit: 1
-        )) ?? []
+        // 적응형 임계값 매칭: 1km → 3km → 5km 순차 탐색
+        let adaptiveResult = (try? await CourseRepository.shared.nearestCoursesAdaptive(
+            to: (lat: loc.coordinate.latitude, lng: loc.coordinate.longitude)
+        ))
 
-        guard let best = nearest.first,
-              let ch = best.clubhouse else {
-            matchError = "반경 3km 이내 골프장이 없어요. 직접 검색하세요"
-            return
-        }
+        matchRadiusKm = adaptiveResult?.radiusKm ?? 5.0
 
-        let distKm = haversineKm(
-            lat1: loc.coordinate.latitude, lng1: loc.coordinate.longitude,
-            lat2: ch.lat, lng2: ch.lng
-        )
-
-        if distKm <= maxDistKm {
-            matchedCourse = best
-            // F3 GPS 매칭 성공 햅틱
+        if let matched = adaptiveResult?.matched {
+            // 단일 자동 매칭 → 카카오 재검증
+            matchedCourse = matched
             Task { await HapticEngine.shared.play(.gpsMatchComplete) }
+            await verifyWithKakao(course: matched, location: loc)
+        } else if let candidates = adaptiveResult?.candidates, !candidates.isEmpty {
+            // 다중 후보 → 사용자 선택 UI
+            candidateCourses = candidates
+            matchedCourse = nil
         } else {
-            matchError = "반경 3km 이내 골프장이 없어요. 직접 검색하세요"
+            // 매칭 없음 → 수동 검색 fallback
+            matchError = "반경 5km 이내 골프장이 없어요. 직접 검색하세요"
+        }
+    }
+
+    /// GPS 매칭 결과를 카카오 로컬 API로 재검증한다.
+    private func verifyWithKakao(course: GolfCourse, location: CLLocation) async {
+        kakaoVerificationStatus = .verifying
+        let result = await KakaoVerificationService.shared.verify(
+            course: course,
+            userLocation: location
+        )
+        switch result {
+        case .matched:
+            kakaoVerificationStatus = .verified
+        case .uncertain:
+            kakaoVerificationStatus = .uncertain
+        case .unavailable:
+            kakaoVerificationStatus = .unavailable
         }
     }
 

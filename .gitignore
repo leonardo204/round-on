@@ -6,6 +6,7 @@
 .api-keys
 .api-keys.*
 Secrets.plist
+Secrets.xcconfig
 secrets/
 
 # Claude Code runtime
@@ -39,6 +40,7 @@ build/
 Ref-docs/golf-db-pack/.kakao_cache.json
 Ref-docs/golf-db-pack/.kakao_html_cache/
 Ref-docs/golf-db-pack/.naver_html_cache/
+Ref-docs/golf-db-pack/.naver_holes_cache/
 
 # Python
 __pycache__/
