@@ -79,10 +79,9 @@ struct RoundOnApp: App {
         WindowGroup {
             ContentView()
                 .modelContainer(modelContainer)
-                // 디자인 가이드(Spring 라이트)에 맞춰 앱 전체 라이트 모드 강제.
-                // statusbar/home indicator 영역이 시스템 다크 배경으로 남는 이슈 해소.
-                // (Winter 다크 팔레트 대응은 추후 ColorScheme 토글 도입 시 적용)
-                .preferredColorScheme(.light)
+                // 라이트/다크 자동 대응 (시스템 적응형 색상 사용 — HomeView 등).
+                // preferredColorScheme 강제 제거: systemGroupedBackground 등 시스템 토큰이
+                // statusbar/home indicator 영역까지 자연스럽게 칠해줌.
                 .onAppear {
                     AppLogger.app.info("RoundOn 앱 시작")
                 }

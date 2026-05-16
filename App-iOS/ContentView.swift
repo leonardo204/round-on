@@ -17,9 +17,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // 루트 배경 — preferredColorScheme(.light)만으로는 다크 시스템 디바이스에서
-            // root window 컨테이너 검은 띠 잔존. 직접 색칠로 statusbar/home indicator 영역 해소.
-            Color.springSurface.ignoresSafeArea()
+            // 시스템 적응형 배경 (라이트/다크 자동). statusbar/home indicator 영역까지 통일.
+            Color(.systemGroupedBackground).ignoresSafeArea()
 
             Group {
                 if let roundVM = roundViewModel, roundVM.isRoundActive {
