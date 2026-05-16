@@ -117,6 +117,7 @@
 		C5020ADC62EB8E14406995DE /* DeviceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */; };
 		C764DE27949FC710FD120E31 /* SharePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E45D0AA7973CCBD2B452FC /* SharePayload.swift */; };
 		C87E4BC33C4AD27803231692 /* CloudKitCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232DCC902D77EB1F7248F0 /* CloudKitCompatibilityTests.swift */; };
+		C9577C2B92C5043C62E1CF7C /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61214ADF6DD0175BABD4FDA2 /* AppLogger.swift */; };
 		CADA89F7A881E57D8C57F48E /* KeychainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */; };
 		CD08C3D8464080E761344FC9 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469A2B894F35A244DC5B16EA /* WCBroker.swift */; };
 		CDC487DA2F9FC92D9D95034C /* PlayerChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252CDB85171329812400D1D /* PlayerChip.swift */; };
@@ -342,7 +343,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_19C6A932-D137-420B-869D-1900EF36EBA5" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -715,10 +716,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_6610D79F-75FD-4CA7-92A1-6D2E9571893B" /* golfCounter */ = {
+		"TEMP_32FA64FC-DF90-4691-A254-2FD46FFB2B43" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_19C6A932-D137-420B-869D-1900EF36EBA5" /* Secrets.xcconfig */,
+				"TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -981,6 +982,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9577C2B92C5043C62E1CF7C /* AppLogger.swift in Sources */,
 				C5020ADC62EB8E14406995DE /* DeviceIdentifier.swift in Sources */,
 				9344CD0EF5751B153BDE6A88 /* DiscoveredCourse.swift in Sources */,
 				2F30D70BCEC9F96E424F4E1D /* GolfCourse.swift in Sources */,
@@ -1178,7 +1180,7 @@
 		};
 		1C9FAD4736127D8A6225ECB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_19C6A932-D137-420B-869D-1900EF36EBA5" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1413,7 +1415,7 @@
 		};
 		B9C759EAA0C96AB87E0749E7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_19C6A932-D137-420B-869D-1900EF36EBA5" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
