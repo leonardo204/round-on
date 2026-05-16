@@ -218,13 +218,13 @@ struct RoundSummaryView: View {
             }
             .padding(.horizontal, 16)
 
-            if round.photos.isEmpty {
+            if round.photoList.isEmpty {
                 Text("사진을 추가하면 공유 viewer에 포함됩니다.")
                     .font(.system(size: 14))
                     .foregroundStyle(Color.springTextSecondary)
                     .padding(.horizontal, 16)
             } else {
-                PhotoGalleryGrid(photos: round.photos, isEditable: true, onDelete: { photo in
+                PhotoGalleryGrid(photos: round.photoList, isEditable: true, onDelete: { photo in
                     deletePhoto(photo)
                 })
                 .padding(.horizontal, 16)
@@ -300,7 +300,7 @@ struct RoundSummaryView: View {
 
     private func deletePhoto(_ photo: RoundPhoto) {
         PhotoStore().deletePhoto(photo)
-        round.photos.removeAll { $0.id == photo.id }
+        round.photos = round.photoList.filter { $0.id != photo.id }
         try? modelContext.save()
     }
 }

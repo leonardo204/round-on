@@ -15,13 +15,17 @@ public struct ScoreEntry: Codable, Sendable, Equatable {
 
 @Model
 public final class HoleScore {
-    public var holeNumber: Int
-    public var par: Int
-    public var counts: [ScoreEntry]
-    public var obCount: [ScoreEntry]
-    public var hazardCount: [ScoreEntry]
+    // MARK: - CloudKit 호환 속성 (모두 default 값 제공)
+    public var holeNumber: Int = 0
+    public var par: Int = 4
+    public var counts: [ScoreEntry] = []
+    public var obCount: [ScoreEntry] = []
+    public var hazardCount: [ScoreEntry] = []
 
-    public init(holeNumber: Int, par: Int, counts: [ScoreEntry] = [], obCount: [ScoreEntry] = [], hazardCount: [ScoreEntry] = []) {
+    // MARK: - CloudKit 호환 inverse 관계
+    public var round: Round?
+
+    public init(holeNumber: Int = 0, par: Int = 4, counts: [ScoreEntry] = [], obCount: [ScoreEntry] = [], hazardCount: [ScoreEntry] = []) {
         self.holeNumber = holeNumber
         self.par = par
         self.counts = counts

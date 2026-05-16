@@ -384,7 +384,7 @@ struct ShareSheetView: View {
 
     /// B2: photos를 순회하며 업로드. 실패 사진은 skip + 배너 알림.
     private func uploadPhotosIfNeeded(shortId: String, editToken: String) async {
-        let photos = round.photos
+        let photos = round.photoList
         guard !photos.isEmpty else { return }
 
         shareVM.photoUploadTotal = photos.count

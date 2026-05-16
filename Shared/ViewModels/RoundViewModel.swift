@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Observation
+import OSLog
 
 // MARK: - RoundViewModel
 // 라운드 라이프사이클 관리 (22-STATE_MANAGEMENT §3)
@@ -55,7 +56,10 @@ public final class RoundViewModel {
         )
         if let rounds = try? modelContext.fetch(descriptor),
            let latestRound = rounds.first {
+            AppLogger.round.info("미완료 라운드 복구: \(latestRound.courseName, privacy: .private)")
             activate(round: latestRound)
+        } else {
+            AppLogger.round.debug("복구할 미완료 라운드 없음")
         }
     }
 
@@ -76,11 +80,8 @@ public final class RoundViewModel {
         holesCount: Int
     ) {
         // 9/18 외 값은 모든 빌드에서 안전 거부 (라운드 미생성)
-        // 호출자 버그 추적용 로그는 DEBUG 빌드에서만 출력
         guard holesCount == 9 || holesCount == 18 else {
-            #if DEBUG
-            print("[RoundViewModel] holesCount는 9 또는 18만 허용됩니다. 전달된 값: \(holesCount)")
-            #endif
+            AppLogger.round.error("holesCount는 9 또는 18만 허용됩니다. 전달된 값: \(holesCount)")
             return
         }
 
@@ -106,13 +107,17 @@ public final class RoundViewModel {
         )
 
         // HoleScore 초기화 (par 기본값 4)
+        var holeScores: [HoleScore] = []
         for holeNumber in 1...holesCount {
             let score = HoleScore(holeNumber: holeNumber, par: 4)
-            round.holes.append(score)
+            holeScores.append(score)
         }
+        round.holes = (round.holes ?? []) + holeScores
 
         modelContext.insert(round)
         try? modelContext.save()
+
+        AppLogger.round.info("라운드 시작: \(courseName, privacy: .private) \(holesCount)홀 \(players.count)명")
 
         activate(round: round)
 
@@ -129,9 +134,11 @@ public final class RoundViewModel {
     /// 라운드 종료
     public func finishRound() {
         guard let round = currentRound else { return }
+        let totalHoles = round.holeList.count
         round.isFinished = true
         round.finishedAt = .now
         try? modelContext.save()
+        AppLogger.round.info("라운드 종료: \(round.courseName, privacy: .private) \(totalHoles)홀")
         deactivate()
 
         // A1: HealthKit 운동 종료
@@ -143,7 +150,7 @@ public final class RoundViewModel {
     /// 카운트 +1
     public func increment(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
-        guard let holeScore = round.holes.first(where: { $0.holeNumber == holeNumber }) else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
 
         let maxCount = 15  // spec_3.md §8.3
         let current = holeScore.count(for: playerId)
@@ -158,9 +165,10 @@ public final class RoundViewModel {
 
     /// 완료된 라운드 편집 진입. ScoreCardViewModel 재생성.
     public func editRound(_ round: Round) {
+        AppLogger.round.info("라운드 편집 진입: \(round.courseName, privacy: .private)")
         self.currentRound = round
         self.scoreCardViewModel = ScoreCardViewModel(round: round)
-        self.playerListViewModel = PlayerListViewModel(players: round.players)
+        self.playerListViewModel = PlayerListViewModel(players: round.playerList)
     }
 
     /// 편집 내용 저장. SwiftData에 쓰기 후 scoreCardViewModel 갱신.
@@ -169,6 +177,7 @@ public final class RoundViewModel {
     public func commitEdit() throws -> Bool {
         guard let round = currentRound else { return false }
         try modelContext.save()
+        AppLogger.round.info("라운드 편집 저장 완료: \(round.courseName, privacy: .private)")
         scoreCardViewModel?.refresh(from: round)
         // 편집 완료 후 currentRound 초기화 (홈으로 돌아갈 때 활성 라운드 오판 방지)
         // isFinished == true인 경우만 deactivate
@@ -183,7 +192,7 @@ public final class RoundViewModel {
     /// 카운트 -1
     public func decrement(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
-        guard let holeScore = round.holes.first(where: { $0.holeNumber == holeNumber }) else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
 
         let current = holeScore.count(for: playerId)
         guard current > 0 else { return }  // 0 미만 금지
@@ -196,7 +205,7 @@ public final class RoundViewModel {
     /// OB 탭 (+2)
     public func tapOB(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
-        guard let holeScore = round.holes.first(where: { $0.holeNumber == holeNumber }) else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
 
         upsertOB(in: holeScore, playerId: playerId, delta: 1)
         upsertCount(in: holeScore, playerId: playerId, delta: 2)
@@ -207,7 +216,7 @@ public final class RoundViewModel {
     /// 해저드 탭 (+1 벌타 + counts +1)
     public func tapHazard(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
-        guard let holeScore = round.holes.first(where: { $0.holeNumber == holeNumber }) else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
 
         upsertHazard(in: holeScore, playerId: playerId, delta: 1)
         upsertCount(in: holeScore, playerId: playerId, delta: 1)
@@ -218,7 +227,7 @@ public final class RoundViewModel {
     /// OK/컨시드 탭 (+1)
     public func tapOK(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
-        guard let holeScore = round.holes.first(where: { $0.holeNumber == holeNumber }) else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
 
         upsertCount(in: holeScore, playerId: playerId, delta: 1)
         save()
@@ -229,10 +238,10 @@ public final class RoundViewModel {
 
     private func activate(round: Round) {
         self.currentRound = round
-        let holeVM = HoleViewModel(totalHoles: round.holes.count)
+        let holeVM = HoleViewModel(totalHoles: round.holeList.count)
         self.holeViewModel = holeVM
         self.scoreCardViewModel = ScoreCardViewModel(round: round)
-        self.playerListViewModel = PlayerListViewModel(players: round.players)
+        self.playerListViewModel = PlayerListViewModel(players: round.playerList)
     }
 
     private func deactivate() {
@@ -248,8 +257,16 @@ public final class RoundViewModel {
 
     private func upsertCount(in holeScore: HoleScore, playerId: UUID, delta: Int) {
         if let idx = holeScore.counts.firstIndex(where: { $0.playerId == playerId }) {
-            holeScore.counts[idx].value = max(0, holeScore.counts[idx].value + delta)
+            let before = holeScore.counts[idx].value
+            let after = max(0, before + delta)
+            if delta < 0 && before == 0 {
+                AppLogger.counter.warning("카운터 clamp: 홀\(holeScore.holeNumber) 음수 차단")
+            } else {
+                AppLogger.counter.debug("카운터: 홀\(holeScore.holeNumber) \(before)→\(after)")
+            }
+            holeScore.counts[idx].value = after
         } else if delta > 0 {
+            AppLogger.counter.debug("카운터 신규: 홀\(holeScore.holeNumber) delta=\(delta)")
             holeScore.counts.append(ScoreEntry(playerId: playerId, value: delta))
         }
     }

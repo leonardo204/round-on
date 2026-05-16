@@ -9,22 +9,23 @@ import SwiftData
 /// SwiftData 신규 모델 — 기존 스키마에 추가만, 라이트웨이트 마이그레이션 안전.
 @Model
 public final class PersistedDiscoveredCourse {
-    /// 카카오 Place ID — 중복 삽입 방지 (unique 제약)
-    @Attribute(.unique) public var kakaoPlaceId: String
+    /// 카카오 Place ID
+    /// CloudKit 미지원으로 @Attribute(.unique) 제거 — insert 전 중복 조회로 대체 (NewRoundView)
+    public var kakaoPlaceId: String = ""
     /// 골프장 이름
-    public var name: String
+    public var name: String = ""
     /// 도로명/지번 주소
     public var address: String?
     /// 전화번호
     public var phone: String?
     /// 클럽하우스 위도
-    public var lat: Double
+    public var lat: Double = 0.0
     /// 클럽하우스 경도
-    public var lng: Double
+    public var lng: Double = 0.0
     /// 카카오 장소 URL
     public var placeUrl: String?
     /// 최초 사용 일시 (첫 라운드 시작 시점)
-    public var firstUsedAt: Date
+    public var firstUsedAt: Date = Date.now
 
     public init(
         kakaoPlaceId: String,

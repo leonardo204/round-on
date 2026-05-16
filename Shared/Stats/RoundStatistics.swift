@@ -79,8 +79,8 @@ public func aggregateStatistics(rounds: [Round]) -> RoundStatisticsResult {
     // 라운드별 주인 플레이어의 총 타수 계산
     // 주인 플레이어(isOwner == true)의 counts 합산
     let scoredRounds: [(round: Round, score: Int)] = finished.compactMap { round in
-        guard let owner = round.players.first(where: { $0.isOwner }) else { return nil }
-        let total = round.holes.reduce(0) { sum, hole in
+        guard let owner = round.playerList.first(where: { $0.isOwner }) else { return nil }
+        let total = round.holeList.reduce(0) { sum, hole in
             sum + hole.count(for: owner.id)
         }
         guard total > 0 else { return nil }  // 타수 미입력 라운드는 제외
@@ -123,10 +123,10 @@ public func aggregateStatistics(rounds: [Round]) -> RoundStatisticsResult {
     // par 대비 평균 계산
     // 각 라운드의 총 par vs 총 score 차이 평균
     let vsParValues: [Int] = scoredRounds.compactMap { item in
-        guard let owner = item.round.players.first(where: { $0.isOwner }) else { return nil }
-        let totalPar = item.round.holes.reduce(0) { $0 + $1.par }
+        guard let owner = item.round.playerList.first(where: { $0.isOwner }) else { return nil }
+        let totalPar = item.round.holeList.reduce(0) { $0 + $1.par }
         guard totalPar > 0 else { return nil }
-        let totalCount = item.round.holes.reduce(0) { $0 + $1.count(for: owner.id) }
+        let totalCount = item.round.holeList.reduce(0) { $0 + $1.count(for: owner.id) }
         return totalCount - totalPar
     }
     let averageVsPar: Double? = vsParValues.isEmpty ? nil :

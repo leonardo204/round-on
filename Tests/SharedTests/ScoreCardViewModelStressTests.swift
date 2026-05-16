@@ -28,11 +28,13 @@ final class ScoreCardViewModelStressTests: XCTestCase {
         ctx.insert(round)
         round.players = players
 
+        var stress18: [HoleScore] = []
         for h in 1...18 {
             let hole = HoleScore(holeNumber: h, par: [3, 4, 5].randomElement()!)
             ctx.insert(hole)
-            round.holes.append(hole)
+            stress18.append(hole)
         }
+        round.holes = stress18
         try ctx.save()
 
         // 독립 기대값 추적
@@ -41,7 +43,7 @@ final class ScoreCardViewModelStressTests: XCTestCase {
 
         for _ in 0..<1000 {
             let player = players.randomElement()!
-            let hole = round.holes.randomElement()!
+            let hole = round.holeList.randomElement()!
             let delta = Bool.random() ? 1 : -1
 
             let cur = hole.count(for: player.id)
@@ -91,13 +93,15 @@ final class ScoreCardViewModelStressTests: XCTestCase {
         round.players = [player]
 
         // 1-9홀: 3타씩, 10-18홀: 5타씩
+        var outInHoles: [HoleScore] = []
         for h in 1...18 {
             let score = h <= 9 ? 3 : 5
             let hole = HoleScore(holeNumber: h, par: 4,
                                  counts: [ScoreEntry(playerId: player.id, value: score)])
             ctx.insert(hole)
-            round.holes.append(hole)
+            outInHoles.append(hole)
         }
+        round.holes = outInHoles
         try ctx.save()
 
         let vm = ScoreCardViewModel(round: round)
@@ -143,12 +147,14 @@ final class ScoreCardViewModelStressTests: XCTestCase {
 
         // par=4 기준: count=2→eagle, 3→birdie, 4→par, 5→bogey, 6→doublePlus, 0→empty
         let cases: [(holeNum: Int, count: Int)] = [(1,2),(2,3),(3,4),(4,5),(5,6),(6,0)]
+        var boundaryHoles: [HoleScore] = []
         for c in cases {
             let hole = HoleScore(holeNumber: c.holeNum, par: 4)
             if c.count > 0 { hole.counts.append(ScoreEntry(playerId: player.id, value: c.count)) }
             ctx.insert(hole)
-            round.holes.append(hole)
+            boundaryHoles.append(hole)
         }
+        round.holes = boundaryHoles
         try ctx.save()
 
         let vm = ScoreCardViewModel(round: round)

@@ -29,7 +29,7 @@ struct PhotoAttachView: View {
 
                 VStack(spacing: 16) {
                     // 현재 사진 수 / 최대
-                    Text("\(round.photos.count) / \(maxCount)장")
+                    Text("\(round.photoList.count) / \(maxCount)장")
                         .font(.system(size: 14))
                         .foregroundStyle(Color.springTextSecondary)
                         .padding(.top, 8)
@@ -42,11 +42,11 @@ struct PhotoAttachView: View {
                     }
 
                     // 사진 갤러리
-                    if round.photos.isEmpty {
+                    if round.photoList.isEmpty {
                         emptyState
                     } else {
                         PhotoGalleryGrid(
-                            photos: round.photos,
+                            photos: round.photoList,
                             isEditable: true,
                             onDelete: { photo in
                                 deletePhoto(photo)
@@ -60,7 +60,7 @@ struct PhotoAttachView: View {
                     // 사진 추가 버튼
                     PhotosPicker(
                         selection: $selectedItems,
-                        maxSelectionCount: maxCount - round.photos.count,
+                        maxSelectionCount: maxCount - round.photoList.count,
                         matching: .images
                     ) {
                         Label("사진 선택", systemImage: "photo.on.rectangle.angled")
@@ -68,13 +68,13 @@ struct PhotoAttachView: View {
                             .foregroundStyle(Color.springTextPrimary)
                             .frame(maxWidth: .infinity)
                             .frame(height: 54)
-                            .background(round.photos.count >= maxCount
+                            .background(round.photoList.count >= maxCount
                                 ? Color.springBorder
                                 : Color.springGreenPrimary)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .padding(.horizontal, 16)
                     }
-                    .disabled(round.photos.count >= maxCount || isLoading)
+                    .disabled(round.photoList.count >= maxCount || isLoading)
                     .padding(.bottom, 32)
                 }
 
@@ -123,7 +123,7 @@ struct PhotoAttachView: View {
         defer { isLoading = false }
 
         for item in items {
-            guard round.photos.count < maxCount else {
+            guard round.photoList.count < maxCount else {
                 errorMessage = "사진은 최대 \(maxCount)장까지 첨부할 수 있어요."
                 break
             }
@@ -133,7 +133,7 @@ struct PhotoAttachView: View {
                       let uiImage = UIImage(data: data) else { continue }
 
                 let photo = try photoStore.savePhoto(uiImage)
-                round.photos.append(photo)
+                round.photos = round.photoList + [photo]
                 Task { await HapticEngine.shared.play(.photoAttach) }
             } catch {
                 errorMessage = "사진 저장 중 오류가 발생했어요."
@@ -148,7 +148,7 @@ struct PhotoAttachView: View {
 
     private func deletePhoto(_ photo: RoundPhoto) {
         photoStore.deletePhoto(photo)
-        round.photos.removeAll { $0.id == photo.id }
+        round.photos = round.photoList.filter { $0.id != photo.id }
         try? modelContext.save()
     }
 }

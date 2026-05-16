@@ -3,10 +3,11 @@ import SwiftData
 
 @Model
 public final class Round {
-    public var id: UUID
-    public var date: Date
-    public var courseId: String
-    public var courseName: String
+    // MARK: - CloudKit 호환 속성 (모두 default 값 제공)
+    public var id: UUID = UUID()
+    public var date: Date = Date.now
+    public var courseId: String = ""
+    public var courseName: String = ""
 
     /// Deprecated: frontCourseName / backCourseName을 사용하세요.
     /// 기존 데이터 마이그레이션을 위해 Optional로 유지합니다.
@@ -21,11 +22,18 @@ public final class Round {
     /// SwiftData Optional 추가 — 라이트웨이트 마이그레이션 안전.
     public var backCourseName: String?
 
-    @Relationship(deleteRule: .cascade) public var players: [Player]
-    @Relationship(deleteRule: .cascade) public var holes: [HoleScore]
-    @Relationship(deleteRule: .cascade) public var photos: [RoundPhoto]
-    public var isFinished: Bool
-    public var startedAt: Date
+    // MARK: - CloudKit 호환 관계 (Optional + inverse)
+    @Relationship(deleteRule: .cascade, inverse: \Player.round)
+    public var players: [Player]? = []
+
+    @Relationship(deleteRule: .cascade, inverse: \HoleScore.round)
+    public var holes: [HoleScore]? = []
+
+    @Relationship(deleteRule: .cascade, inverse: \RoundPhoto.round)
+    public var photos: [RoundPhoto]? = []
+
+    public var isFinished: Bool = false
+    public var startedAt: Date = Date.now
     public var finishedAt: Date?
     public var sharedShortId: String?
     public var sharedURL: String?
@@ -39,11 +47,19 @@ public final class Round {
 
     public var sharedOptionsData: Data?  // ShareOptions을 Codable → Data로 저장
 
+    // MARK: - Optional 관계 편의 접근자 (non-optional 호출자 편의)
+    /// players Optional fallback — 코드 전반에서 `round.playerList` 사용
+    public var playerList: [Player] { players ?? [] }
+    /// holes Optional fallback
+    public var holeList: [HoleScore] { holes ?? [] }
+    /// photos Optional fallback
+    public var photoList: [RoundPhoto] { photos ?? [] }
+
     public init(
         id: UUID = UUID(),
         date: Date = .now,
-        courseId: String,
-        courseName: String,
+        courseId: String = "",
+        courseName: String = "",
         courseSubName: String? = nil,
         frontCourseName: String? = nil,
         backCourseName: String? = nil,

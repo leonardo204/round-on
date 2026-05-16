@@ -75,7 +75,7 @@ public struct RoundPayload: Codable, Sendable {
         self.finishedAt = round.finishedAt
 
         // 익명 모드: A/B/C/D 치환 (spec_3.md:131)
-        let sortedPlayers = round.players.sorted { $0.order < $1.order }
+        let sortedPlayers = round.playerList.sorted { $0.order < $1.order }
         let anonymousNames = ["A", "B", "C", "D"]
         self.players = sortedPlayers.enumerated().map { idx, player in
             let displayName = nameVisibility == .anonymous
@@ -84,7 +84,7 @@ public struct RoundPayload: Codable, Sendable {
             return PlayerPayload(id: player.id.uuidString, name: displayName, order: player.order)
         }
 
-        self.holes = round.holes
+        self.holes = round.holeList
             .sorted { $0.holeNumber < $1.holeNumber }
             .map { HolePayload(from: $0) }
     }

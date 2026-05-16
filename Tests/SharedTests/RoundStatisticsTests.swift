@@ -36,12 +36,14 @@ final class RoundStatisticsTests: XCTestCase {
         ctx.insert(round)
         round.players = [player]
 
+        var holeList: [HoleScore] = []
         for h in 1...holesCount {
             let hole = HoleScore(holeNumber: h, par: par)
             hole.counts.append(ScoreEntry(playerId: player.id, value: scorePerHole))
             ctx.insert(hole)
-            round.holes.append(hole)
+            holeList.append(hole)
         }
+        round.holes = holeList
         return round
     }
 

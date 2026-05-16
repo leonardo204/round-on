@@ -57,7 +57,7 @@ final class RoundEditTests: XCTestCase {
         let descriptor = FetchDescriptor<Round>()
         let fetched = try ctx.fetch(descriptor)
         let fetchedRound = try XCTUnwrap(fetched.first)
-        let fetchedHole = try XCTUnwrap(fetchedRound.holes.first(where: { $0.holeNumber == 1 }))
+        let fetchedHole = try XCTUnwrap(fetchedRound.holeList.first(where: { $0.holeNumber == 1 }))
         let fetchedCount = fetchedHole.count(for: player.id)
 
         XCTAssertEqual(fetchedCount, 4, "편집 후 카운트는 4여야 해요")
@@ -97,7 +97,7 @@ final class RoundEditTests: XCTestCase {
         try vm.commitEdit()
 
         let fetched = try ctx.fetch(FetchDescriptor<Round>())
-        let fetchedHole = try XCTUnwrap(fetched.first?.holes.first(where: { $0.holeNumber == 1 }))
+        let fetchedHole = try XCTUnwrap(fetched.first?.holeList.first(where: { $0.holeNumber == 1 }))
         XCTAssertEqual(fetchedHole.count(for: player.id), 5, "감소 편집 후 카운트는 5여야 해요")
     }
 
@@ -138,7 +138,7 @@ final class RoundEditTests: XCTestCase {
         try vm.commitEdit()
 
         let fetched = try ctx.fetch(FetchDescriptor<Round>())
-        let fetchedHole = try XCTUnwrap(fetched.first?.holes.first(where: { $0.holeNumber == 1 }))
+        let fetchedHole = try XCTUnwrap(fetched.first?.holeList.first(where: { $0.holeNumber == 1 }))
 
         XCTAssertEqual(fetchedHole.count(for: playerA.id), 5, "A 카운트는 5여야 해요")
         XCTAssertEqual(fetchedHole.count(for: playerB.id), 5, "B 카운트는 변경 없이 5여야 해요")

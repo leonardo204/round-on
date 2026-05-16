@@ -140,7 +140,7 @@ struct RoundDetailView: View {
                     Text(formattedDate(round.finishedAt ?? round.date))
                         .font(.system(size: 13))
                         .foregroundStyle(Color.springTextSecondary)
-                    Text("\(round.holes.count)홀")
+                    Text("\(round.holeList.count)홀")
                         .font(.system(size: 13))
                         .foregroundStyle(Color.springTextSecondary)
                 }
@@ -291,7 +291,7 @@ struct RoundDetailView: View {
             columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 9),
             spacing: 4
         ) {
-            ForEach(round.holes.sorted { $0.holeNumber < $1.holeNumber }) { hole in
+            ForEach(round.holeList.sorted { $0.holeNumber < $1.holeNumber }) { hole in
                 let count = hole.count(for: player.id)
                 VStack(spacing: 1) {
                     Text("\(hole.holeNumber)")
@@ -335,14 +335,14 @@ struct RoundDetailView: View {
             }
             .padding(.horizontal, 16)
 
-            if round.photos.isEmpty {
+            if round.photoList.isEmpty {
                 Text("아직 사진이 없어요.")
                     .font(.system(size: 14))
                     .foregroundStyle(Color.springTextSecondary)
                     .padding(.horizontal, 16)
             } else {
                 PhotoGalleryGrid(
-                    photos: round.photos,
+                    photos: round.photoList,
                     isEditable: false,
                     onDelete: nil
                 )
@@ -433,7 +433,7 @@ struct RoundDetailView: View {
               let editToken = keychainStore.editToken(for: shortId) else { return }
 
         // remoteURL 없는 = 아직 업로드 안 된 사진만 대상
-        let pending = round.photos.filter { $0.remoteURL == nil }
+        let pending = round.photoList.filter { $0.remoteURL == nil }
         guard !pending.isEmpty else { return }
 
         var successCount = 0

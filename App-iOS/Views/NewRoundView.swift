@@ -708,22 +708,25 @@ struct NewRoundView: View {
         let holes = (courseHoles == 9 || courseHoles == 18) ? courseHoles : selectedHolesCount
 
         // 카카오 발견 코스 영구 캐싱 (옵션 C)
-        // 사용자가 선택한 코스가 DiscoveredCourse이면 SwiftData에 insert
+        // @Attribute(.unique) 제거 → insert 전 중복 조회로 대체
         if let discovered = selectedDiscoveredCourse {
-            let persisted = PersistedDiscoveredCourse(
-                kakaoPlaceId: discovered.kakaoPlaceId,
-                name: discovered.name,
-                address: discovered.address,
-                phone: discovered.phone,
-                lat: discovered.lat,
-                lng: discovered.lng,
-                placeUrl: discovered.placeUrl,
-                firstUsedAt: .now
-            )
-            // @Attribute(.unique) kakaoPlaceId — 중복 시 try?로 안전 처리
-            try? modelContext.save()
-            modelContext.insert(persisted)
-            try? modelContext.save()
+            let kakaoId = discovered.kakaoPlaceId
+            let predicate = #Predicate<PersistedDiscoveredCourse> { $0.kakaoPlaceId == kakaoId }
+            let existing = (try? modelContext.fetch(FetchDescriptor(predicate: predicate))) ?? []
+            if existing.isEmpty {
+                let persisted = PersistedDiscoveredCourse(
+                    kakaoPlaceId: discovered.kakaoPlaceId,
+                    name: discovered.name,
+                    address: discovered.address,
+                    phone: discovered.phone,
+                    lat: discovered.lat,
+                    lng: discovered.lng,
+                    placeUrl: discovered.placeUrl,
+                    firstUsedAt: .now
+                )
+                modelContext.insert(persisted)
+                try? modelContext.save()
+            }
         }
 
         // 플레이어 생성

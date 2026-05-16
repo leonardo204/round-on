@@ -146,7 +146,7 @@ struct RoundSummaryCard: View {
                     .font(.system(size: 13))
                     .foregroundStyle(Color.springTextSecondary)
                 Spacer()
-                Text("\(round.holes.count)홀")
+                Text("\(round.holeList.count)홀")
                     .font(.system(size: 13))
                     .foregroundStyle(Color.springTextSecondary)
             }

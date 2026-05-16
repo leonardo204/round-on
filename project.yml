@@ -80,6 +80,8 @@ targets:
         NSHealthShareUsageDescription: "골프 라운드 운동 기록을 건강 앱에 저장합니다."
         NSHealthUpdateUsageDescription: "골프 라운드를 운동으로 기록하여 건강 앱에 저장합니다."
         NSLocationWhenInUseUsageDescription: "가까운 골프장을 자동으로 찾기 위해 현재 위치를 사용합니다."
+        UIBackgroundModes:
+          - remote-notification
 
   RoundOn-Watch:
     type: application
@@ -152,6 +154,8 @@ targets:
       properties:
         # 카카오 API 키를 Info.plist에 포함 (런타임 Bundle.main 읽기용)
         KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
+        UIBackgroundModes:
+          - remote-notification
 
 schemes:
   RoundOn:

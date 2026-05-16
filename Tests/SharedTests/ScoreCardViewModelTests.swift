@@ -33,11 +33,13 @@ final class ScoreCardViewModelTests: XCTestCase {
         let round = Round(courseId: "test", courseName: "테스트")
         ctx.insert(round)
         round.players = players
+        var holes18: [HoleScore] = []
         for h in 1...18 {
             let hole = HoleScore(holeNumber: h, par: [3, 4, 5].randomElement()!)
             ctx.insert(hole)
-            round.holes.append(hole)
+            holes18.append(hole)
         }
+        round.holes = holes18
         try ctx.save()
 
         let vm = ScoreCardViewModel(round: round)
@@ -47,7 +49,7 @@ final class ScoreCardViewModelTests: XCTestCase {
         // 100회 랜덤 increment/decrement 시뮬레이션
         for _ in 0..<100 {
             let player = players.randomElement()!
-            let hole = round.holes.randomElement()!
+            let hole = round.holeList.randomElement()!
             let isIncrement = Bool.random()
 
             if isIncrement {
@@ -141,14 +143,16 @@ final class ScoreCardViewModelTests: XCTestCase {
             (6, 0, .empty),      // count=0 → empty
         ]
 
+        var parDiffHoles: [HoleScore] = []
         for tc in testCases {
             let hole = HoleScore(holeNumber: tc.holeNum, par: 4)
             if tc.count > 0 {
                 hole.counts.append(ScoreEntry(playerId: player.id, value: tc.count))
             }
             ctx.insert(hole)
-            round.holes.append(hole)
+            parDiffHoles.append(hole)
         }
+        round.holes = parDiffHoles
         try ctx.save()
 
         let vm = ScoreCardViewModel(round: round)
@@ -176,6 +180,7 @@ final class ScoreCardViewModelTests: XCTestCase {
         round.players = [playerA, playerB]
 
         // 9홀: A=5, B=4 각 홀마다
+        var totalHoles: [HoleScore] = []
         for h in 1...9 {
             let hole = HoleScore(
                 holeNumber: h,
@@ -186,8 +191,9 @@ final class ScoreCardViewModelTests: XCTestCase {
                 ]
             )
             ctx.insert(hole)
-            round.holes.append(hole)
+            totalHoles.append(hole)
         }
+        round.holes = totalHoles
         try ctx.save()
 
         let vm = ScoreCardViewModel(round: round)

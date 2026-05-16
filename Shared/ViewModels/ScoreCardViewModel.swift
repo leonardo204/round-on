@@ -68,11 +68,11 @@ public final class ScoreCardViewModel {
 
     /// Round 변경 시 캐시 재빌드
     public func refresh(from round: Round) {
-        players = round.players.sorted { $0.order < $1.order }
-        totalHoles = round.holes.count
+        players = round.playerList.sorted { $0.order < $1.order }
+        totalHoles = round.holeList.count
 
         var newPar: [Int: Int] = [:]
-        for holeScore in round.holes {
+        for holeScore in round.holeList {
             newPar[holeScore.holeNumber] = holeScore.par
         }
         parByHole = newPar
@@ -86,7 +86,7 @@ public final class ScoreCardViewModel {
             var total = 0
             var vsPar = 0
 
-            for holeScore in round.holes {
+            for holeScore in round.holeList {
                 let c = holeScore.count(for: player.id)
                 holeMap[holeScore.holeNumber] = c
                 total += c

@@ -34,7 +34,7 @@ final class RoundCourseLabelingTests: XCTestCase {
         )
 
         let round = try XCTUnwrap(vm.currentRound, "9홀 startRound 후 currentRound가 설정되어야 한다")
-        XCTAssertEqual(round.holes.count, 9, "9홀 라운드의 holes.count는 9이어야 한다")
+        XCTAssertEqual(round.holeList.count, 9, "9홀 라운드의 holes.count는 9이어야 한다")
         XCTAssertNil(round.backCourseName, "9홀 라운드에서 backCourseName은 nil이어야 한다")
         XCTAssertEqual(round.frontCourseName, "동코스", "frontCourseName은 그대로 저장되어야 한다")
     }
@@ -261,7 +261,7 @@ final class RoundCourseLabelingTests: XCTestCase {
             "9홀 라운드에서 ViewModel은 backCourseName을 nil로 강제해야 한다 (UI 누락 방어)"
         )
         XCTAssertEqual(
-            round.holes.count, 9,
+            round.holeList.count, 9,
             "9홀 라운드의 holes.count는 9이어야 한다"
         )
     }
