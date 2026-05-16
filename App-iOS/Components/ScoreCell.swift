@@ -48,7 +48,7 @@ public struct ScoreCell: View {
     // MARK: Body
 
     public var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack(alignment: .bottomTrailing) {
             // par 대비 색상 배경
             cellBackground
 
@@ -63,18 +63,39 @@ public struct ScoreCell: View {
                 Text(symbol)
                     .font(.system(size: 7))
                     .foregroundStyle(markerColor)
-                    .offset(x: -1, y: 2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 2)
+                    .padding(.trailing, 2)
+            }
+
+            // count > 0일 때 우하단에 작은 ⊖ visual hint — long press 또는 contextMenu로 -1 가능 안내
+            if count > 0 {
+                Image(systemName: "minus.circle.fill")
+                    .font(.system(size: 9))
+                    .foregroundStyle(Color.springTextSecondary.opacity(0.45))
+                    .padding(.bottom, 1)
+                    .padding(.trailing, 1)
             }
         }
         .frame(maxWidth: .infinity)
         .frame(height: 32)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(isCurrentHole ? Color.springGreenPrimary : Color.clear, lineWidth: 1.5)
+                .stroke(isCurrentHole ? Color.springGreenPrimary : Color.clear,
+                        lineWidth: isCurrentHole ? 2 : 1.5)
         )
         .contentShape(Rectangle())
         .onTapGesture { onTap() }
         .onLongPressGesture(minimumDuration: 0.4) { onLongPress() }
+        .contextMenu {
+            if count > 0 {
+                Button {
+                    onLongPress()
+                } label: {
+                    Label("타수 -1", systemImage: "minus.circle")
+                }
+            }
+        }
         // 14-ACCESSIBILITY §2 VoiceOver 4-tuple: 역할, 레이블, 값, 힌트
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(holeNumber)번 홀, \(playerName)")

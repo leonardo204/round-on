@@ -10,10 +10,25 @@ struct SettingsView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
 
+    // 벌타 기본값 (PenaltySettings.Key와 일치)
+    @AppStorage(PenaltySettings.Key.obDelta) private var obDelta: Int = PenaltySettings.Default.obDelta
+    @AppStorage(PenaltySettings.Key.hazardDelta) private var hazardDelta: Int = PenaltySettings.Default.hazardDelta
+    @AppStorage(PenaltySettings.Key.okDelta) private var okDelta: Int = PenaltySettings.Default.okDelta
+
     var body: some View {
         List {
             Section("권한") {
                 locationRow
+            }
+
+            Section {
+                penaltyStepperRow(label: "OB", icon: "flag", hint: "아웃 오브 바운즈 · 타수 자동 추가", value: $obDelta)
+                penaltyStepperRow(label: "해저드", icon: "drop.fill", hint: "워터·벙커 등 · 타수 자동 추가", value: $hazardDelta)
+                penaltyStepperRow(label: "컨시드 (OK)", icon: "checkmark.circle.fill", hint: "기브 · 마지막 한 타 인정", value: $okDelta)
+            } header: {
+                Text("벌타 기본값")
+            } footer: {
+                Text("홀 입력 모드의 OB / 해저드 / 컨시드 버튼이 추가하는 타수입니다.")
             }
 
             Section("정보") {
@@ -30,6 +45,37 @@ struct SettingsView: View {
                 refreshLocationStatus()
             }
         }
+    }
+
+    // MARK: - Penalty stepper row
+
+    private func penaltyStepperRow(label: String, icon: String, hint: String, value: Binding<Int>) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 17))
+                .foregroundStyle(.tint)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label).font(.body)
+                Text(hint).font(.footnote).foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            HStack(spacing: 12) {
+                Text("+\(value.wrappedValue)")
+                    .font(.system(.body, design: .rounded, weight: .semibold))
+                    .foregroundStyle(.tint)
+                    .monospacedDigit()
+                    .frame(minWidth: 28, alignment: .trailing)
+                Stepper("", value: value, in: PenaltySettings.validRange)
+                    .labelsHidden()
+            }
+        }
+        .padding(.vertical, 4)
+        .accessibilityLabel("\(label) 기본 타수")
+        .accessibilityValue("\(value.wrappedValue)타 추가")
     }
 
     // MARK: - Location row

@@ -63,6 +63,9 @@ struct NewRoundView: View {
     /// 현재 선택된 카카오 발견 코스 (startRound 시 영구 캐싱용)
     @State private var selectedDiscoveredCourse: DiscoveredCourse?
 
+    /// Par 안내 alert (라운드 시작 직전 표시)
+    @State private var showParGuideAlert: Bool = false
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -92,7 +95,9 @@ struct NewRoundView: View {
                 // 시작 버튼
                 VStack {
                     Spacer()
-                    Button(action: startRound) {
+                    Button {
+                        showParGuideAlert = true
+                    } label: {
                         Text("라운드 시작")
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundStyle(Color.springTextPrimary)
@@ -112,6 +117,12 @@ struct NewRoundView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("취소") { isPresented = false }
                 }
+            }
+            .alert("Par 설정 안내", isPresented: $showParGuideAlert) {
+                Button("시작") { startRound() }
+                Button("취소", role: .cancel) { }
+            } message: {
+                Text("모든 홀이 Par 4로 시작합니다.\n진행 화면에서 Par 셀(상단 행)을 탭해 3/4/5로 변경할 수 있어요.")
             }
             .task {
                 await loadCourses()

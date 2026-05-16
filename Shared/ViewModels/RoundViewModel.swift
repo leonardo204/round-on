@@ -147,18 +147,46 @@ public final class RoundViewModel {
         }
     }
 
-    /// 카운트 +1
-    public func increment(holeNumber: Int, playerId: UUID) {
-        guard let round = currentRound else { return }
-        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+    /// 카운트 +1. double par (par×2) 이상은 차단.
+    /// - Returns: 정상 증가 시 true, 차단 시 false (UI에서 warning haptic 트리거용)
+    @discardableResult
+    public func increment(holeNumber: Int, playerId: UUID) -> Bool {
+        guard let round = currentRound else { return false }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return false }
 
-        let maxCount = 15  // spec_3.md §8.3
         let current = holeScore.count(for: playerId)
-        guard current < maxCount else { return }
+        let limit = max(2, holeScore.par * 2)  // double par 도달 시 차단 (par 1이라면 최소 2)
+        guard current < limit else {
+            AppLogger.counter.warning("카운터 차단: 홀\(holeScore.holeNumber) double par(\(limit)) 초과")
+            return false
+        }
 
         upsertCount(in: holeScore, playerId: playerId, delta: 1)
         save()
         scoreCardViewModel?.refresh(from: round)
+        return true
+    }
+
+    /// 홀의 par 변경 (3/4/5만 허용)
+    public func setPar(holeNumber: Int, par: Int) {
+        guard [3, 4, 5].contains(par) else { return }
+        guard let round = currentRound else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+        guard holeScore.par != par else { return }
+        AppLogger.round.info("Par 변경: 홀\(holeNumber) \(holeScore.par)→\(par)")
+        holeScore.par = par
+        save()
+        scoreCardViewModel?.refresh(from: round)
+    }
+
+    /// 라운드 폐기 (저장 없이 영구 삭제)
+    public func discardRound() {
+        guard let round = currentRound else { return }
+        AppLogger.round.warning("라운드 폐기: \(round.courseName, privacy: .private)")
+        modelContext.delete(round)
+        try? modelContext.save()
+        deactivate()
+        Task { await onWorkoutEnd?() }
     }
 
     // MARK: F7 — 사후 편집 API
@@ -202,36 +230,48 @@ public final class RoundViewModel {
         scoreCardViewModel?.refresh(from: round)
     }
 
-    /// OB 탭 (+2)
-    public func tapOB(holeNumber: Int, playerId: UUID) {
-        guard let round = currentRound else { return }
-        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
-
-        upsertOB(in: holeScore, playerId: playerId, delta: 1)
-        upsertCount(in: holeScore, playerId: playerId, delta: 2)
-        save()
-        scoreCardViewModel?.refresh(from: round)
+    /// OB 탭 — PenaltySettings.obDelta 만큼 타수 추가 (default +2). double par 초과는 차단.
+    /// - Returns: 정상 적용 시 true, double par 초과로 차단 시 false
+    @discardableResult
+    public func tapOB(holeNumber: Int, playerId: UUID) -> Bool {
+        applyPenalty(holeNumber: holeNumber, playerId: playerId, delta: PenaltySettings.obDelta, kind: .ob)
     }
 
-    /// 해저드 탭 (+1 벌타 + counts +1)
-    public func tapHazard(holeNumber: Int, playerId: UUID) {
-        guard let round = currentRound else { return }
-        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
-
-        upsertHazard(in: holeScore, playerId: playerId, delta: 1)
-        upsertCount(in: holeScore, playerId: playerId, delta: 1)
-        save()
-        scoreCardViewModel?.refresh(from: round)
+    /// 해저드 탭 — PenaltySettings.hazardDelta 만큼 타수 추가 (default +1).
+    @discardableResult
+    public func tapHazard(holeNumber: Int, playerId: UUID) -> Bool {
+        applyPenalty(holeNumber: holeNumber, playerId: playerId, delta: PenaltySettings.hazardDelta, kind: .hazard)
     }
 
-    /// OK/컨시드 탭 (+1)
-    public func tapOK(holeNumber: Int, playerId: UUID) {
-        guard let round = currentRound else { return }
-        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+    /// OK/컨시드 탭 — PenaltySettings.okDelta 만큼 타수 추가 (default +1).
+    @discardableResult
+    public func tapOK(holeNumber: Int, playerId: UUID) -> Bool {
+        applyPenalty(holeNumber: holeNumber, playerId: playerId, delta: PenaltySettings.okDelta, kind: .ok)
+    }
 
-        upsertCount(in: holeScore, playerId: playerId, delta: 1)
+    private enum PenaltyKind { case ob, hazard, ok }
+
+    private func applyPenalty(holeNumber: Int, playerId: UUID, delta: Int, kind: PenaltyKind) -> Bool {
+        guard let round = currentRound else { return false }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return false }
+
+        let current = holeScore.count(for: playerId)
+        let limit = max(2, holeScore.par * 2)
+        // delta 적용 시 double par 초과면 차단
+        guard current + delta <= limit else {
+            AppLogger.counter.warning("벌타 차단: 홀\(holeScore.holeNumber) \(current)+\(delta) > \(limit)")
+            return false
+        }
+
+        switch kind {
+        case .ob:     upsertOB(in: holeScore, playerId: playerId, delta: 1)
+        case .hazard: upsertHazard(in: holeScore, playerId: playerId, delta: 1)
+        case .ok:     break  // OK는 타수만 추가, 별도 카운터 없음
+        }
+        upsertCount(in: holeScore, playerId: playerId, delta: delta)
         save()
         scoreCardViewModel?.refresh(from: round)
+        return true
     }
 
     // MARK: Private helpers

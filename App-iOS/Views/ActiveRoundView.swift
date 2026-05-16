@@ -9,8 +9,14 @@ import Shared
 struct ActiveRoundView: View {
     @Bindable var roundVM: RoundViewModel
     @State private var showFinishConfirm = false
+    @State private var showDiscardConfirm = false
     @State private var showPenaltySheet = false
     @State private var bannerMessage: String?
+
+    @AppStorage(PenaltySettings.Key.activeRoundMode) private var activeMode: String = PenaltySettings.Default.activeRoundMode
+    @AppStorage(PenaltySettings.Key.obDelta) private var obDelta: Int = PenaltySettings.Default.obDelta
+    @AppStorage(PenaltySettings.Key.hazardDelta) private var hazardDelta: Int = PenaltySettings.Default.hazardDelta
+    @AppStorage(PenaltySettings.Key.okDelta) private var okDelta: Int = PenaltySettings.Default.okDelta
 
     private var holeVM: HoleViewModel? { roundVM.holeViewModel }
     private var scoreVM: ScoreCardViewModel? { roundVM.scoreCardViewModel }
@@ -32,8 +38,15 @@ struct ActiveRoundView: View {
                     // 라운드 헤더 + HoleProgress
                     roundHeader
 
-                    // 스코어카드 (split9x2)
-                    if let scoreVM = scoreVM {
+                    // 모드 토글 (보기 / 입력)
+                    modeToggle
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+
+                    // 모드 분기
+                    if activeMode == "holeInput", let scoreVM = scoreVM, let holeVM = holeVM, let playerVM = playerVM {
+                        holeInputView(scoreVM: scoreVM, holeVM: holeVM, playerVM: playerVM)
+                    } else if let scoreVM = scoreVM {
                         scoreCardGrid(scoreVM: scoreVM)
                     }
                 }
@@ -44,10 +57,15 @@ struct ActiveRoundView: View {
                     Button {
                         showPenaltySheet = true
                     } label: {
-                        Image(systemName: "exclamationmark.triangle")
-                            .foregroundStyle(Color.springTextSecondary)
+                        HStack(spacing: 4) {
+                            Image(systemName: "exclamationmark.bubble.fill")
+                                .font(.system(size: 13))
+                            Text("벌타")
+                                .font(.system(size: 14, weight: .medium))
+                        }
+                        .foregroundStyle(Color.springGreenPrimary)
                     }
-                    .accessibilityLabel("벌타 입력")
+                    .accessibilityLabel("벌타 입력 — OB, 해저드, OK 컨시드")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("종료") {
@@ -56,12 +74,34 @@ struct ActiveRoundView: View {
                     .foregroundStyle(.red)
                 }
             }
-            .confirmationDialog("라운드를 종료하시겠어요?", isPresented: $showFinishConfirm, titleVisibility: .visible) {
-                Button("종료", role: .destructive) {
+            .confirmationDialog(
+                "라운드를 종료할까요?",
+                isPresented: $showFinishConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("저장하고 종료") {
                     roundVM.finishRound()
                     Task { await HapticEngine.shared.play(.roundEnd) }
                 }
-                Button("취소", role: .cancel) {}
+                Button("라운드 폐기", role: .destructive) {
+                    showDiscardConfirm = true
+                }
+                Button("취소", role: .cancel) { }
+            } message: {
+                Text("저장하면 기록이 보관되고, 폐기하면 라운드와 스코어가 영구 삭제됩니다.")
+            }
+            .confirmationDialog(
+                "정말 폐기할까요?",
+                isPresented: $showDiscardConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("폐기", role: .destructive) {
+                    roundVM.discardRound()
+                    Task { await HapticEngine.shared.play(.roundEnd) }
+                }
+                Button("취소", role: .cancel) { }
+            } message: {
+                Text("이 라운드와 모든 스코어가 영구 삭제됩니다. 되돌릴 수 없습니다.")
             }
             .sheet(isPresented: $showPenaltySheet) {
                 penaltySheet
@@ -166,7 +206,9 @@ struct ActiveRoundView: View {
                 Text(title)
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 28, alignment: .center)
+                    .frame(width: 44, alignment: .center)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 ForEach(holes, id: \.self) { h in
                     Text("\(h)")
                         .font(.system(size: 11))
@@ -182,17 +224,14 @@ struct ActiveRoundView: View {
             .padding(.horizontal, 4)
             .background(Color.springBorder.opacity(0.3))
 
-            // Par 행
+            // Par 행 — 각 셀 long press(또는 tap)로 3/4/5 선택
             HStack(spacing: 2) {
                 Text("Par")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 28, alignment: .center)
+                    .frame(width: 44, alignment: .center)
                 ForEach(holes, id: \.self) { h in
-                    Text("\(scoreVM.parByHole[h] ?? 4)")
-                        .font(.system(size: 12))
-                        .foregroundStyle(Color.springTextSecondary)
-                        .frame(maxWidth: .infinity)
+                    parCell(holeNumber: h, par: scoreVM.parByHole[h] ?? 4)
                 }
                 Text("\(parTotal)")
                     .font(.system(size: 12, weight: .medium))
@@ -228,12 +267,13 @@ struct ActiveRoundView: View {
         let currentHole = roundVM.holeViewModel?.currentHoleNumber
 
         return HStack(spacing: 2) {
-            // 플레이어 이름 (PlayerChip 읽기전용)
-            Text(player.name)
+            // 플레이어 이름 — 동반자명 잘림 방지 위해 폭 확대 + 약어 처리
+            Text(playerShortName(player.name))
                 .font(.system(size: 12, weight: isActive ? .semibold : .regular))
                 .foregroundStyle(isActive ? Color.springGreenPrimary : Color.springTextPrimary)
                 .lineLimit(1)
-                .frame(width: 28, alignment: .center)
+                .minimumScaleFactor(0.7)
+                .frame(width: 44, alignment: .center)
 
             // 각 홀 셀 (ScoreCell 컴포넌트 사용)
             ForEach(holes, id: \.self) { h in
@@ -250,9 +290,14 @@ struct ActiveRoundView: View {
                     playerName: player.name,
                     par: par,
                     onTap: {
-                        roundVM.increment(holeNumber: h, playerId: player.id)
+                        let ok = roundVM.increment(holeNumber: h, playerId: player.id)
                         roundVM.holeViewModel?.goToHole(index: h - 1)
-                        Task { await HapticEngine.shared.play(.shotIncrement) }
+                        if ok {
+                            Task { await HapticEngine.shared.play(.shotIncrement) }
+                        } else {
+                            bannerMessage = "double par(\(par * 2)) 이상은 입력할 수 없어요."
+                            Task { await HapticEngine.shared.play(.penaltyOB) }
+                        }
                     },
                     onLongPress: {
                         roundVM.decrement(holeNumber: h, playerId: player.id)
@@ -294,11 +339,6 @@ struct ActiveRoundView: View {
                         Text(total > 0 ? "\(total)" : "-")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundStyle(Color.springTextPrimary)
-                        if total > 0, let vsPar = scoreVM.vsParByPlayer[player.id] {
-                            Text(vsParText(vsPar))
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundStyle(vsParColor(vsPar))
-                        }
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -362,18 +402,294 @@ struct ActiveRoundView: View {
         .presentationDetents([.fraction(0.4)])
     }
 
-    // MARK: Helpers
+    // MARK: Mode toggle (보기 / 입력)
 
-    private func vsParText(_ vsPar: Int) -> String {
-        if vsPar == 0 { return "E" }
-        return vsPar > 0 ? "+\(vsPar)" : "\(vsPar)"
+    private var modeToggle: some View {
+        Picker("모드", selection: $activeMode) {
+            Text("📋 보기").tag("scoreboard")
+            Text("⊕ 입력").tag("holeInput")
+        }
+        .pickerStyle(.segmented)
     }
 
-    private func vsParColor(_ vsPar: Int) -> Color {
-        if vsPar <= -2 { return Color.springGreenPrimary }
-        if vsPar < 0  { return Color.springGreenSecondary }
-        if vsPar == 0 { return Color.springTextSecondary }
-        if vsPar == 1 { return Color(red: 0.85, green: 0.3, blue: 0.3) }
-        return Color(red: 0.7, green: 0.1, blue: 0.1)
+    // MARK: Hole Input Mode (옵션 B 다듬은 버전)
+
+    private func holeInputView(scoreVM: ScoreCardViewModel, holeVM: HoleViewModel, playerVM: PlayerListViewModel) -> some View {
+        let activePlayer = playerVM.activePlayer ?? scoreVM.players.first
+        let currentHole = holeVM.currentHoleNumber
+        let par = scoreVM.parByHole[currentHole] ?? 4
+        let count = activePlayer.map { scoreVM.count(holeNumber: currentHole, playerId: $0.id) } ?? 0
+
+        return VStack(spacing: 0) {
+            // 홀 헤더
+            holeHeader(currentHole: currentHole, totalHoles: holeVM.totalHoles, par: par)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 12)
+
+            // 동반자 4인 탭
+            playerTabs(scoreVM: scoreVM, playerVM: playerVM, currentHole: currentHole)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
+
+            // 메인 입력 카드
+            if let player = activePlayer {
+                inputMainCard(player: player, count: count, par: par, currentHole: currentHole)
+                    .padding(.horizontal, 16)
+            }
+
+            Spacer(minLength: 0)
+
+            // 하단 홀 네비
+            holeNavBar(holeVM: holeVM)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 20)
+        }
+    }
+
+    private func holeHeader(currentHole: Int, totalHoles: Int, par: Int) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text("\(currentHole)")
+                    .font(.system(size: 28, weight: .heavy))
+                    .foregroundStyle(Color.springGreenPrimary)
+                Text("번 홀")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color.springTextSecondary)
+                Text("· \(currentHole) / \(totalHoles)")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.springTextSecondary)
+            }
+            Spacer()
+            Menu {
+                ForEach([3, 4, 5], id: \.self) { p in
+                    Button("Par \(p)") {
+                        roundVM.setPar(holeNumber: currentHole, par: p)
+                        Task { await HapticEngine.shared.play(.shotIncrement) }
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text("Par \(par)")
+                        .font(.system(size: 13, weight: .semibold))
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 9))
+                }
+                .foregroundStyle(Color.springGreenPrimary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(Color.springGreenPrimary.opacity(0.10), in: Capsule())
+            }
+        }
+    }
+
+    private func playerTabs(scoreVM: ScoreCardViewModel, playerVM: PlayerListViewModel, currentHole: Int) -> some View {
+        HStack(spacing: 6) {
+            ForEach(scoreVM.players) { player in
+                let isActive = playerVM.activePlayer?.id == player.id
+                let score = scoreVM.count(holeNumber: currentHole, playerId: player.id)
+                Button {
+                    playerVM.activate(player: player)
+                } label: {
+                    VStack(spacing: 2) {
+                        Text(playerShortName(player.name))
+                            .font(.system(size: 11, weight: isActive ? .semibold : .regular))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        Text(score > 0 ? "\(score)" : "−")
+                            .font(.system(size: 14, weight: .bold))
+                            .monospacedDigit()
+                    }
+                    .foregroundStyle(isActive ? Color.white : Color.springTextSecondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(isActive ? Color.springGreenPrimary : Color(.systemFill),
+                                in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .shadow(color: isActive ? Color.springGreenPrimary.opacity(0.25) : .clear, radius: 4, y: 2)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private func inputMainCard(player: Player, count: Int, par: Int, currentHole: Int) -> some View {
+        VStack(spacing: 12) {
+            // - 숫자 + 행
+            HStack(spacing: 12) {
+                counterButton(symbol: "−", style: .minus) {
+                    roundVM.decrement(holeNumber: currentHole, playerId: player.id)
+                    Task { await HapticEngine.shared.play(.shotDecrement) }
+                }
+
+                VStack(spacing: 4) {
+                    Text(count > 0 ? "\(count)" : "0")
+                        .font(.system(size: 92, weight: .heavy))
+                        .foregroundStyle(Color.springTextPrimary)
+                        .monospacedDigit()
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                    Text(parDiffCaption(count: count, par: par))
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                .frame(maxWidth: .infinity)
+
+                counterButton(symbol: "+", style: .plus) {
+                    let ok = roundVM.increment(holeNumber: currentHole, playerId: player.id)
+                    if ok {
+                        Task { await HapticEngine.shared.play(.shotIncrement) }
+                    } else {
+                        bannerMessage = "double par(\(par * 2)) 이상은 입력할 수 없어요."
+                        Task { await HapticEngine.shared.play(.penaltyOB) }
+                    }
+                }
+            }
+
+            // 벌타 3종
+            HStack(spacing: 8) {
+                penaltyBigButton(label: "OB", icon: "flag", delta: obDelta, tint: Color(red: 0.76, green: 0.15, blue: 0.15)) {
+                    let ok = roundVM.tapOB(holeNumber: currentHole, playerId: player.id)
+                    handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOB)
+                }
+                penaltyBigButton(label: "해저드", icon: "drop.fill", delta: hazardDelta, tint: Color(red: 0.08, green: 0.40, blue: 0.75)) {
+                    let ok = roundVM.tapHazard(holeNumber: currentHole, playerId: player.id)
+                    handlePenaltyResult(ok: ok, par: par, haptic: .penaltyHazard)
+                }
+                penaltyBigButton(label: "컨시드", icon: "checkmark.circle.fill", delta: okDelta, tint: Color.springGreenPrimary) {
+                    let ok = roundVM.tapOK(holeNumber: currentHole, playerId: player.id)
+                    handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOK)
+                }
+            }
+        }
+        .padding(20)
+        .background(Color.springSurfaceElevated, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+    }
+
+    private enum CounterStyle { case minus, plus }
+
+    private func counterButton(symbol: String, style: CounterStyle, action: @escaping () -> Void) -> some View {
+        let bgColor: Color = (style == .plus) ? Color.springGreenPrimary : Color(.systemFill)
+        let fgColor: Color = (style == .plus) ? .white : Color.springTextPrimary
+        return Button(action: action) {
+            Text(symbol)
+                .font(.system(size: 36, weight: .bold))
+                .foregroundStyle(fgColor)
+                .frame(width: 76, height: 76)
+                .background(bgColor, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .shadow(color: style == .plus ? Color.springGreenPrimary.opacity(0.3) : .clear, radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(style == .plus ? "타수 +1" : "타수 −1")
+    }
+
+    private func penaltyBigButton(label: String, icon: String, delta: Int, tint: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                Text(label)
+                    .font(.system(size: 13, weight: .semibold))
+                Text("+\(delta)")
+                    .font(.system(size: 11, weight: .medium))
+                    .opacity(0.75)
+            }
+            .foregroundStyle(tint)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(tint.opacity(0.15), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(label) +\(delta)")
+    }
+
+    private func holeNavBar(holeVM: HoleViewModel) -> some View {
+        let isFirst = holeVM.currentHoleNumber <= 1
+        let isLast = holeVM.currentHoleNumber >= holeVM.totalHoles
+        return HStack {
+            Button {
+                holeVM.previousHole()
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "chevron.left")
+                    Text("\(max(1, holeVM.currentHoleNumber - 1))번 홀")
+                }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(isFirst ? Color.springTextSecondary : Color.springTextPrimary)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(Color.springSurfaceElevated, in: RoundedRectangle(cornerRadius: 12))
+            }
+            .disabled(isFirst)
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            Button {
+                holeVM.nextHole()
+            } label: {
+                HStack(spacing: 4) {
+                    Text("\(min(holeVM.totalHoles, holeVM.currentHoleNumber + 1))번 홀")
+                    Image(systemName: "chevron.right")
+                }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(isLast ? Color.springTextSecondary : Color.springGreenPrimary,
+                            in: RoundedRectangle(cornerRadius: 12))
+                .shadow(color: isLast ? .clear : Color.springGreenPrimary.opacity(0.3), radius: 6, y: 2)
+            }
+            .disabled(isLast)
+            .buttonStyle(.plain)
+        }
+    }
+
+    private func parDiffCaption(count: Int, par: Int) -> String {
+        guard count > 0 else { return "Par \(par)" }
+        let diff = count - par
+        if diff == 0 { return "Par \(par) · E" }
+        if diff > 0 { return "Par \(par) · +\(diff)" }
+        return "Par \(par) · \(diff)"
+    }
+
+    private func handlePenaltyResult(ok: Bool, par: Int, haptic: HapticEngine.Event) {
+        if ok {
+            Task { await HapticEngine.shared.play(haptic) }
+        } else {
+            bannerMessage = "double par(\(par * 2)) 초과 — 더 추가할 수 없어요."
+            Task { await HapticEngine.shared.play(.penaltyOB) }
+        }
+    }
+
+    // MARK: Helpers
+
+    /// Par 셀: tap → menu(3/4/5)로 즉시 변경
+    private func parCell(holeNumber: Int, par: Int) -> some View {
+        Menu {
+            ForEach([3, 4, 5], id: \.self) { p in
+                Button("Par \(p)") {
+                    roundVM.setPar(holeNumber: holeNumber, par: p)
+                    Task { await HapticEngine.shared.play(.shotIncrement) }
+                }
+            }
+        } label: {
+            Text("\(par)")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(Color.springTextSecondary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 22)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel("\(holeNumber)번 홀 Par, 현재 \(par). 탭하여 변경.")
+    }
+
+    /// 동반자 이름이 길면 약어로 표시 — "동반자1" → "동1", "동반자2" → "동2"
+    private func playerShortName(_ name: String) -> String {
+        if name.hasPrefix("동반자"), name.count <= 5 {
+            let suffix = name.dropFirst(3)
+            return "동\(suffix)"
+        }
+        return name
     }
 }
