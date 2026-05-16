@@ -27,67 +27,75 @@ struct ShotButton: View {
     // MARK: Body
 
     var body: some View {
+        contentStack
+            .frame(width: 96, height: 96)
+            .background(Color.green.opacity(0.15), in: Circle())
+            .contentShape(Circle())
+            .onTapGesture(perform: handleTap)
+            .focusable()
+            .digitalCrownRotation(
+                $crownValue,
+                from: -999,
+                through: 999,
+                by: 1.0,
+                sensitivity: .low,
+                isContinuous: false,
+                isHapticFeedbackEnabled: true
+            )
+            .onChange(of: crownValue) { _, newVal in
+                handleCrownChange(newVal)
+            }
+            .modifier(AccessibilityModifier(
+                value: voiceOverValue,
+                onIncrement: onIncrement,
+                onDecrement: onDecrement
+            ))
+    }
+
+    // MARK: - Subviews
+
+    @ViewBuilder
+    private var contentStack: some View {
         VStack(spacing: 4) {
-            // 타수 숫자 (--score-watch 56pt/600)
             Text("\(count)")
                 .font(.system(size: 56, weight: .semibold, design: .rounded))
                 .foregroundColor(.primary)
                 .minimumScaleFactor(0.7)
                 .contentTransition(.numericText())
 
-            // par 대비 표시
+            parDiffText
+        }
+    }
+
+    @ViewBuilder
+    private var parDiffText: some View {
+        if count > 0 {
             let parDiff = ParDiff.from(count: count, par: par)
-            if count > 0 {
-                Text(parDiffLabel(parDiff))
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(.secondary)
-            }
+            Text(parDiffLabel(parDiff))
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.secondary)
         }
-        .frame(width: 96, height: 96)
-        .background(Color.green.opacity(0.15), in: Circle())
-        .contentShape(Circle())
-        // 탭: +1
-        .onTapGesture {
-            onIncrement()
-            Task { await HapticEngine.shared.play(.shotIncrement) }
-        }
-        // Digital Crown: ±1 (11-COMPONENTS §7, 14-ACCESSIBILITY §4)
-        .focusable()
-        .digitalCrownRotation(
-            $crownValue,
-            from: -999,
-            through: 999,
-            by: 1.0,
-            sensitivity: .low,
-            isContinuous: false,
-            isHapticFeedbackEnabled: true   // 시스템 기본 Crown 햅틱 활용 (13-HAPTICS §9)
-        )
-        .onChange(of: crownValue) { _, newVal in
-            let newInt = Int(newVal.rounded())
-            let delta = newInt - lastCrownInt
-            lastCrownInt = newInt
+    }
 
-            if delta > 0 {
-                for _ in 0..<delta { onIncrement() }
-            } else if delta < 0 {
-                for _ in 0..<abs(delta) { onDecrement() }
-            }
+    // MARK: - Actions
 
-            // VoiceOver announce debounce 300ms (14-ACCESSIBILITY §4)
-            scheduleAnnounce()
+    private func handleTap() {
+        onIncrement()
+        Task { await HapticEngine.shared.play(.shotIncrement) }
+    }
+
+    private func handleCrownChange(_ newVal: Double) {
+        let newInt = Int(newVal.rounded())
+        let delta = newInt - lastCrownInt
+        lastCrownInt = newInt
+
+        if delta > 0 {
+            for _ in 0..<delta { onIncrement() }
+        } else if delta < 0 {
+            for _ in 0..<abs(delta) { onDecrement() }
         }
-        // VoiceOver (14-ACCESSIBILITY §2)
-        .accessibilityLabel("타수 카운트")
-        .accessibilityHint("탭하여 +1, Digital Crown으로 조절")
-        .accessibilityValue(voiceOverValue)
-        .accessibilityAddTraits(.isAdjustable)
-        .accessibilityAdjustableAction { direction in
-            switch direction {
-            case .increment: onIncrement()
-            case .decrement: onDecrement()
-            @unknown default: break
-            }
-        }
+
+        scheduleAnnounce()
     }
 
     // MARK: - Helpers
@@ -120,6 +128,32 @@ struct ShotButton: View {
 #endif
             _ = value   // VoiceOver는 accessibilityValue 변경 시 자동 발화
         }
+    }
+}
+
+// MARK: - AccessibilityModifier
+// VoiceOver 4-tuple + Adjustable 액션 (14-ACCESSIBILITY §2/§4)
+// body 표현식 분리용 — 컴파일러 타입 추론 부담 완화
+
+private struct AccessibilityModifier: ViewModifier {
+    let value: String
+    let onIncrement: () -> Void
+    let onDecrement: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .accessibilityLabel("타수 카운트")
+            .accessibilityHint("탭하여 +1, Digital Crown으로 조절")
+            .accessibilityValue(value)
+            // accessibilityAdjustableAction만 있어도 SwiftUI가 isAdjustable trait 자동 부여
+            // (watchOS는 AccessibilityTraits.isAdjustable 미노출 — 명시 traits add 회피)
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment: onIncrement()
+                case .decrement: onDecrement()
+                @unknown default: break
+                }
+            }
     }
 }
 
