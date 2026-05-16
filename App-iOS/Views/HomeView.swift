@@ -73,7 +73,7 @@ struct HomeView: View {
                     NavigationLink {
                         StatsView()
                     } label: {
-                        Image(systemName: "chart.bar.fill")
+                        Label("통계", systemImage: "list.bullet.rectangle.fill")
                             .foregroundStyle(Color.springGreenPrimary)
                             .accessibilityLabel("통계")
                     }

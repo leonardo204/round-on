@@ -98,12 +98,18 @@ public final class LocationService: NSObject {
 
 extension LocationService: CLLocationManagerDelegate {
 
-    nonisolated public func locationManager(
-        _ manager: CLLocationManager,
-        didChangeAuthorization status: CLAuthorizationStatus
+    /// iOS 14+ 권한 변경 콜백. 옛 didChangeAuthorization은 deprecated이며
+    /// requestWhenInUseAuthorization 직후 다이얼로그 띄우기 전에 .notDetermined로
+    /// 즉시 발화되는 경우가 있어 continuation 조기 해결 버그를 유발한다.
+    /// 여기서는 status가 .notDetermined가 아닐 때(즉 사용자가 응답했을 때)만 resume.
+    nonisolated public func locationManagerDidChangeAuthorization(
+        _ manager: CLLocationManager
     ) {
+        let status = manager.authorizationStatus
         Task { @MainActor [weak self] in
             guard let self else { return }
+            // 사용자 응답 전 .notDetermined 발화는 무시 (다이얼로그 표시 대기 중)
+            guard status != .notDetermined else { return }
             if let cont = self.authContinuation {
                 self.authContinuation = nil
                 cont.resume(returning: status)

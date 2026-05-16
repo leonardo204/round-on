@@ -16,21 +16,27 @@ struct ContentView: View {
     @State private var showLocationDeniedAlert: Bool = false
 
     var body: some View {
-        Group {
-            if let roundVM = roundViewModel, roundVM.isRoundActive {
-                ActiveRoundView(roundVM: roundVM)
+        ZStack {
+            // 루트 배경 — preferredColorScheme(.light)만으로는 다크 시스템 디바이스에서
+            // root window 컨테이너 검은 띠 잔존. 직접 색칠로 statusbar/home indicator 영역 해소.
+            Color.springSurface.ignoresSafeArea()
+
+            Group {
+                if let roundVM = roundViewModel, roundVM.isRoundActive {
+                    ActiveRoundView(roundVM: roundVM)
+                        .transition(.opacity)
+                } else if let finished = finishedRound {
+                    RoundSummaryView(round: finished, onDismiss: {
+                        finishedRound = nil
+                        roundViewModel = nil
+                    })
                     .transition(.opacity)
-            } else if let finished = finishedRound {
-                RoundSummaryView(round: finished, onDismiss: {
-                    finishedRound = nil
-                    roundViewModel = nil
-                })
-                .transition(.opacity)
-            } else {
-                HomeView(roundViewModel: $roundViewModel, onRoundFinished: { round in
-                    finishedRound = round
-                })
-                .transition(.opacity)
+                } else {
+                    HomeView(roundViewModel: $roundViewModel, onRoundFinished: { round in
+                        finishedRound = round
+                    })
+                    .transition(.opacity)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.2), value: roundViewModel?.isRoundActive)
