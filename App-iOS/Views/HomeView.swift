@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import CoreLocation
 import Shared
 
 // MARK: - HomeView
@@ -12,9 +13,12 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
     @Query(sort: \Round.startedAt, order: .reverse) private var rounds: [Round]
+    @Environment(\.scenePhase) private var scenePhase
     @State private var showNewRound = false
     @State private var showStats = false
+    @State private var showSettings = false
     @State private var selectedRound: Round?
+    @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @Binding var roundViewModel: RoundViewModel?
     let onRoundFinished: ((Round) -> Void)?
 
@@ -58,9 +62,35 @@ struct HomeView: View {
                     }
             }
         }
+        .fullScreenCover(isPresented: $showSettings) {
+            NavigationStack {
+                SettingsView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("닫기") { showSettings = false }
+                        }
+                    }
+            }
+        }
+        .task {
+            refreshLocationStatus()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                refreshLocationStatus()
+            }
+        }
         .onAppear {
             AppLogger.view.debug("HomeView 표시 (라운드 \(rounds.count)건)")
         }
+    }
+
+    private func refreshLocationStatus() {
+        locationStatus = LocationService.shared.authorizationStatus
+    }
+
+    private var isLocationAuthorized: Bool {
+        locationStatus == .authorizedWhenInUse || locationStatus == .authorizedAlways
     }
 
     // MARK: - Custom header (라운드온 + 액션 2개) — mockup 1:1 매칭
@@ -81,7 +111,7 @@ struct HomeView: View {
                     navActionIcon("trending_up", label: "통계")
                 }
                 Button {
-                    AppLogger.view.info("설정 버튼 탭 (placeholder)")
+                    showSettings = true
                 } label: {
                     navActionIcon("settings", label: "설정")
                 }
@@ -206,15 +236,17 @@ struct HomeView: View {
             .buttonStyle(.plain)
             .accessibilityLabel("새 라운드 시작")
 
-            // GPS 권한 안내
-            HStack(spacing: 6) {
-                Image(systemName: "info.circle")
-                    .font(.system(size: 13))
-                Text("GPS 권한이 필요해요")
-                    .font(.system(size: 12))
+            // GPS 권한 안내 — 권한 미허용 시에만 표시
+            if !isLocationAuthorized {
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 13))
+                    Text("GPS 권한이 필요해요")
+                        .font(.system(size: 12))
+                }
+                .foregroundStyle(.tertiary)
+                .padding(.top, 20)
             }
-            .foregroundStyle(.tertiary)
-            .padding(.top, 20)
 
             Spacer(minLength: 0)
         }
