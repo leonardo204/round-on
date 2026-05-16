@@ -132,6 +132,9 @@ targets:
     dependencies:
       - target: Shared
         embed: true
+    configFiles:
+      Debug: Secrets.xcconfig
+      Release: Secrets.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.dev

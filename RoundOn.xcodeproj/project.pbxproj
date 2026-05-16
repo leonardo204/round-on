@@ -338,6 +338,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
+		"TEMP_9717DECB-8CCD-4DAE-8D27-E6A1BDCBE8FE" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -698,6 +699,14 @@
 				26F8C7C724E980752FC0A307 /* ShareViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		"TEMP_DB4C555B-C289-463A-A95F-7873EA21C632" /* golfCounter */ = {
+			isa = PBXGroup;
+			children = (
+				"TEMP_9717DECB-8CCD-4DAE-8D27-E6A1BDCBE8FE" /* Secrets.xcconfig */,
+			);
+			path = golfCounter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1153,6 +1162,7 @@
 		};
 		1C9FAD4736127D8A6225ECB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = "TEMP_9717DECB-8CCD-4DAE-8D27-E6A1BDCBE8FE" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1387,6 +1397,7 @@
 		};
 		B9C759EAA0C96AB87E0749E7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = "TEMP_9717DECB-8CCD-4DAE-8D27-E6A1BDCBE8FE" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
