@@ -50,6 +50,7 @@
 		626057D85619D703724C37A6 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9539182D15057C32C5477 /* SyncCoordinator.swift */; };
 		628959B54063C38658ABEFBF /* HoleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */; };
 		64C879DA0B861663C2C6FE4E /* SyncCoordinatorStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B718787C00263756F5FD6AF /* SyncCoordinatorStressTests.swift */; };
+		65AE8B58C627366B1E91226E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 722D42D03ACC92F83421B906 /* Assets.xcassets */; };
 		68B2C646268D174B6AF9790C /* RoundCourseLabelingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C804B88B54718B4E99D9DDD /* RoundCourseLabelingTests.swift */; };
 		69874D74B436F43650610B0F /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF006E866BFD030D2C951470 /* Round.swift */; };
 		6CFEBA35019A74AA80799A4F /* WCRoundBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 004003D3075ED161398FE093 /* WCRoundBridge.swift */; };
@@ -259,6 +260,7 @@
 		68B422356FF277D5F06DD486 /* HaversineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HaversineTests.swift; sourceTree = "<group>"; };
 		6B718787C00263756F5FD6AF /* SyncCoordinatorStressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinatorStressTests.swift; sourceTree = "<group>"; };
 		6D5592903B2E8D6A58B0D84B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		722D42D03ACC92F83421B906 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredCourse.swift; sourceTree = "<group>"; };
 		7809858545E77AF003225809 /* WatchRoundEndMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRoundEndMenu.swift; sourceTree = "<group>"; };
 		7A232DCC902D77EB1F7248F0 /* CloudKitCompatibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitCompatibilityTests.swift; sourceTree = "<group>"; };
@@ -309,7 +311,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -517,6 +519,7 @@
 		7A942388A4E72E6B9661E8CF /* App-Watch */ = {
 			isa = PBXGroup;
 			children = (
+				722D42D03ACC92F83421B906 /* Assets.xcassets */,
 				BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */,
 				B1D54F1E65191D4472520DAB /* Info.plist */,
 				91F6ABA41B47BEB7F15EE68F /* RoundOnWatch.entitlements */,
@@ -687,10 +690,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_1BEE4245-2656-4568-8EF7-55071A9F50BA" /* golfCounter */ = {
+		"TEMP_0E64F774-EE87-4B3E-894D-7B8EC312ED98" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */,
+				"TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -720,6 +723,7 @@
 			buildConfigurationList = 1D1F96286A8C90EAA594B812 /* Build configuration list for PBXNativeTarget "RoundOn-Watch" */;
 			buildPhases = (
 				D76EDFD8098509B380AC52C6 /* Sources */,
+				D0A5134F615B4C0C33340F8A /* Resources */,
 				C44E1A006230595B1B28EBA0 /* Frameworks */,
 				20970DC288033F82CE83BCB7 /* Embed Frameworks */,
 			);
@@ -853,6 +857,14 @@
 			files = (
 				B59D4E9003F16822FA406964 /* SharedAssets.xcassets in Resources */,
 				956F1CDF34233EFF1E66E2AE /* courses.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0A5134F615B4C0C33340F8A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65AE8B58C627366B1E91226E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1149,7 +1161,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1171,7 +1183,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
