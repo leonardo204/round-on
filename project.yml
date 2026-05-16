@@ -37,6 +37,7 @@ targets:
           - "Color+SeasonalGreen.swift"  # Asset Catalog 참조 제외 (watchOS 런타임 분리)
       - path: Shared/Haptics
       - path: Shared/Logging
+      - path: Shared/Settings  # PenaltySettings (UserDefaults) - watchOS 호환
       - path: Shared/Sync
       - path: Shared/ViewModels
         excludes:
@@ -62,6 +63,9 @@ targets:
         embed: true
       - target: RoundOn-Watch
         embed: true
+    configFiles:
+      Debug: Secrets.xcconfig
+      Release: Secrets.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon
@@ -69,6 +73,9 @@ targets:
         INFOPLIST_FILE: App-iOS/Info.plist
         ENABLE_PREVIEWS: YES
         GENERATE_INFOPLIST_FILE: NO
+        # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
+        # CI/CD 또는 Xcode Cloud 배포 시 시크릿 환경변수로 대체
+        KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
 
   RoundOn-Watch:
     type: application
@@ -84,7 +91,16 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.watchkitapp
         INFOPLIST_FILE: App-Watch/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App-Watch/RoundOnWatch.entitlements
+        CODE_SIGN_STYLE: Automatic
         SDKROOT: watchos
+        # Xcode 16 Preview용 .debug.dylib이 Shared.framework rpath와 불일치하여 실기기 dyld 크래시 → Watch는 Preview 비활성
+        ENABLE_PREVIEWS: NO
+        # Xcode 16 binary-diff debug dylib (RoundOn-Watch.debug.dylib) 자체를 비활성화
+        ENABLE_DEBUG_DYLIB: NO
+        ENABLE_DEBUG_DYLIB_OVERRIDE: NO
+        # @rpath 보강 (default 값 inherits — 명시로 안전 확보)
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
     info:
       path: App-Watch/Info.plist
       properties:
@@ -112,32 +128,6 @@ targets:
         # CoreLocation 링킹 (KakaoVerificationService / CourseDiscoveryService CLLocation 의존)
         OTHER_LDFLAGS: "-framework CoreLocation"
 
-  RoundOn-iOS:
-    type: application
-    platform: iOS
-    deploymentTarget: "18.0"
-    sources:
-      - path: App-iOS
-    dependencies:
-      - target: Shared
-        embed: true
-    configFiles:
-      Debug: Secrets.xcconfig
-      Release: Secrets.xcconfig
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.dev
-        PRODUCT_NAME: RoundOn
-        CODE_SIGN_ENTITLEMENTS: App-iOS/RoundOn.entitlements
-        INFOPLIST_FILE: App-iOS/Info.plist
-        ENABLE_PREVIEWS: YES
-        CODE_SIGN_STYLE: Automatic
-        SKIP_INSTALL: YES
-        GENERATE_INFOPLIST_FILE: NO
-        # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
-        # 실 디바이스 배포 시 CI/CD 환경 변수 또는 Xcode Cloud 시크릿으로 대체
-        KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
-
 schemes:
   RoundOn:
     build:
@@ -146,18 +136,6 @@ schemes:
         RoundOn-Watch: all
         Shared: all
         Shared-Watch: all
-    run:
-      config: Debug
-    test:
-      config: Debug
-      targets:
-        - SharedTests
-
-  RoundOn-iOS:
-    build:
-      targets:
-        RoundOn-iOS: all
-        Shared: all
     run:
       config: Debug
     test:

@@ -10,13 +10,12 @@
 | 항목 | 값 |
 |------|-----|
 | 앱 이름 | 라운드온 (Round-On) — 2026-05-11 확정 |
-| Bundle ID (개발) | `kr.zerolive.golf.roundon.dev` |
-| Bundle ID (정식) | `kr.zerolive.golf.roundon` |
+| Bundle ID | `kr.zerolive.golf.roundon` (단일 — Watch app 동반 설치 호환) |
+| Watch Bundle ID | `kr.zerolive.golf.roundon.watchkitapp` (WKCompanionAppBundleIdentifier 매칭) |
 | Team ID | `XU8HS9JUTS` |
 | Viewer 도메인 | `golf.zerolive.co.kr` |
 | 저장소 | github.com/leonardo204/round-on (SSH: git@github.com:leonardo204/round-on.git) |
-| 빌드 (개발) | `xcodebuild -scheme RoundOn-iOS` |
-| 빌드 (정식) | `xcodebuild -scheme RoundOn` |
+| 빌드 | `xcodebuild -scheme RoundOn` (Watch app 자동 embed) |
 
 ---
 
@@ -58,4 +57,4 @@ bash .claude/db/helper.sh live-set current_task "현재 작업"
 
 ---
 
-*최종 업데이트: 2026-05-13*
+*최종 업데이트: 2026-05-16 (dev/정식 스킴 분기 통합)*
