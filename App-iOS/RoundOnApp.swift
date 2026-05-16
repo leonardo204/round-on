@@ -79,9 +79,6 @@ struct RoundOnApp: App {
         WindowGroup {
             ContentView()
                 .modelContainer(modelContainer)
-                // 라이트/다크 자동 대응 (시스템 적응형 색상 사용 — HomeView 등).
-                // preferredColorScheme 강제 제거: systemGroupedBackground 등 시스템 토큰이
-                // statusbar/home indicator 영역까지 자연스럽게 칠해줌.
                 .onAppear {
                     AppLogger.app.info("RoundOn 앱 시작")
                 }

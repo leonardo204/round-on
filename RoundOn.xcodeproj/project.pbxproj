@@ -52,6 +52,7 @@
 		4D2E191EF28B8326E0AE183F /* RoundOnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */; };
 		5062F11A1515D711B81D8254 /* WatchHoleSwipeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC784D81F59A3D8626A1EFD /* WatchHoleSwipeContainer.swift */; };
 		5121A9F2F7EB6CA36330C281 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9539182D15057C32C5477 /* SyncCoordinator.swift */; };
+		513C9F97563901FB52E67CBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4E83625D112B42A79D66560C /* Assets.xcassets */; };
 		51ECB292269A1BDF7168D454 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */; };
 		52B4DAFFA9558462C9DF1BCA /* KakaoVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */; };
 		563CB27A5BDB5E89F45E141E /* Round+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8586200D803A247A39C2BCA0 /* Round+Display.swift */; };
@@ -144,6 +145,7 @@
 		F610C5FD790A8DD07B15CC83 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB288B76FE366FF249081E /* WCBroker.swift */; };
 		F6BC069E673C88B3FF76DD07 /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F8C7C724E980752FC0A307 /* ShareViewModel.swift */; };
 		F6CCA6A1CA91543B00DF78E9 /* ScoreCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D82D958B92B65E9C78EFAB6 /* ScoreCardViewModel.swift */; };
+		F6DA34D5B316E94D002C71DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4E83625D112B42A79D66560C /* Assets.xcassets */; };
 		F841812ADA0B238A64456F98 /* CourseRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E86F60C31B5986EC23E249 /* CourseRepositoryTests.swift */; };
 		FE60418EB6E040C8AF4E79DF /* KakaoVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */; };
 		FF26BAB4ADA77EFB4D1D2276 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -277,6 +279,7 @@
 		4C203EFDBD24AB1F09291328 /* GolfCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfCourse.swift; sourceTree = "<group>"; };
 		4D0ADF942BC3454FD2A846C1 /* SwiftDataModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataModelTests.swift; sourceTree = "<group>"; };
 		4D82D958B92B65E9C78EFAB6 /* ScoreCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCardViewModel.swift; sourceTree = "<group>"; };
+		4E83625D112B42A79D66560C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FC8F7887F8DB86E5E9CBAC5 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		550B5BE62926027AF561822A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		59E1ACA8E338CA62003F521A /* ScoreCardViewModelStressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCardViewModelStressTests.swift; sourceTree = "<group>"; };
@@ -343,7 +346,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_CB27E476-A710-4E8F-A28A-E612CDDF416F" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,6 +494,7 @@
 		48D346974E552027091537F0 /* App-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				4E83625D112B42A79D66560C /* Assets.xcassets */,
 				550B5BE62926027AF561822A /* ContentView.swift */,
 				266ECBE8207CD2C2E8385E8C /* Info.plist */,
 				F997DB31726FE8C239021BAE /* RoundOn.entitlements */,
@@ -716,10 +720,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_8380111B-18CC-40A7-A7C5-0C36954DBF4B" /* golfCounter */ = {
+		"TEMP_F91C0E46-D8C1-4E89-AA7F-6C78FB2698ED" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */,
+				"TEMP_CB27E476-A710-4E8F-A28A-E612CDDF416F" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -807,6 +811,7 @@
 			buildConfigurationList = C2A70515A3AE1136E259B458 /* Build configuration list for PBXNativeTarget "RoundOn-iOS" */;
 			buildPhases = (
 				3D5155263B4A34D661D2F479 /* Sources */,
+				A6B5C0C3386D2844549E816C /* Resources */,
 				2A87BA46C353A8F0A790176F /* Frameworks */,
 				538AE0EFDA2EEF56A464487D /* Embed Frameworks */,
 			);
@@ -827,6 +832,7 @@
 			buildConfigurationList = C20EFC73A843D4C9C96957BD /* Build configuration list for PBXNativeTarget "RoundOn" */;
 			buildPhases = (
 				F698A62D55F7C29639825318 /* Sources */,
+				DFC62C249F9898D06284D1B6 /* Resources */,
 				A59E575B6BD5FF96C7D3DA14 /* Frameworks */,
 				1C36E2491E84EB85E81C1562 /* Embed Frameworks */,
 				057331CD90B5F238B121FE0D /* Embed Watch Content */,
@@ -905,6 +911,22 @@
 			files = (
 				B59D4E9003F16822FA406964 /* SharedAssets.xcassets in Resources */,
 				956F1CDF34233EFF1E66E2AE /* courses.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6B5C0C3386D2844549E816C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				513C9F97563901FB52E67CBE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFC62C249F9898D06284D1B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6DA34D5B316E94D002C71DA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1166,7 +1188,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1180,15 +1202,16 @@
 		};
 		1C9FAD4736127D8A6225ECB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_CB27E476-A710-4E8F-A28A-E612CDDF416F" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "App-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				KAKAO_REST_API_KEY = "$(KAKAO_REST_API_KEY)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1234,7 +1257,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Shared/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1254,8 +1277,9 @@
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "App-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1273,8 +1297,9 @@
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "App-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1296,7 +1321,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Shared/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1355,7 +1380,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1415,15 +1440,16 @@
 		};
 		B9C759EAA0C96AB87E0749E7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_CB27E476-A710-4E8F-A28A-E612CDDF416F" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "App-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				KAKAO_REST_API_KEY = "$(KAKAO_REST_API_KEY)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1442,7 +1468,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = Tests/SharedTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1460,7 +1486,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = Tests/SharedTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

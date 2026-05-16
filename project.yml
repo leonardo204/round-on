@@ -1,7 +1,7 @@
 name: RoundOn
 options:
   deploymentTarget:
-    iOS: "17.0"
+    iOS: "18.0"
     watchOS: "10.0"
   bundleIdPrefix: kr.zerolive.golf
   createIntermediateGroups: true
@@ -14,7 +14,7 @@ targets:
   Shared:
     type: framework
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "18.0"
     sources:
       - path: Shared
     info:
@@ -54,7 +54,7 @@ targets:
   RoundOn:
     type: application
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "18.0"
     sources:
       - path: App-iOS
     dependencies:
@@ -68,24 +68,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: App-iOS/RoundOn.entitlements
         INFOPLIST_FILE: App-iOS/Info.plist
         ENABLE_PREVIEWS: YES
-    info:
-      path: App-iOS/Info.plist
-      properties:
-        UILaunchScreen: {}
-        CFBundleDisplayName: 라운드온
-        CFBundleDevelopmentRegion: ko
-        # 앱 전체 라이트 모드 강제 (디자인 가이드 Spring 팔레트 기준)
-        # SwiftUI .preferredColorScheme보다 시스템 레벨이라 statusbar까지 확실 적용
-        UIUserInterfaceStyle: Light
-        UISupportedInterfaceOrientations:
-          - UIInterfaceOrientationPortrait
-        NSPhotoLibraryUsageDescription: "라운드 사진을 첨부하여 공유 viewer에 포함할 수 있습니다."
-        NSPhotoLibraryAddUsageDescription: "공유 viewer 사진을 사진 앱에 저장할 수 있습니다."
-        NSHealthShareUsageDescription: "골프 라운드 운동 기록을 건강 앱에 저장합니다."
-        NSHealthUpdateUsageDescription: "골프 라운드를 운동으로 기록하여 건강 앱에 저장합니다."
-        NSLocationWhenInUseUsageDescription: "가까운 골프장을 자동으로 찾기 위해 현재 위치를 사용합니다."
-        UIBackgroundModes:
-          - remote-notification
+        GENERATE_INFOPLIST_FILE: NO
 
   RoundOn-Watch:
     type: application
@@ -112,7 +95,7 @@ targets:
   SharedTests:
     type: bundle.unit-test
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "18.0"
     sources:
       - path: Tests/SharedTests
       # KakaoVerificationService / CourseDiscoveryService 직접 테스트를 위해 소스 포함
@@ -132,7 +115,7 @@ targets:
   RoundOn-iOS:
     type: application
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "18.0"
     sources:
       - path: App-iOS
     dependencies:
@@ -150,18 +133,10 @@ targets:
         ENABLE_PREVIEWS: YES
         CODE_SIGN_STYLE: Automatic
         SKIP_INSTALL: YES
+        GENERATE_INFOPLIST_FILE: NO
         # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
         # 실 디바이스 배포 시 CI/CD 환경 변수 또는 Xcode Cloud 시크릿으로 대체
         KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
-    info:
-      path: App-iOS/Info.plist
-      properties:
-        # 카카오 API 키를 Info.plist에 포함 (런타임 Bundle.main 읽기용)
-        KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
-        # 앱 전체 라이트 모드 강제 (RoundOn-iOS 개발 스킴도 동일 적용)
-        UIUserInterfaceStyle: Light
-        UIBackgroundModes:
-          - remote-notification
 
 schemes:
   RoundOn:

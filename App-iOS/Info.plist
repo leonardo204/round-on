@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>라운드온</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -20,9 +22,30 @@
 	<string>1</string>
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>라운드 사진을 첨부하여 공유 viewer에 포함할 수 있습니다.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>공유 viewer 사진을 사진 앱에 저장할 수 있습니다.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>골프 라운드 운동 기록을 건강 앱에 저장합니다.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>골프 라운드를 운동으로 기록하여 건강 앱에 저장합니다.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>가까운 골프장을 자동으로 찾기 위해 현재 위치를 사용합니다.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

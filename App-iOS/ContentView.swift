@@ -17,8 +17,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // 시스템 적응형 배경 (라이트/다크 자동). statusbar/home indicator 영역까지 통일.
-            Color(.systemGroupedBackground).ignoresSafeArea()
+            Color(red: 0.95, green: 0.95, blue: 0.97)
+                .ignoresSafeArea()
 
             Group {
                 if let roundVM = roundViewModel, roundVM.isRoundActive {
