@@ -24,32 +24,13 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    heroCTA
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
-
-                    if !finishedRounds.isEmpty {
-                        sectionHeader("이번 달")
-                        metricsGrid
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 8)
-                    }
-
-                    if !rounds.isEmpty {
-                        sectionHeaderWithAction("최근 라운드", actionLabel: rounds.count > 5 ? "전체 보기" : nil) {
-                            showStats = true
-                        }
-                        recentList
-                            .padding(.horizontal, 16)
-                    } else {
-                        emptyHint
-                    }
+            Group {
+                if rounds.isEmpty {
+                    emptyStateView
+                } else {
+                    populatedScrollView
                 }
-                .padding(.bottom, 32)
             }
-            .scrollContentBackground(.hidden)
             .background(Color(.systemGroupedBackground).ignoresSafeArea())
             .navigationTitle("라운드온")
             .navigationBarTitleDisplayMode(.large)
@@ -74,6 +55,115 @@ struct HomeView: View {
         .onAppear {
             AppLogger.view.debug("HomeView 표시 (라운드 \(rounds.count)건)")
         }
+    }
+
+    // MARK: - Populated (라운드 1건 이상)
+
+    private var populatedScrollView: some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                heroCTA
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+
+                if !finishedRounds.isEmpty {
+                    sectionHeader("이번 달")
+                    metricsGrid
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 8)
+                }
+
+                sectionHeaderWithAction("최근 라운드", actionLabel: rounds.count > 5 ? "전체 보기" : nil) {
+                    showStats = true
+                }
+                recentList
+                    .padding(.horizontal, 16)
+            }
+            .padding(.bottom, 32)
+        }
+        .scrollContentBackground(.hidden)
+    }
+
+    // MARK: - Empty State (라운드 0건) — Apple HIG ContentUnavailableView 패턴
+
+    private var emptyStateView: some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
+
+            // 원형 아이콘 (110×110, 그라데이션 배경)
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: colorScheme == .dark
+                                ? [Color.accentGreen.opacity(0.20), Color.accentGreen.opacity(0.08)]
+                                : [Color.accentGreen.opacity(0.12), Color.accentGreen.opacity(0.06)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                Image(systemName: "figure.golf")
+                    .font(.system(size: 60, weight: .light))
+                    .foregroundStyle(.tint)
+                    .accessibilityHidden(true)
+            }
+            .frame(width: 110, height: 110)
+            .padding(.bottom, 28)
+
+            // 타이틀
+            Text("첫 라운드 시작하기")
+                .font(.system(size: 24, weight: .bold))
+                .foregroundStyle(.primary)
+                .padding(.bottom, 10)
+
+            // 설명
+            Text("근처 골프장을 자동으로 찾아 드려요.\n한 번 탭하면 한 타가 기록됩니다.")
+                .font(.system(size: 15))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .lineSpacing(2)
+                .frame(maxWidth: 280)
+                .padding(.bottom, 32)
+
+            // 알약 CTA
+            Button {
+                AppLogger.view.info("빈 상태 CTA 탭 → NewRoundView")
+                showNewRound = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 16, weight: .bold))
+                    Text("새 라운드 시작")
+                        .font(.system(size: 16, weight: .semibold))
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 28)
+                .padding(.vertical, 14)
+                .background(
+                    Capsule().fill(Color.accentGreen)
+                )
+                .shadow(
+                    color: Color.accentGreen.opacity(colorScheme == .dark ? 0.4 : 0.4),
+                    radius: colorScheme == .dark ? 20 : 16, x: 0, y: 4
+                )
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("새 라운드 시작")
+
+            // GPS 권한 안내
+            HStack(spacing: 6) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 13))
+                Text("GPS 권한이 필요해요")
+                    .font(.system(size: 12))
+            }
+            .foregroundStyle(.tertiary)
+            .padding(.top, 20)
+
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 32)
     }
 
     // MARK: - Hero CTA

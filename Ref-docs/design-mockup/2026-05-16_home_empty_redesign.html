@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>라운드온 — 빈 상태 시안 (라운드 0건)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+<style>
+  :root {
+    --accent: #2E7D32;
+    --accent-dark: #66BB6A;
+    --bg-light: #F2F2F7;
+    --card-light: #FFFFFF;
+    --text-light: #000;
+    --text2-light: #3C3C4399;
+    --text3-light: #3C3C434D;
+    --bg-dark: #000;
+    --card-dark: #1C1C1E;
+    --text-dark: #FFF;
+    --text2-dark: #EBEBF599;
+    --text3-dark: #EBEBF54D;
+    --divider-light: #C6C6C880;
+    --divider-dark: #54545880;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+    background: #2C2C2E; min-height: 100vh; padding: 40px 20px;
+    color: #fff;
+  }
+  h1.page-title {
+    font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 8px;
+  }
+  p.page-sub {
+    font-size: 14px; text-align: center; opacity: 0.6; margin-bottom: 40px;
+  }
+  .options {
+    display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+  }
+  .option-block { text-align: center; }
+  .option-label {
+    margin-top: 16px; font-size: 14px; font-weight: 600;
+    color: var(--accent-dark);
+  }
+  .option-desc {
+    margin-top: 6px; font-size: 13px; opacity: 0.7;
+    max-width: 360px; line-height: 1.5;
+  }
+  .device {
+    width: 393px; height: 852px; position: relative;
+    border-radius: 60px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    border: 3px solid #1a1a1a;
+    background: var(--bg-light); color: var(--text-light);
+  }
+  .device.dark { background: var(--bg-dark); color: var(--text-dark); }
+
+  /* iOS 상태바 */
+  .statusbar {
+    height: 54px; padding: 18px 30px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 17px; font-weight: 600;
+    position: relative; z-index: 10;
+  }
+  .statusbar-icons { display: flex; gap: 6px; align-items: center; }
+  .statusbar-icons .material-symbols-rounded { font-size: 18px; }
+
+  /* large navigation title */
+  .nav-large {
+    padding: 4px 20px 12px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .nav-large h1 {
+    font-size: 34px; font-weight: 700; letter-spacing: -0.4px;
+  }
+  .nav-actions { display: flex; gap: 6px; }
+  .nav-action-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: rgba(120, 120, 128, 0.12);
+  }
+  .device.dark .nav-action-btn { background: rgba(118, 118, 128, 0.24); }
+  .nav-action-btn .material-symbols-rounded {
+    font-size: 20px; color: var(--accent);
+    font-variation-settings: 'FILL' 0;
+  }
+  .device.dark .nav-action-btn .material-symbols-rounded { color: var(--accent-dark); }
+
+  .scroll-content {
+    height: calc(100% - 54px - 70px - 34px);
+    overflow-y: auto;
+    padding: 0 16px 24px;
+  }
+  .home-indicator {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 134px; height: 5px; border-radius: 3px;
+    background: rgba(0,0,0,0.8);
+  }
+  .device.dark .home-indicator { background: rgba(255,255,255,0.8); }
+
+  /* ============ 옵션 A: ContentUnavailableView (HIG 표준) ============ */
+  .opt-a {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; padding: 0 32px; text-align: center;
+  }
+  .opt-a-icon {
+    width: 110px; height: 110px;
+    background: linear-gradient(135deg, rgba(46,125,50,0.12), rgba(46,125,50,0.06));
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+  }
+  .device.dark .opt-a-icon {
+    background: linear-gradient(135deg, rgba(102,187,106,0.2), rgba(102,187,106,0.08));
+  }
+  .opt-a-icon .material-symbols-rounded {
+    font-size: 60px; color: var(--accent);
+  }
+  .device.dark .opt-a-icon .material-symbols-rounded { color: var(--accent-dark); }
+  .opt-a-title {
+    font-size: 24px; font-weight: 700; letter-spacing: -0.4px;
+    margin-bottom: 10px;
+  }
+  .opt-a-desc {
+    font-size: 15px; line-height: 1.55;
+    color: var(--text2-light); margin-bottom: 32px;
+    max-width: 280px;
+  }
+  .device.dark .opt-a-desc { color: var(--text2-dark); }
+  .opt-a-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: white;
+    padding: 14px 28px; border-radius: 999px;
+    font-size: 16px; font-weight: 600;
+    box-shadow: 0 4px 16px rgba(46, 125, 50, 0.4);
+  }
+  .device.dark .opt-a-cta {
+    background: var(--accent-dark);
+    box-shadow: 0 4px 20px rgba(102, 187, 106, 0.4);
+  }
+  .opt-a-cta .material-symbols-rounded { font-size: 20px; }
+  .opt-a-tip {
+    margin-top: 20px; font-size: 12px;
+    color: var(--text3-light);
+    display: flex; gap: 6px; align-items: center;
+  }
+  .device.dark .opt-a-tip { color: var(--text3-dark); }
+  .opt-a-tip .material-symbols-rounded { font-size: 14px; }
+
+  /* ============ 옵션 B: 온보딩 단계 카드 ============ */
+  .opt-b-hero {
+    background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%);
+    border-radius: 22px; padding: 28px 24px;
+    margin-top: 8px; margin-bottom: 24px;
+    color: white; position: relative; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.3);
+  }
+  .device.dark .opt-b-hero {
+    background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+  }
+  .opt-b-hero .bg-flag {
+    position: absolute; right: -20px; bottom: -20px;
+    opacity: 0.1; transform: rotate(-15deg);
+  }
+  .opt-b-hero .bg-flag .material-symbols-rounded { font-size: 160px; }
+  .opt-b-hero h2 {
+    font-size: 26px; font-weight: 700; letter-spacing: -0.4px;
+    line-height: 1.25; margin-bottom: 8px;
+  }
+  .opt-b-hero p {
+    font-size: 15px; opacity: 0.9; line-height: 1.5;
+  }
+  .opt-b-section {
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text2-light);
+    padding: 0 4px 10px; margin-top: 8px;
+  }
+  .device.dark .opt-b-section { color: var(--text2-dark); }
+  .opt-b-list {
+    background: var(--card-light);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .device.dark .opt-b-list { background: var(--card-dark); }
+  .opt-b-step {
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    border-bottom: 0.5px solid var(--divider-light);
+  }
+  .device.dark .opt-b-step { border-bottom-color: var(--divider-dark); }
+  .opt-b-step:last-child { border-bottom: none; }
+  .opt-b-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(46,125,50,0.12);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .device.dark .opt-b-num {
+    background: rgba(102,187,106,0.18);
+    color: var(--accent-dark);
+  }
+  .opt-b-step-text { flex: 1; }
+  .opt-b-step-title {
+    font-size: 15px; font-weight: 600;
+  }
+  .opt-b-step-desc {
+    font-size: 13px; color: var(--text2-light); margin-top: 2px;
+  }
+  .device.dark .opt-b-step-desc { color: var(--text2-dark); }
+  .opt-b-cta {
+    background: var(--accent);
+    color: white;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    font-size: 17px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(46,125,50,0.35);
+  }
+  .device.dark .opt-b-cta {
+    background: var(--accent-dark);
+    box-shadow: 0 4px 20px rgba(102,187,106,0.4);
+  }
+  .opt-b-cta .material-symbols-rounded { font-size: 22px; }
+
+  /* ============ 옵션 C: 감성 Hero + 영감 카드 ============ */
+  .opt-c {
+    background: linear-gradient(180deg, #2E7D32 0%, #43A047 70%, transparent 100%);
+    position: absolute; top: 0; left: 0; right: 0; height: 540px;
+    z-index: 0;
+  }
+  .device.dark .opt-c {
+    background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 60%, transparent 100%);
+  }
+  .opt-c-content {
+    position: relative; z-index: 1;
+    padding-top: 80px; padding-bottom: 0;
+  }
+  .opt-c-icon {
+    width: 90px; height: 90px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(20px);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+  }
+  .opt-c-icon .material-symbols-rounded {
+    font-size: 50px; color: white;
+  }
+  .opt-c-title {
+    text-align: center; color: white;
+    font-size: 30px; font-weight: 800; letter-spacing: -0.5px;
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .opt-c-quote {
+    text-align: center; color: rgba(255,255,255,0.9);
+    font-size: 15px; line-height: 1.5;
+    padding: 0 36px; margin-bottom: 36px;
+    font-style: italic;
+  }
+  .opt-c-card {
+    background: var(--card-light);
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px 24px;
+    margin: 0 -16px;
+    min-height: 320px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+  }
+  .device.dark .opt-c-card { background: var(--card-dark); }
+  .opt-c-tip-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0;
+  }
+  .opt-c-tip-icon {
+    width: 36px; height: 36px;
+    background: rgba(46,125,50,0.12);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .device.dark .opt-c-tip-icon { background: rgba(102,187,106,0.18); }
+  .opt-c-tip-icon .material-symbols-rounded {
+    font-size: 18px; color: var(--accent);
+  }
+  .device.dark .opt-c-tip-icon .material-symbols-rounded { color: var(--accent-dark); }
+  .opt-c-tip-text {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .device.dark .opt-c-tip-text { color: var(--text-dark); }
+  .opt-c-tip-text strong { font-weight: 600; }
+  .opt-c-tip-text span {
+    display: block; color: var(--text2-light); font-size: 12px; margin-top: 2px;
+  }
+  .device.dark .opt-c-tip-text span { color: var(--text2-dark); }
+  .opt-c-cta {
+    margin-top: 16px;
+    background: var(--accent); color: white;
+    border-radius: 16px; padding: 16px;
+    text-align: center;
+    font-size: 17px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(46,125,50,0.35);
+  }
+  .device.dark .opt-c-cta {
+    background: var(--accent-dark);
+    box-shadow: 0 4px 20px rgba(102,187,106,0.4);
+  }
+  .opt-c-cta .material-symbols-rounded { font-size: 22px; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">라운드온 — 라운드 0건 시작 화면 시안 3종</h1>
+<p class="page-sub">2026-05-16 · 라이트 모드 비교 (다크 자동 대응) · 사용자 검수용</p>
+
+<div class="options">
+
+<!-- ============================= 옵션 A ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="statusbar">
+    <span>1:02</span>
+    <div class="statusbar-icons">
+      <span class="material-symbols-rounded">network_cell</span>
+      <span class="material-symbols-rounded">wifi</span>
+      <span class="material-symbols-rounded">battery_full</span>
+    </div>
+  </div>
+  <div class="nav-large">
+    <h1>라운드온</h1>
+    <div class="nav-actions">
+      <div class="nav-action-btn"><span class="material-symbols-rounded">trending_up</span></div>
+      <div class="nav-action-btn"><span class="material-symbols-rounded">settings</span></div>
+    </div>
+  </div>
+  <div class="scroll-content">
+    <div class="opt-a">
+      <div class="opt-a-icon"><span class="material-symbols-rounded">golf_course</span></div>
+      <div class="opt-a-title">첫 라운드 시작하기</div>
+      <div class="opt-a-desc">근처 골프장을 자동으로 찾아 드려요.<br/>한 번 탭하면 한 타가 기록됩니다.</div>
+      <div class="opt-a-cta">
+        <span class="material-symbols-rounded">play_arrow</span>
+        새 라운드 시작
+      </div>
+      <div class="opt-a-tip">
+        <span class="material-symbols-rounded">info</span>
+        GPS 권한이 필요해요
+      </div>
+    </div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+<div class="option-label">옵션 A — 미니멀 (Apple HIG ContentUnavailableView)</div>
+<div class="option-desc">SF Symbol 큰 일러스트 + 타이틀 + 짧은 설명 + 알약 CTA + GPS 안내. 시스템 표준 패턴. 가장 깨끗.</div>
+</div>
+
+<!-- ============================= 옵션 B ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="statusbar">
+    <span>1:02</span>
+    <div class="statusbar-icons">
+      <span class="material-symbols-rounded">network_cell</span>
+      <span class="material-symbols-rounded">wifi</span>
+      <span class="material-symbols-rounded">battery_full</span>
+    </div>
+  </div>
+  <div class="nav-large">
+    <h1>라운드온</h1>
+    <div class="nav-actions">
+      <div class="nav-action-btn"><span class="material-symbols-rounded">trending_up</span></div>
+      <div class="nav-action-btn"><span class="material-symbols-rounded">settings</span></div>
+    </div>
+  </div>
+  <div class="scroll-content">
+    <div class="opt-b-hero">
+      <div class="bg-flag"><span class="material-symbols-rounded">golf_course</span></div>
+      <h2>골프장에<br/>도착하셨나요?</h2>
+      <p>3단계로 첫 라운드를 시작해 보세요</p>
+    </div>
+    <div class="opt-b-section">시작 가이드</div>
+    <div class="opt-b-list">
+      <div class="opt-b-step">
+        <div class="opt-b-num">1</div>
+        <div class="opt-b-step-text">
+          <div class="opt-b-step-title">골프장 선택</div>
+          <div class="opt-b-step-desc">GPS로 자동 매칭 · 카카오맵 검색</div>
+        </div>
+      </div>
+      <div class="opt-b-step">
+        <div class="opt-b-num">2</div>
+        <div class="opt-b-step-text">
+          <div class="opt-b-step-title">동반자 추가</div>
+          <div class="opt-b-step-desc">최대 4명까지 함께 스코어 기록</div>
+        </div>
+      </div>
+      <div class="opt-b-step">
+        <div class="opt-b-num">3</div>
+        <div class="opt-b-step-text">
+          <div class="opt-b-step-title">라운드 시작</div>
+          <div class="opt-b-step-desc">한 번 탭 = 한 타. 한 손으로 끝</div>
+        </div>
+      </div>
+    </div>
+    <div class="opt-b-cta">
+      <span class="material-symbols-rounded">play_arrow</span>
+      새 라운드 시작
+    </div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+<div class="option-label">옵션 B — 온보딩 단계 가이드</div>
+<div class="option-desc">Hero 카드 + 시작 1·2·3 단계 카드 + 큰 CTA. 첫 사용자에게 흐름을 명확히 안내. 다소 정보 많음.</div>
+</div>
+
+<!-- ============================= 옵션 C ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="opt-c"></div>
+  <div class="statusbar" style="color: white;">
+    <span>1:02</span>
+    <div class="statusbar-icons">
+      <span class="material-symbols-rounded">network_cell</span>
+      <span class="material-symbols-rounded">wifi</span>
+      <span class="material-symbols-rounded">battery_full</span>
+    </div>
+  </div>
+  <div class="opt-c-content">
+    <div class="opt-c-icon"><span class="material-symbols-rounded">sports_golf</span></div>
+    <div class="opt-c-title">라운드온에<br/>오신 것을 환영해요</div>
+    <div class="opt-c-quote">"한 번 탭할 때마다 한 타. 라운드 끝나면<br/>사진과 함께 친구들에게 공유하세요."</div>
+    <div class="opt-c-card">
+      <div class="opt-c-tip-row">
+        <div class="opt-c-tip-icon"><span class="material-symbols-rounded">my_location</span></div>
+        <div class="opt-c-tip-text">
+          <strong>GPS 자동 매칭</strong>
+          <span>965곳 골프장에서 즉시 시작</span>
+        </div>
+      </div>
+      <div class="opt-c-tip-row">
+        <div class="opt-c-tip-icon"><span class="material-symbols-rounded">touch_app</span></div>
+        <div class="opt-c-tip-text">
+          <strong>한 손 카운터</strong>
+          <span>큰 버튼 탭으로 빠른 스코어 입력</span>
+        </div>
+      </div>
+      <div class="opt-c-tip-row">
+        <div class="opt-c-tip-icon"><span class="material-symbols-rounded">share</span></div>
+        <div class="opt-c-tip-text">
+          <strong>7일 공유 링크</strong>
+          <span>사진과 스코어를 친구들에게</span>
+        </div>
+      </div>
+      <div class="opt-c-cta">
+        <span class="material-symbols-rounded">play_arrow</span>
+        첫 라운드 시작하기
+      </div>
+    </div>
+  </div>
+  <div class="home-indicator" style="background: rgba(0,0,0,0.6);"></div>
+</div>
+<div class="option-label">옵션 C — 감성 웰컴 + 핵심 가치 3</div>
+<div class="option-desc">그린 그라데이션 풀스크린 + 큰 웰컴 메시지 + 앱 슬로건 + 핵심 3가지 가치(GPS/카운터/공유) + CTA. 첫인상 강함.</div>
+</div>
+
+</div>
+
+<div style="max-width: 880px; margin: 60px auto 0; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+  <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">선택 가이드</h2>
+  <ul style="list-style: none;">
+    <li style="padding: 6px 0; font-size: 14px; opacity: 0.85;"><strong style="color: #66BB6A;">A 미니멀</strong> — 깨끗하고 빠른 인지. iOS 사용자 친숙. 빈 상태가 자주 노출될 일 없는 경우 적합.</li>
+    <li style="padding: 6px 0; font-size: 14px; opacity: 0.85;"><strong style="color: #66BB6A;">B 단계 가이드</strong> — 첫 사용자가 뭘 해야 할지 명확. 학습 비용 낮음. 정보 밀도 중간.</li>
+    <li style="padding: 6px 0; font-size: 14px; opacity: 0.85;"><strong style="color: #66BB6A;">C 감성 웰컴</strong> — 브랜드 인상 강함. 앱 처음 켜는 사용자에게 매력적. 한 번만 보고 다시는 안 보일 가능성.</li>
+  </ul>
+  <p style="margin-top: 20px; font-size: 13px; opacity: 0.6; line-height: 1.6;">
+    참고: 라운드 1건 이상이면 자동으로 기존 디자인(Hero CTA + 메트릭 + 최근 라운드)으로 전환됩니다.<br/>
+    빈 상태는 "앱 설치 직후 처음 켰을 때 + 모든 라운드 삭제 후" 두 시점에만 노출됩니다.
+  </p>
+</div>
+
+</body>
+</html>
