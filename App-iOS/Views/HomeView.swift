@@ -66,6 +66,8 @@ struct HomeView: View {
             }
             .navigationTitle("라운드온")
             .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(Color.springSurface, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
