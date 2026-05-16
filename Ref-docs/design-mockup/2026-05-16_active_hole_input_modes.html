@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>라운드온 — 홀 입력 모드 시안 3종</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+<style>
+  :root {
+    --accent: #2E7D32;
+    --accent-dark: #66BB6A;
+    --bg-light: #F2F2F7;
+    --card-light: #FFFFFF;
+    --text-light: #000;
+    --text2-light: #3C3C4399;
+    --text3-light: #3C3C434D;
+    --divider-light: #C6C6C880;
+    --red-soft: #F4D7D7;
+    --blue-soft: #D2E5F2;
+    --green-soft: #D5E8D5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+    background: #2C2C2E; min-height: 100vh; padding: 40px 20px;
+    color: #fff;
+  }
+  h1.page-title { font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+  p.page-sub { font-size: 14px; text-align: center; opacity: 0.6; margin-bottom: 40px; }
+  .options { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; }
+  .option-block { text-align: center; }
+  .option-label { margin-top: 16px; font-size: 14px; font-weight: 600; color: var(--accent-dark); }
+  .option-desc { margin-top: 6px; font-size: 13px; opacity: 0.7; max-width: 360px; line-height: 1.5; }
+
+  /* 디바이스 frame */
+  .device {
+    width: 393px; height: 852px; position: relative;
+    border-radius: 60px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    border: 3px solid #1a1a1a;
+    background: var(--bg-light); color: var(--text-light);
+  }
+  .statusbar {
+    height: 54px; padding: 18px 30px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 17px; font-weight: 600;
+    position: relative; z-index: 10;
+  }
+  .nav-bar {
+    padding: 4px 16px 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 0.5px solid var(--divider-light);
+  }
+  .nav-action { font-size: 16px; font-weight: 500; color: var(--accent); }
+  .nav-action.red { color: #E53935; }
+  .nav-title { font-size: 17px; font-weight: 600; }
+
+  /* 모드 토글 (segmented) */
+  .mode-toggle {
+    margin: 12px 16px 0;
+    background: rgba(120,120,128,0.16);
+    border-radius: 9px;
+    padding: 2px;
+    display: flex; gap: 2px;
+    font-size: 13px; font-weight: 500;
+  }
+  .mode-toggle .seg {
+    flex: 1; text-align: center; padding: 7px 0;
+    border-radius: 7px;
+    color: var(--text-light);
+  }
+  .mode-toggle .seg.active {
+    background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    font-weight: 600;
+  }
+
+  /* 홀 헤더 */
+  .hole-header {
+    padding: 16px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    background: white;
+    border-bottom: 0.5px solid var(--divider-light);
+  }
+  .hole-header .hole-num {
+    font-size: 32px; font-weight: 800; color: var(--accent);
+    line-height: 1;
+  }
+  .hole-header .hole-sub { font-size: 13px; color: var(--text2-light); margin-top: 4px; }
+  .par-badge {
+    background: rgba(46,125,50,0.10); color: var(--accent);
+    padding: 6px 12px; border-radius: 12px;
+    font-size: 13px; font-weight: 600;
+  }
+  .par-badge .arrow { font-size: 10px; opacity: 0.6; margin-left: 4px; }
+
+  /* 공통: 벌타 row (작은 chip 형태) */
+  .penalty-row {
+    display: flex; gap: 6px; justify-content: center;
+  }
+  .penalty-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 6px 10px; border-radius: 8px;
+    font-size: 12px; font-weight: 600;
+  }
+  .penalty-chip.ob { background: var(--red-soft); color: #C12525; }
+  .penalty-chip.hazard { background: var(--blue-soft); color: #1565C0; }
+  .penalty-chip.ok { background: var(--green-soft); color: var(--accent); }
+  .penalty-chip .material-symbols-rounded { font-size: 14px; }
+
+  /* 하단 홀 네비 */
+  .hole-nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 14px 16px 28px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(180deg, rgba(242,242,247,0) 0%, rgba(242,242,247,1) 30%);
+  }
+  .nav-btn {
+    padding: 10px 18px; border-radius: 12px;
+    background: white; color: var(--text-light);
+    font-size: 14px; font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .nav-btn.disabled { opacity: 0.4; }
+  .nav-btn.next {
+    background: var(--accent); color: white;
+    box-shadow: 0 4px 16px rgba(46,125,50,0.3);
+  }
+
+  /* =============== 옵션 A: 4인 Stack (수직) =============== */
+  .opt-a-list {
+    padding: 12px 12px 96px;
+    display: flex; flex-direction: column; gap: 10px;
+    overflow-y: auto;
+    height: calc(100% - 54px - 50px - 48px - 70px);
+  }
+  .a-card {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .a-card.me {
+    background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%);
+    color: white;
+  }
+  .a-card .player-name {
+    font-size: 13px; font-weight: 600; opacity: 0.9;
+    width: 48px; flex-shrink: 0;
+  }
+  .a-card.me .player-name { opacity: 1; }
+  .a-card .tap-area {
+    flex: 1;
+    background: rgba(46,125,50,0.07);
+    border-radius: 12px;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 36px; font-weight: 800;
+    font-feature-settings: 'tnum';
+    color: var(--accent);
+    border: 1.5px dashed rgba(46,125,50,0.25);
+  }
+  .a-card.me .tap-area {
+    background: rgba(255,255,255,0.18);
+    color: white;
+    border-color: rgba(255,255,255,0.4);
+  }
+  .a-card .actions {
+    display: flex; flex-direction: column; gap: 4px;
+    width: 80px; flex-shrink: 0;
+  }
+  .a-card .mini-chip {
+    font-size: 10px; font-weight: 600;
+    padding: 4px 6px; border-radius: 6px;
+    text-align: center;
+    background: rgba(120,120,128,0.10);
+    color: var(--text-light);
+  }
+  .a-card.me .mini-chip { background: rgba(255,255,255,0.18); color: white; }
+  .a-card .mini-chip.ob { background: var(--red-soft); color: #C12525; }
+  .a-card .mini-chip.minus { background: rgba(120,120,128,0.20); }
+  .a-card.me .mini-chip.ob { background: rgba(255,255,255,0.25); color: white; }
+  .a-card.me .mini-chip.minus { background: rgba(255,255,255,0.18); color: white; }
+
+  /* =============== 옵션 B: Active 큰 카드 + Stripe =============== */
+  .opt-b-content {
+    padding: 12px 16px 96px;
+    display: flex; flex-direction: column; gap: 16px;
+    height: calc(100% - 54px - 50px - 48px - 70px);
+  }
+  .b-player-tabs {
+    display: flex; gap: 6px;
+  }
+  .b-player-tab {
+    flex: 1;
+    padding: 8px 0;
+    text-align: center;
+    background: rgba(120,120,128,0.10);
+    border-radius: 10px;
+    font-size: 12px; font-weight: 500;
+    color: var(--text2-light);
+  }
+  .b-player-tab.active {
+    background: var(--accent); color: white;
+    font-weight: 600;
+  }
+  .b-player-tab .score {
+    display: block;
+    font-size: 14px; font-weight: 700;
+    margin-top: 2px;
+  }
+  .b-big-card {
+    background: white;
+    border-radius: 24px;
+    padding: 24px 16px 16px;
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: relative;
+  }
+  .b-big-card .active-name {
+    text-align: center; font-size: 15px; font-weight: 600;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .b-big-card .big-number {
+    text-align: center;
+    font-size: 120px; font-weight: 800;
+    font-feature-settings: 'tnum';
+    line-height: 1;
+    color: var(--text-light);
+    margin: 12px 0 16px;
+    background: rgba(46,125,50,0.05);
+    border-radius: 20px;
+    padding: 24px 0;
+    border: 2px dashed rgba(46,125,50,0.2);
+  }
+  .b-big-card .big-helper {
+    text-align: center; font-size: 12px; color: var(--text2-light);
+    margin-top: 4px;
+  }
+  .b-big-card .actions {
+    margin-top: 16px;
+    display: flex; gap: 8px; justify-content: center;
+  }
+  .b-big-card .actions .minus {
+    padding: 10px 14px; border-radius: 10px;
+    background: rgba(120,120,128,0.15);
+    font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  /* =============== 옵션 C: Grid 2x2 =============== */
+  .opt-c-content {
+    padding: 12px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    padding-bottom: 96px;
+    height: calc(100% - 54px - 50px - 48px - 70px);
+  }
+  .c-card {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 10px;
+    display: flex; flex-direction: column; gap: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .c-card.me { background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%); color: white; }
+  .c-card .name { font-size: 12px; font-weight: 600; opacity: 0.9; text-align: center; }
+  .c-card .tap {
+    background: rgba(46,125,50,0.06);
+    border: 2px dashed rgba(46,125,50,0.25);
+    border-radius: 12px;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 44px; font-weight: 800;
+    color: var(--accent);
+    font-feature-settings: 'tnum';
+  }
+  .c-card.me .tap { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.4); color: white; }
+  .c-card .chips {
+    display: flex; gap: 4px; justify-content: center;
+  }
+  .c-card .chip {
+    padding: 4px 6px; border-radius: 6px;
+    font-size: 10px; font-weight: 600;
+  }
+  .c-card .chip.ob { background: var(--red-soft); color: #C12525; }
+  .c-card .chip.hz { background: var(--blue-soft); color: #1565C0; }
+  .c-card .chip.ok { background: var(--green-soft); color: var(--accent); }
+  .c-card .chip.mn { background: rgba(120,120,128,0.20); color: var(--text-light); }
+  .c-card.me .chip.ob, .c-card.me .chip.hz, .c-card.me .chip.ok, .c-card.me .chip.mn {
+    background: rgba(255,255,255,0.20); color: white;
+  }
+
+</style>
+</head>
+<body>
+
+<h1 class="page-title">라운드온 — 홀 입력 모드 시안 3종</h1>
+<p class="page-sub">2026-05-16 · 라이트 모드 · "홀 입력 모드" 신규 화면 비교 (스코어보드 모드는 기존 그대로 유지)</p>
+
+<div class="options">
+
+<!-- ============================= 옵션 A: Stack 1x4 ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="statusbar"><span>1:02</span><span>•••</span></div>
+  <div class="nav-bar">
+    <span class="nav-action">⊕ 벌타</span>
+    <span class="nav-title">아리지CC · 동코스</span>
+    <span class="nav-action red">종료</span>
+  </div>
+  <div class="mode-toggle">
+    <div class="seg">📋 보기</div>
+    <div class="seg active">⊕ 입력</div>
+  </div>
+  <div class="hole-header">
+    <div>
+      <div class="hole-num">3<span style="font-size:18px; font-weight:600; opacity:0.7;">번 홀</span></div>
+      <div class="hole-sub">3 / 18 · 전반</div>
+    </div>
+    <div class="par-badge">Par 4 <span class="arrow">▼</span></div>
+  </div>
+  <div class="opt-a-list">
+    <div class="a-card me">
+      <div class="player-name">나</div>
+      <div class="tap-area">4</div>
+      <div class="actions">
+        <div class="mini-chip ob">OB +2</div>
+        <div class="mini-chip">해저드</div>
+        <div class="mini-chip minus">⊖ −1</div>
+      </div>
+    </div>
+    <div class="a-card">
+      <div class="player-name">동1</div>
+      <div class="tap-area">5</div>
+      <div class="actions">
+        <div class="mini-chip ob">OB +2</div>
+        <div class="mini-chip">해저드</div>
+        <div class="mini-chip minus">⊖ −1</div>
+      </div>
+    </div>
+    <div class="a-card">
+      <div class="player-name">동2</div>
+      <div class="tap-area">3</div>
+      <div class="actions">
+        <div class="mini-chip ob">OB +2</div>
+        <div class="mini-chip">해저드</div>
+        <div class="mini-chip minus">⊖ −1</div>
+      </div>
+    </div>
+    <div class="a-card">
+      <div class="player-name">동3</div>
+      <div class="tap-area">0</div>
+      <div class="actions">
+        <div class="mini-chip ob">OB +2</div>
+        <div class="mini-chip">해저드</div>
+        <div class="mini-chip minus">⊖ −1</div>
+      </div>
+    </div>
+  </div>
+  <div class="hole-nav">
+    <div class="nav-btn">← 2번 홀</div>
+    <div class="nav-btn next">4번 홀 →</div>
+  </div>
+</div>
+<div class="option-label">A. 4인 Stack (1열 4행)</div>
+<div class="option-desc">한 화면에 4명 모두 노출 + 각자 입력. 큰 숫자 영역(36pt) 탭으로 +1. 우측 컬럼에 OB/해저드/−1 mini chips. 활성 플레이어(나)는 그린 그라데이션 강조.</div>
+</div>
+
+<!-- ============================= 옵션 B: Active 큰 카드 + Tabs ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="statusbar"><span>1:02</span><span>•••</span></div>
+  <div class="nav-bar">
+    <span class="nav-action">⊕ 벌타</span>
+    <span class="nav-title">아리지CC · 동코스</span>
+    <span class="nav-action red">종료</span>
+  </div>
+  <div class="mode-toggle">
+    <div class="seg">📋 보기</div>
+    <div class="seg active">⊕ 입력</div>
+  </div>
+  <div class="hole-header">
+    <div>
+      <div class="hole-num">3<span style="font-size:18px; font-weight:600; opacity:0.7;">번 홀</span></div>
+      <div class="hole-sub">3 / 18 · 전반</div>
+    </div>
+    <div class="par-badge">Par 4 <span class="arrow">▼</span></div>
+  </div>
+  <div class="opt-b-content">
+    <div class="b-player-tabs">
+      <div class="b-player-tab active">나<span class="score">4</span></div>
+      <div class="b-player-tab">동1<span class="score">5</span></div>
+      <div class="b-player-tab">동2<span class="score">3</span></div>
+      <div class="b-player-tab">동3<span class="score">−</span></div>
+    </div>
+    <div class="b-big-card">
+      <div class="active-name">나</div>
+      <div class="big-number">4</div>
+      <div class="big-helper">중앙 탭 → +1 · 길게 → −1</div>
+      <div class="penalty-row" style="margin-top: 16px;">
+        <div class="penalty-chip ob"><span class="material-symbols-rounded">flag</span> OB +2</div>
+        <div class="penalty-chip hazard"><span class="material-symbols-rounded">water_drop</span> 해저드 +1</div>
+        <div class="penalty-chip ok"><span class="material-symbols-rounded">check</span> OK +1</div>
+      </div>
+      <div class="actions">
+        <div class="minus">⊖ 타수 −1</div>
+      </div>
+    </div>
+  </div>
+  <div class="hole-nav">
+    <div class="nav-btn">← 2번 홀</div>
+    <div class="nav-btn next">4번 홀 →</div>
+  </div>
+</div>
+<div class="option-label">B. 활성 플레이어 큰 카드 + 탭 전환</div>
+<div class="option-desc">상단 4인 탭(이름+현재 타수) → 선택한 한 명이 가운데 큰 숫자(120pt). 가장 큰 탭 영역(중앙) +1. 벌타·−1 명시 버튼 한 행. 동반자 전환은 상단 탭 한 번 더 누르기.</div>
+</div>
+
+<!-- ============================= 옵션 C: Grid 2x2 ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="statusbar"><span>1:02</span><span>•••</span></div>
+  <div class="nav-bar">
+    <span class="nav-action">⊕ 벌타</span>
+    <span class="nav-title">아리지CC · 동코스</span>
+    <span class="nav-action red">종료</span>
+  </div>
+  <div class="mode-toggle">
+    <div class="seg">📋 보기</div>
+    <div class="seg active">⊕ 입력</div>
+  </div>
+  <div class="hole-header">
+    <div>
+      <div class="hole-num">3<span style="font-size:18px; font-weight:600; opacity:0.7;">번 홀</span></div>
+      <div class="hole-sub">3 / 18 · 전반</div>
+    </div>
+    <div class="par-badge">Par 4 <span class="arrow">▼</span></div>
+  </div>
+  <div class="opt-c-content">
+    <div class="c-card me">
+      <div class="name">나</div>
+      <div class="tap">4</div>
+      <div class="chips">
+        <div class="chip ob">OB</div>
+        <div class="chip hz">해저드</div>
+        <div class="chip ok">OK</div>
+        <div class="chip mn">⊖</div>
+      </div>
+    </div>
+    <div class="c-card">
+      <div class="name">동1</div>
+      <div class="tap">5</div>
+      <div class="chips">
+        <div class="chip ob">OB</div>
+        <div class="chip hz">해저드</div>
+        <div class="chip ok">OK</div>
+        <div class="chip mn">⊖</div>
+      </div>
+    </div>
+    <div class="c-card">
+      <div class="name">동2</div>
+      <div class="tap">3</div>
+      <div class="chips">
+        <div class="chip ob">OB</div>
+        <div class="chip hz">해저드</div>
+        <div class="chip ok">OK</div>
+        <div class="chip mn">⊖</div>
+      </div>
+    </div>
+    <div class="c-card">
+      <div class="name">동3</div>
+      <div class="tap">0</div>
+      <div class="chips">
+        <div class="chip ob">OB</div>
+        <div class="chip hz">해저드</div>
+        <div class="chip ok">OK</div>
+        <div class="chip mn">⊖</div>
+      </div>
+    </div>
+  </div>
+  <div class="hole-nav">
+    <div class="nav-btn">← 2번 홀</div>
+    <div class="nav-btn next">4번 홀 →</div>
+  </div>
+</div>
+<div class="option-label">C. 2×2 Grid (4인 동시)</div>
+<div class="option-desc">4인 동시 노출 + 각 카드에 큰 숫자(44pt) + 벌타 4종 chips(OB/해저드/OK/−1). 활성 플레이어 강조(그린 그라데이션). 한 화면 안에서 모두 입력 가능.</div>
+</div>
+
+</div>
+
+<div style="max-width: 1200px; margin: 60px auto 0; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+  <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">3안 비교 가이드</h2>
+  <table style="width:100%; font-size:13px; border-collapse: collapse;">
+    <thead><tr style="opacity:0.7;">
+      <th style="text-align:left; padding:8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">관점</th>
+      <th style="text-align:left; padding:8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">A. Stack</th>
+      <th style="text-align:left; padding:8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">B. Active 큰 카드</th>
+      <th style="text-align:left; padding:8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">C. Grid 2×2</th>
+    </tr></thead>
+    <tbody style="opacity:0.85;">
+      <tr><td style="padding:8px 12px;">한 번에 보이는 정보</td><td style="padding:8px 12px;">4인 모두</td><td style="padding:8px 12px;">활성 1인 + 다른 동반자 작은 탭</td><td style="padding:8px 12px;">4인 모두</td></tr>
+      <tr><td style="padding:8px 12px;">탭 영역 크기</td><td style="padding:8px 12px;">중간 (각 카드 ~50pt)</td><td style="padding:8px 12px;">최대 (~200pt)</td><td style="padding:8px 12px;">중간 (각 ~80pt)</td></tr>
+      <tr><td style="padding:8px 12px;">동반자 전환 비용</td><td style="padding:8px 12px;">없음 (바로 탭)</td><td style="padding:8px 12px;">+1탭 (상단 탭 선택)</td><td style="padding:8px 12px;">없음 (바로 탭)</td></tr>
+      <tr><td style="padding:8px 12px;">벌타 입력 동선</td><td style="padding:8px 12px;">각 카드 우측 chips</td><td style="padding:8px 12px;">중앙 한 행 (명확)</td><td style="padding:8px 12px;">각 카드 아래 chips (작음)</td></tr>
+      <tr><td style="padding:8px 12px;">사용자 요청과 매치</td><td style="padding:8px 12px;">"가운데 숫자 크게" 약함</td><td style="padding:8px 12px;">"가운데 숫자 크게" 가장 부합 ✓</td><td style="padding:8px 12px;">"가운데 숫자" 분산</td></tr>
+      <tr><td style="padding:8px 12px;">개인 라운드(1인)</td><td style="padding:8px 12px;">한 카드만 — 빈 공간 큼</td><td style="padding:8px 12px;">큰 숫자 그대로 깨끗 ✓</td><td style="padding:8px 12px;">2×2가 비어보임</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top: 20px; font-size: 13px; opacity: 0.7; line-height: 1.6;">
+    공통: 상단 모드 토글(<strong>보기 / 입력</strong>)로 기존 스코어보드와 즉시 전환. 홀 헤더의 Par 4 badge 탭 → menu(3/4/5)로 변경. 하단 ← / → 으로 홀 이동.<br/>
+    <strong>추천</strong>: 4인 라운드 빈도가 높고 동반자 점수 빠른 기록이 중요하면 <strong>A 또는 C</strong>. "큰 숫자 강조" 의도가 강하면 <strong>B</strong>.
+  </p>
+</div>
+
+</body>
+</html>
