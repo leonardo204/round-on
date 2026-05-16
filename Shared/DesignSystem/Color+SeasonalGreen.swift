@@ -1,8 +1,14 @@
 import SwiftUI
 
 // BundleToken: Xcode Framework 타깃에서 .module 대신 사용 (SwiftPM 전용 아님)
-private final class BundleToken {}
-private let sharedBundle = Bundle(for: BundleToken.self)
+// public: App-iOS 타깃에서 Shared 번들 리소스(이미지/컬러) 접근용
+public final class SharedAssetBundleToken {}
+private let sharedBundle = Bundle(for: SharedAssetBundleToken.self)
+
+public extension Bundle {
+    /// Shared framework 리소스 번들 (SharedAssets.xcassets 등)
+    static let sharedAssets = Bundle(for: SharedAssetBundleToken.self)
+}
 
 public extension Color {
     // Spring (light default) — 10-DESIGN_SYSTEM §2

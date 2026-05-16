@@ -14,6 +14,7 @@ struct HomeView: View {
     @Query(sort: \Round.startedAt, order: .reverse) private var rounds: [Round]
     @State private var showNewRound = false
     @State private var showStats = false
+    @State private var selectedRound: Round?
     @Binding var roundViewModel: RoundViewModel?
     let onRoundFinished: ((Round) -> Void)?
 
@@ -23,38 +24,89 @@ struct HomeView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if rounds.isEmpty {
-                    emptyStateView
-                } else {
-                    populatedScrollView
-                }
+        VStack(spacing: 0) {
+            customHeader
+
+            if rounds.isEmpty {
+                emptyStateView
+            } else {
+                populatedScrollView
             }
-            .background(Color(.systemGroupedBackground).ignoresSafeArea())
-            .navigationTitle("라운드온")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        StatsView()
-                    } label: {
-                        Image(systemName: "chart.line.uptrend.xyaxis")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(.tint)
-                            .accessibilityLabel("통계")
-                    }
-                }
-            }
-            .tint(.accentGreen)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .tint(.accentGreen)
         .fullScreenCover(isPresented: $showNewRound) {
             NewRoundView(roundViewModel: $roundViewModel, isPresented: $showNewRound)
+        }
+        .fullScreenCover(isPresented: $showStats) {
+            NavigationStack {
+                StatsView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("닫기") { showStats = false }
+                        }
+                    }
+            }
+        }
+        .fullScreenCover(item: $selectedRound) { round in
+            NavigationStack {
+                RoundDetailView(round: round)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("닫기") { selectedRound = nil }
+                        }
+                    }
+            }
         }
         .onAppear {
             AppLogger.view.debug("HomeView 표시 (라운드 \(rounds.count)건)")
         }
+    }
+
+    // MARK: - Custom header (라운드온 + 액션 2개) — mockup 1:1 매칭
+
+    private var customHeader: some View {
+        HStack(alignment: .bottom) {
+            Text("라운드온")
+                .font(.system(size: 34, weight: .bold))
+                .tracking(-0.4)
+                .foregroundStyle(.primary)
+
+            Spacer()
+
+            HStack(spacing: 6) {
+                Button {
+                    showStats = true
+                } label: {
+                    navActionIcon("trending_up", label: "통계")
+                }
+                Button {
+                    AppLogger.view.info("설정 버튼 탭 (placeholder)")
+                } label: {
+                    navActionIcon("settings", label: "설정")
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 4)
+        .padding(.bottom, 12)
+    }
+
+    // MARK: - Nav action icon (36×36 원형 그레이 배경)
+
+    private func navActionIcon(_ assetName: String, label: String) -> some View {
+        ZStack {
+            Circle()
+                .fill(Color(.systemFill))
+            Image(assetName, bundle: .sharedAssets)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .foregroundStyle(.tint)
+        }
+        .frame(width: 36, height: 36)
+        .accessibilityLabel(label)
     }
 
     // MARK: - Populated (라운드 1건 이상)
@@ -102,8 +154,11 @@ struct HomeView: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                Image(systemName: "figure.golf")
-                    .font(.system(size: 60, weight: .light))
+                Image("golf_course", bundle: .sharedAssets)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
                     .foregroundStyle(.tint)
                     .accessibilityHidden(true)
             }
@@ -122,7 +177,8 @@ struct HomeView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .lineSpacing(2)
-                .frame(maxWidth: 280)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: 260)
                 .padding(.bottom, 32)
 
             // 알약 CTA
@@ -314,8 +370,8 @@ struct HomeView: View {
     private var recentList: some View {
         VStack(spacing: 0) {
             ForEach(Array(rounds.prefix(5).enumerated()), id: \.element.id) { idx, round in
-                NavigationLink {
-                    RoundDetailView(round: round)
+                Button {
+                    selectedRound = round
                 } label: {
                     RoundRow(round: round)
                 }
@@ -496,6 +552,19 @@ private struct RoundRow: View {
         case 0: return .secondary                                          // par
         case 1...2: return .orange                                         // bogey
         default: return .red                                               // doublePlus
+        }
+    }
+}
+
+// MARK: - iOS 18+ containerBackground 가드
+
+private extension View {
+    @ViewBuilder
+    func applyNavigationBackgroundIfAvailable() -> some View {
+        if #available(iOS 18.0, *) {
+            self.containerBackground(Color(red: 0.95, green: 0.95, blue: 0.97), for: .navigation)
+        } else {
+            self
         }
     }
 }
