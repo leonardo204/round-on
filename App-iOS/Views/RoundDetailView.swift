@@ -12,6 +12,7 @@ struct RoundDetailView: View {
     // MARK: Props
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     let round: Round
 
     // MARK: State
@@ -20,6 +21,7 @@ struct RoundDetailView: View {
     @State private var shareVM: ShareViewModel
     @State private var showShare = false
     @State private var showPhotoAttach = false
+    @State private var showDeleteConfirm = false
     @State private var bannerMessage: String?
     @State private var bannerSeverity: BannerNotice.Severity = .info
 
@@ -88,12 +90,36 @@ struct RoundDetailView: View {
                     .fontWeight(.semibold)
                     .foregroundStyle(Color.springGreenPrimary)
                 } else {
-                    Button("편집") {
-                        enterEditMode()
+                    Menu {
+                        Button {
+                            enterEditMode()
+                        } label: {
+                            Label("편집", systemImage: "pencil")
+                        }
+                        Button(role: .destructive) {
+                            showDeleteConfirm = true
+                        } label: {
+                            Label("라운드 삭제", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .foregroundStyle(Color.springGreenPrimary)
                     }
-                    .foregroundStyle(Color.springGreenPrimary)
+                    .accessibilityLabel("라운드 메뉴")
                 }
             }
+        }
+        .confirmationDialog(
+            "라운드를 삭제할까요?",
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("삭제", role: .destructive) {
+                deleteRound()
+            }
+            Button("취소", role: .cancel) { }
+        } message: {
+            Text("\(round.courseName) 라운드와 모든 스코어가 영구 삭제됩니다. 되돌릴 수 없습니다.")
         }
         .sheet(isPresented: $showShare) {
             ShareSheetView(round: round, shareVM: shareVM, onShared: { url in
@@ -423,6 +449,22 @@ struct RoundDetailView: View {
             hole.counts[idx].value = max(0, hole.counts[idx].value - 1)
         }
         scoreVM.refresh(from: round)
+    }
+
+    // MARK: 라운드 삭제
+
+    private func deleteRound() {
+        AppLogger.view.info("라운드 삭제: \(round.courseName) (id=\(round.id))")
+        modelContext.delete(round)
+        do {
+            try modelContext.save()
+        } catch {
+            AppLogger.persistence.error("라운드 삭제 후 저장 실패: \(error)")
+            bannerMessage = "삭제 중 오류가 발생했어요."
+            bannerSeverity = .error
+            return
+        }
+        dismiss()
     }
 
     // MARK: B3: 이미 공유된 라운드에 사진 추가
