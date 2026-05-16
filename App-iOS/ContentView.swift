@@ -46,13 +46,22 @@ struct ContentView: View {
             }
         }
         .task {
+            // B: WCSession 사전 활성화 (lazy init trigger) — 첫 send 시점에 activate 미완료 race 방지
+            await MainActor.run {
+                WCBroker.shared.warmUp()
+            }
+            _ = WCRoundBridge.shared  // SyncCoordinator delegate 등록
+
             // F6: 앱 시작 시 미완료 라운드 복구
             if roundViewModel == nil {
                 let vm = RoundViewModel(modelContext: modelContext)
                 vm.attachWorkoutCoordinator()
+                WCRoundBridge.shared.attach(to: vm)
                 vm.resumeIfNeeded()
                 if vm.isRoundActive {
                     roundViewModel = vm
+                    // 진행 중인 라운드면 Watch에 즉시 snapshot (Watch가 늦게 깰 수 있어 한 번 더)
+                    vm.broadcastCurrentSnapshot()
                 }
             }
             // F1: 앱 시작 시 위치 권한 부트스트랩

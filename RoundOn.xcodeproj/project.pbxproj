@@ -52,6 +52,7 @@
 		64C879DA0B861663C2C6FE4E /* SyncCoordinatorStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B718787C00263756F5FD6AF /* SyncCoordinatorStressTests.swift */; };
 		68B2C646268D174B6AF9790C /* RoundCourseLabelingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C804B88B54718B4E99D9DDD /* RoundCourseLabelingTests.swift */; };
 		69874D74B436F43650610B0F /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF006E866BFD030D2C951470 /* Round.swift */; };
+		6CFEBA35019A74AA80799A4F /* WCRoundBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 004003D3075ED161398FE093 /* WCRoundBridge.swift */; };
 		6DA1DA0D036206F32C87CC47 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC83B6FE7680A75CD4D0EA5 /* Player.swift */; };
 		6E20BAF6F3765EEB29092CB7 /* WatchRoundEndMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7809858545E77AF003225809 /* WatchRoundEndMenu.swift */; };
 		6EAC49F7C733B0BB9AA5DDC1 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A6320D8280D112960766C /* LocationService.swift */; };
@@ -66,6 +67,7 @@
 		836BA4A3A00FE60A25761DA5 /* HoleScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8BC201905AB97743D9446 /* HoleScore.swift */; };
 		85FC47B97FC1625737C64876 /* RoundSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3913330580DF5181D0D64 /* RoundSummaryView.swift */; };
 		882B8BA0FD4D12351BB4B991 /* WatchPlayerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E825799AC9EC61BF8891B4 /* WatchPlayerOverlay.swift */; };
+		88947674CEB250FB0EC25C87 /* WCRoundBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D01C4795589B09DD45D75E5 /* WCRoundBridge.swift */; };
 		88A60453C43346B5DB94C3D3 /* RoundStatisticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B10F7FF48A15ECD6D979FB /* RoundStatisticsTests.swift */; };
 		896505D32AEDBE5C569CE9AA /* SwiftDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0ADF942BC3454FD2A846C1 /* SwiftDataModelTests.swift */; };
 		89CF8C15BF9921282F8AF7CF /* PhotoGalleryGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DB472A47E8E889C5E12823 /* PhotoGalleryGrid.swift */; };
@@ -206,6 +208,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		004003D3075ED161398FE093 /* WCRoundBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCRoundBridge.swift; sourceTree = "<group>"; };
 		00CE161EF58F00C4D3CB7395 /* CourseDiscoveryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDiscoveryServiceTests.swift; sourceTree = "<group>"; };
 		01DD16CE2349CE3F77D14D00 /* RoundOn.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RoundOn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListViewModel.swift; sourceTree = "<group>"; };
@@ -260,6 +263,7 @@
 		7809858545E77AF003225809 /* WatchRoundEndMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRoundEndMenu.swift; sourceTree = "<group>"; };
 		7A232DCC902D77EB1F7248F0 /* CloudKitCompatibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitCompatibilityTests.swift; sourceTree = "<group>"; };
 		7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundDetailView.swift; sourceTree = "<group>"; };
+		7D01C4795589B09DD45D75E5 /* WCRoundBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCRoundBridge.swift; sourceTree = "<group>"; };
 		8252CDB85171329812400D1D /* PlayerChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerChip.swift; sourceTree = "<group>"; };
 		83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundOnApp.swift; sourceTree = "<group>"; };
 		844A27C4539D76B7F1CF3892 /* SeasonalColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalColorTests.swift; sourceTree = "<group>"; };
@@ -305,7 +309,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_759F2D34-E3C9-4F0C-9584-0C3825E021B8" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,6 +470,7 @@
 			isa = PBXGroup;
 			children = (
 				5BCB288B76FE366FF249081E /* WCBroker.swift */,
+				004003D3075ED161398FE093 /* WCRoundBridge.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -631,6 +636,7 @@
 			isa = PBXGroup;
 			children = (
 				469A2B894F35A244DC5B16EA /* WCBroker.swift */,
+				7D01C4795589B09DD45D75E5 /* WCRoundBridge.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -681,10 +687,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_026C8027-6DDD-45A1-A5ED-C941B87FC81A" /* golfCounter */ = {
+		"TEMP_1BEE4245-2656-4568-8EF7-55071A9F50BA" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_759F2D34-E3C9-4F0C-9584-0C3825E021B8" /* Secrets.xcconfig */,
+				"TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -963,6 +969,7 @@
 				107F3BD3FF95B2C484F771BE /* RoundOnWatchApp.swift in Sources */,
 				2D6AB9351D7289B313E8548D /* ShotButton.swift in Sources */,
 				F610C5FD790A8DD07B15CC83 /* WCBroker.swift in Sources */,
+				6CFEBA35019A74AA80799A4F /* WCRoundBridge.swift in Sources */,
 				51ECB292269A1BDF7168D454 /* WatchContentView.swift in Sources */,
 				5062F11A1515D711B81D8254 /* WatchHoleSwipeContainer.swift in Sources */,
 				882B8BA0FD4D12351BB4B991 /* WatchPlayerOverlay.swift in Sources */,
@@ -1000,6 +1007,7 @@
 				9FF481C2DA4735C05099C476 /* ShareSheetView.swift in Sources */,
 				3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */,
 				CD08C3D8464080E761344FC9 /* WCBroker.swift in Sources */,
+				88947674CEB250FB0EC25C87 /* WCRoundBridge.swift in Sources */,
 				E38FA528C02032009D2E5477 /* WorkoutCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1141,7 +1149,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_759F2D34-E3C9-4F0C-9584-0C3825E021B8" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1163,7 +1171,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_759F2D34-E3C9-4F0C-9584-0C3825E021B8" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_24D5ABDA-6E59-4D44-A981-8B6EAF83EB11" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";

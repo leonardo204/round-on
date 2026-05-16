@@ -23,11 +23,22 @@ public final class WCBroker: NSObject {
     @MainActor
     override private init() {
         super.init()
-        guard WCSession.isSupported() else { return }
+        guard WCSession.isSupported() else {
+            AppLogger.round.error("WCSession not supported on this device")
+            return
+        }
         let s = WCSession.default
         s.delegate = self
         s.activate()
         self.session = s
+        AppLogger.round.info("WCBroker(iPhone) init — WCSession activate 시작 (현재 state=\(s.activationState.rawValue))")
+    }
+
+    /// 명시적 warm-up — app 시작 시 호출하여 lazy init 트리거
+    @MainActor
+    public func warmUp() {
+        // shared 접근만으로 init 발동
+        _ = self
     }
 
     // MARK: Public API — 송신
@@ -99,16 +110,67 @@ public final class WCBroker: NSObject {
     /// RoundSnapshot 전송 (updateApplicationContext — 라운드 시작 시)
     @MainActor
     public func send(roundSnapshot snapshot: RoundSnapshot) {
-        guard let session = session, session.isPaired else { return }
+        guard let session = session else {
+            AppLogger.round.error("send(roundSnapshot): WCSession 없음")
+            return
+        }
+        guard session.isPaired else {
+            AppLogger.round.error("send(roundSnapshot): Watch 페어 안 됨 (isPaired=false). iPhone Watch 앱에서 페어 확인 필요")
+            return
+        }
+        guard session.activationState == .activated else {
+            AppLogger.round.warning("send(roundSnapshot): WCSession 미활성 (state=\(session.activationState.rawValue)) — 활성화 후 재전송 시도")
+            // activate 완료 후 재전송 (delay)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.send(roundSnapshot: snapshot)
+            }
+            return
+        }
+        if !session.isWatchAppInstalled {
+            AppLogger.round.warning("send(roundSnapshot): Watch app 미설치 — 그래도 send 시도")
+        }
 
         let encoder = JSONEncoder()
-        guard let data = try? encoder.encode(snapshot) else { return }
+        guard let data = try? encoder.encode(snapshot) else {
+            AppLogger.round.error("send(roundSnapshot): JSON encode 실패")
+            return
+        }
         let dict: [String: Any] = [
             WCMessageKey.messageType: WCMessageKey.roundSnapshot,
             WCMessageKey.payload: data
         ]
 
-        try? session.updateApplicationContext(dict)
+        do {
+            try session.updateApplicationContext(dict)
+            AppLogger.round.info("send(roundSnapshot) OK — roundId=\(snapshot.roundId), \(snapshot.players.count)명, hole=\(snapshot.activeHoleNumber), pars=\(snapshot.parArray.count)")
+        } catch {
+            AppLogger.round.error("send(roundSnapshot) 실패: \(error.localizedDescription)")
+        }
+    }
+
+    /// RoundEnd 전송 (라운드 종료/폐기 통지)
+    @MainActor
+    public func send(roundEnd end: RoundEnd) {
+        guard let session = session, session.isPaired else { return }
+
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(end) else { return }
+        let dict: [String: Any] = [
+            WCMessageKey.messageType: WCMessageKey.roundEnd,
+            WCMessageKey.payload: data
+        ]
+
+        // sendMessage (foreground) — 실패 시 transferUserInfo fallback (background 보장 + 빈 applicationContext로 cleanup)
+        if session.isReachable {
+            session.sendMessage(dict, replyHandler: nil, errorHandler: { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    self?.session?.transferUserInfo(dict)
+                }
+            })
+        } else {
+            session.transferUserInfo(dict)
+        }
+        AppLogger.round.info("send(roundEnd) — roundId=\(end.roundId), reason=\(end.reason.rawValue)")
     }
 
     // MARK: Private — 수신 처리
@@ -136,6 +198,10 @@ public final class WCBroker: NSObject {
         case WCMessageKey.roundSnapshot:
             guard let snapshot = try? decoder.decode(RoundSnapshot.self, from: payloadData) else { return }
             Task { await SyncCoordinator.shared.receive(roundSnapshot: snapshot) }
+
+        case WCMessageKey.roundEnd:
+            guard let end = try? decoder.decode(RoundEnd.self, from: payloadData) else { return }
+            Task { await SyncCoordinator.shared.receive(roundEnd: end) }
 
         default:
             break
@@ -198,6 +264,7 @@ extension WCBroker: WCSessionDelegate {
 
     nonisolated public func session(_ session: WCSession,
                         didReceiveApplicationContext applicationContext: [String: Any]) {
+        AppLogger.round.info("iPhone: didReceiveApplicationContext (Watch→iPhone)")
         let captured = applicationContext
         Task { @MainActor [weak self] in
             self?.handleMessage(captured)

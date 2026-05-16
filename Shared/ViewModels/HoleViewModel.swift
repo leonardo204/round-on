@@ -16,6 +16,10 @@ public final class HoleViewModel {
     /// 전체 홀 수 (9 / 18 / 27 / 36 등)
     public let totalHoles: Int
 
+    /// 홀 변경 시 호출 — RoundViewModel이 setup하여 WC sync 송출에 활용
+    /// 인자: (새 1-indexed 홀 번호)
+    public var onHoleChanged: ((Int) -> Void)?
+
     // MARK: Computed
 
     /// 1-indexed 현재 홀 번호 (표시용)
@@ -39,17 +43,23 @@ public final class HoleViewModel {
     public func nextHole() {
         guard !isLastHole else { return }
         currentHoleIndex += 1
+        onHoleChanged?(currentHoleNumber)
     }
 
     /// 이전 홀로 이동 (첫 번째 홀에서는 무시)
     public func previousHole() {
         guard !isFirstHole else { return }
         currentHoleIndex -= 1
+        onHoleChanged?(currentHoleNumber)
     }
 
-    /// 특정 홀로 직접 이동 (0-indexed)
-    public func goToHole(index: Int) {
+    /// 특정 홀로 직접 이동 (0-indexed). 호출자가 silent=true로 callback 억제 가능 (원격 적용 시).
+    public func goToHole(index: Int, silent: Bool = false) {
         guard index >= 0 && index < totalHoles else { return }
+        let changed = (currentHoleIndex != index)
         currentHoleIndex = index
+        if changed && !silent {
+            onHoleChanged?(currentHoleNumber)
+        }
     }
 }

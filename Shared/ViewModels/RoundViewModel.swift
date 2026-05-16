@@ -36,14 +36,90 @@ public final class RoundViewModel {
     /// App-iOS에서 WorkoutCoordinator.bannerMessage를 수신해 여기에 반영하도록 주입
     public var onWorkoutBannerUpdate: (() -> String?)?
 
+    // MARK: WCSession sync DI (B — iOS↔Watch 양방향)
+
+    /// 디바이스 식별자 ("iPhone" / "Watch") — 자기 자신이 보낸 echo 이벤트 무시용
+    public var deviceId: String = "Unknown"
+
+    /// ShotEvent broadcaster — App-iOS/App-Watch에서 WCBroker.send(shotEvent:) 주입
+    public var onBroadcastShot: ((ShotEvent) -> Void)?
+
+    /// HoleChange broadcaster
+    public var onBroadcastHole: ((HoleChange) -> Void)?
+
+    /// PlayerSwitch broadcaster
+    public var onBroadcastPlayerSwitch: ((PlayerSwitch) -> Void)?
+
+    /// RoundSnapshot broadcaster (라운드 시작 + par 변경 시)
+    public var onBroadcastSnapshot: ((RoundSnapshot) -> Void)?
+
+    /// RoundEnd broadcaster (라운드 종료/폐기 시)
+    public var onBroadcastRoundEnd: ((RoundEnd) -> Void)?
+
     // MARK: Private
 
     private let modelContext: ModelContext
+
+    /// 디바이스별 단조 증가 ShotEvent counter
+    private var localCounter: UInt64 = 0
 
     // MARK: Init
 
     public init(modelContext: ModelContext) {
         self.modelContext = modelContext
+    }
+
+    // MARK: Sync helpers
+
+    private func nextCounter() -> UInt64 {
+        localCounter += 1
+        return localCounter
+    }
+
+    private func makeSnapshot(from round: Round) -> RoundSnapshot {
+        let playerSnaps = round.playerList.map {
+            PlayerSnapshot(id: $0.id, name: $0.name, isOwner: $0.isOwner, order: $0.order)
+        }
+        let parArray = round.holeList
+            .sorted { $0.holeNumber < $1.holeNumber }
+            .map { $0.par }
+        return RoundSnapshot(
+            roundId: round.id,
+            courseId: round.courseId,
+            players: playerSnaps,
+            activeHoleNumber: holeViewModel?.currentHoleNumber ?? 1,
+            activePlayerIndex: playerListViewModel?.activePlayerIndex ?? 0,
+            parArray: parArray
+        )
+    }
+
+    private func emitShot(type: ShotType, holeNumber: Int, playerId: UUID) {
+        guard let broadcast = onBroadcastShot else { return }
+        let event = ShotEvent(
+            type: type,
+            playerId: playerId,
+            holeNumber: holeNumber,
+            deviceId: deviceId,
+            perDeviceCounter: nextCounter()
+        )
+        broadcast(event)
+    }
+
+    private func emitSnapshot() {
+        guard let round = currentRound, let broadcast = onBroadcastSnapshot else { return }
+        broadcast(makeSnapshot(from: round))
+    }
+
+    /// 현재 활성 라운드의 snapshot을 Watch에 명시적으로 재전송.
+    /// 사용처: app 재시작 후 resumeIfNeeded로 라운드 복구된 경우, Watch가 늦게 깬 경우.
+    public func broadcastCurrentSnapshot() {
+        emitSnapshot()
+    }
+
+    private func emitRoundEnd(roundId: UUID, reason: RoundEnd.Reason) {
+        guard let broadcast = onBroadcastRoundEnd else { return }
+        let end = RoundEnd(roundId: roundId, reason: reason, deviceId: deviceId)
+        broadcast(end)
     }
 
     // MARK: Public API
@@ -121,6 +197,9 @@ public final class RoundViewModel {
 
         activate(round: round)
 
+        // B: Watch로 RoundSnapshot 송출 (페어링되어 있으면)
+        emitSnapshot()
+
         // A1: HealthKit 운동 시작 (권한 실패 시에도 라운드는 정상 진행)
         Task {
             await onWorkoutStart?(courseName)
@@ -135,10 +214,12 @@ public final class RoundViewModel {
     public func finishRound() {
         guard let round = currentRound else { return }
         let totalHoles = round.holeList.count
+        let roundId = round.id
         round.isFinished = true
         round.finishedAt = .now
         try? modelContext.save()
         AppLogger.round.info("라운드 종료: \(round.courseName, privacy: .private) \(totalHoles)홀")
+        emitRoundEnd(roundId: roundId, reason: .finished)
         deactivate()
 
         // A1: HealthKit 운동 종료
@@ -164,10 +245,11 @@ public final class RoundViewModel {
         upsertCount(in: holeScore, playerId: playerId, delta: 1)
         save()
         scoreCardViewModel?.refresh(from: round)
+        emitShot(type: .increment, holeNumber: holeNumber, playerId: playerId)
         return true
     }
 
-    /// 홀의 par 변경 (3/4/5만 허용)
+    /// 홀의 par 변경 (3/4/5만 허용). 변경 시 RoundSnapshot 재전송.
     public func setPar(holeNumber: Int, par: Int) {
         guard [3, 4, 5].contains(par) else { return }
         guard let round = currentRound else { return }
@@ -177,14 +259,17 @@ public final class RoundViewModel {
         holeScore.par = par
         save()
         scoreCardViewModel?.refresh(from: round)
+        emitSnapshot()  // par 변경은 snapshot으로 전체 동기화
     }
 
     /// 라운드 폐기 (저장 없이 영구 삭제)
     public func discardRound() {
         guard let round = currentRound else { return }
+        let roundId = round.id
         AppLogger.round.warning("라운드 폐기: \(round.courseName, privacy: .private)")
         modelContext.delete(round)
         try? modelContext.save()
+        emitRoundEnd(roundId: roundId, reason: .discarded)
         deactivate()
         Task { await onWorkoutEnd?() }
     }
@@ -217,17 +302,19 @@ public final class RoundViewModel {
         return true
     }
 
-    /// 카운트 -1
+    /// 카운트 -1. 골프 룰상 최저는 1타(홀인원)이므로 0 미만은 차단.
+    /// 0 = 미입력 상태(아직 안 침), 1 = 홀인원, 음수 불가.
     public func decrement(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
         guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
 
         let current = holeScore.count(for: playerId)
-        guard current > 0 else { return }  // 0 미만 금지
+        guard current > 0 else { return }  // 음수 금지 — 골프 룰 최저 1타
 
         upsertCount(in: holeScore, playerId: playerId, delta: -1)
         save()
         scoreCardViewModel?.refresh(from: round)
+        emitShot(type: .decrement, holeNumber: holeNumber, playerId: playerId)
     }
 
     /// OB 탭 — PenaltySettings.obDelta 만큼 타수 추가 (default +2). double par 초과는 차단.
@@ -271,7 +358,116 @@ public final class RoundViewModel {
         upsertCount(in: holeScore, playerId: playerId, delta: delta)
         save()
         scoreCardViewModel?.refresh(from: round)
+        let shotType: ShotType = (kind == .ob ? .ob : (kind == .hazard ? .hazard : .ok))
+        emitShot(type: shotType, holeNumber: holeNumber, playerId: playerId)
         return true
+    }
+
+    // MARK: B — Watch sync 수신 처리 (broadcast 없이 로컬 적용)
+
+    /// 외부 RoundSnapshot 수신 — Watch에서 iPhone의 라운드 시작 미러링.
+    /// 동일 roundId 이미 활성 시 par/active 위치만 갱신.
+    public func applyRemoteSnapshot(_ snapshot: RoundSnapshot) {
+        // 동일 roundId 이미 활성 → par/active만 동기화
+        if let round = currentRound, round.id == snapshot.roundId {
+            for (idx, par) in snapshot.parArray.enumerated() {
+                let holeNumber = idx + 1
+                if let hs = round.holeList.first(where: { $0.holeNumber == holeNumber }), hs.par != par {
+                    hs.par = par
+                }
+            }
+            if holeViewModel?.currentHoleNumber != snapshot.activeHoleNumber {
+                holeViewModel?.goToHole(index: snapshot.activeHoleNumber - 1, silent: true)
+            }
+            if playerListViewModel?.activePlayerIndex != snapshot.activePlayerIndex {
+                if let p = playerListViewModel?.players.first(where: { $0.order == snapshot.activePlayerIndex }) {
+                    playerListViewModel?.activate(player: p, silent: true)
+                }
+            }
+            try? modelContext.save()
+            scoreCardViewModel?.refresh(from: round)
+            return
+        }
+
+        // 새 라운드 — in-memory Round 생성 후 activate
+        let players = snapshot.players
+            .sorted { $0.order < $1.order }
+            .map { Player(id: $0.id, name: $0.name, isOwner: $0.isOwner, order: $0.order) }
+        let round = Round(
+            id: snapshot.roundId,
+            courseId: snapshot.courseId,
+            courseName: snapshot.courseId,  // Watch에서는 courseName 미수신 → courseId fallback
+            players: players,
+            startedAt: .now
+        )
+        for (idx, par) in snapshot.parArray.enumerated() {
+            let hs = HoleScore(holeNumber: idx + 1, par: par)
+            round.holes = (round.holes ?? []) + [hs]
+        }
+        modelContext.insert(round)
+        try? modelContext.save()
+        activate(round: round)
+        if snapshot.activeHoleNumber > 0 {
+            holeViewModel?.goToHole(index: snapshot.activeHoleNumber - 1, silent: true)
+        }
+        if let p = players.first(where: { $0.order == snapshot.activePlayerIndex }) {
+            playerListViewModel?.activate(player: p, silent: true)
+        }
+        AppLogger.round.info("원격 라운드 활성: id=\(snapshot.roundId) (\(players.count)명)")
+    }
+
+    /// 외부 ShotEvent 수신 — counts/OB/해저드 미러링. broadcast 안 함.
+    public func applyRemoteShot(_ event: ShotEvent) {
+        // echo 무시 (자기가 보낸 메시지)
+        guard event.deviceId != deviceId else { return }
+        guard let round = currentRound else { return }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == event.holeNumber }) else { return }
+
+        switch event.type {
+        case .increment:
+            upsertCount(in: holeScore, playerId: event.playerId, delta: 1)
+        case .decrement:
+            upsertCount(in: holeScore, playerId: event.playerId, delta: -1)
+        case .ob:
+            upsertOB(in: holeScore, playerId: event.playerId, delta: 1)
+            upsertCount(in: holeScore, playerId: event.playerId, delta: 2)
+        case .hazard:
+            upsertHazard(in: holeScore, playerId: event.playerId, delta: 1)
+            upsertCount(in: holeScore, playerId: event.playerId, delta: 1)
+        case .ok:
+            upsertCount(in: holeScore, playerId: event.playerId, delta: 1)
+        }
+        save()
+        scoreCardViewModel?.refresh(from: round)
+    }
+
+    /// 외부 HoleChange 수신 — silent로 적용 (echo loop 방지)
+    public func applyRemoteHoleChange(_ change: HoleChange) {
+        guard change.deviceId != deviceId else { return }
+        holeViewModel?.goToHole(index: change.newHoleNumber - 1, silent: true)
+    }
+
+    /// 외부 PlayerSwitch 수신 — silent로 적용 (echo loop 방지)
+    public func applyRemotePlayerSwitch(_ switchEvent: PlayerSwitch) {
+        guard switchEvent.deviceId != deviceId else { return }
+        guard let players = playerListViewModel?.players,
+              players.indices.contains(switchEvent.newPlayerIndex) else { return }
+        playerListViewModel?.activate(player: players[switchEvent.newPlayerIndex], silent: true)
+    }
+
+    /// 외부 RoundEnd 수신 — 상대 디바이스에서 종료/폐기 → 로컬도 deactivate.
+    /// Watch가 받으면 in-memory Round는 더 이상 의미 없으니 삭제 후 초기 화면으로.
+    public func applyRemoteRoundEnd(_ end: RoundEnd) {
+        guard end.deviceId != deviceId else { return }
+        guard let round = currentRound, round.id == end.roundId else {
+            AppLogger.round.debug("RoundEnd 무시 — 활성 라운드 ID 불일치")
+            return
+        }
+        AppLogger.round.info("원격 라운드 종료 수신: reason=\(end.reason.rawValue)")
+        // 로컬 데이터 삭제 (Watch는 in-memory mirror라 안전)
+        modelContext.delete(round)
+        try? modelContext.save()
+        deactivate()
     }
 
     // MARK: Private helpers
@@ -279,9 +475,45 @@ public final class RoundViewModel {
     private func activate(round: Round) {
         self.currentRound = round
         let holeVM = HoleViewModel(totalHoles: round.holeList.count)
+        // B: 홀 이동 → WC HoleChange 송출
+        holeVM.onHoleChanged = { [weak self] newHoleNumber in
+            self?.emitHoleChange(newHoleNumber: newHoleNumber)
+        }
         self.holeViewModel = holeVM
         self.scoreCardViewModel = ScoreCardViewModel(round: round)
-        self.playerListViewModel = PlayerListViewModel(players: round.playerList)
+
+        let playerVM = PlayerListViewModel(players: round.playerList)
+        // B: 플레이어 전환 → WC PlayerSwitch 송출
+        playerVM.onActivePlayerChanged = { [weak self] newIndex in
+            self?.emitPlayerSwitch(newPlayerIndex: newIndex)
+        }
+        self.playerListViewModel = playerVM
+    }
+
+    private func emitHoleChange(newHoleNumber: Int) {
+        guard let broadcast = onBroadcastHole else { return }
+        let subLabel: String? = {
+            guard let round = currentRound else { return nil }
+            return newHoleNumber <= 9 ? round.frontCourseName : round.backCourseName
+        }()
+        let change = HoleChange(
+            newHoleNumber: newHoleNumber,
+            trigger: .manualSwipe,
+            subCourseName: subLabel,
+            deviceId: deviceId,
+            perDeviceCounter: nextCounter()
+        )
+        broadcast(change)
+    }
+
+    private func emitPlayerSwitch(newPlayerIndex: Int) {
+        guard let broadcast = onBroadcastPlayerSwitch else { return }
+        let switchEvent = PlayerSwitch(
+            newPlayerIndex: newPlayerIndex,
+            deviceId: deviceId,
+            perDeviceCounter: nextCounter()
+        )
+        broadcast(switchEvent)
     }
 
     private func deactivate() {
@@ -298,7 +530,7 @@ public final class RoundViewModel {
     private func upsertCount(in holeScore: HoleScore, playerId: UUID, delta: Int) {
         if let idx = holeScore.counts.firstIndex(where: { $0.playerId == playerId }) {
             let before = holeScore.counts[idx].value
-            let after = max(0, before + delta)
+            let after = max(0, before + delta)  // 음수 차단 — 골프 룰 최저 1타, 0=미입력
             if delta < 0 && before == 0 {
                 AppLogger.counter.warning("카운터 clamp: 홀\(holeScore.holeNumber) 음수 차단")
             } else {

@@ -150,6 +150,28 @@ public struct PlayerSnapshot: Codable, Sendable {
     }
 }
 
+// MARK: RoundEnd
+// 라운드 종료(저장 또는 폐기) 통지 — 상대 디바이스가 deactivate되도록
+
+public struct RoundEnd: Codable, Sendable {
+    public enum Reason: String, Codable, Sendable {
+        case finished   // 저장하고 종료
+        case discarded  // 폐기
+    }
+
+    public let roundId: UUID
+    public let reason: Reason
+    public let deviceId: String
+    public let timestamp: Date
+
+    public init(roundId: UUID, reason: Reason, deviceId: String, timestamp: Date = .now) {
+        self.roundId = roundId
+        self.reason = reason
+        self.deviceId = deviceId
+        self.timestamp = timestamp
+    }
+}
+
 // MARK: WCMessageKey
 // WC 딕셔너리 키 상수
 
@@ -160,4 +182,5 @@ public enum WCMessageKey {
     public static let holeChange = "holeChange"
     public static let playerSwitch = "playerSwitch"
     public static let roundSnapshot = "roundSnapshot"
+    public static let roundEnd = "roundEnd"
 }

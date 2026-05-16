@@ -12,6 +12,7 @@ public protocol SyncCoordinatorDelegate: AnyObject, Sendable {
     func didReceiveHoleChange(_ change: HoleChange) async
     func didReceivePlayerSwitch(_ switch_: PlayerSwitch) async
     func didReceiveRoundSnapshot(_ snapshot: RoundSnapshot) async
+    func didReceiveRoundEnd(_ end: RoundEnd) async
 }
 
 // MARK: - SyncCoordinator
@@ -60,6 +61,11 @@ public actor SyncCoordinator {
     /// WCBroker에서 호출 — 수신 RoundSnapshot 처리
     public func receive(roundSnapshot snapshot: RoundSnapshot) async {
         await delegate?.didReceiveRoundSnapshot(snapshot)
+    }
+
+    /// WCBroker에서 호출 — 수신 RoundEnd 처리 (라운드 종료/폐기 통지)
+    public func receive(roundEnd end: RoundEnd) async {
+        await delegate?.didReceiveRoundEnd(end)
     }
 
     /// 브로드캐스트 — WCBroker로 ShotEvent 전송 요청

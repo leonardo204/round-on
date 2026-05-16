@@ -21,11 +21,20 @@ public final class WCBroker: NSObject {
 
     override private init() {
         super.init()
-        guard WCSession.isSupported() else { return }
+        guard WCSession.isSupported() else {
+            AppLogger.round.error("Watch: WCSession not supported")
+            return
+        }
         let s = WCSession.default
         s.delegate = self
         s.activate()
         self.session = s
+        AppLogger.round.info("WCBroker(Watch) init — activationState=\(s.activationState.rawValue)")
+    }
+
+    /// app 시작 시 명시 호출하여 lazy init 트리거
+    public func warmUp() {
+        _ = self
     }
 
     // MARK: Public API — 송신
@@ -68,6 +77,23 @@ public final class WCBroker: NSObject {
         } else {
             session.transferUserInfo(dict)
         }
+    }
+
+    /// RoundEnd 전송 (라운드 종료/폐기 통지)
+    public func send(roundEnd end: RoundEnd) {
+        guard let session = session else { return }
+        let encoder = JSONEncoder()
+        guard let data = try? encoder.encode(end) else { return }
+        let dict: [String: Any] = [
+            WCMessageKey.messageType: WCMessageKey.roundEnd,
+            WCMessageKey.payload: data
+        ]
+        if session.isReachable {
+            session.sendMessage(dict, replyHandler: nil, errorHandler: nil)
+        } else {
+            session.transferUserInfo(dict)
+        }
+        AppLogger.round.info("Watch send(roundEnd) — roundId=\(end.roundId), reason=\(end.reason.rawValue)")
     }
 
     /// PlayerSwitch 전송
@@ -113,6 +139,10 @@ public final class WCBroker: NSObject {
             guard let snapshot = try? decoder.decode(RoundSnapshot.self, from: payloadData) else { return }
             Task { await SyncCoordinator.shared.receive(roundSnapshot: snapshot) }
 
+        case WCMessageKey.roundEnd:
+            guard let end = try? decoder.decode(RoundEnd.self, from: payloadData) else { return }
+            Task { await SyncCoordinator.shared.receive(roundEnd: end) }
+
         default:
             break
         }
@@ -126,7 +156,7 @@ extension WCBroker: WCSessionDelegate {
     public func session(_ session: WCSession,
                         activationDidCompleteWith activationState: WCSessionActivationState,
                         error: Error?) {
-        // 활성화 완료
+        AppLogger.round.info("Watch: WCSession activated state=\(activationState.rawValue), error=\(error?.localizedDescription ?? "nil")")
     }
 
     // MARK: Foreground 수신
@@ -154,6 +184,7 @@ extension WCBroker: WCSessionDelegate {
 
     public func session(_ session: WCSession,
                         didReceiveApplicationContext applicationContext: [String: Any]) {
+        AppLogger.round.info("Watch: didReceiveApplicationContext (iPhone→Watch)")
         handleMessage(applicationContext)
     }
 }

@@ -751,6 +751,7 @@ struct NewRoundView: View {
         // RoundViewModel 생성 후 라운드 시작
         let vm = RoundViewModel(modelContext: modelContext)
         vm.attachWorkoutCoordinator()
+        WCRoundBridge.shared.attach(to: vm)  // B: iOS↔Watch 양방향 sync (startRound 전에 hook)
         vm.startRound(
             courseId: course.id,
             courseName: course.name,
