@@ -564,7 +564,7 @@ struct NewRoundView: View {
             VStack(spacing: 8) {
                 ForEach(0..<playerCount, id: \.self) { idx in
                     HStack {
-                        Text(idx == 0 ? "나" : "동반자 \(idx)")
+                        Text(idx == 0 ? "나" : "동반자\(idx)")
                             .font(.system(size: 14))
                             .foregroundStyle(Color.springTextSecondary)
                             .frame(width: 60, alignment: .leading)
@@ -732,7 +732,8 @@ struct NewRoundView: View {
         // 플레이어 생성
         var players: [Player] = []
         for i in 0..<playerCount {
-            let name = playerNames[i].isEmpty ? (i == 0 ? "나" : "동반자 \(i)") : playerNames[i]
+            let trimmed = playerNames[i].trimmingCharacters(in: .whitespaces)
+            let name = trimmed.isEmpty ? (i == 0 ? "나" : "동반자\(i)") : trimmed
             players.append(Player(name: name, isOwner: i == 0, order: i))
         }
 
