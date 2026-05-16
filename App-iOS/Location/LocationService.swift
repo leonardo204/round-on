@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import Shared
 
 // MARK: - LocationService
 // F1 자동 골프장 매칭 + F3 GPS 감지를 위한 CoreLocation 래퍼 (01-SPEC §F1, §F3)
@@ -37,12 +38,17 @@ public final class LocationService: NSObject {
     /// 위치 권한 요청. 이미 결정된 경우 즉시 현재 상태 반환.
     public func requestAuthorization() async -> CLAuthorizationStatus {
         let current = manager.authorizationStatus
-        guard current == .notDetermined else { return current }
+        guard current == .notDetermined else {
+            AppLogger.location.debug("위치 권한 이미 결정됨: \(current.rawValue)")
+            return current
+        }
 
-        return await withCheckedContinuation { continuation in
+        let result = await withCheckedContinuation { continuation in
             authContinuation = continuation
             manager.requestWhenInUseAuthorization()
         }
+        AppLogger.location.info("위치 권한 요청 결과: \(result.rawValue)")
+        return result
     }
 
     /// 현재 위치를 한 번 획득한다.
@@ -51,16 +57,18 @@ public final class LocationService: NSObject {
     public func currentLocation() async -> CLLocation? {
         let status = manager.authorizationStatus
         guard status == .authorizedWhenInUse || status == .authorizedAlways else {
+            AppLogger.location.warning("위치 권한 없음 — 현재 위치 획득 불가")
             return nil
         }
 
         // 캐시된 최근 위치가 10초 이내면 그대로 반환
         if let cached = manager.location,
            abs(cached.timestamp.timeIntervalSinceNow) < 10 {
+            AppLogger.location.debug("캐시된 위치 반환: \(cached.coordinate.latitude, privacy: .private), \(cached.coordinate.longitude, privacy: .private)")
             return cached
         }
 
-        return await withCheckedContinuation { continuation in
+        let result = await withCheckedContinuation { continuation in
             locationContinuation = continuation
             manager.requestLocation()
 
@@ -71,10 +79,18 @@ public final class LocationService: NSObject {
                 if let cont = self.locationContinuation {
                     self.locationContinuation = nil
                     self.manager.stopUpdatingLocation()
+                    AppLogger.location.warning("위치 획득 타임아웃 (5초)")
                     cont.resume(returning: nil)
                 }
             }
         }
+
+        if let loc = result {
+            AppLogger.location.info("위치 획득 성공: \(loc.coordinate.latitude, privacy: .private), \(loc.coordinate.longitude, privacy: .private)")
+        } else {
+            AppLogger.location.error("위치 획득 실패")
+        }
+        return result
     }
 }
 
