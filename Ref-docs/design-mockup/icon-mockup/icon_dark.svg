@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGreen" cx="28%" cy="18%" r="110%">
+      <stop offset="0%" stop-color="#6B9D7C"/>
+      <stop offset="40%" stop-color="#3A5E48"/>
+      <stop offset="100%" stop-color="#14241B"/>
+    </radialGradient>
+    <radialGradient id="glassSheen" cx="50%" cy="50%" r="50%">
+      <stop offset="65%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.10"/>
+    </radialGradient>
+    <linearGradient id="turfBand" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2A4030" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0A1810" stop-opacity="0.7"/>
+    </linearGradient>
+    <radialGradient id="cupHole" cx="50%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#0A0604"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <radialGradient id="ballSurf" cx="32%" cy="25%" r="85%">
+      <stop offset="0%" stop-color="#F0F5E8"/>
+      <stop offset="40%" stop-color="#D5E0C8"/>
+      <stop offset="85%" stop-color="#6A8070"/>
+      <stop offset="100%" stop-color="#3A4838"/>
+    </radialGradient>
+    <linearGradient id="poleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7A8478"/>
+      <stop offset="35%" stop-color="#D8DCC8"/>
+      <stop offset="65%" stop-color="#D8DCC8"/>
+      <stop offset="100%" stop-color="#4A5048"/>
+    </linearGradient>
+    <linearGradient id="flagGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D04830"/>
+      <stop offset="100%" stop-color="#882418"/>
+    </linearGradient>
+    <linearGradient id="flagGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="ballSpec" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ballRim" cx="50%" cy="50%" r="50%">
+      <stop offset="80%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="ballShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <clipPath id="ballClip">
+      <circle cx="345" cy="630" r="155"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bgGreen)"/>
+  <rect width="1024" height="1024" fill="url(#glassSheen)"/>
+  <rect x="0" y="520" width="1024" height="504" fill="url(#turfBand)"/>
+
+  <ellipse cx="720" cy="780" rx="190" ry="48" fill="#000000" opacity="0.6" filter="url(#softShadow)"/>
+  <ellipse cx="720" cy="780" rx="160" ry="40" fill="url(#cupHole)"/>
+  <ellipse cx="720" cy="782" rx="160" ry="40" fill="none" stroke="#1A1008" stroke-width="3" opacity="0.85"/>
+  <path d="M 565 775 Q 720 753, 875 775" stroke="#2A1A10" stroke-width="3" fill="none" opacity="0.6"/>
+
+  <ellipse cx="745" cy="782" rx="30" ry="9" fill="#000000" opacity="0.6" filter="url(#softShadow)"/>
+  <rect x="713" y="80" width="16" height="710" fill="url(#poleGrad)"/>
+  <circle cx="721" cy="80" r="13" fill="url(#poleGrad)"/>
+  <rect x="713" y="775" width="16" height="22" fill="#1A1F18" opacity="0.9"/>
+
+  <path d="M 727 90 C 580 78, 410 100, 320 130 C 350 175, 350 205, 320 250 C 410 280, 580 302, 727 290 Z" fill="url(#flagGrad)"/>
+  <path d="M 727 90 C 580 78, 410 100, 320 130 C 350 175, 350 205, 320 250 C 410 280, 580 302, 727 290 Z" fill="url(#flagGloss)"/>
+  <path d="M 325 135 C 350 175, 350 205, 325 248 L 360 240 C 350 205, 350 175, 360 142 Z" fill="#000000" opacity="0.3"/>
+
+  <ellipse cx="345" cy="788" rx="140" ry="20" fill="#000000" opacity="0.65" filter="url(#ballShadow)"/>
+  <circle cx="345" cy="630" r="155" fill="url(#ballSurf)"/>
+  <g clip-path="url(#ballClip)" opacity="0.55">
+    <ellipse cx="300" cy="525" rx="5" ry="4.5" fill="#1A2818"/>
+    <ellipse cx="355" cy="510" rx="5.5" ry="5" fill="#1A2818"/>
+    <ellipse cx="410" cy="520" rx="5" ry="4.5" fill="#1A2818"/>
+    <ellipse cx="455" cy="545" rx="5" ry="4.5" fill="#1A2818"/>
+    <ellipse cx="258" cy="558" rx="6.5" ry="6" fill="#1A2818"/>
+    <ellipse cx="320" cy="555" rx="7" ry="6.5" fill="#1A2818"/>
+    <ellipse cx="380" cy="560" rx="7" ry="6.5" fill="#1A2818"/>
+    <ellipse cx="440" cy="575" rx="6.5" ry="6" fill="#1A2818"/>
+    <ellipse cx="232" cy="610" rx="7" ry="6.5" fill="#1A2818"/>
+    <ellipse cx="295" cy="605" rx="8.5" ry="7.5" fill="#1A2818"/>
+    <ellipse cx="358" cy="608" rx="8.5" ry="7.5" fill="#1A2818"/>
+    <ellipse cx="420" cy="615" rx="8" ry="7" fill="#1A2818"/>
+    <ellipse cx="475" cy="625" rx="6.5" ry="6" fill="#1A2818"/>
+    <ellipse cx="245" cy="660" rx="7" ry="6" fill="#1A2818"/>
+    <ellipse cx="310" cy="660" rx="8" ry="6.5" fill="#1A2818"/>
+    <ellipse cx="378" cy="665" rx="8" ry="6.5" fill="#1A2818"/>
+    <ellipse cx="445" cy="668" rx="7.5" ry="6.5" fill="#1A2818"/>
+    <ellipse cx="275" cy="710" rx="6" ry="5" fill="#1A2818"/>
+    <ellipse cx="340" cy="715" rx="7" ry="6" fill="#1A2818"/>
+    <ellipse cx="405" cy="715" rx="6.5" ry="5.5" fill="#1A2818"/>
+    <ellipse cx="305" cy="755" rx="5" ry="4" fill="#1A2818"/>
+    <ellipse cx="370" cy="760" rx="5.5" ry="4.5" fill="#1A2818"/>
+  </g>
+  <ellipse cx="298" cy="568" rx="50" ry="30" fill="url(#ballSpec)"/>
+  <circle cx="345" cy="630" r="155" fill="url(#ballRim)"/>
+  <circle cx="345" cy="630" r="155" fill="none" stroke="#0A1810" stroke-width="1.5" opacity="0.45"/>
+</svg>
