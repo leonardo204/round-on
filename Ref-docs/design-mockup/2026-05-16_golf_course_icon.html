@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>골프장 깃발+그린 아이콘 시안</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #1C1C1E; color: white;
+    padding: 60px 20px; text-align: center;
+  }
+  h1 { font-size: 22px; margin-bottom: 8px; }
+  .sub { opacity: 0.6; font-size: 14px; margin-bottom: 50px; }
+  .grid {
+    display: flex; gap: 50px; justify-content: center; flex-wrap: wrap;
+  }
+  .opt {
+    background: #2C2C2E; padding: 36px 24px;
+    border-radius: 24px; min-width: 240px;
+  }
+  .opt-circle {
+    width: 130px; height: 130px;
+    background: rgba(46, 125, 50, 0.12);
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+  }
+  .opt-label {
+    font-size: 15px; font-weight: 600; color: #66BB6A;
+  }
+  .opt-desc {
+    font-size: 13px; opacity: 0.7; margin-top: 6px; line-height: 1.5;
+  }
+
+  /* ============ Option 1: 깃발 + 잔디 언덕 (단순) ============ */
+  .icon-1 svg { width: 70px; height: 70px; }
+
+  /* ============ Option 2: 깃발 + 그린 원 (홀까지) ============ */
+  .icon-2 svg { width: 80px; height: 80px; }
+
+  /* ============ Option 3: 골프 깃발만 펄럭 ============ */
+  .icon-3 svg { width: 70px; height: 70px; }
+</style>
+</head>
+<body>
+
+<h1>골프장 아이콘 시안 — 3종 비교</h1>
+<p class="sub">Custom SF Symbol 또는 SwiftUI Shape으로 제작. 사용자가 1개 선택 후 SwiftUI Asset Catalog에 추가.</p>
+
+<div class="grid">
+
+  <div class="opt">
+    <div class="opt-circle icon-1">
+      <!-- Option 1: 깃발이 꽂힌 그린 (단순한 잔디 언덕 위 깃발) -->
+      <svg viewBox="0 0 64 64" fill="none" stroke="#2E7D32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 잔디 언덕 -->
+        <path d="M 8 48 Q 32 36, 56 48 L 56 56 L 8 56 Z" fill="#2E7D32" fill-opacity="0.3"/>
+        <!-- 깃대 -->
+        <line x1="38" y1="44" x2="38" y2="14"/>
+        <!-- 깃발 (삼각) -->
+        <path d="M 38 14 L 54 20 L 38 26 Z" fill="#2E7D32"/>
+        <!-- 홀 -->
+        <ellipse cx="38" cy="46" rx="4" ry="1.5" fill="#1B5E20" stroke="none"/>
+      </svg>
+    </div>
+    <div class="opt-label">Option 1 — 깃발 + 그린 + 홀</div>
+    <div class="opt-desc">잔디 언덕 위 깃발 + 홀(컵). 골프장의 명확한 표현. 가장 직관적.</div>
+  </div>
+
+  <div class="opt">
+    <div class="opt-circle icon-2">
+      <!-- Option 2: 위에서 본 그린 원 + 깃발 -->
+      <svg viewBox="0 0 64 64" fill="none" stroke="#2E7D32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 그린 원 (반투명 채움) -->
+        <circle cx="32" cy="42" r="20" fill="#2E7D32" fill-opacity="0.15"/>
+        <!-- 깃대 -->
+        <line x1="32" y1="42" x2="32" y2="14"/>
+        <!-- 깃발 (펄럭이는 곡선) -->
+        <path d="M 32 14 Q 44 16, 48 22 Q 44 24, 32 22 Z" fill="#2E7D32"/>
+        <!-- 홀 (중앙) -->
+        <ellipse cx="32" cy="42" rx="3.5" ry="1.5" fill="#1B5E20" stroke="none"/>
+      </svg>
+    </div>
+    <div class="opt-label">Option 2 — 깃발 + 원형 그린 (위에서 본 시점)</div>
+    <div class="opt-desc">평면 그린 + 펄럭이는 깃발. Material 'golf_course'에 가장 가까운 표현.</div>
+  </div>
+
+  <div class="opt">
+    <div class="opt-circle icon-3">
+      <!-- Option 3: 깃발만 (미니멀) -->
+      <svg viewBox="0 0 64 64" fill="none" stroke="#2E7D32" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 깃대 -->
+        <line x1="20" y1="54" x2="20" y2="10"/>
+        <!-- 깃발 -->
+        <path d="M 20 10 L 48 16 Q 50 18, 48 20 L 20 26 Z" fill="#2E7D32"/>
+        <!-- 베이스 (잔디 표시) -->
+        <line x1="14" y1="54" x2="26" y2="54"/>
+      </svg>
+    </div>
+    <div class="opt-label">Option 3 — 깃발만 (미니멀)</div>
+    <div class="opt-desc">단순한 깃대 + 깃발. SF Symbols flag.fill과 비슷한 톤. 가장 미니멀.</div>
+  </div>
+
+</div>
+
+<div style="max-width: 700px; margin: 50px auto 0; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; font-size: 13px; opacity: 0.8; line-height: 1.6;">
+  <strong>구현 방식</strong>: 선택된 옵션은 (a) SwiftUI Shape으로 직접 그리거나 (b) SVG → SF Symbols Mac 앱으로 export 후 Asset Catalog .symbolset 추가. <br/>
+  <strong>다크 자동</strong>: stroke/fill 색을 .tint로 받게 하면 라이트(#2E7D32)/다크(#66BB6A) 자동.
+</div>
+
+</body>
+</html>
