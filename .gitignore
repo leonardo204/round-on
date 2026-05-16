@@ -27,8 +27,8 @@ secrets/
 **/.DS_Store
 
 # Xcode generated
-*.xcworkspace/
-*.xcodeproj/
+# .xcodeproj/.xcworkspace는 commit (XcodeGen이 재생성하지만 IDE 진입점 편의)
+# 단 사용자별 상태(xcuserdata/xcuserstate)는 제외
 xcuserdata/
 *.xcuserstate
 DerivedData/

@@ -1,0 +1,1516 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		08D59798AB3DC759A9FE5D3A /* ActiveRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31B2548CE1454A51A3B7C61 /* ActiveRoundView.swift */; };
+		0B23849AEA0720EE81DE5498 /* DiscoveredCourseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */; };
+		0F9FC3B94FFB5A39E07713DE /* ScoreCardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DCE3C4FF5B4BAA26AA628B /* ScoreCardViewModelTests.swift */; };
+		107F3BD3FF95B2C484F771BE /* RoundOnWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E74FBB5C1B2201A2640A0CB /* RoundOnWatchApp.swift */; };
+		1130B0769735C447963E6343 /* PlayerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */; };
+		1502B88CF3CA9A658971B3A2 /* ShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */; };
+		159B53D184A17C4AF6564AC3 /* RoundPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45250A110CE021D7003D5EF /* RoundPhoto.swift */; };
+		16FAD1A1CA872FBFA7BD4D6B /* SyncCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BF69E3C181D9405358D0FC /* SyncCoordinatorTests.swift */; };
+		174629978E56CBEA636EA938 /* HoleProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67F5A9716DF43BC037C82FD /* HoleProgress.swift */; };
+		186C9F61BAB5BCF8D854BF5C /* HoleScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8BC201905AB97743D9446 /* HoleScore.swift */; };
+		1A37F30FB604D78976ED538C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F03B2BB0667E31677AC402 /* HomeView.swift */; };
+		1D0682D67DADBC173CE8D4E5 /* CourseRepositoryAdaptiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29DE1880EE95068A319023D /* CourseRepositoryAdaptiveTests.swift */; };
+		1DE720591DD80D6C142632B9 /* PlayerChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252CDB85171329812400D1D /* PlayerChip.swift */; };
+		1FB0DD177E910F9360ADF1C1 /* PhotoAttachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F06FB5AE6EBC80E02CE91EA /* PhotoAttachView.swift */; };
+		252715583D561E09F401D721 /* RoundPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45250A110CE021D7003D5EF /* RoundPhoto.swift */; };
+		29B0BF2A4DA90F240DEA3008 /* PhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17DB4784545CC14F8C7CB6 /* PhotoStore.swift */; };
+		29B712EBDA0319068F84D4C1 /* DeviceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */; };
+		2A994124CA755841564639BC /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */; };
+		2B22717A387BC3831EEDD7E4 /* SeasonalColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844A27C4539D76B7F1CF3892 /* SeasonalColorTests.swift */; };
+		2D6AB9351D7289B313E8548D /* ShotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B1DA6D342B2FCC5504A01B /* ShotButton.swift */; };
+		2DF85F12B672687E500E3230 /* Color+SeasonalGreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CE8631B302FADCF70407E1 /* Color+SeasonalGreen.swift */; };
+		2E429984813CD4AA2C6039CC /* ActiveRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31B2548CE1454A51A3B7C61 /* ActiveRoundView.swift */; };
+		2EE4733F9FFA892148EE4135 /* NewRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1545EDCE02FB42A61FB4EB3B /* NewRoundView.swift */; };
+		2EFA1CADB926DE0F5AFC28A5 /* RoundStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E776DFD0BE7A80E1814D43A8 /* RoundStatistics.swift */; };
+		2F30D70BCEC9F96E424F4E1D /* GolfCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C203EFDBD24AB1F09291328 /* GolfCourse.swift */; };
+		2FE6C23901027C6F907B2EB3 /* ScoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */; };
+		30A75A43FED855C21E53232D /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; };
+		3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AA5181B0AC6CA697186AC2 /* StatsView.swift */; };
+		35330D84B85CE0EAFF1C6225 /* Color+WatchColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */; };
+		3914E6C2382AB945DAB2E235 /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC043DB752CF9F5CC38601DB /* HapticEngine.swift */; };
+		39A7BEDA7FD5288004686679 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F03B2BB0667E31677AC402 /* HomeView.swift */; };
+		3A4C3518B16BF3E0A294EEEB /* HaversineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B422356FF277D5F06DD486 /* HaversineTests.swift */; };
+		3EDE9D1C605E454B82F106D1 /* HoleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */; };
+		3FB37761B0ABFD37B8A70394 /* WCMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7372CB2448ED263BAEF81FF /* WCMessages.swift */; };
+		4049D9729DF0F45DBC26D46B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550B5BE62926027AF561822A /* ContentView.swift */; };
+		407E7A1F9DF0AA5D45BA96CE /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C92BEBEF1EF6B35DE8F2F84 /* NetworkMonitor.swift */; };
+		40A467A2941E4982B3B87DCA /* RoundViewModel+Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6976C8E2598D26A933D1B57 /* RoundViewModel+Workout.swift */; };
+		434915EAC489DA0572D5CB13 /* HoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49302CB886665828D6966CF2 /* HoleInfo.swift */; };
+		4570AAAEC228B5E38DD45540 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; };
+		46E3B42FF684F0037ED32230 /* PersistedDiscoveredCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC651CE3038389DC2273F08 /* PersistedDiscoveredCourse.swift */; };
+		487EEEA954EB296FF024DC7A /* NewRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1545EDCE02FB42A61FB4EB3B /* NewRoundView.swift */; };
+		4D2E191EF28B8326E0AE183F /* RoundOnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */; };
+		5062F11A1515D711B81D8254 /* WatchHoleSwipeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC784D81F59A3D8626A1EFD /* WatchHoleSwipeContainer.swift */; };
+		5121A9F2F7EB6CA36330C281 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9539182D15057C32C5477 /* SyncCoordinator.swift */; };
+		51ECB292269A1BDF7168D454 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */; };
+		52B4DAFFA9558462C9DF1BCA /* KakaoVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */; };
+		563CB27A5BDB5E89F45E141E /* Round+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8586200D803A247A39C2BCA0 /* Round+Display.swift */; };
+		5F2A2824F6FA8792EA2DE79E /* Round+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8586200D803A247A39C2BCA0 /* Round+Display.swift */; };
+		626057D85619D703724C37A6 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9539182D15057C32C5477 /* SyncCoordinator.swift */; };
+		628959B54063C38658ABEFBF /* HoleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */; };
+		64C879DA0B861663C2C6FE4E /* SyncCoordinatorStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B718787C00263756F5FD6AF /* SyncCoordinatorStressTests.swift */; };
+		68B2C646268D174B6AF9790C /* RoundCourseLabelingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C804B88B54718B4E99D9DDD /* RoundCourseLabelingTests.swift */; };
+		69874D74B436F43650610B0F /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF006E866BFD030D2C951470 /* Round.swift */; };
+		6D000FC39CC791AE01C692F0 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AA5181B0AC6CA697186AC2 /* StatsView.swift */; };
+		6DA1DA0D036206F32C87CC47 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC83B6FE7680A75CD4D0EA5 /* Player.swift */; };
+		6E20BAF6F3765EEB29092CB7 /* WatchRoundEndMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7809858545E77AF003225809 /* WatchRoundEndMenu.swift */; };
+		6EAC49F7C733B0BB9AA5DDC1 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A6320D8280D112960766C /* LocationService.swift */; };
+		6FC643A0480871CBC6B53061 /* ScoreCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D82D958B92B65E9C78EFAB6 /* ScoreCardViewModel.swift */; };
+		73229FFD3ABC095A45826517 /* KakaoVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */; };
+		74FA0A480A9ABC2C15132FBF /* Haversine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB1519F15CB865DEA48F1D8 /* Haversine.swift */; };
+		77E1AAFE77CF54CD704BAC3B /* CourseDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */; };
+		784C1C97E1AB7FCF55F8281E /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		79023044B0DCEC9387564AEE /* PinInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6B01B395738B0326DEF2C4 /* PinInputField.swift */; };
+		792C51A5D4C97F03A20A2114 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		79E2BEDE8E629793C87D80C9 /* PlayerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */; };
+		7E175DD0DBFE92081CAC6641 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469A2B894F35A244DC5B16EA /* WCBroker.swift */; };
+		80FF43CEC8D4B0D5FAEE6810 /* HoleProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67F5A9716DF43BC037C82FD /* HoleProgress.swift */; };
+		81D688914BE7EBE4D6614432 /* RoundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B62D7196BF68313A7411E /* RoundViewModel.swift */; };
+		836BA4A3A00FE60A25761DA5 /* HoleScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8BC201905AB97743D9446 /* HoleScore.swift */; };
+		85FC47B97FC1625737C64876 /* RoundSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3913330580DF5181D0D64 /* RoundSummaryView.swift */; };
+		882B8BA0FD4D12351BB4B991 /* WatchPlayerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E825799AC9EC61BF8891B4 /* WatchPlayerOverlay.swift */; };
+		88A60453C43346B5DB94C3D3 /* RoundStatisticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B10F7FF48A15ECD6D979FB /* RoundStatisticsTests.swift */; };
+		896505D32AEDBE5C569CE9AA /* SwiftDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0ADF942BC3454FD2A846C1 /* SwiftDataModelTests.swift */; };
+		89CF8C15BF9921282F8AF7CF /* PhotoGalleryGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DB472A47E8E889C5E12823 /* PhotoGalleryGrid.swift */; };
+		8BBE68FB8FD179F1D26EEDFD /* CourseDiscoveryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CE161EF58F00C4D3CB7395 /* CourseDiscoveryServiceTests.swift */; };
+		8D2BF5B85DB69ED31FDBD2BB /* RoundEditTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104BC08A43F8064A677945D2 /* RoundEditTests.swift */; };
+		8E060DABD6768C6A41ACB0D8 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC83B6FE7680A75CD4D0EA5 /* Player.swift */; };
+		904AE64B2AF0234F4814A01C /* RoundViewModel+Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6976C8E2598D26A933D1B57 /* RoundViewModel+Workout.swift */; };
+		92C978503B9334D3569B6908 /* Shared-Watch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E228343F6A89E0C2084FCFE9 /* Shared-Watch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9344CD0EF5751B153BDE6A88 /* DiscoveredCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */; };
+		935421071CD08050769BF273 /* SharePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E45D0AA7973CCBD2B452FC /* SharePayload.swift */; };
+		93C68F0692C9576ADBB09EC6 /* ScoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */; };
+		956F1CDF34233EFF1E66E2AE /* courses.json in Resources */ = {isa = PBXBuildFile; fileRef = 666F27BF49E7F5BDBDB8E259 /* courses.json */; };
+		960B0E022F9766B79F1A85AC /* ScoreCardViewModelStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E1ACA8E338CA62003F521A /* ScoreCardViewModelStressTests.swift */; };
+		9613145FEE984F837E36F075 /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178DEE19966BE7071D4D2287 /* PenaltyButton.swift */; };
+		987F4B353D187E90E1C54724 /* RoundSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3913330580DF5181D0D64 /* RoundSummaryView.swift */; };
+		9AF4F7644F80C690F0A1C5A8 /* HoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49302CB886665828D6966CF2 /* HoleInfo.swift */; };
+		9FF481C2DA4735C05099C476 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */; };
+		A450174E8823D2453215919E /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A6320D8280D112960766C /* LocationService.swift */; };
+		A4911A665D5AE576C963F82D /* GolfCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C203EFDBD24AB1F09291328 /* GolfCourse.swift */; };
+		A4E1DC3F6AEB7963F4E00C3E /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139D8E2C353187EFFD42A389 /* PenaltyButton.swift */; };
+		A58D3FCC8A444CD7F0FF0806 /* WorkoutCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92721D7C200DC1BC4B5B5FFF /* WorkoutCoordinator.swift */; };
+		A5DD7E023BDFC4455A4D2AFE /* RoundDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */; };
+		A6126371128F4375B70500EA /* Shared-Watch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E228343F6A89E0C2084FCFE9 /* Shared-Watch.framework */; };
+		A8F84E66D605ADFB52AFF6E2 /* RoundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47B62D7196BF68313A7411E /* RoundViewModel.swift */; };
+		A9A721A70104E499F5C81549 /* KakaoVerificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477CCAE0392D2D63F49A7977 /* KakaoVerificationServiceTests.swift */; };
+		B56EF2615254363E9B9234DC /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139D8E2C353187EFFD42A389 /* PenaltyButton.swift */; };
+		B59D4E9003F16822FA406964 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E8A5E681364FBC39BBD432D /* SharedAssets.xcassets */; };
+		BBF4257DF94F117CC865B85B /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF006E866BFD030D2C951470 /* Round.swift */; };
+		BBFB1BF83C16FBF9120338B6 /* ShareAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3848762312A4A1FA8FB773 /* ShareAPIClient.swift */; };
+		BDC46F454887437ABDD4CCF4 /* CourseDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */; };
+		BE0961DEDFC435F673A8D61B /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC043DB752CF9F5CC38601DB /* HapticEngine.swift */; };
+		BE1E2C1F0C9FCF62AF42E036 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC8F7887F8DB86E5E9CBAC5 /* KeychainStore.swift */; };
+		BE8E36F922C6C29AE75974D0 /* PhotoGalleryGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DB472A47E8E889C5E12823 /* PhotoGalleryGrid.swift */; };
+		BF5F28E7D508B850E5697D08 /* SeasonTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B76960238B796F51EF83760 /* SeasonTheme.swift */; };
+		C18EDB101F96D8BE7DFB2C8A /* CourseRepositoryNearestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98595BAEB16BB3DA62B9907F /* CourseRepositoryNearestTests.swift */; };
+		C5020ADC62EB8E14406995DE /* DeviceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */; };
+		C764DE27949FC710FD120E31 /* SharePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E45D0AA7973CCBD2B452FC /* SharePayload.swift */; };
+		CADA89F7A881E57D8C57F48E /* KeychainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */; };
+		CD08C3D8464080E761344FC9 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469A2B894F35A244DC5B16EA /* WCBroker.swift */; };
+		CDC487DA2F9FC92D9D95034C /* PlayerChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8252CDB85171329812400D1D /* PlayerChip.swift */; };
+		CE1BE4BBB6021912B68D68CF /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; };
+		D2134A1912F959E1E3E7FE3A /* PinInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6B01B395738B0326DEF2C4 /* PinInputField.swift */; };
+		D3761F2207355382FB20C330 /* WCMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7372CB2448ED263BAEF81FF /* WCMessages.swift */; };
+		D5312FF7766DAA62C783B64C /* PhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17DB4784545CC14F8C7CB6 /* PhotoStore.swift */; };
+		D55A8B0770F6D58EC1F7D2F2 /* WatchScoreInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D8AFD2F10C199CC2A10FD8 /* WatchScoreInputView.swift */; };
+		D6B0D7E983BA08D79021A3C7 /* ShareViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507ACE0BB9B99DDAA5BC02B /* ShareViewModelTests.swift */; };
+		D732C3B2D782808264071EDE /* CourseRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */; };
+		DC21B45303E0BE1F8B8A4029 /* DiscoveredCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */; };
+		DC8E1433F243301FE0461228 /* SeasonTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B76960238B796F51EF83760 /* SeasonTheme.swift */; };
+		DFA7F60DB0076FA7D7931C64 /* RoundViewModelHealthKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4580BE6E4C15B85485CCC4F /* RoundViewModelHealthKitTests.swift */; };
+		E21F1296229154698BE27A80 /* RoundOn-Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 606E491E0A1B07D0B779F8D5 /* RoundOn-Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E32142285A2C66B06B44A722 /* PersistedDiscoveredCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC651CE3038389DC2273F08 /* PersistedDiscoveredCourse.swift */; };
+		E38FA528C02032009D2E5477 /* WorkoutCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92721D7C200DC1BC4B5B5FFF /* WorkoutCoordinator.swift */; };
+		E63102B4354A04F77D3BC81A /* BannerNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84545407C4587D1671AA6A29 /* BannerNotice.swift */; };
+		E6EBE1B5368F448B4E72B982 /* ShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */; };
+		E7E95775F414505D6871B686 /* ShareAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3848762312A4A1FA8FB773 /* ShareAPIClient.swift */; };
+		E81220D5E30FB286746F7FE5 /* RoundOnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */; };
+		F030604425C58FD434EF36A3 /* RoundDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */; };
+		F2DFA9D7E933A232091FEF94 /* PhotoAttachView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F06FB5AE6EBC80E02CE91EA /* PhotoAttachView.swift */; };
+		F3B031F38ED20E9AB6BB3238 /* CourseDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */; };
+		F610C5FD790A8DD07B15CC83 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB288B76FE366FF249081E /* WCBroker.swift */; };
+		F6BC069E673C88B3FF76DD07 /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F8C7C724E980752FC0A307 /* ShareViewModel.swift */; };
+		F6CCA6A1CA91543B00DF78E9 /* ScoreCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D82D958B92B65E9C78EFAB6 /* ScoreCardViewModel.swift */; };
+		F841812ADA0B238A64456F98 /* CourseRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E86F60C31B5986EC23E249 /* CourseRepositoryTests.swift */; };
+		FE60418EB6E040C8AF4E79DF /* KakaoVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */; };
+		FF26BAB4ADA77EFB4D1D2276 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FFAD3DDC5CA2B717FE295249 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550B5BE62926027AF561822A /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		00015093D3EFFD921F230F8E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9DB99C3D9A17FE3C0CCC7BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 51ED1B4F97ADF00C13C7FBFE;
+			remoteInfo = "RoundOn-Watch";
+		};
+		5CB6A3A10DB443C339A9AB7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9DB99C3D9A17FE3C0CCC7BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89C82E87CFE957E30D0173AC;
+			remoteInfo = Shared;
+		};
+		6A8A414AC7BF07E57DA8DD08 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9DB99C3D9A17FE3C0CCC7BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89C82E87CFE957E30D0173AC;
+			remoteInfo = Shared;
+		};
+		77BFF1036E6D661FADB988EC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9DB99C3D9A17FE3C0CCC7BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 356B245F420490F5CD4B4AF3;
+			remoteInfo = "Shared-Watch";
+		};
+		B50A582142FCA54A39C3829F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9DB99C3D9A17FE3C0CCC7BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89C82E87CFE957E30D0173AC;
+			remoteInfo = Shared;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		057331CD90B5F238B121FE0D /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				E21F1296229154698BE27A80 /* RoundOn-Watch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C36E2491E84EB85E81C1562 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				784C1C97E1AB7FCF55F8281E /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		20970DC288033F82CE83BCB7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				92C978503B9334D3569B6908 /* Shared-Watch.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		538AE0EFDA2EEF56A464487D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				792C51A5D4C97F03A20A2114 /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		540BC90D6B0F3DE386CE6CF3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FF26BAB4ADA77EFB4D1D2276 /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00CE161EF58F00C4D3CB7395 /* CourseDiscoveryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDiscoveryServiceTests.swift; sourceTree = "<group>"; };
+		01DD16CE2349CE3F77D14D00 /* RoundOn.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RoundOn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListViewModel.swift; sourceTree = "<group>"; };
+		104BC08A43F8064A677945D2 /* RoundEditTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundEditTests.swift; sourceTree = "<group>"; };
+		11AA5181B0AC6CA697186AC2 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		139D8E2C353187EFFD42A389 /* PenaltyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenaltyButton.swift; sourceTree = "<group>"; };
+		1545EDCE02FB42A61FB4EB3B /* NewRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRoundView.swift; sourceTree = "<group>"; };
+		16CE8631B302FADCF70407E1 /* Color+SeasonalGreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+SeasonalGreen.swift"; sourceTree = "<group>"; };
+		178DEE19966BE7071D4D2287 /* PenaltyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenaltyButton.swift; sourceTree = "<group>"; };
+		1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDiscoveryService.swift; sourceTree = "<group>"; };
+		21D8AFD2F10C199CC2A10FD8 /* WatchScoreInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchScoreInputView.swift; sourceTree = "<group>"; };
+		266ECBE8207CD2C2E8385E8C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		26F8C7C724E980752FC0A307 /* ShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
+		28920937CD4E8F060CFB4431 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2AC651CE3038389DC2273F08 /* PersistedDiscoveredCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedDiscoveredCourse.swift; sourceTree = "<group>"; };
+		2AC83B6FE7680A75CD4D0EA5 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		2E8A5E681364FBC39BBD432D /* SharedAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SharedAssets.xcassets; sourceTree = "<group>"; };
+		2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIdentifier.swift; sourceTree = "<group>"; };
+		2FC784D81F59A3D8626A1EFD /* WatchHoleSwipeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHoleSwipeContainer.swift; sourceTree = "<group>"; };
+		33DB472A47E8E889C5E12823 /* PhotoGalleryGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryGrid.swift; sourceTree = "<group>"; };
+		36DCE3C4FF5B4BAA26AA628B /* ScoreCardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCardViewModelTests.swift; sourceTree = "<group>"; };
+		3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredCourseTests.swift; sourceTree = "<group>"; };
+		3E74FBB5C1B2201A2640A0CB /* RoundOnWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundOnWatchApp.swift; sourceTree = "<group>"; };
+		3EB1519F15CB865DEA48F1D8 /* Haversine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haversine.swift; sourceTree = "<group>"; };
+		469A2B894F35A244DC5B16EA /* WCBroker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCBroker.swift; sourceTree = "<group>"; };
+		477CCAE0392D2D63F49A7977 /* KakaoVerificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoVerificationServiceTests.swift; sourceTree = "<group>"; };
+		49302CB886665828D6966CF2 /* HoleInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleInfo.swift; sourceTree = "<group>"; };
+		4C203EFDBD24AB1F09291328 /* GolfCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfCourse.swift; sourceTree = "<group>"; };
+		4D0ADF942BC3454FD2A846C1 /* SwiftDataModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataModelTests.swift; sourceTree = "<group>"; };
+		4D82D958B92B65E9C78EFAB6 /* ScoreCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCardViewModel.swift; sourceTree = "<group>"; };
+		4FC8F7887F8DB86E5E9CBAC5 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		550B5BE62926027AF561822A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		59E1ACA8E338CA62003F521A /* ScoreCardViewModelStressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCardViewModelStressTests.swift; sourceTree = "<group>"; };
+		5A17DB4784545CC14F8C7CB6 /* PhotoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStore.swift; sourceTree = "<group>"; };
+		5BCB288B76FE366FF249081E /* WCBroker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCBroker.swift; sourceTree = "<group>"; };
+		5C804B88B54718B4E99D9DDD /* RoundCourseLabelingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCourseLabelingTests.swift; sourceTree = "<group>"; };
+		5C92BEBEF1EF6B35DE8F2F84 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		5E8AB8C951D4F92749B069D2 /* SharedTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SharedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		606E491E0A1B07D0B779F8D5 /* RoundOn-Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RoundOn-Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62E825799AC9EC61BF8891B4 /* WatchPlayerOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPlayerOverlay.swift; sourceTree = "<group>"; };
+		64E86F60C31B5986EC23E249 /* CourseRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepositoryTests.swift; sourceTree = "<group>"; };
+		666F27BF49E7F5BDBDB8E259 /* courses.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = courses.json; sourceTree = "<group>"; };
+		67F8BC201905AB97743D9446 /* HoleScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleScore.swift; sourceTree = "<group>"; };
+		68B422356FF277D5F06DD486 /* HaversineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HaversineTests.swift; sourceTree = "<group>"; };
+		6B31D02AD5B472AA0EF649D1 /* RoundOn-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "RoundOn-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B718787C00263756F5FD6AF /* SyncCoordinatorStressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinatorStressTests.swift; sourceTree = "<group>"; };
+		6D5592903B2E8D6A58B0D84B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredCourse.swift; sourceTree = "<group>"; };
+		7809858545E77AF003225809 /* WatchRoundEndMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRoundEndMenu.swift; sourceTree = "<group>"; };
+		7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundDetailView.swift; sourceTree = "<group>"; };
+		8252CDB85171329812400D1D /* PlayerChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerChip.swift; sourceTree = "<group>"; };
+		83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundOnApp.swift; sourceTree = "<group>"; };
+		844A27C4539D76B7F1CF3892 /* SeasonalColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalColorTests.swift; sourceTree = "<group>"; };
+		84545407C4587D1671AA6A29 /* BannerNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerNotice.swift; sourceTree = "<group>"; };
+		8586200D803A247A39C2BCA0 /* Round+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Round+Display.swift"; sourceTree = "<group>"; };
+		89B10F7FF48A15ECD6D979FB /* RoundStatisticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundStatisticsTests.swift; sourceTree = "<group>"; };
+		8C6B01B395738B0326DEF2C4 /* PinInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinInputField.swift; sourceTree = "<group>"; };
+		8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOptions.swift; sourceTree = "<group>"; };
+		8F06FB5AE6EBC80E02CE91EA /* PhotoAttachView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAttachView.swift; sourceTree = "<group>"; };
+		924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreTests.swift; sourceTree = "<group>"; };
+		92721D7C200DC1BC4B5B5FFF /* WorkoutCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCoordinator.swift; sourceTree = "<group>"; };
+		94A3913330580DF5181D0D64 /* RoundSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundSummaryView.swift; sourceTree = "<group>"; };
+		97E45D0AA7973CCBD2B452FC /* SharePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePayload.swift; sourceTree = "<group>"; };
+		98595BAEB16BB3DA62B9907F /* CourseRepositoryNearestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepositoryNearestTests.swift; sourceTree = "<group>"; };
+		9B76960238B796F51EF83760 /* SeasonTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonTheme.swift; sourceTree = "<group>"; };
+		9C3A6320D8280D112960766C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		A5BF69E3C181D9405358D0FC /* SyncCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinatorTests.swift; sourceTree = "<group>"; };
+		A67F5A9716DF43BC037C82FD /* HoleProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleProgress.swift; sourceTree = "<group>"; };
+		A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleViewModel.swift; sourceTree = "<group>"; };
+		AC043DB752CF9F5CC38601DB /* HapticEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEngine.swift; sourceTree = "<group>"; };
+		AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoVerificationService.swift; sourceTree = "<group>"; };
+		AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
+		B1D54F1E65191D4472520DAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B4580BE6E4C15B85485CCC4F /* RoundViewModelHealthKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundViewModelHealthKitTests.swift; sourceTree = "<group>"; };
+		B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
+		BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCell.swift; sourceTree = "<group>"; };
+		BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+WatchColors.swift"; sourceTree = "<group>"; };
+		BF006E866BFD030D2C951470 /* Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
+		C6976C8E2598D26A933D1B57 /* RoundViewModel+Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoundViewModel+Workout.swift"; sourceTree = "<group>"; };
+		C8B9539182D15057C32C5477 /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
+		CE3848762312A4A1FA8FB773 /* ShareAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareAPIClient.swift; sourceTree = "<group>"; };
+		D29DE1880EE95068A319023D /* CourseRepositoryAdaptiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepositoryAdaptiveTests.swift; sourceTree = "<group>"; };
+		D45250A110CE021D7003D5EF /* RoundPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundPhoto.swift; sourceTree = "<group>"; };
+		E228343F6A89E0C2084FCFE9 /* Shared-Watch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "Shared-Watch.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E47B62D7196BF68313A7411E /* RoundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundViewModel.swift; sourceTree = "<group>"; };
+		E518496606C12528426C5FCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E6F03B2BB0667E31677AC402 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		E776DFD0BE7A80E1814D43A8 /* RoundStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundStatistics.swift; sourceTree = "<group>"; };
+		F31B2548CE1454A51A3B7C61 /* ActiveRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveRoundView.swift; sourceTree = "<group>"; };
+		F3B1DA6D342B2FCC5504A01B /* ShotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotButton.swift; sourceTree = "<group>"; };
+		F507ACE0BB9B99DDAA5BC02B /* ShareViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewModelTests.swift; sourceTree = "<group>"; };
+		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
+		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
+		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0801B1CA73C33F1D5E49766E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE1BE4BBB6021912B68D68CF /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A87BA46C353A8F0A790176F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4570AAAEC228B5E38DD45540 /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A59E575B6BD5FF96C7D3DA14 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30A75A43FED855C21E53232D /* Shared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C44E1A006230595B1B28EBA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6126371128F4375B70500EA /* Shared-Watch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08417F8A3A57348685D5EBD1 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				5C92BEBEF1EF6B35DE8F2F84 /* NetworkMonitor.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		16BD330EC504237BEBC12A89 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				84545407C4587D1671AA6A29 /* BannerNotice.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2135B463ABAB38E757D45A83 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				16CE8631B302FADCF70407E1 /* Color+SeasonalGreen.swift */,
+				9B76960238B796F51EF83760 /* SeasonTheme.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		23EF20A78A3CDD50A33B3F30 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				4FC8F7887F8DB86E5E9CBAC5 /* KeychainStore.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		284B739834C9BDF5B78EA9CE /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A67F5A9716DF43BC037C82FD /* HoleProgress.swift */,
+				139D8E2C353187EFFD42A389 /* PenaltyButton.swift */,
+				33DB472A47E8E889C5E12823 /* PhotoGalleryGrid.swift */,
+				8C6B01B395738B0326DEF2C4 /* PinInputField.swift */,
+				8252CDB85171329812400D1D /* PlayerChip.swift */,
+				BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2A9D62332BB75BD983E7B822 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				178DEE19966BE7071D4D2287 /* PenaltyButton.swift */,
+				F3B1DA6D342B2FCC5504A01B /* ShotButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2CEF0D930E071A0829681459 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E518496606C12528426C5FCA /* Info.plist */,
+				16BD330EC504237BEBC12A89 /* Components */,
+				2135B463ABAB38E757D45A83 /* DesignSystem */,
+				EE8665FF58C0CADCFDC3C374 /* Geo */,
+				7E3DF1F6A13CC1D7AE81D505 /* Haptics */,
+				E13DC8D6C2021E3B5CC85245 /* Models */,
+				08417F8A3A57348685D5EBD1 /* Network */,
+				66F9BB947ACD678B5F29D887 /* Repositories */,
+				A4A6E0394F6F7BA093685482 /* Resources */,
+				23EF20A78A3CDD50A33B3F30 /* Security */,
+				498270FF89301F402C1D232E /* Stats */,
+				9CE6488885972EA79E6F322B /* Sync */,
+				F20AE9ABD924403852942388 /* ViewModels */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		3E9F89D66145A5EF9E4544B7 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				2FC784D81F59A3D8626A1EFD /* WatchHoleSwipeContainer.swift */,
+				62E825799AC9EC61BF8891B4 /* WatchPlayerOverlay.swift */,
+				7809858545E77AF003225809 /* WatchRoundEndMenu.swift */,
+				21D8AFD2F10C199CC2A10FD8 /* WatchScoreInputView.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		471746C49C29E0641E201C9A = {
+			isa = PBXGroup;
+			children = (
+				48D346974E552027091537F0 /* App-iOS */,
+				7A942388A4E72E6B9661E8CF /* App-Watch */,
+				2CEF0D930E071A0829681459 /* Shared */,
+				47E0D97F6FDF3E79FBCBD867 /* Tests */,
+				5B2BE3114BBFFDFD214FBC29 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		47E0D97F6FDF3E79FBCBD867 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				BFF72A348A328875BB18319D /* SharedTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		48D346974E552027091537F0 /* App-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				550B5BE62926027AF561822A /* ContentView.swift */,
+				266ECBE8207CD2C2E8385E8C /* Info.plist */,
+				F997DB31726FE8C239021BAE /* RoundOn.entitlements */,
+				83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */,
+				284B739834C9BDF5B78EA9CE /* Components */,
+				C43B09E921CA59470A483072 /* HealthKit */,
+				9BD64F1A82F9B6036B1D6B52 /* Location */,
+				667FC86A2B0B9F90FC32F884 /* Network */,
+				C03953379B8E648CDE9174A6 /* Photo */,
+				C296FBFCF8B2ED991A8F748B /* Sync */,
+				BE35F75FD4E395ED1AB4137F /* Views */,
+			);
+			path = "App-iOS";
+			sourceTree = "<group>";
+		};
+		49057DD96C7B34A71A708471 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				5BCB288B76FE366FF249081E /* WCBroker.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		498270FF89301F402C1D232E /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				E776DFD0BE7A80E1814D43A8 /* RoundStatistics.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		5B2BE3114BBFFDFD214FBC29 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6B31D02AD5B472AA0EF649D1 /* RoundOn-iOS.app */,
+				606E491E0A1B07D0B779F8D5 /* RoundOn-Watch.app */,
+				01DD16CE2349CE3F77D14D00 /* RoundOn.app */,
+				E228343F6A89E0C2084FCFE9 /* Shared-Watch.framework */,
+				28920937CD4E8F060CFB4431 /* Shared.framework */,
+				5E8AB8C951D4F92749B069D2 /* SharedTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		667FC86A2B0B9F90FC32F884 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */,
+				AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */,
+				CE3848762312A4A1FA8FB773 /* ShareAPIClient.swift */,
+				97E45D0AA7973CCBD2B452FC /* SharePayload.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		66F9BB947ACD678B5F29D887 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		7A942388A4E72E6B9661E8CF /* App-Watch */ = {
+			isa = PBXGroup;
+			children = (
+				BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */,
+				B1D54F1E65191D4472520DAB /* Info.plist */,
+				3E74FBB5C1B2201A2640A0CB /* RoundOnWatchApp.swift */,
+				B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */,
+				2A9D62332BB75BD983E7B822 /* Components */,
+				3E9F89D66145A5EF9E4544B7 /* Screens */,
+				49057DD96C7B34A71A708471 /* Sync */,
+			);
+			path = "App-Watch";
+			sourceTree = "<group>";
+		};
+		7E3DF1F6A13CC1D7AE81D505 /* Haptics */ = {
+			isa = PBXGroup;
+			children = (
+				AC043DB752CF9F5CC38601DB /* HapticEngine.swift */,
+			);
+			path = Haptics;
+			sourceTree = "<group>";
+		};
+		9BD64F1A82F9B6036B1D6B52 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				9C3A6320D8280D112960766C /* LocationService.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
+		9CE6488885972EA79E6F322B /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */,
+				C8B9539182D15057C32C5477 /* SyncCoordinator.swift */,
+				F7372CB2448ED263BAEF81FF /* WCMessages.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		A4A6E0394F6F7BA093685482 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				666F27BF49E7F5BDBDB8E259 /* courses.json */,
+				2E8A5E681364FBC39BBD432D /* SharedAssets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		BE35F75FD4E395ED1AB4137F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F31B2548CE1454A51A3B7C61 /* ActiveRoundView.swift */,
+				E6F03B2BB0667E31677AC402 /* HomeView.swift */,
+				1545EDCE02FB42A61FB4EB3B /* NewRoundView.swift */,
+				8F06FB5AE6EBC80E02CE91EA /* PhotoAttachView.swift */,
+				7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */,
+				94A3913330580DF5181D0D64 /* RoundSummaryView.swift */,
+				AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */,
+				11AA5181B0AC6CA697186AC2 /* StatsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BFF72A348A328875BB18319D /* SharedTests */ = {
+			isa = PBXGroup;
+			children = (
+				00CE161EF58F00C4D3CB7395 /* CourseDiscoveryServiceTests.swift */,
+				D29DE1880EE95068A319023D /* CourseRepositoryAdaptiveTests.swift */,
+				98595BAEB16BB3DA62B9907F /* CourseRepositoryNearestTests.swift */,
+				64E86F60C31B5986EC23E249 /* CourseRepositoryTests.swift */,
+				3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */,
+				68B422356FF277D5F06DD486 /* HaversineTests.swift */,
+				6D5592903B2E8D6A58B0D84B /* Info.plist */,
+				477CCAE0392D2D63F49A7977 /* KakaoVerificationServiceTests.swift */,
+				924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */,
+				5C804B88B54718B4E99D9DDD /* RoundCourseLabelingTests.swift */,
+				104BC08A43F8064A677945D2 /* RoundEditTests.swift */,
+				89B10F7FF48A15ECD6D979FB /* RoundStatisticsTests.swift */,
+				B4580BE6E4C15B85485CCC4F /* RoundViewModelHealthKitTests.swift */,
+				59E1ACA8E338CA62003F521A /* ScoreCardViewModelStressTests.swift */,
+				36DCE3C4FF5B4BAA26AA628B /* ScoreCardViewModelTests.swift */,
+				844A27C4539D76B7F1CF3892 /* SeasonalColorTests.swift */,
+				F507ACE0BB9B99DDAA5BC02B /* ShareViewModelTests.swift */,
+				4D0ADF942BC3454FD2A846C1 /* SwiftDataModelTests.swift */,
+				6B718787C00263756F5FD6AF /* SyncCoordinatorStressTests.swift */,
+				A5BF69E3C181D9405358D0FC /* SyncCoordinatorTests.swift */,
+			);
+			path = SharedTests;
+			sourceTree = "<group>";
+		};
+		C03953379B8E648CDE9174A6 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				5A17DB4784545CC14F8C7CB6 /* PhotoStore.swift */,
+			);
+			path = Photo;
+			sourceTree = "<group>";
+		};
+		C296FBFCF8B2ED991A8F748B /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				469A2B894F35A244DC5B16EA /* WCBroker.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		C43B09E921CA59470A483072 /* HealthKit */ = {
+			isa = PBXGroup;
+			children = (
+				C6976C8E2598D26A933D1B57 /* RoundViewModel+Workout.swift */,
+				92721D7C200DC1BC4B5B5FFF /* WorkoutCoordinator.swift */,
+			);
+			path = HealthKit;
+			sourceTree = "<group>";
+		};
+		E13DC8D6C2021E3B5CC85245 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */,
+				4C203EFDBD24AB1F09291328 /* GolfCourse.swift */,
+				49302CB886665828D6966CF2 /* HoleInfo.swift */,
+				67F8BC201905AB97743D9446 /* HoleScore.swift */,
+				2AC651CE3038389DC2273F08 /* PersistedDiscoveredCourse.swift */,
+				2AC83B6FE7680A75CD4D0EA5 /* Player.swift */,
+				BF006E866BFD030D2C951470 /* Round.swift */,
+				8586200D803A247A39C2BCA0 /* Round+Display.swift */,
+				D45250A110CE021D7003D5EF /* RoundPhoto.swift */,
+				8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EE8665FF58C0CADCFDC3C374 /* Geo */ = {
+			isa = PBXGroup;
+			children = (
+				3EB1519F15CB865DEA48F1D8 /* Haversine.swift */,
+			);
+			path = Geo;
+			sourceTree = "<group>";
+		};
+		F20AE9ABD924403852942388 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */,
+				0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */,
+				E47B62D7196BF68313A7411E /* RoundViewModel.swift */,
+				4D82D958B92B65E9C78EFAB6 /* ScoreCardViewModel.swift */,
+				26F8C7C724E980752FC0A307 /* ShareViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		356B245F420490F5CD4B4AF3 /* Shared-Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B413B37442B486A9EFA54505 /* Build configuration list for PBXNativeTarget "Shared-Watch" */;
+			buildPhases = (
+				876075688AED865496BD1914 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Shared-Watch";
+			packageProductDependencies = (
+			);
+			productName = "Shared-Watch";
+			productReference = E228343F6A89E0C2084FCFE9 /* Shared-Watch.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		51ED1B4F97ADF00C13C7FBFE /* RoundOn-Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D1F96286A8C90EAA594B812 /* Build configuration list for PBXNativeTarget "RoundOn-Watch" */;
+			buildPhases = (
+				D76EDFD8098509B380AC52C6 /* Sources */,
+				C44E1A006230595B1B28EBA0 /* Frameworks */,
+				20970DC288033F82CE83BCB7 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				36741AB5F69A0C74099EBB08 /* PBXTargetDependency */,
+			);
+			name = "RoundOn-Watch";
+			packageProductDependencies = (
+			);
+			productName = "RoundOn-Watch";
+			productReference = 606E491E0A1B07D0B779F8D5 /* RoundOn-Watch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5B55A84900970DF17157671A /* SharedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58E76B765C5E12B2B9CBDBD9 /* Build configuration list for PBXNativeTarget "SharedTests" */;
+			buildPhases = (
+				D3CAE9B3A3AF9BFB15D9F9B2 /* Sources */,
+				0801B1CA73C33F1D5E49766E /* Frameworks */,
+				540BC90D6B0F3DE386CE6CF3 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D954A7E7D3317C392B46E517 /* PBXTargetDependency */,
+			);
+			name = SharedTests;
+			packageProductDependencies = (
+			);
+			productName = SharedTests;
+			productReference = 5E8AB8C951D4F92749B069D2 /* SharedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		89C82E87CFE957E30D0173AC /* Shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 383BF55D45497E815E5B7792 /* Build configuration list for PBXNativeTarget "Shared" */;
+			buildPhases = (
+				781751736BC97129A00E8666 /* Sources */,
+				831604FCCD62290E59ACB81A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Shared;
+			packageProductDependencies = (
+			);
+			productName = Shared;
+			productReference = 28920937CD4E8F060CFB4431 /* Shared.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C616AC81F6747E97A25433A0 /* RoundOn-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C2A70515A3AE1136E259B458 /* Build configuration list for PBXNativeTarget "RoundOn-iOS" */;
+			buildPhases = (
+				3D5155263B4A34D661D2F479 /* Sources */,
+				2A87BA46C353A8F0A790176F /* Frameworks */,
+				538AE0EFDA2EEF56A464487D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2A7FD5E847A0CF87CADC86B4 /* PBXTargetDependency */,
+			);
+			name = "RoundOn-iOS";
+			packageProductDependencies = (
+			);
+			productName = "RoundOn-iOS";
+			productReference = 6B31D02AD5B472AA0EF649D1 /* RoundOn-iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FF70C7607D631E72907DB3E5 /* RoundOn */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C20EFC73A843D4C9C96957BD /* Build configuration list for PBXNativeTarget "RoundOn" */;
+			buildPhases = (
+				F698A62D55F7C29639825318 /* Sources */,
+				A59E575B6BD5FF96C7D3DA14 /* Frameworks */,
+				1C36E2491E84EB85E81C1562 /* Embed Frameworks */,
+				057331CD90B5F238B121FE0D /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC4FC0C80F9945FD7CA19501 /* PBXTargetDependency */,
+				83FDC11216164A06FF591A5C /* PBXTargetDependency */,
+			);
+			name = RoundOn;
+			packageProductDependencies = (
+			);
+			productName = RoundOn;
+			productReference = 01DD16CE2349CE3F77D14D00 /* RoundOn.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C9DB99C3D9A17FE3C0CCC7BB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					356B245F420490F5CD4B4AF3 = {
+						DevelopmentTeam = XU8HS9JUTS;
+					};
+					51ED1B4F97ADF00C13C7FBFE = {
+						DevelopmentTeam = XU8HS9JUTS;
+					};
+					5B55A84900970DF17157671A = {
+						DevelopmentTeam = XU8HS9JUTS;
+					};
+					89C82E87CFE957E30D0173AC = {
+						DevelopmentTeam = XU8HS9JUTS;
+					};
+					C616AC81F6747E97A25433A0 = {
+						DevelopmentTeam = XU8HS9JUTS;
+						ProvisioningStyle = Automatic;
+					};
+					FF70C7607D631E72907DB3E5 = {
+						DevelopmentTeam = XU8HS9JUTS;
+					};
+				};
+			};
+			buildConfigurationList = C6ED44AA9180BF2586EDBABF /* Build configuration list for PBXProject "RoundOn" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 471746C49C29E0641E201C9A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FF70C7607D631E72907DB3E5 /* RoundOn */,
+				51ED1B4F97ADF00C13C7FBFE /* RoundOn-Watch */,
+				C616AC81F6747E97A25433A0 /* RoundOn-iOS */,
+				89C82E87CFE957E30D0173AC /* Shared */,
+				356B245F420490F5CD4B4AF3 /* Shared-Watch */,
+				5B55A84900970DF17157671A /* SharedTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		831604FCCD62290E59ACB81A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B59D4E9003F16822FA406964 /* SharedAssets.xcassets in Resources */,
+				956F1CDF34233EFF1E66E2AE /* courses.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D5155263B4A34D661D2F479 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				08D59798AB3DC759A9FE5D3A /* ActiveRoundView.swift in Sources */,
+				4049D9729DF0F45DBC26D46B /* ContentView.swift in Sources */,
+				77E1AAFE77CF54CD704BAC3B /* CourseDiscoveryService.swift in Sources */,
+				174629978E56CBEA636EA938 /* HoleProgress.swift in Sources */,
+				1A37F30FB604D78976ED538C /* HomeView.swift in Sources */,
+				FE60418EB6E040C8AF4E79DF /* KakaoVerificationService.swift in Sources */,
+				A450174E8823D2453215919E /* LocationService.swift in Sources */,
+				487EEEA954EB296FF024DC7A /* NewRoundView.swift in Sources */,
+				A4E1DC3F6AEB7963F4E00C3E /* PenaltyButton.swift in Sources */,
+				1FB0DD177E910F9360ADF1C1 /* PhotoAttachView.swift in Sources */,
+				BE8E36F922C6C29AE75974D0 /* PhotoGalleryGrid.swift in Sources */,
+				D5312FF7766DAA62C783B64C /* PhotoStore.swift in Sources */,
+				79023044B0DCEC9387564AEE /* PinInputField.swift in Sources */,
+				1DE720591DD80D6C142632B9 /* PlayerChip.swift in Sources */,
+				F030604425C58FD434EF36A3 /* RoundDetailView.swift in Sources */,
+				E81220D5E30FB286746F7FE5 /* RoundOnApp.swift in Sources */,
+				987F4B353D187E90E1C54724 /* RoundSummaryView.swift in Sources */,
+				40A467A2941E4982B3B87DCA /* RoundViewModel+Workout.swift in Sources */,
+				2FE6C23901027C6F907B2EB3 /* ScoreCell.swift in Sources */,
+				E7E95775F414505D6871B686 /* ShareAPIClient.swift in Sources */,
+				935421071CD08050769BF273 /* SharePayload.swift in Sources */,
+				2A994124CA755841564639BC /* ShareSheetView.swift in Sources */,
+				6D000FC39CC791AE01C692F0 /* StatsView.swift in Sources */,
+				7E175DD0DBFE92081CAC6641 /* WCBroker.swift in Sources */,
+				A58D3FCC8A444CD7F0FF0806 /* WorkoutCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		781751736BC97129A00E8666 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E63102B4354A04F77D3BC81A /* BannerNotice.swift in Sources */,
+				2DF85F12B672687E500E3230 /* Color+SeasonalGreen.swift in Sources */,
+				D732C3B2D782808264071EDE /* CourseRepository.swift in Sources */,
+				29B712EBDA0319068F84D4C1 /* DeviceIdentifier.swift in Sources */,
+				DC21B45303E0BE1F8B8A4029 /* DiscoveredCourse.swift in Sources */,
+				A4911A665D5AE576C963F82D /* GolfCourse.swift in Sources */,
+				3914E6C2382AB945DAB2E235 /* HapticEngine.swift in Sources */,
+				74FA0A480A9ABC2C15132FBF /* Haversine.swift in Sources */,
+				9AF4F7644F80C690F0A1C5A8 /* HoleInfo.swift in Sources */,
+				186C9F61BAB5BCF8D854BF5C /* HoleScore.swift in Sources */,
+				628959B54063C38658ABEFBF /* HoleViewModel.swift in Sources */,
+				BE1E2C1F0C9FCF62AF42E036 /* KeychainStore.swift in Sources */,
+				407E7A1F9DF0AA5D45BA96CE /* NetworkMonitor.swift in Sources */,
+				46E3B42FF684F0037ED32230 /* PersistedDiscoveredCourse.swift in Sources */,
+				6DA1DA0D036206F32C87CC47 /* Player.swift in Sources */,
+				79E2BEDE8E629793C87D80C9 /* PlayerListViewModel.swift in Sources */,
+				563CB27A5BDB5E89F45E141E /* Round+Display.swift in Sources */,
+				BBF4257DF94F117CC865B85B /* Round.swift in Sources */,
+				159B53D184A17C4AF6564AC3 /* RoundPhoto.swift in Sources */,
+				2EFA1CADB926DE0F5AFC28A5 /* RoundStatistics.swift in Sources */,
+				81D688914BE7EBE4D6614432 /* RoundViewModel.swift in Sources */,
+				6FC643A0480871CBC6B53061 /* ScoreCardViewModel.swift in Sources */,
+				BF5F28E7D508B850E5697D08 /* SeasonTheme.swift in Sources */,
+				1502B88CF3CA9A658971B3A2 /* ShareOptions.swift in Sources */,
+				F6BC069E673C88B3FF76DD07 /* ShareViewModel.swift in Sources */,
+				626057D85619D703724C37A6 /* SyncCoordinator.swift in Sources */,
+				3FB37761B0ABFD37B8A70394 /* WCMessages.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		876075688AED865496BD1914 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C5020ADC62EB8E14406995DE /* DeviceIdentifier.swift in Sources */,
+				9344CD0EF5751B153BDE6A88 /* DiscoveredCourse.swift in Sources */,
+				2F30D70BCEC9F96E424F4E1D /* GolfCourse.swift in Sources */,
+				BE0961DEDFC435F673A8D61B /* HapticEngine.swift in Sources */,
+				434915EAC489DA0572D5CB13 /* HoleInfo.swift in Sources */,
+				836BA4A3A00FE60A25761DA5 /* HoleScore.swift in Sources */,
+				3EDE9D1C605E454B82F106D1 /* HoleViewModel.swift in Sources */,
+				E32142285A2C66B06B44A722 /* PersistedDiscoveredCourse.swift in Sources */,
+				8E060DABD6768C6A41ACB0D8 /* Player.swift in Sources */,
+				1130B0769735C447963E6343 /* PlayerListViewModel.swift in Sources */,
+				5F2A2824F6FA8792EA2DE79E /* Round+Display.swift in Sources */,
+				69874D74B436F43650610B0F /* Round.swift in Sources */,
+				252715583D561E09F401D721 /* RoundPhoto.swift in Sources */,
+				A8F84E66D605ADFB52AFF6E2 /* RoundViewModel.swift in Sources */,
+				F6CCA6A1CA91543B00DF78E9 /* ScoreCardViewModel.swift in Sources */,
+				DC8E1433F243301FE0461228 /* SeasonTheme.swift in Sources */,
+				E6EBE1B5368F448B4E72B982 /* ShareOptions.swift in Sources */,
+				5121A9F2F7EB6CA36330C281 /* SyncCoordinator.swift in Sources */,
+				D3761F2207355382FB20C330 /* WCMessages.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3CAE9B3A3AF9BFB15D9F9B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3B031F38ED20E9AB6BB3238 /* CourseDiscoveryService.swift in Sources */,
+				8BBE68FB8FD179F1D26EEDFD /* CourseDiscoveryServiceTests.swift in Sources */,
+				1D0682D67DADBC173CE8D4E5 /* CourseRepositoryAdaptiveTests.swift in Sources */,
+				C18EDB101F96D8BE7DFB2C8A /* CourseRepositoryNearestTests.swift in Sources */,
+				F841812ADA0B238A64456F98 /* CourseRepositoryTests.swift in Sources */,
+				0B23849AEA0720EE81DE5498 /* DiscoveredCourseTests.swift in Sources */,
+				3A4C3518B16BF3E0A294EEEB /* HaversineTests.swift in Sources */,
+				52B4DAFFA9558462C9DF1BCA /* KakaoVerificationService.swift in Sources */,
+				A9A721A70104E499F5C81549 /* KakaoVerificationServiceTests.swift in Sources */,
+				CADA89F7A881E57D8C57F48E /* KeychainStoreTests.swift in Sources */,
+				68B2C646268D174B6AF9790C /* RoundCourseLabelingTests.swift in Sources */,
+				8D2BF5B85DB69ED31FDBD2BB /* RoundEditTests.swift in Sources */,
+				88A60453C43346B5DB94C3D3 /* RoundStatisticsTests.swift in Sources */,
+				DFA7F60DB0076FA7D7931C64 /* RoundViewModelHealthKitTests.swift in Sources */,
+				960B0E022F9766B79F1A85AC /* ScoreCardViewModelStressTests.swift in Sources */,
+				0F9FC3B94FFB5A39E07713DE /* ScoreCardViewModelTests.swift in Sources */,
+				2B22717A387BC3831EEDD7E4 /* SeasonalColorTests.swift in Sources */,
+				D6B0D7E983BA08D79021A3C7 /* ShareViewModelTests.swift in Sources */,
+				896505D32AEDBE5C569CE9AA /* SwiftDataModelTests.swift in Sources */,
+				64C879DA0B861663C2C6FE4E /* SyncCoordinatorStressTests.swift in Sources */,
+				16FAD1A1CA872FBFA7BD4D6B /* SyncCoordinatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D76EDFD8098509B380AC52C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35330D84B85CE0EAFF1C6225 /* Color+WatchColors.swift in Sources */,
+				9613145FEE984F837E36F075 /* PenaltyButton.swift in Sources */,
+				107F3BD3FF95B2C484F771BE /* RoundOnWatchApp.swift in Sources */,
+				2D6AB9351D7289B313E8548D /* ShotButton.swift in Sources */,
+				F610C5FD790A8DD07B15CC83 /* WCBroker.swift in Sources */,
+				51ECB292269A1BDF7168D454 /* WatchContentView.swift in Sources */,
+				5062F11A1515D711B81D8254 /* WatchHoleSwipeContainer.swift in Sources */,
+				882B8BA0FD4D12351BB4B991 /* WatchPlayerOverlay.swift in Sources */,
+				6E20BAF6F3765EEB29092CB7 /* WatchRoundEndMenu.swift in Sources */,
+				D55A8B0770F6D58EC1F7D2F2 /* WatchScoreInputView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F698A62D55F7C29639825318 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E429984813CD4AA2C6039CC /* ActiveRoundView.swift in Sources */,
+				FFAD3DDC5CA2B717FE295249 /* ContentView.swift in Sources */,
+				BDC46F454887437ABDD4CCF4 /* CourseDiscoveryService.swift in Sources */,
+				80FF43CEC8D4B0D5FAEE6810 /* HoleProgress.swift in Sources */,
+				39A7BEDA7FD5288004686679 /* HomeView.swift in Sources */,
+				73229FFD3ABC095A45826517 /* KakaoVerificationService.swift in Sources */,
+				6EAC49F7C733B0BB9AA5DDC1 /* LocationService.swift in Sources */,
+				2EE4733F9FFA892148EE4135 /* NewRoundView.swift in Sources */,
+				B56EF2615254363E9B9234DC /* PenaltyButton.swift in Sources */,
+				F2DFA9D7E933A232091FEF94 /* PhotoAttachView.swift in Sources */,
+				89CF8C15BF9921282F8AF7CF /* PhotoGalleryGrid.swift in Sources */,
+				29B0BF2A4DA90F240DEA3008 /* PhotoStore.swift in Sources */,
+				D2134A1912F959E1E3E7FE3A /* PinInputField.swift in Sources */,
+				CDC487DA2F9FC92D9D95034C /* PlayerChip.swift in Sources */,
+				A5DD7E023BDFC4455A4D2AFE /* RoundDetailView.swift in Sources */,
+				4D2E191EF28B8326E0AE183F /* RoundOnApp.swift in Sources */,
+				85FC47B97FC1625737C64876 /* RoundSummaryView.swift in Sources */,
+				904AE64B2AF0234F4814A01C /* RoundViewModel+Workout.swift in Sources */,
+				93C68F0692C9576ADBB09EC6 /* ScoreCell.swift in Sources */,
+				BBFB1BF83C16FBF9120338B6 /* ShareAPIClient.swift in Sources */,
+				C764DE27949FC710FD120E31 /* SharePayload.swift in Sources */,
+				9FF481C2DA4735C05099C476 /* ShareSheetView.swift in Sources */,
+				3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */,
+				CD08C3D8464080E761344FC9 /* WCBroker.swift in Sources */,
+				E38FA528C02032009D2E5477 /* WorkoutCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2A7FD5E847A0CF87CADC86B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 89C82E87CFE957E30D0173AC /* Shared */;
+			targetProxy = B50A582142FCA54A39C3829F /* PBXContainerItemProxy */;
+		};
+		36741AB5F69A0C74099EBB08 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 356B245F420490F5CD4B4AF3 /* Shared-Watch */;
+			targetProxy = 77BFF1036E6D661FADB988EC /* PBXContainerItemProxy */;
+		};
+		83FDC11216164A06FF591A5C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 51ED1B4F97ADF00C13C7FBFE /* RoundOn-Watch */;
+			targetProxy = 00015093D3EFFD921F230F8E /* PBXContainerItemProxy */;
+		};
+		CC4FC0C80F9945FD7CA19501 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 89C82E87CFE957E30D0173AC /* Shared */;
+			targetProxy = 6A8A414AC7BF07E57DA8DD08 /* PBXContainerItemProxy */;
+		};
+		D954A7E7D3317C392B46E517 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 89C82E87CFE957E30D0173AC /* Shared */;
+			targetProxy = 5CB6A3A10DB443C339A9AB7E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		15CCDF3D19677164115B64C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = XU8HS9JUTS;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		1C9FAD4736127D8A6225ECB8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "App-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				KAKAO_REST_API_KEY = "$(KAKAO_REST_API_KEY)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.dev;
+				PRODUCT_NAME = RoundOn;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2337A791A6557D5252E12CC7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Shared/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.shared.watch;
+				PRODUCT_NAME = Shared;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VERSIONING_SYSTEM = "apple-generic";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		2C03ADBA989C706505E867E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Shared/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.shared;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		3F8AAE358BCFC230E96FBF34 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "App-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4B919E3C9654019F15F0B6DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "App-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Shared/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.shared;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		560759119373F0B77C4CE3BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = XU8HS9JUTS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		5930B946F708B0D84F023165 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "App-Watch/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		878463E3972102C944FFFFB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Shared/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.shared.watch;
+				PRODUCT_NAME = Shared;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VERSIONING_SYSTEM = "apple-generic";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		B677B179C05A6E2170595843 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "App-Watch/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		B9C759EAA0C96AB87E0749E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "App-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				KAKAO_REST_API_KEY = "$(KAKAO_REST_API_KEY)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.dev;
+				PRODUCT_NAME = RoundOn;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BF98B587FDEAC5A263A6808F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = Tests/SharedTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-framework CoreLocation";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.SharedTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F8D7D0186D2339E99D712E82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = Tests/SharedTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-framework CoreLocation";
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.SharedTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D1F96286A8C90EAA594B812 /* Build configuration list for PBXNativeTarget "RoundOn-Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5930B946F708B0D84F023165 /* Debug */,
+				B677B179C05A6E2170595843 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		383BF55D45497E815E5B7792 /* Build configuration list for PBXNativeTarget "Shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C03ADBA989C706505E867E8 /* Debug */,
+				54A0A6D1E7D1EF07B3473E74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		58E76B765C5E12B2B9CBDBD9 /* Build configuration list for PBXNativeTarget "SharedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F8D7D0186D2339E99D712E82 /* Debug */,
+				BF98B587FDEAC5A263A6808F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B413B37442B486A9EFA54505 /* Build configuration list for PBXNativeTarget "Shared-Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2337A791A6557D5252E12CC7 /* Debug */,
+				878463E3972102C944FFFFB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C20EFC73A843D4C9C96957BD /* Build configuration list for PBXNativeTarget "RoundOn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B919E3C9654019F15F0B6DF /* Debug */,
+				3F8AAE358BCFC230E96FBF34 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C2A70515A3AE1136E259B458 /* Build configuration list for PBXNativeTarget "RoundOn-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C9FAD4736127D8A6225ECB8 /* Debug */,
+				B9C759EAA0C96AB87E0749E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C6ED44AA9180BF2586EDBABF /* Build configuration list for PBXProject "RoundOn" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15CCDF3D19677164115B64C5 /* Debug */,
+				560759119373F0B77C4CE3BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C9DB99C3D9A17FE3C0CCC7BB /* Project object */;
+}
