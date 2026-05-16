@@ -343,7 +343,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -716,10 +716,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_32FA64FC-DF90-4691-A254-2FD46FFB2B43" /* golfCounter */ = {
+		"TEMP_8380111B-18CC-40A7-A7C5-0C36954DBF4B" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */,
+				"TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1180,7 +1180,7 @@
 		};
 		1C9FAD4736127D8A6225ECB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1415,7 +1415,7 @@
 		};
 		B9C759EAA0C96AB87E0749E7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_1C443231-B1D7-4E98-A602-961B6E225F76" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_3045C67B-03ED-4960-A4C0-24207B3FC7D0" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
