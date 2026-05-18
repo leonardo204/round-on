@@ -1,11 +1,13 @@
 /**
  * viewer HTML — 정상 (200 공개) 렌더링
- * 31-VIEWER_HTML §2~§4 구현 (사진 갤러리/라이트박스는 2026-05-18 폐기)
+ * 디자인: Ref-docs/design-mockup/2026-05-18_viewer_redesign.html (B안)
  *
  * 구조:
- *  - 헤더 (코스명, 날짜, 플레이어)
- *  - 스코어카드 (9홀 2단 — OUT/IN)
- *  - 푸터 (만료 시각 + OSM ODbL 크레딧)
+ *  - 헤더 (그린 그라데이션 + 코스명, 날짜, 플레이어)
+ *  - 데이터 품질 배지 (low인 경우만)
+ *  - Hero 합계 카드 (플레이어별 총 타수 + par diff)
+ *  - 스코어카드 (OUT/IN 미니 테이블 2단)
+ *  - 푸터 (만료 시각 KST + OSM ODbL + 라운드온 브랜드)
  */
 
 import { escapeHtml } from "../lib/escape.js";
@@ -22,63 +24,113 @@ function scoreClass(shots: number, par: number): string {
   return "double-plus";
 }
 
-// ── 스코어카드 OUT/IN 반절 렌더링 ─────────────────────────────────────────
+// ── 스코어카드 OUT/IN 반절 렌더링 (B안 미니 테이블) ────────────────────────
 
 function renderScorecardHalf(
   label: string,
   holes: Hole[],
   players: Player[]
 ): string {
-  const playerHeaders = players
-    .map((p) => `<th>${escapeHtml(p.name)}</th>`)
+  // 홀 번호 헤더 행
+  const holeNumberCells = holes
+    .map((h) => `<th>${h.number}</th>`)
     .join("");
 
-  const rows = holes
-    .map((hole) => {
-      const cells = players
-        .map((player) => {
+  // par 헤더 행
+  const parCells = holes
+    .map((h) => `<th>${h.par}</th>`)
+    .join("");
+
+  const parTotal = holes.reduce((acc, h) => acc + h.par, 0);
+
+  // 플레이어별 행
+  const playerRows = players
+    .map((player) => {
+      const cells = holes
+        .map((hole) => {
           const score = hole.scores.find((s) => s.playerId === player.id);
-          if (!score) return "<td>—</td>";
+          if (!score || score.shots === 0) {
+            return `<td><span class="cell empty">—</span></td>`;
+          }
           const cls = scoreClass(score.shots, hole.par);
-          return `<td class="${cls}">${score.shots}</td>`;
+          // par는 plain (background 없음 — 칼라 매트릭스 정확 적용)
+          if (cls === "par") {
+            return `<td>${score.shots}</td>`;
+          }
+          return `<td><span class="cell ${cls}">${score.shots}</span></td>`;
         })
         .join("");
-      return `<tr><td>${hole.number}</td><td>${hole.par}</td>${cells}</tr>`;
+
+      const sum = holes.reduce((acc, hole) => {
+        const score = hole.scores.find((s) => s.playerId === player.id);
+        return acc + (score?.shots ?? 0);
+      }, 0);
+      const sumDisplay = sum > 0 ? `<strong>${sum}</strong>` : "—";
+
+      return `<tr>
+        <td class="col-label">${escapeHtml(player.name)}</td>
+        ${cells}
+        <td class="col-sum">${sumDisplay}</td>
+      </tr>`;
     })
     .join("\n");
 
-  // 합계
-  const totals = players
+  return `
+    <div class="card scorecard-section">
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th class="col-label">${escapeHtml(label)}</th>
+            ${holeNumberCells}
+            <th class="col-sum">합</th>
+          </tr>
+          <tr class="par-row">
+            <th class="col-label">Par</th>
+            ${parCells}
+            <th class="col-sum">${parTotal}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${playerRows}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// ── Hero 카드 렌더링 (플레이어별 총 타수 + par diff) ───────────────────────
+
+function renderHero(holes: Hole[], players: Player[]): string {
+  const totalPar = holes.reduce((acc, h) => acc + h.par, 0);
+
+  const blocks = players
     .map((player) => {
       const sum = holes.reduce((acc, hole) => {
         const score = hole.scores.find((s) => s.playerId === player.id);
         return acc + (score?.shots ?? 0);
       }, 0);
-      return `<td>${sum}</td>`;
+      const diff = sum - totalPar;
+      let diffLabel = "—";
+      let diffClass = "even";
+      if (sum > 0) {
+        if (diff === 0) { diffLabel = "E"; diffClass = "even"; }
+        else if (diff > 0) { diffLabel = `+${diff}`; diffClass = "over"; }
+        else { diffLabel = `${diff}`; diffClass = "under"; }
+      }
+      const sumDisplay = sum > 0 ? `${sum}` : "—";
+      return `
+        <div class="player-block">
+          <div class="p-name">${escapeHtml(player.name)}</div>
+          <div class="p-total">${sumDisplay}</div>
+          <div class="p-vs-par ${diffClass}">${diffLabel}</div>
+        </div>`;
     })
     .join("");
 
-  return `
-  <div class="scorecard-half">
-    <table class="score-table">
-      <thead>
-        <tr>
-          <th>홀</th><th>Par</th>${playerHeaders}
-        </tr>
-      </thead>
-      <tbody>
-        ${rows}
-      </tbody>
-      <tfoot class="sticky-total">
-        <tr><td colspan="2">${label}</td>${totals}</tr>
-      </tfoot>
-    </table>
-  </div>`;
+  return `<div class="card hero">${blocks}</div>`;
 }
 
 // ── KST 시각 포맷터 ─────────────────────────────────────────────────────
-// 입력: ISO 8601 UTC 문자열 (예: "2026-05-25T02:35:33.176Z")
-// 출력: "2026-05-25 11:35 (KST)"
+
 function formatKST(isoUtc: string): string {
   const d = new Date(isoUtc);
   if (isNaN(d.getTime())) return isoUtc;
@@ -91,7 +143,6 @@ function formatKST(isoUtc: string): string {
   return `${Y}-${M}-${D} ${h}:${m} (KST)`;
 }
 
-// 날짜만 (라운드 일자): "2026-05-18"
 function formatKSTDate(isoUtc: string): string {
   const d = new Date(isoUtc);
   if (isNaN(d.getTime())) return isoUtc;
@@ -119,11 +170,10 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     ...p,
     name:
       options.nameVisibility === "anonymous"
-        ? String.fromCharCode(65 + i) // A, B, C, D
+        ? String.fromCharCode(65 + i)
         : p.name,
   }));
 
-  // 헤더 플레이어 표시
   const playerLabel =
     displayPlayers.length === 0
       ? ""
@@ -132,14 +182,14 @@ export function renderViewer(opts: ViewerRenderOptions): string {
       : `${escapeHtml(displayPlayers[0].name)} 외 ${displayPlayers.length - 1}명`;
 
   const courseName = escapeHtml(round.courseName || "코스 정보 없음");
-  // round.date: ISO UTC string (예: "2026-05-18T02:18:06Z") → KST date string
   const roundDate = round.date ? escapeHtml(formatKSTDate(round.date)) : "";
   const dataQuality = round.dataQuality ?? "low";
 
-  // 스코어카드 — 9홀 2단
   const allHoles = round.holes ?? [];
   const outHoles = allHoles.filter((h) => h.number >= 1 && h.number <= 9);
   const inHoles = allHoles.filter((h) => h.number >= 10 && h.number <= 18);
+
+  const heroHtml = renderHero(allHoles, displayPlayers);
 
   const scorecardOut = outHoles.length > 0
     ? renderScorecardHalf("OUT", outHoles, displayPlayers)
@@ -148,169 +198,215 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     ? renderScorecardHalf("IN", inHoles, displayPlayers)
     : "";
 
-  // 만료 시각 표시 — KST (UTC+9) 변환, "2026-05-25 02:35 (KST)" 형식
   const expiresAtDisplay = escapeHtml(formatKST(expiresAt));
 
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <!-- viewport-fit=cover: safe-area-inset 요구 충족 (spec_3.md:149) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#7FB069" />
+  <meta name="theme-color" content="#2E7D32" />
   <title>${courseName} — 라운드온</title>
-  <!-- robots: 검색 인덱싱 차단 (개인 라운드 데이터 보호) -->
   <meta name="robots" content="noindex, nofollow" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* CSS 변수 — Spring 팔레트 (10-DESIGN_SYSTEM §2) */
     :root {
-      --green-primary: #7FB069;
-      --green-secondary: #C8DCC0;
-      --green-accent:  #4A7A58;
-      --surface: #FAFCF7;
-      --surface-elevated: #FFFFFF;
-      --text-primary: #1A2E1E;
-      --text-secondary: #4A5C4E;
-      --border: #C8DCC0;
+      --green-primary: #2E7D32;
+      --green-light:   #43A047;
+      --green-soft:    #66BB6A;
+      --green-bg:      #C8DCC0;
+      --surface:       #FAFCF7;
+      --card:          #FFFFFF;
+      --text-1:        #1A2E1E;
+      --text-2:        #4A5C4E;
+      --text-3:        #9AAA9F;
+      --divider:       #EEF0ED;
+      --red-soft:      #F4E1E1;
+      --red-strong:    #E8B5B5;
+      --red-text:      #C12525;
     }
 
-    body {
-      margin: 0;
+    html, body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--surface);
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
       padding: env(safe-area-inset-top) env(safe-area-inset-right)
                env(safe-area-inset-bottom) env(safe-area-inset-left);
-      background: var(--surface);
-      color: var(--text-primary);
     }
 
-    /* 헤더 */
+    /* ── 헤더 (그린 그라데이션) ────────────────────────────────────────── */
     .viewer-header {
-      background: var(--green-primary);
-      color: #fff;
-      padding: 1rem;
+      background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
+      color: white;
+      padding: 20px 20px 16px;
     }
     .course-name {
-      margin: 0 0 .25rem;
-      font-size: 1.25rem;
-      font-weight: 700;
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
     }
-    .round-meta {
-      margin: 0;
-      font-size: .875rem;
-      opacity: .85;
+    .meta {
+      font-size: 13px; opacity: 0.92; margin-top: 4px;
+      display: flex; align-items: center; gap: 8px;
     }
-
-    /* 데이터 품질 배지 (31-VIEWER §3, CLAUDE.md §PROJECT) */
-    .data-quality-badge[data-quality="low"] {
-      font-size: .8rem;
-      color: var(--text-secondary);
-      background: var(--green-secondary);
-      padding: .375rem .75rem;
-      border-top: 1px solid var(--border);
-      text-align: center;
+    .meta-dot {
+      width: 3px; height: 3px; border-radius: 50%;
+      background: white; opacity: 0.7;
     }
 
-    /* 스코어카드 */
-    .scorecard {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    /* ── 데이터 품질 배지 ───────────────────────────────────────────── */
+    .badge-low {
+      padding: 8px 16px;
+      font-size: 12px; color: var(--text-2);
+      background: var(--divider); text-align: center;
+      border-bottom: 1px solid #DCE0DA;
     }
-    .scorecard-half {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+
+    /* ── 카드 공통 ────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* ── Hero 합계 카드 ──────────────────────────────────────────── */
+    .hero {
+      margin: 16px;
+      padding: 18px;
+      display: flex; gap: 16px;
+    }
+    .player-block {
+      flex: 1; text-align: center;
+      border-right: 1px solid var(--divider);
+    }
+    .player-block:last-child { border-right: none; }
+    .p-name {
+      font-size: 12px; color: var(--text-2); font-weight: 600;
+    }
+    .p-total {
+      font-size: 30px; font-weight: 800; margin-top: 4px;
+      font-feature-settings: 'tnum'; color: var(--text-1);
+    }
+    .p-vs-par {
+      font-size: 13px; font-weight: 600; margin-top: 2px;
+    }
+    .p-vs-par.under { color: var(--green-primary); }
+    .p-vs-par.even  { color: var(--text-2); }
+    .p-vs-par.over  { color: var(--red-text); }
+
+    /* ── 스코어카드 영역 ───────────────────────────────────────────── */
+    main { padding: 0 16px; }
+    .scorecard-section {
+      margin-top: 14px; overflow: hidden;
     }
     .score-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .875rem;
-      min-width: 280px;
+      width: 100%; border-collapse: collapse; font-size: 13px;
+      font-feature-settings: 'tnum';
     }
     .score-table th, .score-table td {
-      padding: .5rem .375rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      min-width: 44px; min-height: 44px; /* 터치 타깃 44pt (spec_3.md:150) */
+      padding: 8px 4px; text-align: center;
+      border-bottom: 1px solid var(--divider);
+      min-width: 28px;
+    }
+    .score-table th.col-label, .score-table td.col-label {
+      text-align: left; padding-left: 12px;
+      color: var(--text-2); font-weight: 600; min-width: 56px;
     }
     .score-table thead th {
-      background: var(--green-secondary);
-      font-weight: 600;
-      position: sticky;
-      top: 0;
+      background: var(--divider); color: var(--text-2);
+      font-size: 11px; font-weight: 700;
     }
-    /* sticky-total: 합계 행 (31-VIEWER §4) */
-    .sticky-total {
-      position: sticky;
-      bottom: 0;
+    .score-table thead tr.par-row th {
+      background: var(--card); font-size: 10px;
+      opacity: 0.7; padding-top: 4px; padding-bottom: 4px;
     }
-    .sticky-total td {
-      background: var(--surface-elevated);
+    .score-table tbody td {
+      color: var(--text-1); font-weight: 500;
+    }
+    .score-table .col-sum {
+      color: var(--text-1); font-weight: 700;
+    }
+
+    /* ── 점수 셀 마커 (31-VIEWER §4 매트릭스) ─────────────────────── */
+    .cell {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      font-feature-settings: 'tnum';
       font-weight: 700;
-      border-top: 2px solid var(--green-primary);
     }
+    .cell.eagle   { background: #1B5E20; color: white; }
+    .cell.birdie  { background: var(--green-soft); color: white; }
+    .cell.bogey   { background: var(--red-soft); color: var(--text-1); border-radius: 6px; }
+    .cell.double-plus { background: var(--red-strong); color: var(--text-1); border-radius: 6px; font-weight: 800; }
+    .cell.empty   { color: var(--green-bg); font-weight: 400; }
 
-    /* 점수 셀 색상 (31-VIEWER §4 매트릭스) */
-    .eagle     { background: #2E7D32; color: #fff; border-radius: 50%; }
-    .birdie    { background: var(--green-primary); color: #fff; border-radius: 50%; }
-    .par       { /* 기본 */ }
-    .bogey     { background: #EEF0ED; color: var(--text-primary); border-radius: 2px; }
-    .double-plus { background: #D0D4CF; color: var(--text-primary); border-radius: 2px; }
-
-    /* 푸터 */
+    /* ── 푸터 ───────────────────────────────────────────────────── */
     .viewer-footer {
-      padding: 1.5rem 1rem;
-      border-top: 1px solid var(--border);
+      padding: 18px 16px 24px;
       text-align: center;
-      font-size: .75rem;
-      color: var(--text-secondary);
+      color: var(--text-3); font-size: 11px;
+      border-top: 1px solid var(--divider);
+      margin-top: 12px;
     }
-    .viewer-footer p { margin: .25rem 0; }
+    .viewer-footer .expire {
+      color: var(--text-2); font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .viewer-footer .brand {
+      font-size: 12px; color: var(--green-primary);
+      font-weight: 600; margin-top: 6px;
+    }
 
-    /* 다크 모드 — Winter 팔레트 (31-VIEWER §9, 10-DESIGN_SYSTEM §2) */
+    /* ── 다크 모드 ──────────────────────────────────────────────── */
     @media (prefers-color-scheme: dark) {
       :root {
-        --green-primary: #5A8A6B; --green-secondary: #2A3F35;
-        --green-accent: #8FB5A0; --surface: #0F1612;
-        --surface-elevated: #1A241E; --text-primary: #E8F0EA;
-        --text-secondary: #9AAA9F; --border: #2A3530;
+        --green-primary: #43A047;
+        --green-light:   #66BB6A;
+        --green-soft:    #5A8A6B;
+        --green-bg:      #2A3F35;
+        --surface:       #0F1612;
+        --card:          #1A241E;
+        --text-1:        #E8F0EA;
+        --text-2:        #9AAA9F;
+        --text-3:        #6E8071;
+        --divider:       #2A3530;
+        --red-soft:      #4A2A2A;
+        --red-strong:    #6A2F2F;
+        --red-text:      #E57373;
       }
-      .eagle  { background: #388E3C; }
-      .birdie { background: #5A8A6B; }
-      .bogey  { background: #2A3530; }
-      .double-plus { background: #1E2B22; }
+      .cell.eagle  { background: #388E3C; }
+      .cell.birdie { background: #5A8A6B; }
     }
   </style>
 </head>
 <body>
   <header class="viewer-header">
     <h1 class="course-name">${courseName}</h1>
-    <p class="round-meta">${roundDate}${playerLabel ? " · " + playerLabel : ""}</p>
+    <div class="meta">
+      <span>${roundDate}</span>
+      ${playerLabel ? '<span class="meta-dot"></span><span>' + playerLabel + '</span>' : ''}
+    </div>
   </header>
 
   ${
     dataQuality === "low"
-      ? `<div class="data-quality-badge" data-quality="low">
-    GPS 홀 자동 감지가 지원되지 않는 코스입니다.
-  </div>`
+      ? `<div class="badge-low">GPS 홀 자동 감지가 지원되지 않는 코스입니다.</div>`
       : ""
   }
 
+  ${heroHtml}
+
   <main>
-    <!-- 스코어카드 (31-VIEWER §4: 9홀 2단 디폴트) -->
-    <section class="scorecard">
-      ${scorecardOut}
-      ${scorecardIn}
-    </section>
+    ${scorecardOut}
+    ${scorecardIn}
   </main>
 
-  <!-- 푸터 (31-VIEWER §3, OSM ODbL 필수) -->
   <footer class="viewer-footer">
-    <p class="expires-at">이 링크는 ${expiresAtDisplay}에 만료됩니다.</p>
-    <!-- OSM ODbL 표기 (CLAUDE.md §PROJECT, golf-db-pack/README.md) -->
-    <p class="osm-credit">&copy; OpenStreetMap contributors, ODbL 1.0</p>
+    <div class="expire">🔒 ${expiresAtDisplay} 만료</div>
+    <div>&copy; OpenStreetMap contributors, ODbL 1.0</div>
+    <div class="brand">라운드온 · Round-On</div>
   </footer>
 </body>
 </html>`;

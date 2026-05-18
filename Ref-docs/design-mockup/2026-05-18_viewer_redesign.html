@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>라운드온 — viewer 재디자인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  html, body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #2C2C2E; min-height: 100vh; padding: 40px 20px;
+    color: #fff;
+  }
+  h1.page-title { font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+  p.page-sub { font-size: 13px; text-align: center; opacity: 0.6; margin-bottom: 32px; }
+
+  .options { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; align-items: flex-start; }
+  .option-block { text-align: center; }
+  .option-label { margin-top: 16px; font-size: 14px; font-weight: 600; color: #66BB6A; }
+  .option-desc { margin-top: 6px; font-size: 12px; opacity: 0.7; max-width: 380px; line-height: 1.5; }
+
+  .device {
+    width: 393px; min-height: 852px; position: relative;
+    border-radius: 36px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    border: 2px solid #1a1a1a;
+    background: #FAFCF7; color: #1A2E1E;
+  }
+
+  /* ============ 공통 헤더 ============ */
+  .v-header {
+    padding: 20px 20px 16px;
+    background: linear-gradient(135deg, #2E7D32 0%, #43A047 100%);
+    color: white;
+  }
+  .v-header .course-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .v-header .meta {
+    font-size: 13px; opacity: 0.92; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .v-header .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: white; opacity: 0.7; }
+  .badge-low {
+    margin: 0; padding: 8px 16px;
+    font-size: 12px; color: #4A5C4E;
+    background: #EEF0ED; text-align: center;
+    border-bottom: 1px solid #DCE0DA;
+  }
+
+  /* ============ Hero 요약 (옵션 A에만) ============ */
+  .hero {
+    margin: 16px; padding: 18px;
+    background: white; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    display: flex; gap: 16px;
+  }
+  .hero .player-block {
+    flex: 1; text-align: center;
+    border-right: 1px solid #EEF0ED;
+  }
+  .hero .player-block:last-child { border-right: none; }
+  .hero .p-name {
+    font-size: 12px; color: #4A5C4E; font-weight: 600;
+  }
+  .hero .p-total {
+    font-size: 30px; font-weight: 800; margin-top: 4px;
+    font-feature-settings: 'tnum'; color: #1A2E1E;
+  }
+  .hero .p-vs-par {
+    font-size: 13px; font-weight: 600; margin-top: 2px;
+  }
+  .hero .p-vs-par.under { color: #2E7D32; }
+  .hero .p-vs-par.even  { color: #4A5C4E; }
+  .hero .p-vs-par.over  { color: #C12525; }
+
+  /* ============ 스코어카드 옵션 A: 카드형 9홀 박스 ============ */
+  .opt-a-scorecard { padding: 0 16px 16px; }
+  .opt-a-section { margin-top: 12px; }
+  .opt-a-section h3 {
+    font-size: 11px; font-weight: 700;
+    color: #4A5C4E; letter-spacing: 0.5px;
+    padding: 8px 4px;
+    text-transform: uppercase;
+  }
+  .opt-a-grid {
+    display: grid; grid-template-columns: repeat(9, 1fr);
+    gap: 4px;
+    background: white; border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .opt-a-hole-cell {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px;
+    padding: 4px 0;
+  }
+  .opt-a-hole-num {
+    font-size: 9px; color: #9AAA9F; font-weight: 600;
+  }
+  .opt-a-par-num {
+    font-size: 9px; color: #C8DCC0; font-weight: 500;
+  }
+  .opt-a-score-marker {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    font-feature-settings: 'tnum';
+  }
+  .opt-a-score-marker.eagle      { background: #1B5E20; color: white; box-shadow: inset 0 0 0 2px white, inset 0 0 0 3px #1B5E20; }
+  .opt-a-score-marker.birdie     { background: #66BB6A; color: white; }
+  .opt-a-score-marker.par        { background: transparent; color: #1A2E1E; }
+  .opt-a-score-marker.bogey      { background: #F4E1E1; color: #1A2E1E; border-radius: 6px; }
+  .opt-a-score-marker.double     { background: #E8B5B5; color: #1A2E1E; border-radius: 6px; font-weight: 800; }
+  .opt-a-score-marker.empty      { color: #C8DCC0; font-weight: 400; }
+  .opt-a-section-total {
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: rgba(46,125,50,0.08);
+    border-radius: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px;
+  }
+  .opt-a-section-total .label { color: #4A5C4E; font-weight: 600; }
+  .opt-a-section-total .value { color: #1A2E1E; font-weight: 700; font-feature-settings: 'tnum'; }
+  .opt-a-section-total .vs    { color: #2E7D32; font-weight: 600; margin-left: 6px; font-size: 12px; }
+
+  /* ============ 스코어카드 옵션 B: 미니 테이블 ============ */
+  .opt-b-scorecard { padding: 0 16px 16px; }
+  .opt-b-section { margin-top: 14px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .opt-b-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .opt-b-table th, .opt-b-table td {
+    padding: 8px 4px; text-align: center;
+    border-bottom: 1px solid #EEF0ED;
+    min-width: 32px;
+  }
+  .opt-b-table th {
+    background: #EEF0ED; color: #4A5C4E;
+    font-size: 11px; font-weight: 700;
+  }
+  .opt-b-table th.col-label, .opt-b-table td.col-label {
+    text-align: left; padding-left: 12px;
+    color: #4A5C4E; font-weight: 600; min-width: 60px;
+  }
+  .opt-b-table tfoot td {
+    background: #FAFCF7;
+    font-weight: 700; color: #1A2E1E; border-top: 2px solid #2E7D32;
+  }
+  .opt-b-cell { display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-feature-settings: 'tnum'; }
+  .opt-b-cell.eagle  { background: #1B5E20; color: white; }
+  .opt-b-cell.birdie { background: #66BB6A; color: white; }
+  .opt-b-cell.bogey  { background: #F4E1E1; border-radius: 6px; }
+  .opt-b-cell.double { background: #E8B5B5; border-radius: 6px; font-weight: 800; }
+  .opt-b-cell.empty  { color: #C8DCC0; }
+
+  /* ============ 푸터 공통 ============ */
+  .v-footer {
+    padding: 16px; text-align: center;
+    color: #9AAA9F; font-size: 11px;
+    border-top: 1px solid #EEF0ED;
+    margin-top: 8px;
+  }
+  .v-footer .expire { color: #4A5C4E; font-size: 12px; margin-bottom: 6px; }
+  .v-footer .brand { font-size: 12px; color: #2E7D32; font-weight: 600; margin-top: 4px; }
+
+  /* dark mode preview (시뮬레이션) */
+  .device.dark { background: #0F1612; color: #E8F0EA; }
+  .device.dark .hero { background: #1A241E; }
+  .device.dark .opt-a-grid, .device.dark .opt-b-section { background: #1A241E; }
+  .device.dark .opt-a-hole-num, .device.dark .opt-a-par-num { color: #6E8071; }
+  .device.dark .opt-a-score-marker.par { color: #E8F0EA; }
+  .device.dark .opt-b-table th { background: #2A3530; color: #9AAA9F; }
+  .device.dark .opt-b-table th, .device.dark .opt-b-table td { border-bottom-color: #2A3530; }
+  .device.dark .opt-b-table tfoot td { background: #0F1612; color: #E8F0EA; }
+  .device.dark .badge-low { background: #1A241E; color: #9AAA9F; border-bottom-color: #2A3530; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">라운드온 viewer 재디자인 시안</h1>
+<p class="page-sub">2026-05-18 · 1타~5타 다양한 케이스 + Hero 합계 + par-diff 색상 정확 적용</p>
+
+<div class="options">
+
+<!-- ============================= 옵션 A: Hero + 카드 그리드 ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="v-header">
+    <div class="course-name">금강</div>
+    <div class="meta">
+      <span>2026-05-18</span>
+      <span class="meta-dot"></span>
+      <span>나</span>
+    </div>
+  </div>
+  <div class="badge-low">GPS 홀 자동 감지가 지원되지 않는 코스입니다.</div>
+
+  <!-- Hero 합계 -->
+  <div class="hero">
+    <div class="player-block">
+      <div class="p-name">나</div>
+      <div class="p-total">68</div>
+      <div class="p-vs-par under">-4</div>
+    </div>
+  </div>
+
+  <div class="opt-a-scorecard">
+    <div class="opt-a-section">
+      <h3>OUT</h3>
+      <div class="opt-a-grid">
+        <!-- 1번 홀 (eagle: par4 - 2) -->
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">1</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker eagle">2</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">2</div><div class="opt-a-par-num">P3</div><div class="opt-a-score-marker birdie">2</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">3</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker par">4</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">4</div><div class="opt-a-par-num">P5</div><div class="opt-a-score-marker birdie">4</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">5</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker bogey">5</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">6</div><div class="opt-a-par-num">P3</div><div class="opt-a-score-marker par">3</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">7</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker double">6</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">8</div><div class="opt-a-par-num">P5</div><div class="opt-a-score-marker eagle">3</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">9</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker par">4</div></div>
+      </div>
+      <div class="opt-a-section-total">
+        <span class="label">OUT 합계</span>
+        <span><span class="value">33</span><span class="vs">-3</span></span>
+      </div>
+    </div>
+
+    <div class="opt-a-section">
+      <h3>IN</h3>
+      <div class="opt-a-grid">
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">10</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker par">4</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">11</div><div class="opt-a-par-num">P3</div><div class="opt-a-score-marker bogey">4</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">12</div><div class="opt-a-par-num">P5</div><div class="opt-a-score-marker birdie">4</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">13</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker empty">—</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">14</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker par">4</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">15</div><div class="opt-a-par-num">P3</div><div class="opt-a-score-marker par">3</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">16</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker birdie">3</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">17</div><div class="opt-a-par-num">P5</div><div class="opt-a-score-marker double">7</div></div>
+        <div class="opt-a-hole-cell"><div class="opt-a-hole-num">18</div><div class="opt-a-par-num">P4</div><div class="opt-a-score-marker par">4</div></div>
+      </div>
+      <div class="opt-a-section-total">
+        <span class="label">IN 합계</span>
+        <span><span class="value">35</span><span class="vs" style="color:#4A5C4E;">E</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="v-footer">
+    <div class="expire">🔒 2026-05-25 13:06 (KST) 만료</div>
+    <div>&copy; OpenStreetMap contributors, ODbL 1.0</div>
+    <div class="brand">라운드온 · Round-On</div>
+  </div>
+</div>
+<div class="option-label">A. Hero 카드 + 9홀 그리드 (3-row 셀: 홀#/P#/스코어)</div>
+<div class="option-desc">상단 Hero에 총 타수 + par 차이를 크게. 각 홀 셀에 홀번호·Par·스코어를 세로로 묶어 par-diff 색상 매트릭스 정확 적용. 동그라미는 28pt 고정원으로 깔끔.</div>
+</div>
+
+<!-- ============================= 옵션 B: 미니 테이블 (스펙 정합) ============================= -->
+<div class="option-block">
+<div class="device">
+  <div class="v-header">
+    <div class="course-name">금강</div>
+    <div class="meta">
+      <span>2026-05-18</span>
+      <span class="meta-dot"></span>
+      <span>나</span>
+    </div>
+  </div>
+  <div class="badge-low">GPS 홀 자동 감지가 지원되지 않는 코스입니다.</div>
+
+  <div class="hero">
+    <div class="player-block">
+      <div class="p-name">나</div>
+      <div class="p-total">68</div>
+      <div class="p-vs-par under">-4</div>
+    </div>
+  </div>
+
+  <div class="opt-b-scorecard">
+    <div class="opt-b-section">
+      <table class="opt-b-table">
+        <thead>
+          <tr>
+            <th class="col-label">OUT</th>
+            <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th>
+            <th>합</th>
+          </tr>
+          <tr style="font-size:10px; opacity:0.7;">
+            <th class="col-label">Par</th>
+            <th>4</th><th>3</th><th>4</th><th>5</th><th>4</th><th>3</th><th>4</th><th>5</th><th>4</th>
+            <th>36</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label">나</td>
+            <td><span class="opt-b-cell eagle">2</span></td>
+            <td><span class="opt-b-cell birdie">2</span></td>
+            <td>4</td>
+            <td><span class="opt-b-cell birdie">4</span></td>
+            <td><span class="opt-b-cell bogey">5</span></td>
+            <td>3</td>
+            <td><span class="opt-b-cell double">6</span></td>
+            <td><span class="opt-b-cell eagle">3</span></td>
+            <td>4</td>
+            <td><strong>33</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="opt-b-section">
+      <table class="opt-b-table">
+        <thead>
+          <tr>
+            <th class="col-label">IN</th>
+            <th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th>
+            <th>합</th>
+          </tr>
+          <tr style="font-size:10px; opacity:0.7;">
+            <th class="col-label">Par</th>
+            <th>4</th><th>3</th><th>5</th><th>4</th><th>4</th><th>3</th><th>4</th><th>5</th><th>4</th>
+            <th>36</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label">나</td>
+            <td>4</td>
+            <td><span class="opt-b-cell bogey">4</span></td>
+            <td><span class="opt-b-cell birdie">4</span></td>
+            <td><span class="opt-b-cell empty">—</span></td>
+            <td>4</td>
+            <td>3</td>
+            <td><span class="opt-b-cell birdie">3</span></td>
+            <td><span class="opt-b-cell double">7</span></td>
+            <td>4</td>
+            <td><strong>35</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="v-footer">
+    <div class="expire">🔒 2026-05-25 13:06 (KST) 만료</div>
+    <div>&copy; OpenStreetMap contributors, ODbL 1.0</div>
+    <div class="brand">라운드온 · Round-On</div>
+  </div>
+</div>
+<div class="option-label">B. 가로 미니 테이블 (스펙 §4 정합)</div>
+<div class="option-desc">기존 spec 31-VIEWER §4 그대로. 9홀 가로 행 + par 행 + 플레이어 행 + 합계 sticky. par 셀은 색상 없이 plain, par-diff만 마커. 모바일 가로 480px 안에 fits.</div>
+</div>
+
+</div>
+
+<div style="max-width: 1000px; margin: 60px auto 0; background: rgba(255,255,255,0.05); padding: 24px 28px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+  <h2 style="font-size: 17px; font-weight: 600; margin-bottom: 12px;">결정 요청</h2>
+  <p style="font-size: 13px; opacity: 0.85; line-height: 1.7;">
+    <strong style="color: #66BB6A;">A안</strong> — 동반자가 1명일 때 가장 깨끗. 각 홀에 홀#·Par·스코어가 묶여있어 시각적 그룹 명확. 다인 라운드면 player별 grid 반복 = 세로 길어짐.<br><br>
+    <strong style="color: #66BB6A;">B안</strong> — spec §4 정합. 다인 라운드(2~4명) 시 각 플레이어가 한 행씩 추가되어 비교 쉬움. 1인 라운드엔 빈공간 많음.<br><br>
+    공통 개선: <strong>Hero 합계 카드</strong> (총 타수 + par diff 크게) + <strong>par-diff 색상 매트릭스 정확 적용</strong> (현재 빨강계 1타도 다 eagle 처리되던 버그 수정).
+  </p>
+</div>
+
+</body>
+</html>
