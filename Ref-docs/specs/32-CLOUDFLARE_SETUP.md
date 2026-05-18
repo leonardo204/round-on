@@ -6,6 +6,9 @@
 > **버전**: v4 기반
 > **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §3.2 (01-SPEC.md:244-258), §3.4 (01-SPEC.md:274-284)
 > **관련 문서**: `30-API_SPEC.md`, `31-VIEWER_HTML.md`, `33-SECURITY.md`, `21-DATA_MODEL.md`, `50-PRIVACY_POLICY.md`
+>
+> ⚠️ **2026-05-18 폐기 사항**: §4 R2 버킷(`R2_PHOTOS`) + Lifecycle Rule 모두 제거. 사진 공유 기능 자체가 폐기되어 R2 인프라 불필요. 본 문서의 §4 전체는 무효. KV 4종 / wrangler.toml / Custom Domain 설정은 그대로 유효 (`Worker/DEPLOYMENT.md`가 최신 가이드).
+> §6 DNS는 더 단순한 **Custom Domain 방식**으로 대체됨 (대시보드 → Worker → Settings → Domains & Routes).
 
 ---
 
@@ -14,9 +17,9 @@
 > 동료 문서가 위임한 인프라 결정을 본 문서에서 정식 확정한다.
 >
 > 1. **KV 네임스페이스 4종 + 키 스키마** (`KV_META`, `KV_RATELIMIT`, `KV_PINLOCK`, `KV_SESSION`) — §3
-> 2. **R2 버킷 1종 + 키 스키마 + Lifecycle Rule** (`R2_PHOTOS`) — §4
+> 2. ~~**R2 버킷 1종**~~ — **2026-05-18 폐기**
 > 3. **wrangler.toml 완전 구성** (바인딩 + 환경 + 시크릿) — §5
-> 4. **DNS CNAME + Worker 라우트** (`golf.zerolive.co.kr`) — §6
+> 4. **DNS CNAME + Worker 라우트** (`golf.zerolive.co.kr`) — §6 (Custom Domain으로 대체)
 > 5. **보안 헤더 적용 위치** (Worker 응답 전역) — §8
 
 ---

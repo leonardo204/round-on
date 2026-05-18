@@ -1,6 +1,8 @@
 # 50 — 개인정보 처리방침 (Privacy Policy)
 
 > **상태**: DRAFT · 법적 검수 필요 · placeholder 6건 미확정 · 2026-05-13 작성
+>
+> ⚠️ **2026-05-18 변경**: 사진 수집/저장/공유 항목 모두 폐기. 본 문서의 "사진" 관련 모든 행/문장(EXIF GPS strip, R2 업로드, NSPhotoLibraryUsageDescription 등)은 무효이며 별도 patch 없이 폐기됨으로 간주. **외부 전송 데이터는 동반자 별명 + 스코어 + deviceToken(익명 UUID)만**.
 
 > **관련 문서**: [01-SPEC](01-SPEC.md) · [33-SECURITY](33-SECURITY.md) · [53-PERMISSIONS](53-PERMISSIONS.md) · [21-DATA_MODEL](21-DATA_MODEL.md) · [30-API_SPEC](30-API_SPEC.md) · [전체 인덱스](README.md)
 

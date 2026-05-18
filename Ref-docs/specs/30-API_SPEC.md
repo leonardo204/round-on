@@ -6,6 +6,8 @@
 > **버전**: v4 기반
 > **출처 명세서**: [기능 명세서 v4](01-SPEC.md) §3.3 (01-SPEC.md:259-284), §9 (01-SPEC.md:655-672)
 > **관련 문서**: `21-DATA_MODEL.md` (SwiftData 모델), `31-VIEWER_HTML.md`, `32-CLOUDFLARE_SETUP.md`, `33-SECURITY.md`
+>
+> ⚠️ **2026-05-18 폐기 사항**: 사진 관련 4개 엔드포인트 모두 제거됨 — `POST /api/share/:id/photos`, `DELETE /api/share/:id/photos/:photoId`, `GET /:id/photo/:photoId`, `GET /:id/photos.zip`. R2 binding + 사진 rate limit + ShareMeta.photos 필드 모두 제거. 본 문서의 사진 관련 모든 섹션(§5, §6.3~§6.4, §9.1, §9.5)은 무효이며 별도 patch 없이 폐기됨으로 간주.
 
 > **[spec 미정의 5건 일람]**
 >
