@@ -504,7 +504,7 @@ struct NewRoundView: View {
     /// - 9홀: 전반 picker만 표시
     /// - 미선택 가능 (nil이면 화면에서 "전반"/"후반" 자동 라벨)
     private func subCourseSelectorSection(course: GolfCourse) -> some View {
-        let subCourses = course.subCourses ?? []
+        let subCourses = availableSubCourses(course: course)
 
         return VStack(alignment: .leading, spacing: 16) {
             // 전반 코스 picker
@@ -626,12 +626,23 @@ struct NewRoundView: View {
     }
 
     /// 서브코스 selector 표시 여부.
-    /// 골프장 holesCount가 18 초과이고 subCourses 데이터가 있으면 표시.
-    /// (라운드 홀 수와 무관 — 메타데이터 유무 기준)
+    /// 1) 골프장 자체 subCourses 메타에 있으면 표시
+    /// 2) CourseParsCatalog에 등록된 sub-course가 2개 이상이면 표시 (par prefill 가능)
     private func shouldShowSubCourseSelector(course: GolfCourse) -> Bool {
-        guard let subs = course.subCourses, !subs.isEmpty else { return false }
-        let metaHoles = course.holesCount ?? 0
-        return metaHoles > 18
+        if let subs = course.subCourses, !subs.isEmpty, (course.holesCount ?? 0) > 18 {
+            return true
+        }
+        return CourseParsCatalog.subCourseNames(for: course.id).count >= 2
+    }
+
+    /// picker에 표시할 서브코스 후보 (메타 + CoursePars 통합)
+    private func availableSubCourses(course: GolfCourse) -> [SubCourse] {
+        if let subs = course.subCourses, !subs.isEmpty {
+            return subs
+        }
+        // CoursePars 데이터에서 동적 생성
+        return CourseParsCatalog.subCourseNames(for: course.id)
+            .map { SubCourse(name: $0) }
     }
 
     // MARK: Logic

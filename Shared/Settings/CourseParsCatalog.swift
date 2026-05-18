@@ -93,4 +93,10 @@ public enum CourseParsCatalog {
         loadIfNeeded()
         return Array(cache.keys).sorted()
     }
+
+    /// 골프장의 등록된 서브코스 이름 목록 (NewRoundView picker fallback용)
+    public static func subCourseNames(for courseId: String) -> [String] {
+        loadIfNeeded()
+        return cache[courseId]?.subCourses.map { $0.name } ?? []
+    }
 }
