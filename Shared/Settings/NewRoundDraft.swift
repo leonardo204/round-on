@@ -9,6 +9,7 @@ public struct NewRoundDraft: Codable, Sendable, Equatable {
     public let courseName: String
     public let frontSubCourseName: String?
     public let backSubCourseName: String?
+    public let backUnknown: Bool        // 후반 코스 "모름" 선택 여부
     public let holesCount: Int          // 9 또는 18
     public let playerNames: [String]    // 4개 슬롯 ["나", "동반자1", ...]
     public let playerCount: Int         // 1...4
@@ -19,6 +20,7 @@ public struct NewRoundDraft: Codable, Sendable, Equatable {
         courseName: String,
         frontSubCourseName: String?,
         backSubCourseName: String?,
+        backUnknown: Bool = false,
         holesCount: Int,
         playerNames: [String],
         playerCount: Int,
@@ -28,6 +30,7 @@ public struct NewRoundDraft: Codable, Sendable, Equatable {
         self.courseName = courseName
         self.frontSubCourseName = frontSubCourseName
         self.backSubCourseName = backSubCourseName
+        self.backUnknown = backUnknown
         self.holesCount = holesCount
         self.playerNames = playerNames
         self.playerCount = playerCount

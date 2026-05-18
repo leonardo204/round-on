@@ -20,6 +20,9 @@ public final class RoundViewModel {
     /// HealthKit 권한 실패 등 배너 표시용 메시지
     public var bannerMessage: String?
 
+    /// par prefill 성공 시 ActiveRoundView에서 일회성 토스트 표시용
+    public var lastPrefillToastMessage: String?
+
     // 하위 VM (RoundViewModel이 소유)
     public private(set) var holeViewModel: HoleViewModel?
     public private(set) var scoreCardViewModel: ScoreCardViewModel?
@@ -145,6 +148,7 @@ public final class RoundViewModel {
     ///   - courseName: 골프장 이름
     ///   - frontCourseName: 전반 9홀 코스 라벨 (예: "동코스"). nil이면 화면에서 "전반" 표시.
     ///   - backCourseName: 후반 9홀 코스 라벨 (예: "남코스"). 9홀 라운드면 nil.
+    ///   - backUnknown: 후반 코스를 모름으로 선택한 경우 — 전반 par prefill 후 후반은 par 4.
     ///   - players: 참가 플레이어 목록
     ///   - holesCount: 9 또는 18만 허용. 그 외 값은 release 빌드에서도 안전 거부.
     public func startRound(
@@ -152,6 +156,7 @@ public final class RoundViewModel {
         courseName: String,
         frontCourseName: String? = nil,
         backCourseName: String? = nil,
+        backUnknown: Bool = false,
         players: [Player],
         holesCount: Int
     ) {
@@ -183,12 +188,28 @@ public final class RoundViewModel {
         )
 
         // HoleScore 초기화 — 가능하면 CourseParsCatalog prefill, 없으면 par 4
-        let prefillPars: [Int]? = (holesCount == 18)
-            ? CourseParsCatalog.pars18(courseId: courseId, front: frontCourseName, back: normalizedBack)
-            : CourseParsCatalog.pars(for: courseId, subCourseName: frontCourseName)
-        if let pp = prefillPars, pp.count == holesCount {
-            AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") back=\(normalizedBack ?? "-") → \(pp)")
+        let prefillPars: [Int]?
+        if holesCount == 18 && backUnknown {
+            // 후반 모름 선택: 전반 par prefill + 후반 par 4
+            if let frontPars = CourseParsCatalog.pars(for: courseId, subCourseName: frontCourseName),
+               frontPars.count == 9 {
+                prefillPars = frontPars + Array(repeating: 4, count: 9)
+                AppLogger.round.info("Par prefill 적용 (전반만): courseId=\(courseId) front=\(frontCourseName ?? "-") → \(frontPars) + [4×9]")
+            } else {
+                prefillPars = nil
+            }
+        } else if holesCount == 18 {
+            prefillPars = CourseParsCatalog.pars18(courseId: courseId, front: frontCourseName, back: normalizedBack)
+            if let pp = prefillPars {
+                AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") back=\(normalizedBack ?? "-") → \(pp)")
+            }
         } else {
+            prefillPars = CourseParsCatalog.pars(for: courseId, subCourseName: frontCourseName)
+            if let pp = prefillPars {
+                AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") → \(pp)")
+            }
+        }
+        if prefillPars == nil || prefillPars?.count != holesCount {
             AppLogger.round.debug("Par prefill 미적용 (catalog 미등록 또는 형식 불일치) — 모든 홀 par 4 기본값")
         }
 
@@ -204,6 +225,20 @@ public final class RoundViewModel {
         try? modelContext.save()
 
         AppLogger.round.info("라운드 시작: \(courseName, privacy: .private) \(holesCount)홀 \(players.count)명")
+
+        // par prefill 성공 시 토스트 메시지 세팅 (ActiveRoundView에서 소비)
+        if let pp = prefillPars, pp.count == holesCount {
+            if holesCount == 18 && backUnknown {
+                let frontLabel = frontCourseName.map { "\($0) " } ?? ""
+                lastPrefillToastMessage = "\(frontLabel)전반 par 자동 설정 완료"
+            } else if let front = frontCourseName, let back = normalizedBack {
+                lastPrefillToastMessage = "\(front)/\(back) par 자동 설정 완료"
+            } else if let front = frontCourseName {
+                lastPrefillToastMessage = "\(front) par 자동 설정 완료"
+            } else {
+                lastPrefillToastMessage = "par 자동 설정 완료"
+            }
+        }
 
         activate(round: round)
 
