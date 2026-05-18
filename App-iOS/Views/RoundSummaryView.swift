@@ -19,7 +19,6 @@ struct RoundSummaryView: View {
     @State private var scoreVM: ScoreCardViewModel
     @State private var shareVM: ShareViewModel
     @State private var showShare = false
-    @State private var showPhotoAttach = false
     @State private var bannerMessage: String?
     @State private var bannerSeverity: BannerNotice.Severity = .info
 
@@ -54,9 +53,6 @@ struct RoundSummaryView: View {
                         // 플레이어별 요약
                         playerSummarySection
 
-                        // 사진 갤러리
-                        photoSection
-
                         Spacer(minLength: 40)
                     }
                     .padding(.top, 16)
@@ -81,9 +77,6 @@ struct RoundSummaryView: View {
                     bannerMessage = "공유 링크가 생성되었어요."
                     bannerSeverity = .success
                 })
-            }
-            .sheet(isPresented: $showPhotoAttach) {
-                PhotoAttachView(round: round, onDismiss: { showPhotoAttach = false })
             }
             .task {
                 shareVM.checkExpiration()
@@ -199,38 +192,7 @@ struct RoundSummaryView: View {
         .padding(.horizontal, 16)
     }
 
-    // MARK: Photo Section
-
-    private var photoSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("사진")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(Color.springTextPrimary)
-                Spacer()
-                Button {
-                    showPhotoAttach = true
-                } label: {
-                    Label("추가", systemImage: "plus")
-                        .font(.system(size: 14))
-                        .foregroundStyle(Color.springGreenPrimary)
-                }
-            }
-            .padding(.horizontal, 16)
-
-            if round.photoList.isEmpty {
-                Text("사진을 추가하면 공유 viewer에 포함됩니다.")
-                    .font(.system(size: 14))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .padding(.horizontal, 16)
-            } else {
-                PhotoGalleryGrid(photos: round.photoList, isEditable: true, onDelete: { photo in
-                    deletePhoto(photo)
-                })
-                .padding(.horizontal, 16)
-            }
-        }
-    }
+    // photoSection은 2026-05-18 폐기 (사진 공유 기능 제거)
 
     // MARK: CTA Buttons
 
@@ -298,9 +260,4 @@ struct RoundSummaryView: View {
         return formatter.string(from: date)
     }
 
-    private func deletePhoto(_ photo: RoundPhoto) {
-        PhotoStore().deletePhoto(photo)
-        round.photos = round.photoList.filter { $0.id != photo.id }
-        try? modelContext.save()
-    }
 }

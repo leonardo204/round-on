@@ -15,7 +15,7 @@ struct RoundOnApp: App {
             AppLogger.persistence.error("모든 ModelContainer 초기화 실패 — 인메모리 fallback 진입")
             let schema = Schema([
                 Round.self, Player.self, HoleScore.self,
-                RoundPhoto.self, PersistedDiscoveredCourse.self
+                PersistedDiscoveredCourse.self
             ])
             // swiftlint:disable:next force_try
             self.modelContainer = try! ModelContainer(
@@ -31,7 +31,6 @@ struct RoundOnApp: App {
             Round.self,
             Player.self,
             HoleScore.self,
-            RoundPhoto.self,
             PersistedDiscoveredCourse.self  // 카카오 발견 골프장 영구 캐시 (신규)
         ])
 

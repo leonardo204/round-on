@@ -5,7 +5,7 @@ import Shared
 // MARK: - RoundDetailView
 // iphone-2.8: 완료 라운드 사후 보기 (12-SCREENS 2.8)
 // viewer URL 복사 + 만료 표시 + 재공유 진입
-// B3: 이미 공유된 라운드에 사진 추가 시 uploadPhoto 자동 호출
+// 사진 기능은 2026-05-18 폐기 (개인정보보호, 비용 절감)
 
 struct RoundDetailView: View {
 
@@ -20,7 +20,6 @@ struct RoundDetailView: View {
     @State private var scoreVM: ScoreCardViewModel
     @State private var shareVM: ShareViewModel
     @State private var showShare = false
-    @State private var showPhotoAttach = false
     @State private var showDeleteConfirm = false
     @State private var bannerMessage: String?
     @State private var bannerSeverity: BannerNotice.Severity = .info
@@ -30,7 +29,6 @@ struct RoundDetailView: View {
     @State private var editRoundVM: RoundViewModel?
 
     private let apiClient = ShareAPIClient()
-    private let photoStore = PhotoStore()
     private let keychainStore = KeychainStore.shared
 
     // MARK: Init
@@ -64,9 +62,6 @@ struct RoundDetailView: View {
 
                     // 홀별 스코어 요약
                     scoreSection
-
-                    // 사진
-                    photoSection
 
                     Spacer(minLength: 80)
                 }
@@ -125,15 +120,6 @@ struct RoundDetailView: View {
             ShareSheetView(round: round, shareVM: shareVM, onShared: { url in
                 bannerMessage = "공유 링크가 생성되었어요."
                 bannerSeverity = .success
-            })
-        }
-        .sheet(isPresented: $showPhotoAttach) {
-            PhotoAttachView(round: round, onDismiss: {
-                showPhotoAttach = false
-                // B3: 이미 공유된 라운드면 새로 추가된 사진을 업로드
-                if round.sharedShortId != nil {
-                    Task { await uploadNewPhotosIfShared() }
-                }
             })
         }
         .task {
@@ -346,37 +332,6 @@ struct RoundDetailView: View {
 
     // MARK: Photo Section
 
-    private var photoSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                sectionLabel("사진")
-                Spacer()
-                Button {
-                    showPhotoAttach = true
-                } label: {
-                    Label("추가", systemImage: "plus")
-                        .font(.system(size: 14))
-                        .foregroundStyle(Color.springGreenPrimary)
-                }
-            }
-            .padding(.horizontal, 16)
-
-            if round.photoList.isEmpty {
-                Text("아직 사진이 없어요.")
-                    .font(.system(size: 14))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .padding(.horizontal, 16)
-            } else {
-                PhotoGalleryGrid(
-                    photos: round.photoList,
-                    isEditable: false,
-                    onDelete: nil
-                )
-                .padding(.horizontal, 16)
-            }
-        }
-    }
-
     // MARK: Share Button
 
     private var shareButton: some View {
@@ -467,51 +422,7 @@ struct RoundDetailView: View {
         dismiss()
     }
 
-    // MARK: B3: 이미 공유된 라운드에 사진 추가
-
-    /// 이미 공유된 라운드에서 remoteURL이 없는 (아직 업로드 안 된) 사진을 업로드
-    private func uploadNewPhotosIfShared() async {
-        guard let shortId = round.sharedShortId,
-              let editToken = keychainStore.editToken(for: shortId) else { return }
-
-        // remoteURL 없는 = 아직 업로드 안 된 사진만 대상
-        let pending = round.photoList.filter { $0.remoteURL == nil }
-        guard !pending.isEmpty else { return }
-
-        var successCount = 0
-        var failedCount = 0
-
-        for photo in pending {
-            guard let imageData = photoStore.jpegData(for: photo) else {
-                failedCount += 1
-                continue
-            }
-            do {
-                let response = try await apiClient.uploadPhoto(
-                    shortId: shortId,
-                    editToken: editToken,
-                    imageData: imageData,
-                    holeNumber: photo.holeNumber,
-                    caption: photo.caption
-                )
-                photo.remoteURL = response.remoteURL
-                successCount += 1
-            } catch {
-                failedCount += 1
-            }
-        }
-
-        try? modelContext.save()
-
-        if successCount > 0 {
-            bannerMessage = "사진 \(successCount)장을 viewer에 업로드했어요."
-            bannerSeverity = .success
-        }
-        if failedCount > 0 {
-            bannerMessage = (bannerMessage ?? "") + " \(failedCount)장 업로드 실패."
-            bannerSeverity = failedCount == pending.count ? .error : .warning
-        }
-    }
+    // 사진 업로드 헬퍼는 2026-05-18 폐기 (사진 공유 기능 제거)
 
     // MARK: Helpers
 

@@ -29,8 +29,7 @@ public final class Round {
     @Relationship(deleteRule: .cascade, inverse: \HoleScore.round)
     public var holes: [HoleScore]? = []
 
-    @Relationship(deleteRule: .cascade, inverse: \RoundPhoto.round)
-    public var photos: [RoundPhoto]? = []
+    // RoundPhoto 관계는 2026-05-18 폐기 (사진 공유 기능 제거)
 
     public var isFinished: Bool = false
     public var startedAt: Date = Date.now
@@ -52,8 +51,6 @@ public final class Round {
     public var playerList: [Player] { players ?? [] }
     /// holes Optional fallback
     public var holeList: [HoleScore] { holes ?? [] }
-    /// photos Optional fallback
-    public var photoList: [RoundPhoto] { photos ?? [] }
 
     public init(
         id: UUID = UUID(),
@@ -65,7 +62,6 @@ public final class Round {
         backCourseName: String? = nil,
         players: [Player] = [],
         holes: [HoleScore] = [],
-        photos: [RoundPhoto] = [],
         isFinished: Bool = false,
         startedAt: Date = .now,
         finishedAt: Date? = nil
@@ -79,7 +75,6 @@ public final class Round {
         self.backCourseName = backCourseName
         self.players = players
         self.holes = holes
-        self.photos = photos
         self.isFinished = isFinished
         self.startedAt = startedAt
         self.finishedAt = finishedAt

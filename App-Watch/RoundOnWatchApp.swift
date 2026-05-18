@@ -12,7 +12,7 @@ struct RoundOnWatchApp: App {
     let modelContainer: ModelContainer
 
     init() {
-        let schema = Schema([Round.self, Player.self, HoleScore.self, RoundPhoto.self])
+        let schema = Schema([Round.self, Player.self, HoleScore.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         // swiftlint:disable:next force_try
         self.modelContainer = try! ModelContainer(for: schema, configurations: config)

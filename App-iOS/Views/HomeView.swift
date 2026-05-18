@@ -698,12 +698,12 @@ extension Color {
 
 #Preview("Light") {
     HomeView(roundViewModel: .constant(nil))
-        .modelContainer(for: [Round.self, Player.self, HoleScore.self, RoundPhoto.self], inMemory: true)
+        .modelContainer(for: [Round.self, Player.self, HoleScore.self], inMemory: true)
         .preferredColorScheme(.light)
 }
 
 #Preview("Dark") {
     HomeView(roundViewModel: .constant(nil))
-        .modelContainer(for: [Round.self, Player.self, HoleScore.self, RoundPhoto.self], inMemory: true)
+        .modelContainer(for: [Round.self, Player.self, HoleScore.self], inMemory: true)
         .preferredColorScheme(.dark)
 }

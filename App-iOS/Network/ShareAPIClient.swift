@@ -111,54 +111,8 @@ public final class ShareAPIClient: @unchecked Sendable {
         _ = try await perform(req, expectNoContent: true)
     }
 
-    // MARK: - POST /api/share/{shortId}/photos (사진 업로드)
-
-    /// 사진 업로드 multipart/form-data (30-API §5.1)
-    public func uploadPhoto(
-        shortId: String,
-        editToken: String,
-        imageData: Data,
-        holeNumber: Int?,
-        caption: String?
-    ) async throws -> UploadPhotoResponse {
-        let url = try makeURL(path: "/api/share/\(shortId)/photos")
-        let boundary = "Boundary-\(UUID().uuidString)"
-
-        var req = URLRequest(url: url)
-        req.httpMethod = "POST"
-        req.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        req.setValue("Bearer \(editToken)", forHTTPHeaderField: "Authorization")
-
-        var body = Data()
-        // photo 파트
-        body.appendFormField(name: "photo", filename: "photo.jpg", mimeType: "image/jpeg", data: imageData, boundary: boundary)
-        // holeNumber
-        if let hole = holeNumber, let holeData = "\(hole)".data(using: .utf8) {
-            body.appendTextField(name: "holeNumber", value: String(hole), data: holeData, boundary: boundary)
-        }
-        // caption
-        if let cap = caption, let capData = cap.data(using: .utf8) {
-            body.appendTextField(name: "caption", value: cap, data: capData, boundary: boundary)
-        }
-        // 종료
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        req.httpBody = body
-
-        let data = try await perform(req)
-        return try decodeResponse(UploadPhotoResponse.self, from: data)
-    }
-
-    // MARK: - DELETE /api/share/{shortId}/photos/{photoId} (사진 삭제)
-
-    /// 사진 삭제 (30-API §5.2)
-    public func deletePhoto(shortId: String, photoId: String, editToken: String) async throws {
-        let url = try makeURL(path: "/api/share/\(shortId)/photos/\(photoId)")
-        var req = URLRequest(url: url)
-        req.httpMethod = "DELETE"
-        req.setValue("Bearer \(editToken)", forHTTPHeaderField: "Authorization")
-
-        _ = try await perform(req, expectNoContent: true)
-    }
+    // 사진 업로드/삭제 API는 2026-05-18 폐기 (개인정보보호, 비용 절감).
+    // 공유 viewer는 스코어카드 + 만료 시각만 표시.
 
     // MARK: - Private Helpers
 
@@ -211,42 +165,4 @@ public final class ShareAPIClient: @unchecked Sendable {
     }
 }
 
-// MARK: - Data multipart 헬퍼
-
-private extension Data {
-    mutating func appendFormField(
-        name: String,
-        filename: String,
-        mimeType: String,
-        data fileData: Data,
-        boundary: String
-    ) {
-        var header = "--\(boundary)\r\n"
-        header += "Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(filename)\"\r\n"
-        header += "Content-Type: \(mimeType)\r\n\r\n"
-        if let headerData = header.data(using: .utf8) {
-            append(headerData)
-        }
-        append(fileData)
-        if let crlf = "\r\n".data(using: .utf8) {
-            append(crlf)
-        }
-    }
-
-    mutating func appendTextField(
-        name: String,
-        value: String,
-        data valueData: Data,
-        boundary: String
-    ) {
-        var header = "--\(boundary)\r\n"
-        header += "Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n"
-        if let headerData = header.data(using: .utf8) {
-            append(headerData)
-        }
-        append(valueData)
-        if let crlf = "\r\n".data(using: .utf8) {
-            append(crlf)
-        }
-    }
-}
+// multipart 헬퍼는 photo upload용이라 폐기 (2026-05-18)

@@ -49,10 +49,7 @@ public struct UpdateShareResponse: Codable, Sendable {
     public let expiresAt: Date
 }
 
-public struct UploadPhotoResponse: Codable, Sendable {
-    public let photoId: String
-    public let remoteURL: String
-}
+// UploadPhotoResponse는 2026-05-18 폐기 (사진 공유 기능 제거)
 
 // MARK: - 라운드 페이로드
 

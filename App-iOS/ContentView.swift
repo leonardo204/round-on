@@ -176,5 +176,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Round.self, Player.self, HoleScore.self, RoundPhoto.self], inMemory: true)
+        .modelContainer(for: [Round.self, Player.self, HoleScore.self], inMemory: true)
 }

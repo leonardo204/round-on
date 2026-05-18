@@ -23,7 +23,6 @@ struct ShareSheetView: View {
     @State private var activityURL: URL?
 
     private let apiClient = ShareAPIClient()
-    private let photoStore = PhotoStore()
     private let keychainStore = KeychainStore.shared
 
     // MARK: Body
@@ -255,18 +254,6 @@ struct ShareSheetView: View {
 
     private var ctaButton: some View {
         VStack(spacing: 0) {
-            // 사진 업로드 진행 표시 (B2)
-            if shareVM.isUploadingPhotos {
-                HStack(spacing: 8) {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                    Text("사진 업로드 중 \(shareVM.photoUploadCurrent)/\(shareVM.photoUploadTotal)")
-                        .font(.system(size: 13))
-                        .foregroundStyle(Color.springTextSecondary)
-                }
-                .padding(.bottom, 8)
-            }
-
             Button {
                 Task { await performShare() }
             } label: {
@@ -369,9 +356,6 @@ struct ShareSheetView: View {
                     onShared?(url)
                 }
                 Task { await HapticEngine.shared.play(.shareSuccess) }
-
-                // B2: 공유 링크 생성 성공 후 사진 자동 업로드
-                await uploadPhotosIfNeeded(shortId: response.shortId, editToken: response.editToken)
             }
         } catch let error as ShareAPIError {
             shareVM.errorMessage = error.localizedDescription
@@ -382,54 +366,7 @@ struct ShareSheetView: View {
         }
     }
 
-    /// B2: photos를 순회하며 업로드. 실패 사진은 skip + 배너 알림.
-    private func uploadPhotosIfNeeded(shortId: String, editToken: String) async {
-        let photos = round.photoList
-        guard !photos.isEmpty else { return }
-
-        shareVM.photoUploadTotal = photos.count
-        shareVM.photoUploadCurrent = 0
-        shareVM.isUploadingPhotos = true
-        defer { shareVM.isUploadingPhotos = false }
-
-        var failedCount = 0
-
-        for photo in photos {
-            guard let imageData = photoStore.jpegData(for: photo) else {
-                failedCount += 1
-                shareVM.photoUploadCurrent += 1
-                continue
-            }
-
-            do {
-                let response = try await apiClient.uploadPhoto(
-                    shortId: shortId,
-                    editToken: editToken,
-                    imageData: imageData,
-                    holeNumber: photo.holeNumber,
-                    caption: photo.caption
-                )
-                // remoteURL 업데이트
-                photo.remoteURL = response.remoteURL
-                shareVM.photoUploadCurrent += 1
-            } catch {
-                failedCount += 1
-                shareVM.photoUploadCurrent += 1
-            }
-        }
-
-        try? modelContext.save()
-
-        let successCount = photos.count - failedCount
-        if failedCount > 0 && successCount > 0 {
-            shareVM.errorMessage = "사진 \(successCount)장 업로드 완료. \(failedCount)장은 실패했어요."
-        } else if failedCount == 0 {
-            // 성공 토스트 (에러 아님 — 배너 severity .info)
-            shareVM.errorMessage = nil
-        } else {
-            shareVM.errorMessage = "사진 업로드에 실패했어요."
-        }
-    }
+    // uploadPhotosIfNeeded는 2026-05-18 폐기 (사진 공유 기능 제거)
 
     private func deleteShare(shortId: String, editToken: String) async {
         do {

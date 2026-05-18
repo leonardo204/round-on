@@ -31,11 +31,6 @@ public final class ShareViewModel {
     /// 로딩 상태 (공유 링크 생성 중)
     public var isLoading: Bool = false
 
-    /// 사진 업로드 진행 상태 (B2)
-    public var photoUploadCurrent: Int = 0
-    public var photoUploadTotal: Int = 0
-    public var isUploadingPhotos: Bool = false
-
     /// 에러 메시지
     public var errorMessage: String?
 
@@ -63,7 +58,7 @@ public final class ShareViewModel {
     }
 
     public var canShare: Bool {
-        isPinValid && !isLoading && !isUploadingPhotos
+        isPinValid && !isLoading
     }
 
     // MARK: Public API
@@ -94,13 +89,6 @@ public final class ShareViewModel {
               let expiresAt = round.sharedExpiresAt,
               expiresAt < .now else { return }
         clearShareFields(in: round)
-    }
-
-    /// 사진 업로드 진행 상태 리셋
-    public func resetPhotoUploadProgress() {
-        photoUploadCurrent = 0
-        photoUploadTotal = 0
-        isUploadingPhotos = false
     }
 
     // MARK: Private
