@@ -86,6 +86,32 @@ struct WatchHoleSwipeContainer: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Par \(par). 탭하여 \(par == 3 ? 4 : (par == 4 ? 5 : 3))로 변경")
 
+                // 코스 cycle 버튼 (현재 홀 속한 half의 다음 코스로 순환)
+                if let round = roundVM.currentRound {
+                    let subs = CourseParsCatalog.subCourseNames(for: round.courseId)
+                    if subs.count >= 2 {
+                        let isBack = holeNumber > 9
+                        let cur = isBack ? round.backCourseName : round.frontCourseName
+                        let curIdx = cur.flatMap { subs.firstIndex(of: $0) } ?? -1
+                        let next = subs[(curIdx + 1) % subs.count]
+                        Button {
+                            roundVM.changeSubCourse(half: isBack ? .back : .front, to: next)
+                            Task { await HapticEngine.shared.play(.holeManualChange) }
+                        } label: {
+                            Text(cur ?? "코스")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 2)
+                                .background(Color.green, in: Capsule())
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("코스 \(cur ?? "-"). 탭하여 \(next)로 변경")
+                    }
+                }
+
                 Spacer()
 
                 Text("\(holeNumber)/\(totalHoles)")

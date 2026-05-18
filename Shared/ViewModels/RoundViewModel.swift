@@ -259,6 +259,34 @@ public final class RoundViewModel {
         return true
     }
 
+    /// 라운드 중 전반/후반 9홀 코스 변경 — CourseParsCatalog에서 par 재prefill.
+    /// half: .front (홀 1-9) 또는 .back (홀 10-18)
+    public enum Half: String, Sendable { case front, back }
+
+    public func changeSubCourse(half: Half, to newSubCourseName: String) {
+        guard let round = currentRound else { return }
+        // courseName 필드 업데이트
+        switch half {
+        case .front: round.frontCourseName = newSubCourseName
+        case .back:  round.backCourseName = newSubCourseName
+        }
+        // 새 9홀 par 조회
+        let pars = CourseParsCatalog.pars(for: round.courseId, subCourseName: newSubCourseName)
+        if let pars = pars, pars.count == 9 {
+            let range = (half == .front) ? (1...9) : (10...18)
+            for hole in round.holeList where range.contains(hole.holeNumber) {
+                let idx = hole.holeNumber - (half == .front ? 1 : 10)
+                if idx < pars.count { hole.par = pars[idx] }
+            }
+            AppLogger.round.info("코스 변경: \(half.rawValue) → \(newSubCourseName) — par \(pars) 재prefill")
+        } else {
+            AppLogger.round.warning("코스 변경: \(half.rawValue) → \(newSubCourseName) — par catalog 미매칭, par 유지")
+        }
+        save()
+        scoreCardViewModel?.refresh(from: round)
+        emitSnapshot()  // Watch sync
+    }
+
     /// 홀의 par 변경 (3/4/5만 허용). 변경 시 RoundSnapshot 재전송.
     public func setPar(holeNumber: Int, par: Int) {
         guard [3, 4, 5].contains(par) else { return }

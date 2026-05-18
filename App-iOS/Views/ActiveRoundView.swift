@@ -125,6 +125,36 @@ struct ActiveRoundView: View {
                     }
                 }
                 Spacer()
+                // 코스 변경 menu (CourseParsCatalog 등록 골프장만 활성)
+                if let courseId = roundVM.currentRound?.courseId {
+                    let subs = CourseParsCatalog.subCourseNames(for: courseId)
+                    if subs.count >= 2 {
+                        Menu {
+                            Section("전반 코스 변경") {
+                                ForEach(subs, id: \.self) { name in
+                                    Button(name) {
+                                        roundVM.changeSubCourse(half: .front, to: name)
+                                    }
+                                }
+                            }
+                            if roundVM.currentRound?.holeList.count == 18 {
+                                Section("후반 코스 변경") {
+                                    ForEach(subs, id: \.self) { name in
+                                        Button(name) {
+                                            roundVM.changeSubCourse(half: .back, to: name)
+                                        }
+                                    }
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .font(.system(size: 15))
+                                .foregroundStyle(Color.springGreenPrimary)
+                                .padding(.horizontal, 8)
+                        }
+                        .accessibilityLabel("코스 변경")
+                    }
+                }
                 // 현재 홀 표시 + 플레이어 칩
                 if let holeVM = holeVM {
                     VStack(alignment: .trailing, spacing: 0) {
