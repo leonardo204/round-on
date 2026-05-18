@@ -21,6 +21,7 @@ struct ShareSheetView: View {
 
     @State private var showActivitySheet = false
     @State private var activityURL: URL?
+    @State private var toastMessage: String?
 
     private let apiClient = ShareAPIClient()
     private let keychainStore = KeychainStore.shared
@@ -82,10 +83,33 @@ struct ShareSheetView: View {
                         .presentationDetents([.medium, .large])
                 }
             }
+            .overlay(alignment: .bottom) {
+                if let msg = toastMessage {
+                    Text(msg)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 12)
+                        .background(.black.opacity(0.85), in: Capsule())
+                        .padding(.bottom, 100)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+            .animation(.easeInOut(duration: 0.2), value: toastMessage)
             .task {
                 // C2: 앱 진입 시 기존 평문 editToken을 Keychain으로 마이그레이션
                 keychainStore.migrateIfNeeded(round: round)
                 try? modelContext.save()
+            }
+        }
+    }
+
+    private func showToast(_ message: String) {
+        toastMessage = message
+        Task {
+            try? await Task.sleep(nanoseconds: 1_800_000_000)
+            await MainActor.run {
+                if toastMessage == message { toastMessage = nil }
             }
         }
     }
@@ -204,7 +228,7 @@ struct ShareSheetView: View {
         VStack(alignment: .leading, spacing: 12) {
             sectionLabel("현재 공유 링크")
 
-            HStack {
+            HStack(spacing: 10) {
                 Text(url)
                     .font(.system(size: 13, design: .monospaced))
                     .foregroundStyle(Color.springGreenPrimary)
@@ -213,13 +237,35 @@ struct ShareSheetView: View {
 
                 Spacer()
 
+                // 복사
                 Button {
                     UIPasteboard.general.string = url
+                    showToast("링크를 복사했어요")
+                    AppLogger.share.info("[ShareSheet] 링크 복사: \(url)")
+                    Task { await HapticEngine.shared.play(.shareSuccess) }
                 } label: {
                     Image(systemName: "doc.on.doc")
+                        .font(.system(size: 16))
                         .foregroundStyle(Color.springGreenPrimary)
+                        .frame(width: 36, height: 36)
+                        .background(Color.springGreenSecondary.opacity(0.25), in: Circle())
                 }
                 .accessibilityLabel("링크 복사")
+
+                // 공유 (UIActivityViewController)
+                Button {
+                    if let u = URL(string: url) {
+                        AppLogger.share.info("[ShareSheet] 시스템 공유 시트 호출: \(url)")
+                        showActivity(url: u)
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 16))
+                        .foregroundStyle(.white)
+                        .frame(width: 36, height: 36)
+                        .background(Color.springGreenPrimary, in: Circle())
+                }
+                .accessibilityLabel("공유")
             }
             .padding(16)
             .background(Color.springSurfaceElevated)

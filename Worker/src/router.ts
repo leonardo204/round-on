@@ -55,6 +55,14 @@ export async function route(
     });
   }
 
+  // ── /favicon.ico ─── 빈 응답으로 404 방지 (브라우저 자동 요청)
+  if (pathname === "/favicon.ico" && method === "GET") {
+    return new Response(null, {
+      status: 204,
+      headers: { "Cache-Control": "public, max-age=86400" },
+    });
+  }
+
   // ── /api/share ──────────────────────────────────────────────────────────
   if (pathname === "/api/share") {
     if (method === "POST") {

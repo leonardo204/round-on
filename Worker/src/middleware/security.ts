@@ -44,13 +44,13 @@ export function applySecurityHeaders(
         "default-src 'self'",
         // 인라인 스타일 + 스크립트 허용 (viewer는 템플릿 리터럴 inline)
         "style-src 'self' 'unsafe-inline'",
-        "script-src 'self' 'unsafe-inline'",
-        // 이미지: Worker 경유 사진 URL만 허용 (R2 직접 URL 차단)
-        "img-src 'self'",
-        // 폼 action: 같은 origin만
+        // Cloudflare가 자동 주입하는 beacon.min.js 허용 (static.cloudflareinsights.com)
+        "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+        // Cloudflare insights는 cloudflareinsights.com으로 비콘 전송
+        "connect-src 'self' https://cloudflareinsights.com",
+        "img-src 'self' data:",
+        "font-src 'self'",
         "form-action 'self'",
-        // 외부 자원 로드 금지
-        "connect-src 'self'",
         "frame-ancestors 'none'",
       ].join("; ")
     );

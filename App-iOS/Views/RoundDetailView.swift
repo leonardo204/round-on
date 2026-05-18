@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 import Shared
 
 // MARK: - RoundDetailView
@@ -183,7 +184,7 @@ struct RoundDetailView: View {
 
             if let url = round.sharedURL, round.sharedShortId != nil {
                 VStack(spacing: 8) {
-                    HStack {
+                    HStack(spacing: 10) {
                         Text(url)
                             .font(.system(size: 13, design: .monospaced))
                             .foregroundStyle(Color.springGreenPrimary)
@@ -197,11 +198,31 @@ struct RoundDetailView: View {
                             UIPasteboard.general.string = url
                             bannerMessage = "링크를 복사했어요."
                             bannerSeverity = .success
+                            AppLogger.share.info("[RoundDetail] 링크 복사: \(url)")
+                            Task { await HapticEngine.shared.play(.shareSuccess) }
                         } label: {
                             Image(systemName: "doc.on.doc")
+                                .font(.system(size: 16))
                                 .foregroundStyle(Color.springGreenPrimary)
+                                .frame(width: 36, height: 36)
+                                .background(Color.springGreenSecondary.opacity(0.25), in: Circle())
                         }
                         .accessibilityLabel("링크 복사")
+
+                        // 공유 버튼 (UIActivityViewController)
+                        Button {
+                            if let u = URL(string: url) {
+                                AppLogger.share.info("[RoundDetail] 시스템 공유 시트 호출: \(url)")
+                                presentActivitySheet(url: u)
+                            }
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 16))
+                                .foregroundStyle(.white)
+                                .frame(width: 36, height: 36)
+                                .background(Color.springGreenPrimary, in: Circle())
+                        }
+                        .accessibilityLabel("공유")
                     }
                     .padding(16)
                     .background(Color.springSurfaceElevated)
@@ -423,6 +444,28 @@ struct RoundDetailView: View {
     }
 
     // 사진 업로드 헬퍼는 2026-05-18 폐기 (사진 공유 기능 제거)
+
+    /// UIActivityViewController를 keyWindow root에 띄움.
+    private func presentActivitySheet(url: URL) {
+        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        guard let root = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow })?.rootViewController else {
+            AppLogger.share.error("[RoundDetail] keyWindow rootViewController 없음 — 공유 시트 표시 실패")
+            return
+        }
+        // 가장 위에 표시되는 modal 위에 present
+        var top = root
+        while let presented = top.presentedViewController { top = presented }
+        // iPad: popover anchor
+        if let pop = activityVC.popoverPresentationController {
+            pop.sourceView = top.view
+            pop.sourceRect = CGRect(x: top.view.bounds.midX, y: top.view.bounds.midY, width: 0, height: 0)
+            pop.permittedArrowDirections = []
+        }
+        top.present(activityVC, animated: true)
+    }
 
     // MARK: Helpers
 
