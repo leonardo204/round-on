@@ -156,9 +156,9 @@ struct ActiveRoundView: View {
     private func scoreCardGrid(scoreVM: ScoreCardViewModel) -> some View {
         ScrollView {
             VStack(spacing: 16) {
-                // OUT 구간 (1-9홀) — 전반 코스 라벨 사용
+                // 전반 (1-9홀) — 코스 라벨이 있으면 그것 우선, 없으면 "전반"
                 if !scoreVM.outHoles.isEmpty {
-                    let outLabel = roundVM.currentRound?.frontCourseName ?? "OUT"
+                    let outLabel = roundVM.currentRound?.frontCourseName ?? "전반"
                     scoreSection(
                         title: outLabel,
                         holes: scoreVM.outHoles,
@@ -168,9 +168,9 @@ struct ActiveRoundView: View {
                     )
                 }
 
-                // IN 구간 (10-18홀) — 후반 코스 라벨 사용. 9홀이면 inHoles 비어있어 자동 숨김.
+                // 후반 (10-18홀) — 코스 라벨이 있으면 그것 우선, 없으면 "후반". 9홀이면 자동 숨김.
                 if !scoreVM.inHoles.isEmpty {
-                    let inLabel = roundVM.currentRound?.backCourseName ?? "IN"
+                    let inLabel = roundVM.currentRound?.backCourseName ?? "후반"
                     scoreSection(
                         title: inLabel,
                         holes: scoreVM.inHoles,

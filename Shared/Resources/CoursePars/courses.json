@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-18",
+  "notes": "골프장별 코스/홀별 par 사전 데이터. courseId는 Ref-docs/golf-db-pack courses_seed_v3.json의 id와 매칭. 향후 골프장 추가 시 이 파일에 항목 append.",
+  "courses": [
+    {
+      "courseId": "아리지_경기",
+      "courseName": "아리지CC",
+      "source": "https://www.ariji.co.kr/course-info/*",
+      "confidence": "high",
+      "subCourses": [
+        { "name": "햇님코스", "pars": [5, 4, 3, 4, 4, 3, 4, 4, 5] },
+        { "name": "달님코스", "pars": [4, 3, 4, 5, 4, 3, 5, 4, 4] },
+        { "name": "별님코스", "pars": [4, 5, 4, 4, 3, 4, 4, 3, 5] }
+      ]
+    }
+  ]
+}

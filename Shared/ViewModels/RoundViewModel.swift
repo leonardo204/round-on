@@ -182,10 +182,20 @@ public final class RoundViewModel {
             startedAt: .now
         )
 
-        // HoleScore 초기화 (par 기본값 4)
+        // HoleScore 초기화 — 가능하면 CourseParsCatalog prefill, 없으면 par 4
+        let prefillPars: [Int]? = (holesCount == 18)
+            ? CourseParsCatalog.pars18(courseId: courseId, front: frontCourseName, back: normalizedBack)
+            : CourseParsCatalog.pars(for: courseId, subCourseName: frontCourseName)
+        if let pp = prefillPars, pp.count == holesCount {
+            AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") back=\(normalizedBack ?? "-") → \(pp)")
+        } else {
+            AppLogger.round.debug("Par prefill 미적용 (catalog 미등록 또는 형식 불일치) — 모든 홀 par 4 기본값")
+        }
+
         var holeScores: [HoleScore] = []
         for holeNumber in 1...holesCount {
-            let score = HoleScore(holeNumber: holeNumber, par: 4)
+            let par = prefillPars?[holeNumber - 1] ?? 4
+            let score = HoleScore(holeNumber: holeNumber, par: par)
             holeScores.append(score)
         }
         round.holes = (round.holes ?? []) + holeScores

@@ -17,6 +17,10 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: Shared
+        excludes:
+          - "Resources/CoursePars"  # 별도 folder 리소스로 등록 (Swift 컴파일 제외)
+      - path: Shared/Resources/CoursePars
+        type: folder                 # JSON 파일을 bundle 내 폴더 그대로 유지
     info:
       path: Shared/Info.plist
     settings:
@@ -37,11 +41,13 @@ targets:
           - "Color+SeasonalGreen.swift"  # Asset Catalog 참조 제외 (watchOS 런타임 분리)
       - path: Shared/Haptics
       - path: Shared/Logging
-      - path: Shared/Settings  # PenaltySettings (UserDefaults) - watchOS 호환
+      - path: Shared/Settings  # PenaltySettings, CourseParsCatalog (watchOS 호환)
       - path: Shared/Sync
       - path: Shared/ViewModels
         excludes:
           - "ShareViewModel.swift"  # UIKit 의존 (iOS 전용)
+      - path: Shared/Resources/CoursePars  # 골프장별 par 사전 데이터 JSON
+        type: folder
     info:
       path: Shared/Info.plist
     settings:

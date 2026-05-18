@@ -192,10 +192,10 @@ export function renderViewer(opts: ViewerRenderOptions): string {
   const heroHtml = renderHero(allHoles, displayPlayers);
 
   const scorecardOut = outHoles.length > 0
-    ? renderScorecardHalf("OUT", outHoles, displayPlayers)
+    ? renderScorecardHalf("전반", outHoles, displayPlayers)
     : "";
   const scorecardIn = inHoles.length > 0
-    ? renderScorecardHalf("IN", inHoles, displayPlayers)
+    ? renderScorecardHalf("후반", inHoles, displayPlayers)
     : "";
 
   const expiresAtDisplay = escapeHtml(formatKST(expiresAt));
