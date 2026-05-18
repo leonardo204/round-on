@@ -82,7 +82,6 @@ function renderScorecardHalf(
 function formatKST(isoUtc: string): string {
   const d = new Date(isoUtc);
   if (isNaN(d.getTime())) return isoUtc;
-  // UTC + 9시간
   const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
   const Y = kst.getUTCFullYear();
   const M = String(kst.getUTCMonth() + 1).padStart(2, "0");
@@ -90,6 +89,17 @@ function formatKST(isoUtc: string): string {
   const h = String(kst.getUTCHours()).padStart(2, "0");
   const m = String(kst.getUTCMinutes()).padStart(2, "0");
   return `${Y}-${M}-${D} ${h}:${m} (KST)`;
+}
+
+// 날짜만 (라운드 일자): "2026-05-18"
+function formatKSTDate(isoUtc: string): string {
+  const d = new Date(isoUtc);
+  if (isNaN(d.getTime())) return isoUtc;
+  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+  const Y = kst.getUTCFullYear();
+  const M = String(kst.getUTCMonth() + 1).padStart(2, "0");
+  const D = String(kst.getUTCDate()).padStart(2, "0");
+  return `${Y}-${M}-${D}`;
 }
 
 // ── 메인 viewer HTML 렌더링 ────────────────────────────────────────────────
@@ -122,7 +132,8 @@ export function renderViewer(opts: ViewerRenderOptions): string {
       : `${escapeHtml(displayPlayers[0].name)} 외 ${displayPlayers.length - 1}명`;
 
   const courseName = escapeHtml(round.courseName || "코스 정보 없음");
-  const roundDate = escapeHtml(round.date || "");
+  // round.date: ISO UTC string (예: "2026-05-18T02:18:06Z") → KST date string
+  const roundDate = round.date ? escapeHtml(formatKSTDate(round.date)) : "";
   const dataQuality = round.dataQuality ?? "low";
 
   // 스코어카드 — 9홀 2단

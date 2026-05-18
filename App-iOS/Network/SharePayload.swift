@@ -94,24 +94,20 @@ public struct PlayerPayload: Codable, Sendable {
 }
 
 public struct HolePayload: Codable, Sendable {
-    public let holeNumber: Int
+    public let number: Int            // Worker types.Hole.number 매칭 (1~18)
     public let par: Int
     public let scores: [ScoreEntryPayload]
-    public let obCounts: [ScoreEntryPayload]
-    public let hazardCounts: [ScoreEntryPayload]
 
     public init(from holeScore: HoleScore) {
-        self.holeNumber = holeScore.holeNumber
+        self.number = holeScore.holeNumber
         self.par = holeScore.par
-        self.scores = holeScore.counts.map { ScoreEntryPayload(playerId: $0.playerId.uuidString, value: $0.value) }
-        self.obCounts = holeScore.obCount.map { ScoreEntryPayload(playerId: $0.playerId.uuidString, value: $0.value) }
-        self.hazardCounts = holeScore.hazardCount.map { ScoreEntryPayload(playerId: $0.playerId.uuidString, value: $0.value) }
+        self.scores = holeScore.counts.map { ScoreEntryPayload(playerId: $0.playerId.uuidString, shots: $0.value) }
     }
 }
 
 public struct ScoreEntryPayload: Codable, Sendable {
     public let playerId: String
-    public let value: Int
+    public let shots: Int             // Worker types.HoleScore.shots 매칭
 }
 
 // MARK: - 옵션 페이로드
