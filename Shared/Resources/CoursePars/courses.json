@@ -1,17 +1,2311 @@
 {
-  "version": 1,
+  "version": 4,
   "updatedAt": "2026-05-18",
-  "notes": "골프장별 코스/홀별 par 사전 데이터. courseId는 Ref-docs/golf-db-pack courses_seed_v3.json의 id와 매칭. 향후 골프장 추가 시 이 파일에 항목 append.",
+  "notes": "골프존 lobby API hybrid (1차+2차 매칭). courseId는 courses_seed_v3.json과 매칭.",
   "courses": [
     {
-      "courseId": "아리지_경기",
-      "courseName": "아리지CC",
-      "source": "https://www.ariji.co.kr/course-info/*",
+      "courseId": "가평베네스트gc_kr",
+      "courseName": "가평베네스트G.C",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
       "confidence": "high",
       "subCourses": [
-        { "name": "햇님코스", "pars": [5, 4, 3, 4, 4, 3, 4, 4, 5] },
-        { "name": "달님코스", "pars": [4, 3, 4, 5, 4, 3, 5, 4, 4] },
-        { "name": "별님코스", "pars": [4, 5, 4, 4, 3, 4, 4, 3, 5] }
+        {
+          "name": "BIRCH/MAPLE 1",
+          "pars": [
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "BIRCH/MAPLE 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "MAPLE/PINE 2",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "골든베이골프리조트_충남",
+      "courseName": "골든베이골프&리조트",
+      "region": "충남",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "MOUNTAIN/VALLEY",
+          "pars": [
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "MOUNTAIN/VALLEY",
+          "pars": [
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "OCEAN/MOUNTAIN",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "골프존카운티진천_충북",
+      "courseName": "골프존카운티 진천",
+      "region": "충북",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "LAKE/MOUNTAIN 1",
+          "pars": [
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "LAKE/MOUNTAIN 2",
+          "pars": [
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "MOUNTAIN/VALLEY 2",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "남여주_경기",
+      "courseName": "남여주",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "코스1 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "코스2 2",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "남여주대중_kr",
+      "courseName": "남여주대중골프장",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "코스1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "코스2",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "남한강에스파크cc_kr",
+      "courseName": "남한강에스파크 컨트리클럽",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "코스1",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "코스2",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "뉴스프링빌_kr",
+      "courseName": "뉴스프링빌골프장",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "ALPS/MONTBLANC 1",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "ALPS/MONTBLANC 2",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "ROCKY/OLYMPUS 1",
+          "pars": [
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "ROCKY/OLYMPUS 2",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "뉴스프링빌cc_경기_1",
+      "courseName": "뉴스프링빌C.C.",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "ALPS/MONTBLANC",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "ALPS/MONTBLANC",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "ROCKY/OLYMPUS",
+          "pars": [
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "ROCKY/OLYMPUS",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "뉴스프링빌대중형_kr",
+      "courseName": "뉴스프링빌골프장(대중형)",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "ALPS/MONTBLANC",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "ALPS/MONTBLANC",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "ROCKY/OLYMPUS",
+          "pars": [
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "ROCKY/OLYMPUS",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "더크로스비gc_경기",
+      "courseName": "더크로스비골프클럽",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "샬롯/아리아 1",
+          "pars": [
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "샬롯/아리아 2",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            5,
+            3,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "빌리/샬롯 1",
+          "pars": [
+            5,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "라싸gc_경기",
+      "courseName": "라싸 골프클럽",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "LAKE/VALLEY 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            3,
+            5,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "LAKE/VALLEY 2",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            3,
+            4,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "VALLEY/MOUNTAIN 2",
+          "pars": [
+            4,
+            4,
+            5,
+            4,
+            3,
+            4,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "로드힐스gc_강원",
+      "courseName": "로드힐스골프클럽",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "힐스/로드",
+          "pars": [
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "힐스/로드",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "레이크/힐스",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            5,
+            4,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "리베라cc_경기",
+      "courseName": "리베라CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "레이크/밸리 1",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "레이크/밸리 2",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "체리힐/파인힐 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "체리힐/파인힐 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "마이다스레이크이천골프앤리조트_경기",
+      "courseName": "마이다스레이크이천 골프앤리조트",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "마이다스/올림푸스",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "마이다스/올림푸스",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "올림푸스/타이탄",
+          "pars": [
+            4,
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "백제cc_충남",
+      "courseName": "백제컨트리클럽",
+      "region": "충남",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "사비/한성 1",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "사비/한성 2",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "웅진/사비 1",
+          "pars": [
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "베네스트gc_경기",
+      "courseName": "베네스트G.C",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "BIRCH/MAPLE",
+          "pars": [
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "BIRCH/MAPLE",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "MAPLE/PINE",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "베뉴지cc_경기",
+      "courseName": "베뉴지C.C",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "G/HUE 1",
+          "pars": [
+            4,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "G/HUE 2",
+          "pars": [
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "HILL/G 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "베어크리크gc_경기",
+      "courseName": "베어크리크골프클럽",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "크리크코스 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "크리크코스 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "벨라45오너스cc_kr",
+      "courseName": "벨라45 오너스 컨트리클럽",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "오너스A/오너스B",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "오너스A/오너스B",
+          "pars": [
+            4,
+            4,
+            4,
+            5,
+            4,
+            3,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "마스터즈C/마스터즈D",
+          "pars": [
+            4,
+            4,
+            4,
+            5,
+            3,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "마스터즈C/마스터즈D",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "마스터즈D/마스터즈E",
+          "pars": [
+            4,
+            4,
+            3,
+            3,
+            5,
+            4,
+            4,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "비에이비스타cc_경기_1",
+      "courseName": "비에이비스타C.C.",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "몬티/벨라 1",
+          "pars": [
+            4,
+            4,
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "name": "몬티/벨라 2",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            5,
+            3,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "보나/호박 1",
+          "pars": [
+            5,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "보나/호박 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "비스타/라고 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "비스타/라고 2",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "비에이비스타회원제_kr",
+      "courseName": "비에이비스타 골프장(회원제)",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "몬티/벨라",
+          "pars": [
+            4,
+            4,
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "name": "몬티/벨라",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            5,
+            3,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "보나/호박",
+          "pars": [
+            5,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "보나/호박",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "비스타/라고",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "비스타/라고",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "샤인데일골프리조트_강원",
+      "courseName": "샤인데일골프&리조트",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "데일/샤인",
+          "pars": [
+            5,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "데일/샤인",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "레이크/데일",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "설악썬밸리cc_강원",
+      "courseName": "설악썬밸리컨트리클럽",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "밸리/설악 1",
+          "pars": [
+            4,
+            4,
+            4,
+            3,
+            5,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "밸리/설악 2",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "설악/썬 2",
+          "pars": [
+            4,
+            4,
+            3,
+            4,
+            4,
+            5,
+            4,
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "소피아그린_경기",
+      "courseName": "소피아그린",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "세종/여강 1",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "세종/여강 2",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "여강/황학 2",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            5,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "솔모로_경기",
+      "courseName": "솔모로",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "CHERRY/PERSIMMON 1",
+          "pars": [
+            4,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "name": "CHERRY/PERSIMMON 2",
+          "pars": [
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "PINE/MAPLE 1",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "PINE/MAPLE 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "신원cc_경기",
+      "courseName": "신원CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "데이비드/솔로몬 1",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "데이비드/솔로몬 2",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "솔로몬/에벤에셀 2",
+          "pars": [
+            4,
+            5,
+            4,
+            4,
+            3,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "아난티중앙gc구디에머슨_충북",
+      "courseName": "아난티 중앙골프클럽(구,디에머슨)",
+      "region": "충북",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "레이크/스카이",
+          "pars": [
+            5,
+            3,
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "레이크/스카이",
+          "pars": [
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "마운틴/레이크",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "아리지_경기",
+      "courseName": "아리지",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "달님/별님 1",
+          "pars": [
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "달님/별님 2",
+          "pars": [
+            4,
+            5,
+            4,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "name": "별님/햇님 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "알펜시아cc_강원",
+      "courseName": "알펜시아컨트리클럽",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "코스1",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "코스2",
+          "pars": [
+            4,
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "양평tpcgc_kr",
+      "courseName": "양평TPC GC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "LUNAR/STELLA 1",
+          "pars": [
+            4,
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "LUNAR/STELLA 2",
+          "pars": [
+            4,
+            5,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "SOLAR/LUNAR 1",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "자유_경기",
+      "courseName": "자유",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "코스1 1",
+          "pars": [
+            4,
+            4,
+            3,
+            4,
+            5,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "코스2 2",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            5,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "자유로cc_경기",
+      "courseName": "자유로컨트리클럽",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "대한/민국 1",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "대한/민국 2",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "민국/통일 2",
+          "pars": [
+            5,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "지산cc_경기_1",
+      "courseName": "지산CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "남/서 1",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "남/서 2",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "동/남 1",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "코스카_충북",
+      "courseName": "코스카",
+      "region": "충북",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "릴리/파인 1",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "릴리/파인 2",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "메이플/릴리 1",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "클럽모우골프라이프스타일_강원",
+      "courseName": "클럽모우골프 &라이프스타일",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "마운틴/오아시스",
+          "pars": [
+            5,
+            4,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "마운틴/오아시스",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "오아시스/와일드",
+          "pars": [
+            5,
+            4,
+            4,
+            4,
+            3,
+            5,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "킹즈락_충북",
+      "courseName": "킹즈락",
+      "region": "충북",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "EAST/WEST 1",
+          "pars": [
+            4,
+            5,
+            3,
+            5,
+            3,
+            4,
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "EAST/WEST 2",
+          "pars": [
+            5,
+            4,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "SOUTH/EAST 1",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "파인리즈cc_강원",
+      "courseName": "파인리즈컨트리클럽",
+      "region": "강원",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "LAKE/RIDGE 1",
+          "pars": [
+            4,
+            4,
+            4,
+            3,
+            4,
+            5,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "LAKE/RIDGE 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "PINE/LAKE 1",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "포천힐스cc_경기",
+      "courseName": "포천힐스컨트리클럽",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "코스1 1",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "코스2 2",
+          "pars": [
+            5,
+            3,
+            4,
+            5,
+            3,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "코스3 3",
+          "pars": [
+            5,
+            4,
+            5,
+            3,
+            4,
+            3,
+            4,
+            4,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "플라자cc_경기",
+      "courseName": "플라자CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "medium-alias-match",
+      "subCourses": [
+        {
+          "name": "LION",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            5,
+            4,
+            3,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "LION",
+          "pars": [
+            5,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "TIGER",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "TIGER",
+          "pars": [
+            4,
+            4,
+            4,
+            3,
+            4,
+            5,
+            3,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "필로스gc_경기",
+      "courseName": "필로스골프클럽",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "EAST/WEST 1",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "EAST/WEST 2",
+          "pars": [
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4,
+            4
+          ]
+        },
+        {
+          "name": "SOUTH/EAST 1",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            5,
+            4,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "한림용인cc_경기",
+      "courseName": "한림용인CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "다이아몬드/사파이어 1",
+          "pars": [
+            4,
+            5,
+            4,
+            3,
+            5,
+            4,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "다이아몬드/사파이어 2",
+          "pars": [
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "루비/다이아몬드 1",
+          "pars": [
+            4,
+            4,
+            5,
+            3,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "한원cc_경기",
+      "courseName": "한원CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "고구려/백제 1",
+          "pars": [
+            4,
+            5,
+            3,
+            4,
+            4,
+            4,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "고구려/백제 2",
+          "pars": [
+            5,
+            4,
+            3,
+            4,
+            4,
+            4,
+            3,
+            5,
+            4
+          ]
+        },
+        {
+          "name": "백제/신라 2",
+          "pars": [
+            4,
+            5,
+            4,
+            4,
+            4,
+            5,
+            3,
+            4,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "courseId": "해솔리아cc_경기",
+      "courseName": "해솔리아CC",
+      "region": "경기",
+      "source": "golfzon-lobby-api",
+      "confidence": "high",
+      "subCourses": [
+        {
+          "name": "리아코스/해코스 1",
+          "pars": [
+            5,
+            4,
+            5,
+            4,
+            3,
+            4,
+            4,
+            4,
+            3
+          ]
+        },
+        {
+          "name": "리아코스/해코스 2",
+          "pars": [
+            4,
+            5,
+            4,
+            4,
+            3,
+            5,
+            4,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "솔코스/리아코스 1",
+          "pars": [
+            5,
+            4,
+            4,
+            3,
+            4,
+            4,
+            5,
+            3,
+            4
+          ]
+        }
       ]
     }
   ]
