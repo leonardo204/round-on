@@ -66,6 +66,15 @@ struct NewRoundView: View {
     /// Par 안내 alert (라운드 시작 직전 표시)
     @State private var showParGuideAlert: Bool = false
 
+    /// 복원 모드 — true이면 onAppear에서 NewRoundDraftStore.load() 적용
+    private let restoreDraft: Bool
+
+    init(roundViewModel: Binding<RoundViewModel?>, isPresented: Binding<Bool>, restoreDraft: Bool = false) {
+        self._roundViewModel = roundViewModel
+        self._isPresented = isPresented
+        self.restoreDraft = restoreDraft
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -126,8 +135,18 @@ struct NewRoundView: View {
             }
             .task {
                 await loadCourses()
-                await matchNearestCourse()
+                if restoreDraft, let draft = NewRoundDraftStore.load() {
+                    applyDraft(draft)
+                } else {
+                    await matchNearestCourse()
+                }
             }
+            .onChange(of: matchedCourse?.id) { _, _ in saveDraft() }
+            .onChange(of: selectedFrontSubCourse?.id) { _, _ in saveDraft() }
+            .onChange(of: selectedBackSubCourse?.id) { _, _ in saveDraft() }
+            .onChange(of: selectedHolesCount) { _, _ in saveDraft() }
+            .onChange(of: playerCount) { _, _ in saveDraft() }
+            .onChange(of: playerNames) { _, _ in saveDraft() }
             .sheet(isPresented: $showCourseSearch) {
                 CourseSearchSheet(
                     localCourses: allCourses,
@@ -761,7 +780,42 @@ struct NewRoundView: View {
             holesCount: holes
         )
         roundViewModel = vm
+        // 라운드 실제 시작 — draft clear
+        NewRoundDraftStore.clear()
         isPresented = false
+    }
+
+    // MARK: - Draft persistence
+
+    private func saveDraft() {
+        let draft = NewRoundDraft(
+            courseId: matchedCourse?.id ?? "",
+            courseName: matchedCourse?.name ?? "",
+            frontSubCourseName: selectedFrontSubCourse?.name,
+            backSubCourseName: selectedBackSubCourse?.name,
+            holesCount: selectedHolesCount,
+            playerNames: playerNames,
+            playerCount: playerCount
+        )
+        NewRoundDraftStore.save(draft)
+    }
+
+    private func applyDraft(_ draft: NewRoundDraft) {
+        // 골프장 — id로 allCourses에서 찾기
+        if !draft.courseId.isEmpty, let course = allCourses.first(where: { $0.id == draft.courseId }) {
+            matchedCourse = course
+            // 서브코스 매칭
+            if let frontName = draft.frontSubCourseName {
+                selectedFrontSubCourse = course.subCourses?.first(where: { $0.name == frontName })
+            }
+            if let backName = draft.backSubCourseName {
+                selectedBackSubCourse = course.subCourses?.first(where: { $0.name == backName })
+            }
+        }
+        selectedHolesCount = draft.holesCount
+        playerCount = draft.playerCount
+        playerNames = draft.playerNames
+        AppLogger.view.info("NewRoundDraft 복원: course=\(draft.courseName, privacy: .private), \(draft.playerCount)명")
     }
 }
 

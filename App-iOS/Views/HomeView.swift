@@ -15,10 +15,12 @@ struct HomeView: View {
     @Query(sort: \Round.startedAt, order: .reverse) private var rounds: [Round]
     @Environment(\.scenePhase) private var scenePhase
     @State private var showNewRound = false
+    @State private var showResumeNewRound = false  // draft 복원 모드
     @State private var showStats = false
     @State private var showSettings = false
     @State private var selectedRound: Round?
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
+    @State private var pendingDraft: NewRoundDraft?  // 홈에 표시될 hint banner
     @Binding var roundViewModel: RoundViewModel?
     let onRoundFinished: ((Round) -> Void)?
 
@@ -31,6 +33,12 @@ struct HomeView: View {
         VStack(spacing: 0) {
             customHeader
 
+            if let draft = pendingDraft {
+                draftResumeBanner(draft)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+            }
+
             if rounds.isEmpty {
                 emptyStateView
             } else {
@@ -40,7 +48,10 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .tint(.accentGreen)
         .fullScreenCover(isPresented: $showNewRound) {
-            NewRoundView(roundViewModel: $roundViewModel, isPresented: $showNewRound)
+            NewRoundView(roundViewModel: $roundViewModel, isPresented: $showNewRound, restoreDraft: false)
+        }
+        .fullScreenCover(isPresented: $showResumeNewRound) {
+            NewRoundView(roundViewModel: $roundViewModel, isPresented: $showResumeNewRound, restoreDraft: true)
         }
         .fullScreenCover(isPresented: $showStats) {
             NavigationStack {
@@ -74,6 +85,13 @@ struct HomeView: View {
         }
         .task {
             refreshLocationStatus()
+            refreshDraft()
+        }
+        .onChange(of: showNewRound) { _, isPresented in
+            if !isPresented { refreshDraft() }
+        }
+        .onChange(of: showResumeNewRound) { _, isPresented in
+            if !isPresented { refreshDraft() }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -91,6 +109,70 @@ struct HomeView: View {
 
     private var isLocationAuthorized: Bool {
         locationStatus == .authorizedWhenInUse || locationStatus == .authorizedAlways
+    }
+
+    // MARK: - Draft resume banner
+
+    private func refreshDraft() {
+        pendingDraft = NewRoundDraftStore.load()
+    }
+
+    private func draftResumeBanner(_ draft: NewRoundDraft) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "arrow.uturn.left.circle.fill")
+                .font(.system(size: 22))
+                .foregroundStyle(Color.accentGreen)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("설정 중인 라운드가 있어요")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color.primary)
+                Text(draftSummary(draft))
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            HStack(spacing: 8) {
+                Button {
+                    showResumeNewRound = true
+                } label: {
+                    Text("이어가기")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(Color.accentGreen, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("설정 중인 라운드 이어가기")
+
+                Button {
+                    NewRoundDraftStore.clear()
+                    pendingDraft = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("설정 폐기")
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(Color(.secondarySystemGroupedBackground),
+                    in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+
+    private func draftSummary(_ draft: NewRoundDraft) -> String {
+        var parts: [String] = []
+        if !draft.courseName.isEmpty { parts.append(draft.courseName) }
+        parts.append("\(draft.playerCount)명")
+        parts.append("\(draft.holesCount)홀")
+        return parts.joined(separator: " · ")
     }
 
     // MARK: - Custom header (라운드온 + 액션 2개) — mockup 1:1 매칭
