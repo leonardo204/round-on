@@ -61,6 +61,28 @@ struct WatchHoleSwipeContainer: View {
         owner: Player,
         scoreVM: ScoreCardViewModel
     ) -> some View {
+        OwnerHoleContentView(
+            holeNumber: holeNumber,
+            totalHoles: totalHoles,
+            owner: owner,
+            scoreVM: scoreVM,
+            roundVM: roundVM
+        )
+    }
+}
+
+// MARK: - OwnerHoleContentView (코스 picker sheet 지원)
+
+private struct OwnerHoleContentView: View {
+    let holeNumber: Int
+    let totalHoles: Int
+    let owner: Player
+    let scoreVM: ScoreCardViewModel
+    @Bindable var roundVM: RoundViewModel
+
+    @State private var showCoursePicker: Bool = false
+
+    var body: some View {
         let count = scoreVM.count(holeNumber: holeNumber, playerId: owner.id)
         let par = scoreVM.parByHole[holeNumber] ?? 4
 
@@ -86,19 +108,16 @@ struct WatchHoleSwipeContainer: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Par \(par). 탭하여 \(par == 3 ? 4 : (par == 4 ? 5 : 3))로 변경")
 
-                // 코스 cycle 버튼 (현재 홀 속한 half의 다음 코스로 순환)
+                // 코스 수정 버튼 — 탭하면 picker sheet
                 if let round = roundVM.currentRound {
                     let subs = CourseParsCatalog.subCourseNames(for: round.courseId)
                     if subs.count >= 2 {
                         let isBack = holeNumber > 9
                         let cur = isBack ? round.backCourseName : round.frontCourseName
-                        let curIdx = cur.flatMap { subs.firstIndex(of: $0) } ?? -1
-                        let next = subs[(curIdx + 1) % subs.count]
                         Button {
-                            roundVM.changeSubCourse(half: isBack ? .back : .front, to: next)
-                            Task { await HapticEngine.shared.play(.holeManualChange) }
+                            showCoursePicker = true
                         } label: {
-                            Text(cur ?? "코스")
+                            Text(cur ?? "코스 수정")
                                 .font(.system(size: 10, weight: .medium))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 5)
@@ -108,7 +127,16 @@ struct WatchHoleSwipeContainer: View {
                                 .minimumScaleFactor(0.7)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("코스 \(cur ?? "-"). 탭하여 \(next)로 변경")
+                        .accessibilityLabel("코스 수정. 현재: \(cur ?? "미선택")")
+                        .sheet(isPresented: $showCoursePicker) {
+                            CoursePickerSheet(
+                                round: round,
+                                subs: subs,
+                                currentHoleNumber: holeNumber,
+                                roundVM: roundVM,
+                                isPresented: $showCoursePicker
+                            )
+                        }
                     }
                 }
 
@@ -196,5 +224,86 @@ struct WatchHoleSwipeContainer: View {
         if diff == 0 { return "Par \(par) · E" }
         if diff > 0 { return "Par \(par) · +\(diff)" }
         return "Par \(par) · \(diff)"
+    }
+}
+
+// MARK: - CoursePickerSheet (Watch 코스 수정)
+
+private struct CoursePickerSheet: View {
+    let round: Round
+    let subs: [String]
+    let currentHoleNumber: Int
+    @Bindable var roundVM: RoundViewModel
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        let totalHoles = round.holeList.count
+        ScrollView {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("코스 수정")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 4)
+
+                // 전반 섹션
+                Text("전반")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+                ForEach(subs, id: \.self) { name in
+                    let isCurrent = round.frontCourseName == name
+                    Button {
+                        roundVM.changeSubCourse(half: .front, to: name)
+                        Task { await HapticEngine.shared.play(.holeManualChange) }
+                        isPresented = false
+                    } label: {
+                        HStack {
+                            Text(name)
+                                .font(.system(size: 13))
+                                .foregroundStyle(isCurrent ? Color.green : .primary)
+                            Spacer()
+                            if isCurrent {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 11, weight: .bold))
+                                    .foregroundStyle(Color.green)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                // 후반 섹션 (18홀일 때만)
+                if totalHoles == 18 {
+                    Divider().padding(.vertical, 4)
+                    Text("후반")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.secondary)
+                    ForEach(subs, id: \.self) { name in
+                        let isCurrent = round.backCourseName == name
+                        Button {
+                            roundVM.changeSubCourse(half: .back, to: name)
+                            Task { await HapticEngine.shared.play(.holeManualChange) }
+                            isPresented = false
+                        } label: {
+                            HStack {
+                                Text(name)
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(isCurrent ? Color.green : .primary)
+                                Spacer()
+                                if isCurrent {
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 11, weight: .bold))
+                                        .foregroundStyle(Color.green)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 8)
+        }
     }
 }

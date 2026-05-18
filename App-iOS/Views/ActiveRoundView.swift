@@ -12,6 +12,7 @@ struct ActiveRoundView: View {
     @State private var showDiscardConfirm = false
     @State private var showPenaltySheet = false
     @State private var bannerMessage: String?
+    @State private var prefillToastMessage: String?
 
     @AppStorage(PenaltySettings.Key.activeRoundMode) private var activeMode: String = PenaltySettings.Default.activeRoundMode
     @AppStorage(PenaltySettings.Key.obDelta) private var obDelta: Int = PenaltySettings.Default.obDelta
@@ -49,6 +50,33 @@ struct ActiveRoundView: View {
                     } else if let scoreVM = scoreVM {
                         scoreCardGrid(scoreVM: scoreVM)
                     }
+                }
+
+                // par prefill 토스트 (라운드 시작 직후 1.5초)
+                if let msg = prefillToastMessage {
+                    VStack {
+                        Spacer()
+                        Text(msg)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(Color.springTextPrimary)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(Color.springSurfaceElevated)
+                            .clipShape(Capsule())
+                            .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 4)
+                            .padding(.bottom, 40)
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .animation(.easeInOut(duration: 0.25), value: prefillToastMessage)
+                }
+            }
+            .onChange(of: roundVM.lastPrefillToastMessage) { _, newMsg in
+                guard let msg = newMsg else { return }
+                withAnimation { prefillToastMessage = msg }
+                roundVM.lastPrefillToastMessage = nil
+                Task {
+                    try? await Task.sleep(for: .seconds(1.5))
+                    withAnimation { prefillToastMessage = nil }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -147,12 +175,20 @@ struct ActiveRoundView: View {
                                 }
                             }
                         } label: {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                                .font(.system(size: 15))
-                                .foregroundStyle(Color.springGreenPrimary)
-                                .padding(.horizontal, 8)
+                            HStack(spacing: 4) {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.system(size: 12))
+                                Text("코스 수정")
+                                    .font(.system(size: 12, weight: .medium))
+                            }
+                            .foregroundStyle(Color.springGreenPrimary)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .overlay(
+                                Capsule().stroke(Color.springGreenPrimary.opacity(0.6), lineWidth: 1)
+                            )
                         }
-                        .accessibilityLabel("코스 변경")
+                        .accessibilityLabel("코스 수정")
                     }
                 }
                 // 현재 홀 표시 + 플레이어 칩
