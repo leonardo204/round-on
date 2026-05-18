@@ -1,7 +1,7 @@
 {
-  "version": 5,
+  "version": 6,
   "updatedAt": "2026-05-18",
-  "notes": "골프존 lobby API 전체 한국 골프장 일괄 수집 (가상CC 제외). courseId가 'golfzon_'으로 시작하면 우리 DB 매칭 실패한 fallback. confidence: high-exact/relaxed/loose/unmatched.",
+  "notes": "골프존 18홀 페어(\"X/Y 1\") → 9홀 unique 코스(X, Y) 분리 정규화. NewRoundView picker가 전반/후반 자유 조합 가능.",
   "courses": [
     {
       "courseId": "gcq_경기",
@@ -11,7 +11,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -25,7 +25,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -48,7 +48,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -62,7 +62,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -85,7 +85,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -99,7 +99,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -122,7 +122,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -136,7 +136,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -159,7 +159,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -173,7 +173,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -196,7 +196,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -210,7 +210,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -233,7 +233,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -247,7 +247,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -270,7 +270,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -284,7 +284,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -307,7 +307,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -321,7 +321,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -344,7 +344,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -358,7 +358,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -381,7 +381,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -395,7 +395,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -409,7 +409,7 @@
           ]
         },
         {
-          "name": "코스3 3",
+          "name": "코스3",
           "pars": [
             4,
             4,
@@ -423,7 +423,7 @@
           ]
         },
         {
-          "name": "코스4 4",
+          "name": "코스4",
           "pars": [
             4,
             4,
@@ -446,7 +446,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -460,7 +460,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -483,7 +483,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -497,7 +497,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -520,7 +520,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -534,7 +534,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -557,7 +557,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -571,7 +571,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -594,7 +594,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -608,7 +608,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -631,7 +631,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -645,7 +645,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -668,7 +668,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "VALLEY/HILL 1",
+          "name": "VALLEY",
           "pars": [
             4,
             3,
@@ -682,7 +682,7 @@
           ]
         },
         {
-          "name": "VALLEY/HILL 2",
+          "name": "HILL",
           "pars": [
             4,
             5,
@@ -696,7 +696,7 @@
           ]
         },
         {
-          "name": "GOLD/LAKE 1",
+          "name": "GOLD",
           "pars": [
             5,
             4,
@@ -710,7 +710,7 @@
           ]
         },
         {
-          "name": "GOLD/LAKE 2",
+          "name": "LAKE",
           "pars": [
             4,
             3,
@@ -733,7 +733,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "LION 1",
+          "name": "LION",
           "pars": [
             4,
             4,
@@ -747,21 +747,7 @@
           ]
         },
         {
-          "name": "LION 2",
-          "pars": [
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "TIGER 1",
+          "name": "TIGER",
           "pars": [
             5,
             4,
@@ -772,20 +758,6 @@
             3,
             4,
             5
-          ]
-        },
-        {
-          "name": "TIGER 2",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            5,
-            4
           ]
         }
       ]
@@ -798,7 +770,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "ALPS/MONTBLANC 1",
+          "name": "ALPS",
           "pars": [
             4,
             4,
@@ -812,7 +784,7 @@
           ]
         },
         {
-          "name": "ALPS/MONTBLANC 2",
+          "name": "MONTBLANC",
           "pars": [
             4,
             3,
@@ -826,7 +798,7 @@
           ]
         },
         {
-          "name": "ROCKY/OLYMPUS 1",
+          "name": "ROCKY",
           "pars": [
             4,
             3,
@@ -840,7 +812,7 @@
           ]
         },
         {
-          "name": "ROCKY/OLYMPUS 2",
+          "name": "OLYMPUS",
           "pars": [
             4,
             3,
@@ -863,7 +835,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "LAKE/VALLEY 1",
+          "name": "LAKE",
           "pars": [
             4,
             3,
@@ -877,7 +849,7 @@
           ]
         },
         {
-          "name": "LAKE/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             3,
@@ -891,7 +863,7 @@
           ]
         },
         {
-          "name": "SKY/PALM 1",
+          "name": "SKY",
           "pars": [
             4,
             3,
@@ -905,7 +877,7 @@
           ]
         },
         {
-          "name": "SKY/PALM 2",
+          "name": "PALM",
           "pars": [
             4,
             4,
@@ -928,7 +900,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "MOUNTAIN/VALLEY 1",
+          "name": "MOUNTAIN",
           "pars": [
             4,
             3,
@@ -942,7 +914,7 @@
           ]
         },
         {
-          "name": "MOUNTAIN/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             4,
@@ -956,49 +928,7 @@
           ]
         },
         {
-          "name": "OCEAN/MOUNTAIN 1",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "OCEAN/MOUNTAIN 2",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "VALLEY/OCEAN 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "VALLEY/OCEAN 2",
+          "name": "OCEAN",
           "pars": [
             4,
             3,
@@ -1021,7 +951,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "마운틴/밸리 1",
+          "name": "마운틴",
           "pars": [
             5,
             4,
@@ -1035,7 +965,7 @@
           ]
         },
         {
-          "name": "마운틴/밸리 2",
+          "name": "밸리",
           "pars": [
             4,
             5,
@@ -1049,21 +979,7 @@
           ]
         },
         {
-          "name": "밸리/스카이 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "밸리/스카이 2",
+          "name": "스카이",
           "pars": [
             4,
             5,
@@ -1074,34 +990,6 @@
             4,
             4,
             5
-          ]
-        },
-        {
-          "name": "스카이/마운틴 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            3,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "스카이/마운틴 2",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4,
-            6
           ]
         }
       ]
@@ -1114,7 +1002,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "남/진 1",
+          "name": "남",
           "pars": [
             5,
             3,
@@ -1128,7 +1016,7 @@
           ]
         },
         {
-          "name": "남/진 2",
+          "name": "진",
           "pars": [
             4,
             4,
@@ -1142,49 +1030,7 @@
           ]
         },
         {
-          "name": "정/남 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "정/남 2",
-          "pars": [
-            5,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "진/정 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "진/정 2",
+          "name": "정",
           "pars": [
             4,
             4,
@@ -1207,7 +1053,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "데일/샤인 1",
+          "name": "데일",
           "pars": [
             5,
             4,
@@ -1221,7 +1067,7 @@
           ]
         },
         {
-          "name": "데일/샤인 2",
+          "name": "샤인",
           "pars": [
             5,
             4,
@@ -1235,49 +1081,7 @@
           ]
         },
         {
-          "name": "레이크/데일 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "레이크/데일 2",
-          "pars": [
-            5,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "샤인/레이크 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "샤인/레이크 2",
+          "name": "레이크",
           "pars": [
             4,
             5,
@@ -1300,7 +1104,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -1314,7 +1118,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -1337,7 +1141,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             4,
@@ -1351,7 +1155,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             4,
             5,
@@ -1365,7 +1169,7 @@
           ]
         },
         {
-          "name": "SOUTH 1",
+          "name": "SOUTH",
           "pars": [
             4,
             3,
@@ -1376,20 +1180,6 @@
             5,
             4,
             3
-          ]
-        },
-        {
-          "name": "SOUTH 2",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5
           ]
         }
       ]
@@ -1402,7 +1192,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -1416,7 +1206,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -1439,7 +1229,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "HILL/LAKE 1",
+          "name": "HILL",
           "pars": [
             4,
             4,
@@ -1453,7 +1243,7 @@
           ]
         },
         {
-          "name": "HILL/LAKE 2",
+          "name": "LAKE",
           "pars": [
             4,
             5,
@@ -1467,21 +1257,7 @@
           ]
         },
         {
-          "name": "LAKE/MOUNTAIN 1",
-          "pars": [
-            4,
-            5,
-            3,
-            5,
-            4,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "LAKE/MOUNTAIN 2",
+          "name": "MOUNTAIN",
           "pars": [
             5,
             4,
@@ -1491,34 +1267,6 @@
             4,
             4,
             3,
-            5
-          ]
-        },
-        {
-          "name": "MOUNTAIN/HILL 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "MOUNTAIN/HILL 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
             5
           ]
         }
@@ -1532,7 +1280,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "청룡/백호 1",
+          "name": "청룡",
           "pars": [
             4,
             5,
@@ -1546,7 +1294,7 @@
           ]
         },
         {
-          "name": "청룡/백호 2",
+          "name": "백호",
           "pars": [
             4,
             4,
@@ -1560,7 +1308,7 @@
           ]
         },
         {
-          "name": "현무/주작 1",
+          "name": "현무",
           "pars": [
             4,
             4,
@@ -1574,7 +1322,7 @@
           ]
         },
         {
-          "name": "현무/주작 2",
+          "name": "주작",
           "pars": [
             5,
             4,
@@ -1597,7 +1345,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "마운틴/오아시스 1",
+          "name": "마운틴",
           "pars": [
             5,
             4,
@@ -1611,7 +1359,7 @@
           ]
         },
         {
-          "name": "마운틴/오아시스 2",
+          "name": "오아시스",
           "pars": [
             4,
             5,
@@ -1625,21 +1373,7 @@
           ]
         },
         {
-          "name": "오아시스/와일드 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "오아시스/와일드 2",
+          "name": "와일드",
           "pars": [
             5,
             4,
@@ -1650,34 +1384,6 @@
             3,
             4,
             4
-          ]
-        },
-        {
-          "name": "와일드/마운틴 1",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "와일드/마운틴 2",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5
           ]
         }
       ]
@@ -1690,7 +1396,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -1704,7 +1410,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -1727,7 +1433,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -1741,7 +1447,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -1764,7 +1470,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "릴리/파인 1",
+          "name": "릴리",
           "pars": [
             4,
             5,
@@ -1778,7 +1484,7 @@
           ]
         },
         {
-          "name": "릴리/파인 2",
+          "name": "파인",
           "pars": [
             4,
             4,
@@ -1792,49 +1498,7 @@
           ]
         },
         {
-          "name": "메이플/릴리 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "메이플/릴리 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "파인/메이플 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "파인/메이플 2",
+          "name": "메이플",
           "pars": [
             4,
             5,
@@ -1857,7 +1521,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "EDWARD/HENRY 1",
+          "name": "EDWARD",
           "pars": [
             4,
             3,
@@ -1871,7 +1535,7 @@
           ]
         },
         {
-          "name": "EDWARD/HENRY 2",
+          "name": "HENRY",
           "pars": [
             4,
             5,
@@ -1885,21 +1549,7 @@
           ]
         },
         {
-          "name": "HENRY/WILLIAM 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "HENRY/WILLIAM 2",
+          "name": "WILLIAM",
           "pars": [
             5,
             4,
@@ -1909,34 +1559,6 @@
             5,
             4,
             3,
-            4
-          ]
-        },
-        {
-          "name": "WILLIAM/EDWARD 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "WILLIAM/EDWARD 2",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            5,
-            3,
-            4,
             4
           ]
         }
@@ -1950,7 +1572,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "라고 1",
+          "name": "라고",
           "pars": [
             5,
             4,
@@ -1964,21 +1586,7 @@
           ]
         },
         {
-          "name": "라고 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "솔 1",
+          "name": "솔",
           "pars": [
             4,
             5,
@@ -1989,20 +1597,6 @@
             3,
             4,
             4
-          ]
-        },
-        {
-          "name": "솔 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            4,
-            3,
-            5
           ]
         }
       ]
@@ -2015,7 +1609,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "가야/공룡 1",
+          "name": "가야",
           "pars": [
             4,
             5,
@@ -2029,7 +1623,7 @@
           ]
         },
         {
-          "name": "가야/공룡 2",
+          "name": "공룡",
           "pars": [
             5,
             4,
@@ -2043,21 +1637,7 @@
           ]
         },
         {
-          "name": "공룡/충무 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "공룡/충무 2",
+          "name": "충무",
           "pars": [
             4,
             3,
@@ -2067,34 +1647,6 @@
             5,
             3,
             4,
-            4
-          ]
-        },
-        {
-          "name": "충무/가야 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "충무/가야 2",
-          "pars": [
-            4,
-            5,
-            3,
-            5,
-            4,
-            4,
-            4,
-            3,
             4
           ]
         }
@@ -2108,7 +1660,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "남/동 1",
+          "name": "남",
           "pars": [
             4,
             5,
@@ -2122,7 +1674,7 @@
           ]
         },
         {
-          "name": "남/동 2",
+          "name": "동",
           "pars": [
             4,
             4,
@@ -2136,21 +1688,7 @@
           ]
         },
         {
-          "name": "동/서 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "동/서 2",
+          "name": "서",
           "pars": [
             5,
             4,
@@ -2161,34 +1699,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "서/남 1",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "서/남 2",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4
           ]
         }
       ]
@@ -2201,7 +1711,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "비치힐스/에코 1",
+          "name": "비치힐스",
           "pars": [
             4,
             4,
@@ -2215,7 +1725,7 @@
           ]
         },
         {
-          "name": "비치힐스/에코 2",
+          "name": "에코",
           "pars": [
             4,
             5,
@@ -2229,21 +1739,7 @@
           ]
         },
         {
-          "name": "에코/와일드 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "에코/와일드 2",
+          "name": "와일드",
           "pars": [
             4,
             5,
@@ -2253,34 +1749,6 @@
             4,
             3,
             5,
-            4
-          ]
-        },
-        {
-          "name": "와일드/비치힐스 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "와일드/비치힐스 2",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
             4
           ]
         }
@@ -2294,7 +1762,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "KINGS 1",
+          "name": "KINGS",
           "pars": [
             4,
             5,
@@ -2308,38 +1776,10 @@
           ]
         },
         {
-          "name": "KINGS 2",
+          "name": "QUEENS",
           "pars": [
             5,
             4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "QUEENS 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "QUEENS 2",
-          "pars": [
-            4,
-            5,
             4,
             3,
             4,
@@ -2359,7 +1799,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -2373,7 +1813,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -2396,7 +1836,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -2410,7 +1850,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -2433,7 +1873,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "드래곤/스카이 1",
+          "name": "드래곤",
           "pars": [
             4,
             5,
@@ -2447,7 +1887,7 @@
           ]
         },
         {
-          "name": "드래곤/스카이 2",
+          "name": "스카이",
           "pars": [
             4,
             3,
@@ -2461,49 +1901,7 @@
           ]
         },
         {
-          "name": "레이크/드래곤 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "레이크/드래곤 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "스카이/레이크 1",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "스카이/레이크 2",
+          "name": "레이크",
           "pars": [
             4,
             4,
@@ -2526,7 +1924,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "가락/신어 1",
+          "name": "가락",
           "pars": [
             4,
             3,
@@ -2540,7 +1938,7 @@
           ]
         },
         {
-          "name": "가락/신어 2",
+          "name": "신어",
           "pars": [
             4,
             3,
@@ -2554,7 +1952,7 @@
           ]
         },
         {
-          "name": "김해/수로 1",
+          "name": "김해",
           "pars": [
             5,
             4,
@@ -2568,7 +1966,7 @@
           ]
         },
         {
-          "name": "김해/수로 2",
+          "name": "수로",
           "pars": [
             4,
             4,
@@ -2582,49 +1980,7 @@
           ]
         },
         {
-          "name": "낙동/가락 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "낙동/가락 2",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "신어/낙동 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "신어/낙동 2",
+          "name": "낙동",
           "pars": [
             5,
             4,
@@ -2647,7 +2003,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "리버/블루 1",
+          "name": "리버",
           "pars": [
             5,
             4,
@@ -2661,7 +2017,7 @@
           ]
         },
         {
-          "name": "리버/블루 2",
+          "name": "블루",
           "pars": [
             4,
             5,
@@ -2675,21 +2031,7 @@
           ]
         },
         {
-          "name": "블루/실크 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "블루/실크 2",
+          "name": "실크",
           "pars": [
             4,
             4,
@@ -2700,34 +2042,6 @@
             3,
             4,
             4
-          ]
-        },
-        {
-          "name": "실크/리버 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "실크/리버 2",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            4,
-            3,
-            4,
-            3,
-            5
           ]
         }
       ]
@@ -2740,7 +2054,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             3,
@@ -2754,7 +2068,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             5,
             4,
@@ -2768,49 +2082,7 @@
           ]
         },
         {
-          "name": "SOUTH/EAST 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "SOUTH/EAST 2",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 2",
+          "name": "SOUTH",
           "pars": [
             4,
             5,
@@ -2833,7 +2105,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -2847,7 +2119,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -2870,7 +2142,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -2884,7 +2156,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -2907,7 +2179,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "남/서 1",
+          "name": "남",
           "pars": [
             4,
             4,
@@ -2921,7 +2193,7 @@
           ]
         },
         {
-          "name": "남/서 2",
+          "name": "서",
           "pars": [
             4,
             5,
@@ -2935,49 +2207,7 @@
           ]
         },
         {
-          "name": "동/남 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "동/남 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "서/동 1",
-          "pars": [
-            4,
-            5,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "서/동 2",
+          "name": "동",
           "pars": [
             4,
             5,
@@ -3000,7 +2230,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -3014,7 +2244,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -3037,7 +2267,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "HILL/VALLEY 1",
+          "name": "HILL",
           "pars": [
             4,
             3,
@@ -3051,7 +2281,7 @@
           ]
         },
         {
-          "name": "HILL/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             4,
@@ -3065,49 +2295,7 @@
           ]
         },
         {
-          "name": "LAKE/HILL 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "LAKE/HILL 2",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "VALLEY/LAKE 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "VALLEY/LAKE 2",
+          "name": "LAKE",
           "pars": [
             4,
             3,
@@ -3130,7 +2318,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -3144,7 +2332,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -3167,7 +2355,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -3181,7 +2369,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -3204,7 +2392,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "카일필립스 1",
+          "name": "카일필립스",
           "pars": [
             4,
             3,
@@ -3218,21 +2406,7 @@
           ]
         },
         {
-          "name": "카일필립스 2",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "짐앵A/짐앵B 1",
+          "name": "짐앵A",
           "pars": [
             5,
             4,
@@ -3246,7 +2420,7 @@
           ]
         },
         {
-          "name": "짐앵A/짐앵B 2",
+          "name": "짐앵B",
           "pars": [
             4,
             3,
@@ -3260,21 +2434,7 @@
           ]
         },
         {
-          "name": "짐앵B/짐앵C 1",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            3,
-            5,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "짐앵B/짐앵C 2",
+          "name": "짐앵C",
           "pars": [
             5,
             4,
@@ -3284,34 +2444,6 @@
             3,
             4,
             3,
-            4
-          ]
-        },
-        {
-          "name": "짐앵C/짐앵A 1",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            5,
-            3,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "짐앵C/짐앵A 2",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            3,
-            4,
-            3,
-            5,
             4
           ]
         }
@@ -3325,7 +2457,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "남/서 1",
+          "name": "남",
           "pars": [
             4,
             4,
@@ -3339,7 +2471,7 @@
           ]
         },
         {
-          "name": "남/서 2",
+          "name": "서",
           "pars": [
             4,
             5,
@@ -3353,49 +2485,7 @@
           ]
         },
         {
-          "name": "동/남 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "동/남 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "서/동 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "서/동 2",
+          "name": "동",
           "pars": [
             4,
             5,
@@ -3418,7 +2508,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "힐스/로드 1",
+          "name": "힐스",
           "pars": [
             4,
             3,
@@ -3432,7 +2522,7 @@
           ]
         },
         {
-          "name": "힐스/로드 2",
+          "name": "로드",
           "pars": [
             4,
             4,
@@ -3446,49 +2536,7 @@
           ]
         },
         {
-          "name": "레이크/힐스 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "레이크/힐스 2",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "로드/레이크 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "로드/레이크 2",
+          "name": "레이크",
           "pars": [
             4,
             4,
@@ -3511,7 +2559,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "HIDDEN/HEALING 1",
+          "name": "HIDDEN",
           "pars": [
             4,
             5,
@@ -3525,7 +2573,7 @@
           ]
         },
         {
-          "name": "HIDDEN/HEALING 2",
+          "name": "HEALING",
           "pars": [
             4,
             4,
@@ -3548,7 +2596,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "백두/함백 1",
+          "name": "백두",
           "pars": [
             5,
             5,
@@ -3562,7 +2610,7 @@
           ]
         },
         {
-          "name": "백두/함백 2",
+          "name": "함백",
           "pars": [
             4,
             4,
@@ -3576,49 +2624,7 @@
           ]
         },
         {
-          "name": "태백/백두 1",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "태백/백두 2",
-          "pars": [
-            5,
-            5,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3
-          ]
-        },
-        {
-          "name": "함백/태백 1",
-          "pars": [
-            4,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "함백/태백 2",
+          "name": "태백",
           "pars": [
             5,
             3,
@@ -3641,7 +2647,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "오너스A/오너스B 1",
+          "name": "오너스A",
           "pars": [
             5,
             4,
@@ -3655,7 +2661,7 @@
           ]
         },
         {
-          "name": "오너스A/오너스B 2",
+          "name": "오너스B",
           "pars": [
             4,
             4,
@@ -3669,7 +2675,7 @@
           ]
         },
         {
-          "name": "마스터즈C/마스터즈D 1",
+          "name": "마스터즈C",
           "pars": [
             4,
             4,
@@ -3683,7 +2689,7 @@
           ]
         },
         {
-          "name": "마스터즈C/마스터즈D 2",
+          "name": "마스터즈D",
           "pars": [
             4,
             4,
@@ -3697,21 +2703,7 @@
           ]
         },
         {
-          "name": "마스터즈D/마스터즈E 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "마스터즈D/마스터즈E 2",
+          "name": "마스터즈E",
           "pars": [
             4,
             4,
@@ -3722,34 +2714,6 @@
             4,
             4,
             5
-          ]
-        },
-        {
-          "name": "마스터즈E/마스터즈C 1",
-          "pars": [
-            4,
-            4,
-            3,
-            3,
-            5,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "마스터즈E/마스터즈C 2",
-          "pars": [
-            4,
-            4,
-            4,
-            5,
-            3,
-            4,
-            3,
-            5,
-            4
           ]
         }
       ]
@@ -3762,7 +2726,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "몬티/벨라 1",
+          "name": "몬티",
           "pars": [
             4,
             4,
@@ -3776,7 +2740,7 @@
           ]
         },
         {
-          "name": "몬티/벨라 2",
+          "name": "벨라",
           "pars": [
             4,
             5,
@@ -3790,7 +2754,7 @@
           ]
         },
         {
-          "name": "보나/호박 1",
+          "name": "보나",
           "pars": [
             5,
             4,
@@ -3804,7 +2768,7 @@
           ]
         },
         {
-          "name": "보나/호박 2",
+          "name": "호박",
           "pars": [
             5,
             4,
@@ -3818,7 +2782,7 @@
           ]
         },
         {
-          "name": "비스타/라고 1",
+          "name": "비스타",
           "pars": [
             4,
             4,
@@ -3832,7 +2796,7 @@
           ]
         },
         {
-          "name": "비스타/라고 2",
+          "name": "라고",
           "pars": [
             4,
             4,
@@ -3855,7 +2819,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -3869,7 +2833,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -3892,7 +2856,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "동/서 1",
+          "name": "동",
           "pars": [
             5,
             4,
@@ -3906,7 +2870,7 @@
           ]
         },
         {
-          "name": "동/서 2",
+          "name": "서",
           "pars": [
             5,
             4,
@@ -3920,21 +2884,7 @@
           ]
         },
         {
-          "name": "서/중 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "서/중 2",
+          "name": "중",
           "pars": [
             4,
             4,
@@ -3957,7 +2907,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -3971,7 +2921,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -3994,7 +2944,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "몬트/히든 1",
+          "name": "몬트",
           "pars": [
             4,
             3,
@@ -4008,7 +2958,7 @@
           ]
         },
         {
-          "name": "몬트/히든 2",
+          "name": "히든",
           "pars": [
             4,
             3,
@@ -4022,49 +2972,7 @@
           ]
         },
         {
-          "name": "이글/몬트 1",
-          "pars": [
-            4,
-            4,
-            4,
-            5,
-            3,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "이글/몬트 2",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "히든/이글 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "히든/이글 2",
+          "name": "이글",
           "pars": [
             4,
             4,
@@ -4087,7 +2995,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4101,7 +3009,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -4124,7 +3032,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4138,7 +3046,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -4161,7 +3069,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -4175,7 +3083,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -4198,7 +3106,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4212,7 +3120,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -4235,7 +3143,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -4249,7 +3157,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -4272,7 +3180,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4286,7 +3194,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             3,
@@ -4309,7 +3217,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4323,7 +3231,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -4346,7 +3254,7 @@
       "confidence": "high-unmatched",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -4360,7 +3268,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -4383,7 +3291,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "드림/챌린지 1",
+          "name": "드림",
           "pars": [
             4,
             4,
@@ -4397,7 +3305,7 @@
           ]
         },
         {
-          "name": "드림/챌린지 2",
+          "name": "챌린지",
           "pars": [
             4,
             3,
@@ -4411,49 +3319,7 @@
           ]
         },
         {
-          "name": "에이스/드림 1",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "에이스/드림 2",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            4,
-            5,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "챌린지/에이스 1",
-          "pars": [
-            4,
-            3,
-            5,
-            3,
-            5,
-            4,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "챌린지/에이스 2",
+          "name": "에이스",
           "pars": [
             5,
             3,
@@ -4476,7 +3342,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "BIRCH/MAPLE 1",
+          "name": "BIRCH",
           "pars": [
             5,
             3,
@@ -4490,7 +3356,7 @@
           ]
         },
         {
-          "name": "BIRCH/MAPLE 2",
+          "name": "MAPLE",
           "pars": [
             5,
             4,
@@ -4504,21 +3370,7 @@
           ]
         },
         {
-          "name": "MAPLE/PINE 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "MAPLE/PINE 2",
+          "name": "PINE",
           "pars": [
             4,
             5,
@@ -4528,34 +3380,6 @@
             4,
             3,
             4,
-            5
-          ]
-        },
-        {
-          "name": "PINE/BIRCH 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "PINE/BIRCH 2",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
             5
           ]
         }
@@ -4569,7 +3393,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -4583,7 +3407,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -4620,20 +3444,6 @@
           ]
         },
         {
-          "name": "MOUNTAIN/VALLEY",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
           "name": "OCEAN/MOUNTAIN",
           "pars": [
             4,
@@ -4657,7 +3467,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4671,7 +3481,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -4694,7 +3504,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4708,7 +3518,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -4731,7 +3541,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -4745,7 +3555,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -4768,7 +3578,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -4782,7 +3592,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -4805,7 +3615,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -4819,7 +3629,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -4842,7 +3652,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "다솔/비룡 1",
+          "name": "다솔",
           "pars": [
             4,
             4,
@@ -4856,7 +3666,7 @@
           ]
         },
         {
-          "name": "다솔/비룡 2",
+          "name": "비룡",
           "pars": [
             5,
             4,
@@ -4870,21 +3680,7 @@
           ]
         },
         {
-          "name": "다솔/비토 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "다솔/비토 2",
+          "name": "비토",
           "pars": [
             4,
             4,
@@ -4895,34 +3691,6 @@
             3,
             4,
             5
-          ]
-        },
-        {
-          "name": "비토/비룡 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "비토/비룡 2",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4
           ]
         }
       ]
@@ -4935,7 +3703,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -4949,7 +3717,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -4972,7 +3740,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -4986,7 +3754,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -5009,7 +3777,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "다이아몬드/토파즈 1",
+          "name": "다이아몬드",
           "pars": [
             4,
             4,
@@ -5023,7 +3791,7 @@
           ]
         },
         {
-          "name": "다이아몬드/토파즈 2",
+          "name": "토파즈",
           "pars": [
             5,
             4,
@@ -5037,7 +3805,7 @@
           ]
         },
         {
-          "name": "루비/에메랄드 1",
+          "name": "루비",
           "pars": [
             5,
             4,
@@ -5051,7 +3819,7 @@
           ]
         },
         {
-          "name": "루비/에메랄드 2",
+          "name": "에메랄드",
           "pars": [
             4,
             3,
@@ -5074,7 +3842,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -5088,7 +3856,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -5111,7 +3879,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -5125,7 +3893,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -5148,7 +3916,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "LAKE/MOUNTAIN 1",
+          "name": "LAKE",
           "pars": [
             4,
             3,
@@ -5162,7 +3930,7 @@
           ]
         },
         {
-          "name": "LAKE/MOUNTAIN 2",
+          "name": "MOUNTAIN",
           "pars": [
             4,
             4,
@@ -5176,21 +3944,7 @@
           ]
         },
         {
-          "name": "MOUNTAIN/VALLEY 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "MOUNTAIN/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             5,
@@ -5200,34 +3954,6 @@
             4,
             3,
             5,
-            4
-          ]
-        },
-        {
-          "name": "VALLEY/LAKE 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "VALLEY/LAKE 2",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            5,
-            4,
             4
           ]
         }
@@ -5241,7 +3967,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -5255,7 +3981,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -5278,7 +4004,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -5292,7 +4018,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             3,
@@ -5315,7 +4041,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -5329,7 +4055,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -5352,7 +4078,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "청룡/거북 1",
+          "name": "청룡",
           "pars": [
             4,
             5,
@@ -5366,7 +4092,7 @@
           ]
         },
         {
-          "name": "청룡/거북 2",
+          "name": "거북",
           "pars": [
             4,
             4,
@@ -5380,21 +4106,7 @@
           ]
         },
         {
-          "name": "거북/백호 1",
-          "pars": [
-            4,
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "거북/백호 2",
+          "name": "백호",
           "pars": [
             4,
             5,
@@ -5404,34 +4116,6 @@
             5,
             3,
             4,
-            4
-          ]
-        },
-        {
-          "name": "백호/청룡 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "백호/청룡 2",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
             4
           ]
         }
@@ -5445,7 +4129,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -5459,7 +4143,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -5482,7 +4166,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -5496,7 +4180,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -5519,7 +4203,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -5533,7 +4217,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -5593,7 +4277,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -5607,7 +4291,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -5667,7 +4351,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -5681,7 +4365,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -5704,7 +4388,7 @@
       "confidence": "high",
       "subCourses": [
         {
-          "name": "ALPS/MONTBLANC 1",
+          "name": "ALPS",
           "pars": [
             4,
             4,
@@ -5718,7 +4402,7 @@
           ]
         },
         {
-          "name": "ALPS/MONTBLANC 2",
+          "name": "MONTBLANC",
           "pars": [
             4,
             3,
@@ -5732,7 +4416,7 @@
           ]
         },
         {
-          "name": "ROCKY/OLYMPUS 1",
+          "name": "ROCKY",
           "pars": [
             4,
             3,
@@ -5746,7 +4430,7 @@
           ]
         },
         {
-          "name": "ROCKY/OLYMPUS 2",
+          "name": "OLYMPUS",
           "pars": [
             4,
             3,
@@ -5783,20 +4467,6 @@
           ]
         },
         {
-          "name": "ALPS/MONTBLANC",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
           "name": "ROCKY/OLYMPUS",
           "pars": [
             4,
@@ -5808,20 +4478,6 @@
             5,
             4,
             5
-          ]
-        },
-        {
-          "name": "ROCKY/OLYMPUS",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4
           ]
         }
       ]
@@ -5848,20 +4504,6 @@
           ]
         },
         {
-          "name": "ALPS/MONTBLANC",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
           "name": "ROCKY/OLYMPUS",
           "pars": [
             4,
@@ -5873,20 +4515,6 @@
             5,
             4,
             5
-          ]
-        },
-        {
-          "name": "ROCKY/OLYMPUS",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4
           ]
         }
       ]
@@ -5899,7 +4527,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "다산/베아채 1",
+          "name": "다산",
           "pars": [
             4,
             5,
@@ -5913,7 +4541,7 @@
           ]
         },
         {
-          "name": "다산/베아채 2",
+          "name": "베아채",
           "pars": [
             5,
             4,
@@ -5927,21 +4555,7 @@
           ]
         },
         {
-          "name": "베아채/장보고 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "베아채/장보고 2",
+          "name": "장보고",
           "pars": [
             4,
             5,
@@ -5952,34 +4566,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "장보고/다산 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            3,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "장보고/다산 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4
           ]
         }
       ]
@@ -5992,7 +4578,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -6006,7 +4592,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -6029,7 +4615,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "동/중 1",
+          "name": "동",
           "pars": [
             4,
             3,
@@ -6043,7 +4629,7 @@
           ]
         },
         {
-          "name": "동/중 2",
+          "name": "중",
           "pars": [
             4,
             3,
@@ -6057,49 +4643,7 @@
           ]
         },
         {
-          "name": "서/동 1",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "서/동 2",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            3,
-            5,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "중/서 1",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "중/서 2",
+          "name": "서",
           "pars": [
             5,
             3,
@@ -6122,7 +4666,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -6136,7 +4680,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -6159,7 +4703,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "샬롯/아리아 1",
+          "name": "샬롯",
           "pars": [
             4,
             4,
@@ -6173,7 +4717,7 @@
           ]
         },
         {
-          "name": "샬롯/아리아 2",
+          "name": "아리아",
           "pars": [
             4,
             3,
@@ -6187,49 +4731,7 @@
           ]
         },
         {
-          "name": "빌리/샬롯 1",
-          "pars": [
-            5,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "빌리/샬롯 2",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "아리아/빌리 1",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "아리아/빌리 2",
+          "name": "빌리",
           "pars": [
             5,
             4,
@@ -6252,7 +4754,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -6266,7 +4768,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -6289,7 +4791,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -6303,7 +4805,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -6326,7 +4828,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -6340,7 +4842,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -6363,7 +4865,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -6377,7 +4879,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -6400,7 +4902,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "LAKE/VALLEY 1",
+          "name": "LAKE",
           "pars": [
             4,
             4,
@@ -6414,7 +4916,7 @@
           ]
         },
         {
-          "name": "LAKE/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             3,
@@ -6428,21 +4930,7 @@
           ]
         },
         {
-          "name": "VALLEY/MOUNTAIN 1",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "VALLEY/MOUNTAIN 2",
+          "name": "MOUNTAIN",
           "pars": [
             4,
             4,
@@ -6452,34 +4940,6 @@
             4,
             3,
             4,
-            5
-          ]
-        },
-        {
-          "name": "MOUNTAIN/LAKE 1",
-          "pars": [
-            4,
-            4,
-            5,
-            4,
-            3,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "MOUNTAIN/LAKE 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            3,
-            5,
-            4,
-            3,
             5
           ]
         }
@@ -6493,7 +4953,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "LAKE/PINE 1",
+          "name": "LAKE",
           "pars": [
             5,
             4,
@@ -6507,7 +4967,7 @@
           ]
         },
         {
-          "name": "LAKE/PINE 2",
+          "name": "PINE",
           "pars": [
             5,
             3,
@@ -6521,21 +4981,7 @@
           ]
         },
         {
-          "name": "PINE/STONE 1",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "PINE/STONE 2",
+          "name": "STONE",
           "pars": [
             4,
             4,
@@ -6544,34 +4990,6 @@
             4,
             5,
             3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "STONE/LAKE 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "STONE/LAKE 2",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            3,
-            5,
             4,
             4
           ]
@@ -6586,7 +5004,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -6600,7 +5018,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -6637,20 +5055,6 @@
           ]
         },
         {
-          "name": "힐스/로드",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
           "name": "레이크/힐스",
           "pars": [
             4,
@@ -6674,7 +5078,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -6688,7 +5092,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -6711,7 +5115,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -6725,7 +5129,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -6748,7 +5152,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "HILL/LAKE 1",
+          "name": "HILL",
           "pars": [
             5,
             4,
@@ -6762,7 +5166,7 @@
           ]
         },
         {
-          "name": "HILL/LAKE 2",
+          "name": "LAKE",
           "pars": [
             4,
             4,
@@ -6776,21 +5180,7 @@
           ]
         },
         {
-          "name": "LAKE/PINE 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4,
-            5,
-            3
-          ]
-        },
-        {
-          "name": "LAKE/PINE 2",
+          "name": "PINE",
           "pars": [
             4,
             5,
@@ -6800,34 +5190,6 @@
             5,
             3,
             4,
-            4
-          ]
-        },
-        {
-          "name": "PINE/HILL 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "PINE/HILL 2",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            3,
-            4,
-            3,
-            5,
             4
           ]
         }
@@ -6841,7 +5203,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "레이크/밸리 1",
+          "name": "레이크",
           "pars": [
             4,
             3,
@@ -6855,7 +5217,7 @@
           ]
         },
         {
-          "name": "레이크/밸리 2",
+          "name": "밸리",
           "pars": [
             4,
             5,
@@ -6869,7 +5231,7 @@
           ]
         },
         {
-          "name": "체리힐/파인힐 1",
+          "name": "체리힐",
           "pars": [
             4,
             4,
@@ -6883,7 +5245,7 @@
           ]
         },
         {
-          "name": "체리힐/파인힐 2",
+          "name": "파인힐",
           "pars": [
             5,
             4,
@@ -6906,7 +5268,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -6920,7 +5282,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -6943,7 +5305,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "마우나/블루 1",
+          "name": "마우나",
           "pars": [
             4,
             4,
@@ -6957,7 +5319,7 @@
           ]
         },
         {
-          "name": "마우나/블루 2",
+          "name": "블루",
           "pars": [
             4,
             3,
@@ -6971,21 +5333,7 @@
           ]
         },
         {
-          "name": "블루/오션 1",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "블루/오션 2",
+          "name": "오션",
           "pars": [
             5,
             3,
@@ -6995,34 +5343,6 @@
             3,
             5,
             4,
-            4
-          ]
-        },
-        {
-          "name": "오션/마우나 1",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "오션/마우나 2",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
             4
           ]
         }
@@ -7036,7 +5356,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "마이다스/올림푸스 1",
+          "name": "마이다스",
           "pars": [
             4,
             4,
@@ -7050,7 +5370,7 @@
           ]
         },
         {
-          "name": "마이다스/올림푸스 2",
+          "name": "올림푸스",
           "pars": [
             5,
             4,
@@ -7064,21 +5384,7 @@
           ]
         },
         {
-          "name": "올림푸스/타이탄 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "올림푸스/타이탄 2",
+          "name": "타이탄",
           "pars": [
             4,
             4,
@@ -7089,34 +5395,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "타이탄/마이다스 1",
-          "pars": [
-            4,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "타이탄/마이다스 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4
           ]
         }
       ]
@@ -7129,7 +5407,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -7143,7 +5421,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -7166,7 +5444,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "남코스 1",
+          "name": "남코스",
           "pars": [
             4,
             4,
@@ -7180,21 +5458,7 @@
           ]
         },
         {
-          "name": "남코스 2",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "서코스 1",
+          "name": "서코스",
           "pars": [
             5,
             4,
@@ -7208,21 +5472,7 @@
           ]
         },
         {
-          "name": "서코스 2",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "동코스 1",
+          "name": "동코스",
           "pars": [
             5,
             4,
@@ -7233,20 +5483,6 @@
             3,
             4,
             5
-          ]
-        },
-        {
-          "name": "동코스 2",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4
           ]
         }
       ]
@@ -7259,7 +5495,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -7273,7 +5509,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -7296,7 +5532,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "사비/한성 1",
+          "name": "사비",
           "pars": [
             4,
             5,
@@ -7310,7 +5546,7 @@
           ]
         },
         {
-          "name": "사비/한성 2",
+          "name": "한성",
           "pars": [
             4,
             4,
@@ -7324,49 +5560,7 @@
           ]
         },
         {
-          "name": "웅진/사비 1",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "웅진/사비 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "한성/웅진 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "한성/웅진 2",
+          "name": "웅진",
           "pars": [
             4,
             3,
@@ -7403,20 +5597,6 @@
           ]
         },
         {
-          "name": "BIRCH/MAPLE",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
           "name": "MAPLE/PINE",
           "pars": [
             4,
@@ -7440,7 +5620,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "G/HUE 1",
+          "name": "G",
           "pars": [
             4,
             4,
@@ -7454,7 +5634,7 @@
           ]
         },
         {
-          "name": "G/HUE 2",
+          "name": "HUE",
           "pars": [
             4,
             3,
@@ -7468,49 +5648,7 @@
           ]
         },
         {
-          "name": "HILL/G 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "HILL/G 2",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "HUE/HILL 1",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "HUE/HILL 2",
+          "name": "HILL",
           "pars": [
             4,
             4,
@@ -7533,7 +5671,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "크리크코스 1",
+          "name": "크리크코스",
           "pars": [
             4,
             4,
@@ -7544,20 +5682,6 @@
             4,
             5,
             4
-          ]
-        },
-        {
-          "name": "크리크코스 2",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
           ]
         }
       ]
@@ -7570,7 +5694,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -7584,7 +5708,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -7621,20 +5745,6 @@
           ]
         },
         {
-          "name": "오너스A/오너스B",
-          "pars": [
-            4,
-            4,
-            4,
-            5,
-            4,
-            3,
-            4,
-            3,
-            5
-          ]
-        },
-        {
           "name": "마스터즈C/마스터즈D",
           "pars": [
             4,
@@ -7642,20 +5752,6 @@
             4,
             5,
             3,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "마스터즈C/마스터즈D",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
             4,
             3,
             5,
@@ -7686,7 +5782,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -7700,7 +5796,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -7723,7 +5819,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -7737,7 +5833,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -7760,7 +5856,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -7774,7 +5870,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -7797,7 +5893,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -7811,7 +5907,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             3,
@@ -7834,7 +5930,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -7848,7 +5944,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -7871,7 +5967,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -7885,7 +5981,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -7908,7 +6004,7 @@
       "confidence": "high",
       "subCourses": [
         {
-          "name": "몬티/벨라 1",
+          "name": "몬티",
           "pars": [
             4,
             4,
@@ -7922,7 +6018,7 @@
           ]
         },
         {
-          "name": "몬티/벨라 2",
+          "name": "벨라",
           "pars": [
             4,
             5,
@@ -7936,7 +6032,7 @@
           ]
         },
         {
-          "name": "보나/호박 1",
+          "name": "보나",
           "pars": [
             5,
             4,
@@ -7950,7 +6046,7 @@
           ]
         },
         {
-          "name": "보나/호박 2",
+          "name": "호박",
           "pars": [
             5,
             4,
@@ -7964,7 +6060,7 @@
           ]
         },
         {
-          "name": "비스타/라고 1",
+          "name": "비스타",
           "pars": [
             4,
             4,
@@ -7978,7 +6074,7 @@
           ]
         },
         {
-          "name": "비스타/라고 2",
+          "name": "라고",
           "pars": [
             4,
             4,
@@ -8015,20 +6111,6 @@
           ]
         },
         {
-          "name": "몬티/벨라",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4,
-            4
-          ]
-        },
-        {
           "name": "보나/호박",
           "pars": [
             5,
@@ -8043,20 +6125,6 @@
           ]
         },
         {
-          "name": "보나/호박",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            3,
-            5
-          ]
-        },
-        {
           "name": "비스타/라고",
           "pars": [
             4,
@@ -8068,20 +6136,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "비스타/라고",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
           ]
         }
       ]
@@ -8094,7 +6148,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -8108,7 +6162,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -8145,20 +6199,6 @@
           ]
         },
         {
-          "name": "데일/샤인",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
           "name": "레이크/데일",
           "pars": [
             4,
@@ -8182,7 +6222,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -8196,7 +6236,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -8219,7 +6259,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -8233,7 +6273,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -8256,7 +6296,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -8270,7 +6310,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -8293,7 +6333,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -8307,7 +6347,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -8330,7 +6370,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -8344,7 +6384,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -8367,7 +6407,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "밸리/설악 1",
+          "name": "밸리",
           "pars": [
             4,
             4,
@@ -8381,7 +6421,7 @@
           ]
         },
         {
-          "name": "밸리/설악 2",
+          "name": "설악",
           "pars": [
             4,
             5,
@@ -8395,21 +6435,7 @@
           ]
         },
         {
-          "name": "설악/썬 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "설악/썬 2",
+          "name": "썬",
           "pars": [
             4,
             4,
@@ -8420,34 +6446,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "썬/밸리 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "썬/밸리 2",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            5,
-            4
           ]
         }
       ]
@@ -8460,7 +6458,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -8474,7 +6472,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -8497,7 +6495,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "LAKES/VALLEY 1",
+          "name": "LAKES",
           "pars": [
             5,
             4,
@@ -8511,7 +6509,7 @@
           ]
         },
         {
-          "name": "LAKES/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             5,
             3,
@@ -8525,49 +6523,7 @@
           ]
         },
         {
-          "name": "MOUNTAIN/LAKES 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "MOUNTAIN/LAKES 2",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "VALLEY/MOUNTAIN 1",
-          "pars": [
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "VALLEY/MOUNTAIN 2",
+          "name": "MOUNTAIN",
           "pars": [
             4,
             5,
@@ -8590,7 +6546,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "밸리/마운틴 1",
+          "name": "밸리",
           "pars": [
             4,
             4,
@@ -8604,7 +6560,7 @@
           ]
         },
         {
-          "name": "밸리/마운틴 2",
+          "name": "마운틴",
           "pars": [
             3,
             4,
@@ -8618,7 +6574,7 @@
           ]
         },
         {
-          "name": "필드/마운틴 1",
+          "name": "필드",
           "pars": [
             4,
             4,
@@ -8632,49 +6588,7 @@
           ]
         },
         {
-          "name": "필드/마운틴 2",
-          "pars": [
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "필드/밸리 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "필드/밸리 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "파인/레이크 1",
+          "name": "파인",
           "pars": [
             4,
             3,
@@ -8688,7 +6602,7 @@
           ]
         },
         {
-          "name": "파인/레이크 2",
+          "name": "레이크",
           "pars": [
             4,
             5,
@@ -8711,7 +6625,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -8725,7 +6639,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -8748,7 +6662,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "세종/여강 1",
+          "name": "세종",
           "pars": [
             4,
             5,
@@ -8762,7 +6676,7 @@
           ]
         },
         {
-          "name": "세종/여강 2",
+          "name": "여강",
           "pars": [
             4,
             5,
@@ -8776,21 +6690,7 @@
           ]
         },
         {
-          "name": "여강/황학 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "여강/황학 2",
+          "name": "황학",
           "pars": [
             4,
             4,
@@ -8800,34 +6700,6 @@
             5,
             3,
             4,
-            4
-          ]
-        },
-        {
-          "name": "황학/세종 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "황학/세종 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
             4
           ]
         }
@@ -8841,7 +6713,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -8855,7 +6727,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -8878,7 +6750,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "CHERRY/PERSIMMON 1",
+          "name": "CHERRY",
           "pars": [
             4,
             4,
@@ -8892,7 +6764,7 @@
           ]
         },
         {
-          "name": "CHERRY/PERSIMMON 2",
+          "name": "PERSIMMON",
           "pars": [
             3,
             4,
@@ -8906,7 +6778,7 @@
           ]
         },
         {
-          "name": "PINE/MAPLE 1",
+          "name": "PINE",
           "pars": [
             5,
             4,
@@ -8920,7 +6792,7 @@
           ]
         },
         {
-          "name": "PINE/MAPLE 2",
+          "name": "MAPLE",
           "pars": [
             5,
             4,
@@ -8943,7 +6815,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "MOUNTAIN/LAKE 1",
+          "name": "MOUNTAIN",
           "pars": [
             4,
             4,
@@ -8957,7 +6829,7 @@
           ]
         },
         {
-          "name": "MOUNTAIN/LAKE 2",
+          "name": "LAKE",
           "pars": [
             4,
             4,
@@ -8971,7 +6843,7 @@
           ]
         },
         {
-          "name": "SKY/VALLEY 1",
+          "name": "SKY",
           "pars": [
             4,
             5,
@@ -8985,7 +6857,7 @@
           ]
         },
         {
-          "name": "SKY/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             5,
@@ -9008,7 +6880,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -9022,7 +6894,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             3,
             4,
@@ -9045,7 +6917,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -9059,7 +6931,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -9082,7 +6954,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -9096,7 +6968,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -9119,7 +6991,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "데이비드/솔로몬 1",
+          "name": "데이비드",
           "pars": [
             4,
             5,
@@ -9133,7 +7005,7 @@
           ]
         },
         {
-          "name": "데이비드/솔로몬 2",
+          "name": "솔로몬",
           "pars": [
             4,
             4,
@@ -9147,21 +7019,7 @@
           ]
         },
         {
-          "name": "솔로몬/에벤에셀 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "솔로몬/에벤에셀 2",
+          "name": "에벤에셀",
           "pars": [
             4,
             5,
@@ -9171,34 +7029,6 @@
             4,
             5,
             3,
-            4
-          ]
-        },
-        {
-          "name": "에벤에셀/데이비드 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "에벤에셀/데이비드 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
             4
           ]
         }
@@ -9212,7 +7042,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -9226,7 +7056,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -9249,7 +7079,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "K코스/M코스 1",
+          "name": "K코스",
           "pars": [
             5,
             4,
@@ -9263,7 +7093,7 @@
           ]
         },
         {
-          "name": "K코스/M코스 2",
+          "name": "M코스",
           "pars": [
             4,
             4,
@@ -9277,21 +7107,7 @@
           ]
         },
         {
-          "name": "M코스/S코스 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "M코스/S코스 2",
+          "name": "S코스",
           "pars": [
             4,
             3,
@@ -9302,34 +7118,6 @@
             4,
             4,
             5
-          ]
-        },
-        {
-          "name": "S코스/K코스 1",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "S코스/K코스 2",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
           ]
         }
       ]
@@ -9352,20 +7140,6 @@
             4,
             4,
             3,
-            5
-          ]
-        },
-        {
-          "name": "레이크/스카이",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
             5
           ]
         },
@@ -9393,7 +7167,7 @@
       "confidence": "high-loose",
       "subCourses": [
         {
-          "name": "레이크/스카이 1",
+          "name": "레이크",
           "pars": [
             5,
             3,
@@ -9407,7 +7181,7 @@
           ]
         },
         {
-          "name": "레이크/스카이 2",
+          "name": "스카이",
           "pars": [
             4,
             4,
@@ -9421,49 +7195,7 @@
           ]
         },
         {
-          "name": "마운틴/레이크 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3
-          ]
-        },
-        {
-          "name": "마운틴/레이크 2",
-          "pars": [
-            5,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "스카이/마운틴 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "스카이/마운틴 2",
+          "name": "마운틴",
           "pars": [
             4,
             5,
@@ -9486,7 +7218,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "레이크/마운틴 1",
+          "name": "레이크",
           "pars": [
             4,
             5,
@@ -9500,7 +7232,7 @@
           ]
         },
         {
-          "name": "레이크/마운틴 2",
+          "name": "마운틴",
           "pars": [
             4,
             5,
@@ -9514,21 +7246,7 @@
           ]
         },
         {
-          "name": "마운틴/힐 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "마운틴/힐 2",
+          "name": "힐",
           "pars": [
             4,
             5,
@@ -9538,34 +7256,6 @@
             5,
             3,
             4,
-            4
-          ]
-        },
-        {
-          "name": "힐/레이크 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "힐/레이크 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            5,
-            3,
             4
           ]
         }
@@ -9579,7 +7269,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -9593,7 +7283,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             3,
@@ -9616,7 +7306,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "달님/별님 1",
+          "name": "달님",
           "pars": [
             4,
             3,
@@ -9630,7 +7320,7 @@
           ]
         },
         {
-          "name": "달님/별님 2",
+          "name": "별님",
           "pars": [
             4,
             5,
@@ -9644,21 +7334,7 @@
           ]
         },
         {
-          "name": "별님/햇님 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "별님/햇님 2",
+          "name": "햇님",
           "pars": [
             5,
             4,
@@ -9669,34 +7345,6 @@
             4,
             4,
             5
-          ]
-        },
-        {
-          "name": "햇님/달님 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "햇님/달님 2",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4
           ]
         }
       ]
@@ -9709,7 +7357,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -9723,7 +7371,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -9746,7 +7394,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -9760,7 +7408,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -9783,7 +7431,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -9797,7 +7445,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -9857,7 +7505,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -9871,7 +7519,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -9894,7 +7542,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "LUNAR/STELLA 1",
+          "name": "LUNAR",
           "pars": [
             4,
             4,
@@ -9908,7 +7556,7 @@
           ]
         },
         {
-          "name": "LUNAR/STELLA 2",
+          "name": "STELLA",
           "pars": [
             4,
             5,
@@ -9922,49 +7570,7 @@
           ]
         },
         {
-          "name": "SOLAR/LUNAR 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "SOLAR/LUNAR 2",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "STELLA/SOLAR 1",
-          "pars": [
-            4,
-            5,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "STELLA/SOLAR 2",
+          "name": "SOLAR",
           "pars": [
             4,
             5,
@@ -9987,7 +7593,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "송정/하남 1",
+          "name": "송정",
           "pars": [
             4,
             5,
@@ -10001,7 +7607,7 @@
           ]
         },
         {
-          "name": "송정/하남 2",
+          "name": "하남",
           "pars": [
             4,
             4,
@@ -10015,49 +7621,7 @@
           ]
         },
         {
-          "name": "어등/송정 1",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "어등/송정 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "하남/어등 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "하남/어등 2",
+          "name": "어등",
           "pars": [
             4,
             4,
@@ -10080,7 +7644,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -10094,7 +7658,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -10117,7 +7681,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "레이크/새별 1",
+          "name": "레이크",
           "pars": [
             4,
             3,
@@ -10131,7 +7695,7 @@
           ]
         },
         {
-          "name": "레이크/새별 2",
+          "name": "새별",
           "pars": [
             4,
             4,
@@ -10145,21 +7709,7 @@
           ]
         },
         {
-          "name": "새별/파인 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "새별/파인 2",
+          "name": "파인",
           "pars": [
             4,
             4,
@@ -10170,34 +7720,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "파인/레이크 1",
-          "pars": [
-            4,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "파인/레이크 2",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            5,
-            5,
-            3,
-            4,
-            4
           ]
         }
       ]
@@ -10210,7 +7732,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "CHALLENGE/CHAMPION 1",
+          "name": "CHALLENGE",
           "pars": [
             4,
             4,
@@ -10224,7 +7746,7 @@
           ]
         },
         {
-          "name": "CHALLENGE/CHAMPION 2",
+          "name": "CHAMPION",
           "pars": [
             4,
             5,
@@ -10238,21 +7760,7 @@
           ]
         },
         {
-          "name": "CHAMPION/MASTER 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "CHAMPION/MASTER 2",
+          "name": "MASTER",
           "pars": [
             6,
             4,
@@ -10262,34 +7770,6 @@
             5,
             4,
             3,
-            4
-          ]
-        },
-        {
-          "name": "MASTER/CHALLENGE 1",
-          "pars": [
-            6,
-            4,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "MASTER/CHALLENGE 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4,
             4
           ]
         }
@@ -10303,7 +7783,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -10317,7 +7797,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -10340,7 +7820,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -10354,7 +7834,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -10377,7 +7857,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "BEACH/OCEAN 1",
+          "name": "BEACH",
           "pars": [
             4,
             3,
@@ -10391,7 +7871,7 @@
           ]
         },
         {
-          "name": "BEACH/OCEAN 2",
+          "name": "OCEAN",
           "pars": [
             4,
             5,
@@ -10405,21 +7885,7 @@
           ]
         },
         {
-          "name": "OCEAN/VALLEY 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "OCEAN/VALLEY 2",
+          "name": "VALLEY",
           "pars": [
             4,
             3,
@@ -10430,34 +7896,6 @@
             5,
             4,
             4
-          ]
-        },
-        {
-          "name": "VALLEY/BEACH 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "VALLEY/BEACH 2",
-          "pars": [
-            4,
-            3,
-            4,
-            3,
-            5,
-            4,
-            4,
-            4,
-            5
           ]
         }
       ]
@@ -10470,7 +7908,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -10484,7 +7922,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -10507,7 +7945,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "HILL/PINE 1",
+          "name": "HILL",
           "pars": [
             4,
             5,
@@ -10521,7 +7959,7 @@
           ]
         },
         {
-          "name": "HILL/PINE 2",
+          "name": "PINE",
           "pars": [
             4,
             3,
@@ -10535,49 +7973,7 @@
           ]
         },
         {
-          "name": "OCEAN/HILL 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "OCEAN/HILL 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "PINE/OCEAN 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "PINE/OCEAN 2",
+          "name": "OCEAN",
           "pars": [
             4,
             3,
@@ -10600,7 +7996,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "무학/백구 1",
+          "name": "무학",
           "pars": [
             4,
             4,
@@ -10614,7 +8010,7 @@
           ]
         },
         {
-          "name": "무학/백구 2",
+          "name": "백구",
           "pars": [
             5,
             4,
@@ -10628,21 +8024,7 @@
           ]
         },
         {
-          "name": "백구/백로 1",
-          "pars": [
-            5,
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "백구/백로 2",
+          "name": "백로",
           "pars": [
             4,
             4,
@@ -10652,34 +8034,6 @@
             5,
             4,
             4,
-            4
-          ]
-        },
-        {
-          "name": "백로/무학 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            3,
-            5,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "백로/무학 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            3,
-            4,
-            4,
-            5,
             4
           ]
         }
@@ -10693,7 +8047,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -10707,7 +8061,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -10730,7 +8084,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -10744,7 +8098,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -10767,7 +8121,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -10781,7 +8135,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -10804,7 +8158,7 @@
       "confidence": "high-loose",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -10818,7 +8172,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -10841,7 +8195,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "길정/리온 1",
+          "name": "길정",
           "pars": [
             4,
             4,
@@ -10855,7 +8209,7 @@
           ]
         },
         {
-          "name": "길정/리온 2",
+          "name": "리온",
           "pars": [
             5,
             4,
@@ -10869,55 +8223,13 @@
           ]
         },
         {
-          "name": "리온/마운틴 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "리온/마운틴 2",
+          "name": "마운틴",
           "pars": [
             4,
             5,
             3,
             4,
             4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "마운틴/길정 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "마운틴/길정 2",
-          "pars": [
-            4,
-            4,
-            3,
-            4,
-            5,
             4,
             3,
             4,
@@ -10934,7 +8246,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -10948,7 +8260,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -10971,7 +8283,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -10985,7 +8297,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -11008,7 +8320,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -11022,7 +8334,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -11045,7 +8357,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             5,
@@ -11059,7 +8371,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             4,
             5,
@@ -11073,49 +8385,7 @@
           ]
         },
         {
-          "name": "SOUTH/EAST 1",
-          "pars": [
-            4,
-            3,
-            4,
-            3,
-            5,
-            5,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "SOUTH/EAST 2",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            4,
-            3,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            3,
-            4,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 2",
+          "name": "SOUTH",
           "pars": [
             4,
             3,
@@ -11138,7 +8408,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -11152,7 +8422,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -11175,7 +8445,7 @@
       "confidence": "high",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -11189,7 +8459,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -11212,7 +8482,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "대한/민국 1",
+          "name": "대한",
           "pars": [
             5,
             4,
@@ -11226,7 +8496,7 @@
           ]
         },
         {
-          "name": "대한/민국 2",
+          "name": "민국",
           "pars": [
             4,
             5,
@@ -11240,21 +8510,7 @@
           ]
         },
         {
-          "name": "민국/통일 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "민국/통일 2",
+          "name": "통일",
           "pars": [
             5,
             4,
@@ -11264,34 +8520,6 @@
             4,
             3,
             4,
-            4
-          ]
-        },
-        {
-          "name": "통일/대한 1",
-          "pars": [
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "통일/대한 2",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
             4
           ]
         }
@@ -11305,7 +8533,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -11319,7 +8547,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -11342,7 +8570,7 @@
       "confidence": "high",
       "subCourses": [
         {
-          "name": "남/서 1",
+          "name": "남",
           "pars": [
             4,
             4,
@@ -11356,7 +8584,7 @@
           ]
         },
         {
-          "name": "남/서 2",
+          "name": "서",
           "pars": [
             4,
             5,
@@ -11370,7 +8598,7 @@
           ]
         },
         {
-          "name": "동/남 1",
+          "name": "동",
           "pars": [
             4,
             5,
@@ -11393,7 +8621,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -11407,7 +8635,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -11430,7 +8658,7 @@
       "confidence": "high",
       "subCourses": [
         {
-          "name": "릴리/파인 1",
+          "name": "릴리",
           "pars": [
             4,
             5,
@@ -11444,7 +8672,7 @@
           ]
         },
         {
-          "name": "릴리/파인 2",
+          "name": "파인",
           "pars": [
             4,
             4,
@@ -11458,7 +8686,7 @@
           ]
         },
         {
-          "name": "메이플/릴리 1",
+          "name": "메이플",
           "pars": [
             4,
             5,
@@ -11481,7 +8709,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -11495,7 +8723,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -11518,7 +8746,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -11532,7 +8760,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             3,
@@ -11555,7 +8783,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             4,
@@ -11569,7 +8797,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             4,
             3,
@@ -11583,49 +8811,7 @@
           ]
         },
         {
-          "name": "SOUTH/EAST 1",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "SOUTH/EAST 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 1",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            4,
-            5,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 2",
+          "name": "SOUTH",
           "pars": [
             4,
             4,
@@ -11648,7 +8834,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -11662,7 +8848,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -11699,20 +8885,6 @@
           ]
         },
         {
-          "name": "마운틴/오아시스",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5
-          ]
-        },
-        {
           "name": "오아시스/와일드",
           "pars": [
             5,
@@ -11736,7 +8908,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             5,
@@ -11750,7 +8922,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             5,
             4,
@@ -11764,49 +8936,7 @@
           ]
         },
         {
-          "name": "SOUTH/EAST 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "SOUTH/EAST 2",
-          "pars": [
-            4,
-            5,
-            3,
-            5,
-            3,
-            4,
-            4,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 2",
+          "name": "SOUTH",
           "pars": [
             4,
             4,
@@ -11829,7 +8959,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "레이크/마운틴 1",
+          "name": "레이크",
           "pars": [
             4,
             5,
@@ -11843,7 +8973,7 @@
           ]
         },
         {
-          "name": "레이크/마운틴 2",
+          "name": "마운틴",
           "pars": [
             4,
             4,
@@ -11857,21 +8987,7 @@
           ]
         },
         {
-          "name": "마운틴/우드 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "마운틴/우드 2",
+          "name": "우드",
           "pars": [
             4,
             4,
@@ -11882,34 +8998,6 @@
             3,
             4,
             5
-          ]
-        },
-        {
-          "name": "우드/레이크 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "우드/레이크 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4
           ]
         }
       ]
@@ -11922,7 +9010,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -11936,7 +9024,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -11959,7 +9047,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -11973,7 +9061,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -11996,7 +9084,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "북코스 1",
+          "name": "북코스",
           "pars": [
             5,
             4,
@@ -12010,40 +9098,12 @@
           ]
         },
         {
-          "name": "북코스 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "남코스 1",
+          "name": "남코스",
           "pars": [
             4,
             4,
             3,
             5,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "남코스 2",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
             4,
             4,
             5,
@@ -12061,7 +9121,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -12075,7 +9135,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -12098,7 +9158,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -12112,7 +9172,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -12135,7 +9195,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -12149,7 +9209,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -12172,7 +9232,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "LAKE/RIDGE 1",
+          "name": "LAKE",
           "pars": [
             4,
             4,
@@ -12186,7 +9246,7 @@
           ]
         },
         {
-          "name": "LAKE/RIDGE 2",
+          "name": "RIDGE",
           "pars": [
             5,
             4,
@@ -12200,49 +9260,7 @@
           ]
         },
         {
-          "name": "PINE/LAKE 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "PINE/LAKE 2",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "RIDGE/PINE 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "RIDGE/PINE 2",
+          "name": "PINE",
           "pars": [
             4,
             5,
@@ -12265,7 +9283,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -12279,7 +9297,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -12302,7 +9320,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -12316,7 +9334,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -12339,7 +9357,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -12353,7 +9371,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -12376,7 +9394,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "샤인/포도 1",
+          "name": "샤인",
           "pars": [
             5,
             4,
@@ -12390,7 +9408,7 @@
           ]
         },
         {
-          "name": "샤인/포도 2",
+          "name": "포도",
           "pars": [
             4,
             4,
@@ -12404,49 +9422,7 @@
           ]
         },
         {
-          "name": "자두/샤인 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "자두/샤인 2",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "포도/자두 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "포도/자두 2",
+          "name": "자두",
           "pars": [
             5,
             4,
@@ -12469,7 +9445,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "가든/스카이 1",
+          "name": "가든",
           "pars": [
             4,
             5,
@@ -12483,7 +9459,7 @@
           ]
         },
         {
-          "name": "가든/스카이 2",
+          "name": "스카이",
           "pars": [
             4,
             5,
@@ -12497,49 +9473,7 @@
           ]
         },
         {
-          "name": "베이/가든 1",
-          "pars": [
-            4,
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "베이/가든 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "스카이/베이 1",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "스카이/베이 2",
+          "name": "베이",
           "pars": [
             4,
             4,
@@ -12562,7 +9496,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             3,
@@ -12576,7 +9510,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -12599,7 +9533,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -12613,7 +9547,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             3,
@@ -12627,7 +9561,7 @@
           ]
         },
         {
-          "name": "코스3 3",
+          "name": "코스3",
           "pars": [
             5,
             4,
@@ -12650,7 +9584,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -12664,7 +9598,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -12687,7 +9621,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "듄스/링크스 1",
+          "name": "듄스",
           "pars": [
             4,
             4,
@@ -12701,7 +9635,7 @@
           ]
         },
         {
-          "name": "듄스/링크스 2",
+          "name": "링크스",
           "pars": [
             4,
             6,
@@ -12715,21 +9649,7 @@
           ]
         },
         {
-          "name": "링크스/파크 1",
-          "pars": [
-            4,
-            6,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "링크스/파크 2",
+          "name": "파크",
           "pars": [
             5,
             4,
@@ -12740,34 +9660,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "파크/듄스 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "파크/듄스 2",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            4,
-            5,
-            3,
-            4
           ]
         }
       ]
@@ -12794,20 +9686,6 @@
           ]
         },
         {
-          "name": "LION",
-          "pars": [
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4
-          ]
-        },
-        {
           "name": "TIGER",
           "pars": [
             5,
@@ -12819,20 +9697,6 @@
             3,
             4,
             5
-          ]
-        },
-        {
-          "name": "TIGER",
-          "pars": [
-            4,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            5,
-            4
           ]
         }
       ]
@@ -12845,7 +9709,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             3,
@@ -12859,7 +9723,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             5,
             4,
@@ -12873,49 +9737,7 @@
           ]
         },
         {
-          "name": "NORTH/EAST 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "NORTH/EAST 2",
-          "pars": [
-            4,
-            3,
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            5
-          ]
-        },
-        {
-          "name": "WEST/NORTH 1",
-          "pars": [
-            5,
-            4,
-            4,
-            4,
-            3,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "WEST/NORTH 2",
+          "name": "NORTH",
           "pars": [
             5,
             4,
@@ -12938,7 +9760,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "EAST/WEST 1",
+          "name": "EAST",
           "pars": [
             4,
             5,
@@ -12952,7 +9774,7 @@
           ]
         },
         {
-          "name": "EAST/WEST 2",
+          "name": "WEST",
           "pars": [
             4,
             3,
@@ -12966,49 +9788,7 @@
           ]
         },
         {
-          "name": "SOUTH/EAST 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "SOUTH/EAST 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 1",
-          "pars": [
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4,
-            4
-          ]
-        },
-        {
-          "name": "WEST/SOUTH 2",
+          "name": "SOUTH",
           "pars": [
             4,
             4,
@@ -13031,7 +9811,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -13045,7 +9825,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             5,
@@ -13068,7 +9848,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "다이아몬드/사파이어 1",
+          "name": "다이아몬드",
           "pars": [
             4,
             5,
@@ -13082,7 +9862,7 @@
           ]
         },
         {
-          "name": "다이아몬드/사파이어 2",
+          "name": "사파이어",
           "pars": [
             4,
             4,
@@ -13096,49 +9876,7 @@
           ]
         },
         {
-          "name": "루비/다이아몬드 1",
-          "pars": [
-            4,
-            4,
-            5,
-            3,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "루비/다이아몬드 2",
-          "pars": [
-            4,
-            5,
-            4,
-            3,
-            5,
-            4,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "사파이어/루비 1",
-          "pars": [
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "사파이어/루비 2",
+          "name": "루비",
           "pars": [
             4,
             4,
@@ -13161,7 +9899,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -13175,7 +9913,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -13198,7 +9936,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "고구려/백제 1",
+          "name": "고구려",
           "pars": [
             4,
             5,
@@ -13212,7 +9950,7 @@
           ]
         },
         {
-          "name": "고구려/백제 2",
+          "name": "백제",
           "pars": [
             5,
             4,
@@ -13226,21 +9964,7 @@
           ]
         },
         {
-          "name": "백제/신라 1",
-          "pars": [
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3,
-            5,
-            4
-          ]
-        },
-        {
-          "name": "백제/신라 2",
+          "name": "신라",
           "pars": [
             4,
             5,
@@ -13251,34 +9975,6 @@
             3,
             4,
             3
-          ]
-        },
-        {
-          "name": "신라/고구려 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            4,
-            5,
-            3,
-            4,
-            3
-          ]
-        },
-        {
-          "name": "신라/고구려 2",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            4,
-            3,
-            4,
-            5
           ]
         }
       ]
@@ -13291,7 +9987,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             3,
@@ -13305,7 +10001,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
@@ -13328,7 +10024,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "리아코스/해코스 1",
+          "name": "리아코스",
           "pars": [
             5,
             4,
@@ -13342,7 +10038,7 @@
           ]
         },
         {
-          "name": "리아코스/해코스 2",
+          "name": "해코스",
           "pars": [
             4,
             5,
@@ -13356,49 +10052,7 @@
           ]
         },
         {
-          "name": "솔코스/리아코스 1",
-          "pars": [
-            5,
-            4,
-            4,
-            3,
-            4,
-            4,
-            5,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "솔코스/리아코스 2",
-          "pars": [
-            5,
-            4,
-            5,
-            4,
-            3,
-            4,
-            4,
-            4,
-            3
-          ]
-        },
-        {
-          "name": "해코스/솔코스 1",
-          "pars": [
-            4,
-            5,
-            4,
-            4,
-            3,
-            5,
-            4,
-            3,
-            4
-          ]
-        },
-        {
-          "name": "해코스/솔코스 2",
+          "name": "솔코스",
           "pars": [
             5,
             4,
@@ -13421,7 +10075,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "GOLDEN/ROYAL 1",
+          "name": "GOLDEN",
           "pars": [
             5,
             3,
@@ -13435,7 +10089,7 @@
           ]
         },
         {
-          "name": "GOLDEN/ROYAL 2",
+          "name": "ROYAL",
           "pars": [
             4,
             5,
@@ -13449,21 +10103,7 @@
           ]
         },
         {
-          "name": "ROYAL/SILK 1",
-          "pars": [
-            4,
-            5,
-            3,
-            4,
-            4,
-            5,
-            4,
-            4,
-            3
-          ]
-        },
-        {
-          "name": "ROYAL/SILK 2",
+          "name": "SILK",
           "pars": [
             4,
             3,
@@ -13474,34 +10114,6 @@
             4,
             3,
             5
-          ]
-        },
-        {
-          "name": "SILK/GOLDEN 1",
-          "pars": [
-            4,
-            3,
-            4,
-            4,
-            4,
-            5,
-            4,
-            3,
-            5
-          ]
-        },
-        {
-          "name": "SILK/GOLDEN 2",
-          "pars": [
-            5,
-            3,
-            4,
-            5,
-            4,
-            4,
-            3,
-            4,
-            4
           ]
         }
       ]
@@ -13514,7 +10126,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             5,
             4,
@@ -13528,7 +10140,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             3,
@@ -13551,7 +10163,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "AUTUMN/SPRING 1",
+          "name": "AUTUMN",
           "pars": [
             5,
             4,
@@ -13565,7 +10177,7 @@
           ]
         },
         {
-          "name": "AUTUMN/SPRING 2",
+          "name": "SPRING",
           "pars": [
             4,
             5,
@@ -13588,7 +10200,7 @@
       "confidence": "high-exact",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             4,
@@ -13602,7 +10214,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             5,
             4,
@@ -13625,7 +10237,7 @@
       "confidence": "high-relaxed",
       "subCourses": [
         {
-          "name": "코스1 1",
+          "name": "코스1",
           "pars": [
             4,
             5,
@@ -13639,7 +10251,7 @@
           ]
         },
         {
-          "name": "코스2 2",
+          "name": "코스2",
           "pars": [
             4,
             4,
