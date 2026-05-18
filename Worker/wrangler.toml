@@ -29,10 +29,13 @@ ENVIRONMENT = "development"
 VIEWER_DOMAIN = "golf.zerolive.co.kr"
 
 # ── Production 환경 (Worker는 env마다 bindings 명시적 상속) ─────────
-# 도메인 연결은 Cloudflare 대시보드 → Workers & Pages → Settings →
-# Domains & Routes → Custom Domain `golf.zerolive.co.kr` 추가.
+# Custom Domain은 routes에 custom_domain = true 명시하면 deploy 시 자동 등록.
+# (대시보드 수동 작업 불필요. DNS Worker 형식 행도 자동 생성됨)
 [env.production]
 workers_dev = false
+routes = [
+  { pattern = "golf.zerolive.co.kr", custom_domain = true, zone_name = "zerolive.co.kr" }
+]
 
 [env.production.vars]
 ENVIRONMENT = "production"
