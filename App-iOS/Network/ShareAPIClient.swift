@@ -58,7 +58,21 @@ public final class ShareAPIClient: @unchecked Sendable {
 
     private let decoder: JSONDecoder = {
         let d = JSONDecoder()
-        d.dateDecodingStrategy = .iso8601
+        // Worker는 fractional seconds 포함 ISO8601 (예: "2026-05-25T02:05:33.176Z")
+        // 기본 .iso8601은 fractional 미지원이라 실패 → 두 포맷 모두 fallback
+        let fractional = ISO8601DateFormatter()
+        fractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let standard = ISO8601DateFormatter()
+        standard.formatOptions = [.withInternetDateTime]
+        d.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let str = try container.decode(String.self)
+            if let date = fractional.date(from: str) ?? standard.date(from: str) {
+                return date
+            }
+            throw DecodingError.dataCorruptedError(in: container,
+                debugDescription: "Invalid ISO8601 date: \(str)")
+        }
         return d
     }()
 
