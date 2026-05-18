@@ -304,12 +304,17 @@ struct ShareSheetView: View {
     // MARK: Share Actions
 
     private func performShare() async {
-        guard shareVM.canShare else { return }
+        AppLogger.share.info("[ShareSheet] performShare 진입 (mode=\(shareVM.isUpdateMode ? "update" : "create"))")
+        guard shareVM.canShare else {
+            AppLogger.share.error("[ShareSheet] canShare=false — 차단 (isLoading=\(shareVM.isLoading), pinValid=\(shareVM.isPinValid))")
+            return
+        }
         shareVM.errorMessage = nil
         shareVM.isLoading = true
         defer { shareVM.isLoading = false }
 
         let options = shareVM.currentOptions()
+        AppLogger.share.debug("[ShareSheet] options: nameVisibility=\(String(describing: options.nameVisibility)), access=\(String(describing: options.accessControl))")
         // C3: Keychain 기반 deviceToken 생성 (shortId 없으면 신규 UUID)
         let deviceToken = UUID().uuidString
 
@@ -317,7 +322,7 @@ struct ShareSheetView: View {
             if shareVM.isUpdateMode,
                let shortId = round.sharedShortId,
                let editToken = keychainStore.editToken(for: shortId) {
-                // 업데이트 모드 (C3: Keychain에서 editToken 조회)
+                AppLogger.share.info("[ShareSheet] update 모드 — shortId=\(shortId)")
                 let payload = UpdateShareRequest(
                     round: RoundPayload(from: round, nameVisibility: options.nameVisibility),
                     options: ShareOptionsPayload(from: options)
@@ -326,13 +331,23 @@ struct ShareSheetView: View {
                 round.sharedURL = response.url
                 round.sharedExpiresAt = response.expiresAt
                 round.sharedOptions = options
-                try? modelContext.save()
+                do {
+                    try modelContext.save()
+                } catch {
+                    AppLogger.share.error("[ShareSheet] modelContext.save 실패 (update): \(error.localizedDescription)")
+                }
 
                 if let url = URL(string: response.url) {
+                    AppLogger.share.info("[ShareSheet] update 완료, viewer=\(url.absoluteString)")
                     showActivity(url: url)
+                } else {
+                    AppLogger.share.error("[ShareSheet] response.url 파싱 실패: \(response.url)")
                 }
             } else {
-                // 신규 생성
+                if shareVM.isUpdateMode {
+                    AppLogger.share.warning("[ShareSheet] update 모드 진입 조건 실패 (shortId/editToken 누락) → 신규 생성으로 fallback")
+                }
+                AppLogger.share.info("[ShareSheet] create 모드 — deviceToken=\(deviceToken.prefix(8))…")
                 let payload = CreateShareRequest(
                     deviceToken: deviceToken,
                     round: RoundPayload(from: round, nameVisibility: options.nameVisibility),
@@ -340,27 +355,39 @@ struct ShareSheetView: View {
                 )
                 let response = try await apiClient.createShare(request: payload)
 
-                // C2: editToken을 Keychain에 저장 (평문 필드 사용 안 함)
-                try? keychainStore.setEditToken(response.editToken, for: response.shortId)
+                do {
+                    try keychainStore.setEditToken(response.editToken, for: response.shortId)
+                    AppLogger.share.debug("[ShareSheet] editToken Keychain 저장 OK — shortId=\(response.shortId)")
+                } catch {
+                    AppLogger.share.error("[ShareSheet] Keychain 저장 실패: \(error.localizedDescription)")
+                }
 
                 round.sharedShortId = response.shortId
                 round.sharedURL = response.url
                 round.sharedExpiresAt = response.expiresAt
                 round.sharedOptions = options
-                // Deprecated 필드는 nil 유지 (Keychain으로 이관 완료)
-                round.sharedEditToken = nil
-                try? modelContext.save()
+                round.sharedEditToken = nil  // C2: Deprecated 평문 필드 정리
+                do {
+                    try modelContext.save()
+                } catch {
+                    AppLogger.share.error("[ShareSheet] modelContext.save 실패 (create): \(error.localizedDescription)")
+                }
 
                 if let url = URL(string: response.url) {
+                    AppLogger.share.info("[ShareSheet] create 완료, viewer=\(url.absoluteString)")
                     showActivity(url: url)
                     onShared?(url)
+                } else {
+                    AppLogger.share.error("[ShareSheet] response.url 파싱 실패: \(response.url)")
                 }
                 Task { await HapticEngine.shared.play(.shareSuccess) }
             }
         } catch let error as ShareAPIError {
+            AppLogger.share.error("[ShareSheet] ShareAPIError: \(error.localizedDescription)")
             shareVM.errorMessage = error.localizedDescription
             Task { await HapticEngine.shared.play(.shareError) }
         } catch {
+            AppLogger.share.error("[ShareSheet] 알 수 없는 오류: \(error.localizedDescription)")
             shareVM.errorMessage = "알 수 없는 오류가 발생했어요."
             Task { await HapticEngine.shared.play(.shareError) }
         }
@@ -369,20 +396,32 @@ struct ShareSheetView: View {
     // uploadPhotosIfNeeded는 2026-05-18 폐기 (사진 공유 기능 제거)
 
     private func deleteShare(shortId: String, editToken: String) async {
+        AppLogger.share.info("[ShareSheet] deleteShare 진입 — shortId=\(shortId)")
         do {
             try await apiClient.deleteShare(shortId: shortId, editToken: editToken)
             // C2: Keychain에서도 삭제
-            try? keychainStore.deleteEditToken(for: shortId)
+            do {
+                try keychainStore.deleteEditToken(for: shortId)
+            } catch {
+                AppLogger.share.warning("[ShareSheet] Keychain 삭제 실패 (이미 없을 수도): \(error.localizedDescription)")
+            }
             round.sharedShortId = nil
             round.sharedURL = nil
             round.sharedEditToken = nil
             round.sharedExpiresAt = nil
             round.sharedOptions = nil
-            try? modelContext.save()
+            do {
+                try modelContext.save()
+            } catch {
+                AppLogger.share.error("[ShareSheet] deleteShare 후 modelContext.save 실패: \(error.localizedDescription)")
+            }
+            AppLogger.share.info("[ShareSheet] deleteShare 완료 — shortId=\(shortId)")
             dismiss()
         } catch let error as ShareAPIError {
+            AppLogger.share.error("[ShareSheet] deleteShare ShareAPIError: \(error.localizedDescription)")
             shareVM.errorMessage = error.localizedDescription
         } catch {
+            AppLogger.share.error("[ShareSheet] deleteShare 알 수 없는 오류: \(error.localizedDescription)")
             shareVM.errorMessage = "viewer 회수 중 오류가 발생했어요."
         }
     }
