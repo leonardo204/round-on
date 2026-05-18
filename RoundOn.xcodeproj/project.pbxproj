@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0B23849AEA0720EE81DE5498 /* DiscoveredCourseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */; };
 		0C808553B38ED6FA82AC838E /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61214ADF6DD0175BABD4FDA2 /* AppLogger.swift */; };
+		0F71C54E47D7D97D28A8AE2A /* NewRoundDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328B7409441442909D75CE09 /* NewRoundDraft.swift */; };
 		0F9FC3B94FFB5A39E07713DE /* ScoreCardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DCE3C4FF5B4BAA26AA628B /* ScoreCardViewModelTests.swift */; };
 		107F3BD3FF95B2C484F771BE /* RoundOnWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E74FBB5C1B2201A2640A0CB /* RoundOnWatchApp.swift */; };
 		1130B0769735C447963E6343 /* PlayerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */; };
@@ -83,6 +84,7 @@
 		960B0E022F9766B79F1A85AC /* ScoreCardViewModelStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E1ACA8E338CA62003F521A /* ScoreCardViewModelStressTests.swift */; };
 		9613145FEE984F837E36F075 /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178DEE19966BE7071D4D2287 /* PenaltyButton.swift */; };
 		9AF4F7644F80C690F0A1C5A8 /* HoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49302CB886665828D6966CF2 /* HoleInfo.swift */; };
+		9DA722260EE9AD51841D5D38 /* NewRoundDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328B7409441442909D75CE09 /* NewRoundDraft.swift */; };
 		9FF481C2DA4735C05099C476 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */; };
 		A4911A665D5AE576C963F82D /* GolfCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C203EFDBD24AB1F09291328 /* GolfCourse.swift */; };
 		A5DD7E023BDFC4455A4D2AFE /* RoundDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */; };
@@ -231,6 +233,7 @@
 		2E8A5E681364FBC39BBD432D /* SharedAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SharedAssets.xcassets; sourceTree = "<group>"; };
 		2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIdentifier.swift; sourceTree = "<group>"; };
 		2FC784D81F59A3D8626A1EFD /* WatchHoleSwipeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHoleSwipeContainer.swift; sourceTree = "<group>"; };
+		328B7409441442909D75CE09 /* NewRoundDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRoundDraft.swift; sourceTree = "<group>"; };
 		33DB472A47E8E889C5E12823 /* PhotoGalleryGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryGrid.swift; sourceTree = "<group>"; };
 		36DCE3C4FF5B4BAA26AA628B /* ScoreCardViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCardViewModelTests.swift; sourceTree = "<group>"; };
 		3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredCourseTests.swift; sourceTree = "<group>"; };
@@ -311,7 +314,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_9569DF54-6CBA-4B97-8508-A5C7062AFBEB" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -578,6 +581,7 @@
 		BD586EFE70770BEC27A88992 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				328B7409441442909D75CE09 /* NewRoundDraft.swift */,
 				116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */,
 			);
 			path = Settings;
@@ -690,10 +694,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_0E64F774-EE87-4B3E-894D-7B8EC312ED98" /* golfCounter */ = {
+		"TEMP_69C62ED8-5CEF-41E9-9825-E5CA299128B8" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */,
+				"TEMP_9569DF54-6CBA-4B97-8508-A5C7062AFBEB" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -897,6 +901,7 @@
 				628959B54063C38658ABEFBF /* HoleViewModel.swift in Sources */,
 				BE1E2C1F0C9FCF62AF42E036 /* KeychainStore.swift in Sources */,
 				407E7A1F9DF0AA5D45BA96CE /* NetworkMonitor.swift in Sources */,
+				0F71C54E47D7D97D28A8AE2A /* NewRoundDraft.swift in Sources */,
 				36DDEDE8C4BF65E47A8E182A /* PenaltySettings.swift in Sources */,
 				46E3B42FF684F0037ED32230 /* PersistedDiscoveredCourse.swift in Sources */,
 				6DA1DA0D036206F32C87CC47 /* Player.swift in Sources */,
@@ -927,6 +932,7 @@
 				434915EAC489DA0572D5CB13 /* HoleInfo.swift in Sources */,
 				836BA4A3A00FE60A25761DA5 /* HoleScore.swift in Sources */,
 				3EDE9D1C605E454B82F106D1 /* HoleViewModel.swift in Sources */,
+				9DA722260EE9AD51841D5D38 /* NewRoundDraft.swift in Sources */,
 				576AA378C4AD869517C79577 /* PenaltySettings.swift in Sources */,
 				E32142285A2C66B06B44A722 /* PersistedDiscoveredCourse.swift in Sources */,
 				8E060DABD6768C6A41ACB0D8 /* Player.swift in Sources */,
@@ -1161,7 +1167,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_9569DF54-6CBA-4B97-8508-A5C7062AFBEB" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1183,7 +1189,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_5E7601B7-5E67-4509-BC47-90C36E59BAAE" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_9569DF54-6CBA-4B97-8508-A5C7062AFBEB" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
