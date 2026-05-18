@@ -2,42 +2,61 @@ name = "roundon-viewer"
 main = "src/index.ts"
 compatibility_date = "2026-05-11"
 compatibility_flags = ["nodejs_compat"]
-
-# Workers Unbound: bcrypt cost 12 처리 (~200-300ms) 허용 (33-SECURITY §4.2)
-usage_model = "unbound"
 workers_dev = true
 
 [triggers]
 crons = ["0 3 * * *"]  # 매일 새벽 3시 만료 회수 처리
 
-[env.production]
-route = { pattern = "golf.zerolive.co.kr/*", zone_name = "zerolive.co.kr" }
-workers_dev = false
-
+# ── Top-level bindings (로컬 dev 및 default 환경) ─────────────────
 [[kv_namespaces]]
 binding = "KV_META"
-id = "<roundon-meta>"
+id = "7b78e911dd704dd29c684002b99247af"
 
 [[kv_namespaces]]
 binding = "KV_RATELIMIT"
-id = "<roundon-ratelimit>"
+id = "7c656f66ceef450584018031f6ad0413"
 
 [[kv_namespaces]]
 binding = "KV_PINLOCK"
-id = "<roundon-pinlock>"
+id = "61235bd0592e467f812bb548488b77c9"
 
 [[kv_namespaces]]
 binding = "KV_SESSION"
-id = "<roundon-session>"
-
-[[r2_buckets]]
-binding = "R2_PHOTOS"
-bucket_name = "roundon-photos"
+id = "c80cc35640444de4b3a3eef50a554ec3"
 
 [vars]
 ENVIRONMENT = "development"
 VIEWER_DOMAIN = "golf.zerolive.co.kr"
 
+# ── Production 환경 (Worker는 env마다 bindings 명시적 상속) ─────────
+# 도메인 연결은 Cloudflare 대시보드 → Workers & Pages → Settings →
+# Domains & Routes → Custom Domain `golf.zerolive.co.kr` 추가.
+[env.production]
+workers_dev = false
+
+[env.production.vars]
+ENVIRONMENT = "production"
+VIEWER_DOMAIN = "golf.zerolive.co.kr"
+
+[[env.production.kv_namespaces]]
+binding = "KV_META"
+id = "7b78e911dd704dd29c684002b99247af"
+
+[[env.production.kv_namespaces]]
+binding = "KV_RATELIMIT"
+id = "7c656f66ceef450584018031f6ad0413"
+
+[[env.production.kv_namespaces]]
+binding = "KV_PINLOCK"
+id = "61235bd0592e467f812bb548488b77c9"
+
+[[env.production.kv_namespaces]]
+binding = "KV_SESSION"
+id = "c80cc35640444de4b3a3eef50a554ec3"
+
 # 시크릿 (wrangler.toml에 값 기재 금지 — wrangler secret put으로 등록)
-# BCRYPT_PEPPER    : openssl rand -base64 32
-# SESSION_HMAC_KEY : openssl rand -base64 32
+# SESSION_HMAC_KEY : 등록 완료 (2026-05-18)
+# BCRYPT_PEPPER    : 등록 완료 (2026-05-18)
+#
+# 사진 공유 기능은 2026-05-18 폐기 (개인정보보호, 비용 절감).
+# R2 binding 및 PHOTO_BACKEND var 제거.

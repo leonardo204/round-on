@@ -16,7 +16,7 @@ export interface RateLimitRule {
 
 export const RATE_LIMITS = {
   share: { limit: 5, windowMs: 60_000 },    // 1분 5건
-  photos: { limit: 30, windowMs: 60_000 },  // 1분 30건
+  // photos rate limit은 2026-05-18 폐기 (사진 공유 기능 제거)
 } as const;
 
 /**
@@ -38,7 +38,7 @@ function currentMinuteKey(): string {
  */
 export async function checkRateLimit(
   env: Env,
-  type: "share" | "photos",
+  type: "share",
   deviceToken: string
 ): Promise<boolean> {
   const rule = RATE_LIMITS[type];

@@ -3,7 +3,7 @@
  * 30-API §9.6, 33-SECURITY §9.2
  */
 
-import type { Env, ShareMeta, Photo } from "../types.js";
+import type { Env, ShareMeta } from "../types.js";
 import { errorResponse } from "../middleware/security.js";
 
 export async function handleDeleteShare(
@@ -31,15 +31,7 @@ export async function handleDeleteShare(
     return errorResponse("EDIT_TOKEN_INVALID", "editToken이 일치하지 않습니다.", 401);
   }
 
-  // 4. R2 사진 전체 삭제 (33-SECURITY §9.2)
-  const photos: Photo[] = meta.photos ?? [];
-  await Promise.all(
-    photos.map((photo) =>
-      env.R2_PHOTOS.delete(`${shortId}/${photo.photoId}.jpg`)
-    )
-  );
-
-  // 5. KV 메타 삭제
+  // 4. KV 메타 삭제 (사진은 2026-05-18 폐기 — R2 정리 불필요)
   await env.KV_META.delete(`share:${shortId}`);
   await env.KV_META.delete(`share:${shortId}:pinHash`);
 

@@ -12,9 +12,6 @@ export interface Env {
   KV_PINLOCK: KVNamespace;    // PIN 오답 잠금 카운터 (33-SECURITY §5)
   KV_SESSION: KVNamespace;    // viewer 세션 쿠키 검증값 (33-SECURITY §5.4)
 
-  // R2 버킷 (32-CLOUDFLARE_SETUP §4)
-  R2_PHOTOS: R2Bucket;        // 사진 파일 ({shortId}/{photoId}.jpg)
-
   // vars
   ENVIRONMENT: string;         // "development" | "production"
   VIEWER_DOMAIN: string;       // "golf.zerolive.co.kr"
@@ -94,6 +91,7 @@ export interface SharePayload {
 
 /**
  * KV에 저장되는 share 메타 객체 (share:{shortId})
+ * (2026-05-18) photos 필드 제거 — 사진 공유 기능 폐기
  */
 export interface ShareMeta {
   shortId: string;
@@ -102,19 +100,6 @@ export interface ShareMeta {
   options: Omit<ShareOptions, "pin">;  // PIN은 별도 키(pinHash)에 저장
   createdAt: string;      // ISO 8601 UTC
   expiresAt: string;      // ISO 8601 UTC (createdAt + 7일)
-  photos: Photo[];        // 사진 목록
-}
-
-/**
- * 사진 메타
- */
-export interface Photo {
-  photoId: string;        // ph_{uuid}
-  holeNumber?: number;
-  caption?: string;
-  contentType: string;    // "image/jpeg" | "image/png"
-  size: number;           // bytes
-  uploadedAt: string;     // ISO 8601 UTC
 }
 
 /**

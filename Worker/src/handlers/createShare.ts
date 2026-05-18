@@ -115,7 +115,6 @@ export async function handleCreateShare(
     },
     createdAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
-    photos: [],
   };
 
   // 11. KV 저장 — 7일 TTL (32-CLOUDFLARE §7)
