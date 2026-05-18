@@ -342,8 +342,9 @@ struct ShareSheetView: View {
 
     private func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
         formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")  // KST 강제 — 디바이스 timezone 무관
         return formatter.string(from: date)
     }
 

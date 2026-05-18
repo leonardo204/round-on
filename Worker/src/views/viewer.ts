@@ -76,6 +76,22 @@ function renderScorecardHalf(
   </div>`;
 }
 
+// ── KST 시각 포맷터 ─────────────────────────────────────────────────────
+// 입력: ISO 8601 UTC 문자열 (예: "2026-05-25T02:35:33.176Z")
+// 출력: "2026-05-25 11:35 (KST)"
+function formatKST(isoUtc: string): string {
+  const d = new Date(isoUtc);
+  if (isNaN(d.getTime())) return isoUtc;
+  // UTC + 9시간
+  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+  const Y = kst.getUTCFullYear();
+  const M = String(kst.getUTCMonth() + 1).padStart(2, "0");
+  const D = String(kst.getUTCDate()).padStart(2, "0");
+  const h = String(kst.getUTCHours()).padStart(2, "0");
+  const m = String(kst.getUTCMinutes()).padStart(2, "0");
+  return `${Y}-${M}-${D} ${h}:${m} (KST)`;
+}
+
 // ── 메인 viewer HTML 렌더링 ────────────────────────────────────────────────
 
 export interface ViewerRenderOptions {
@@ -121,8 +137,8 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     ? renderScorecardHalf("IN", inHoles, displayPlayers)
     : "";
 
-  // 만료 시각 표시
-  const expiresAtDisplay = escapeHtml(expiresAt);
+  // 만료 시각 표시 — KST (UTC+9) 변환, "2026-05-25 02:35 (KST)" 형식
+  const expiresAtDisplay = escapeHtml(formatKST(expiresAt));
 
   return `<!DOCTYPE html>
 <html lang="ko">

@@ -236,8 +236,8 @@ struct RoundDetailView: View {
                                 .font(.system(size: 12))
                                 .foregroundStyle(expired ? .red : Color.springTextSecondary)
                             Text(expired
-                                ? "만료됨 (\(formattedDate(expiresAt)))"
-                                : "만료: \(formattedDate(expiresAt))")
+                                ? "만료됨 (\(formattedExpiry(expiresAt)))"
+                                : "만료: \(formattedExpiry(expiresAt))")
                                 .font(.system(size: 12))
                                 .foregroundStyle(expired ? .red : Color.springTextSecondary)
                         }
@@ -489,11 +489,22 @@ struct RoundDetailView: View {
         return Color(red: 0.7, green: 0.1, blue: 0.1)
     }
 
+    /// 날짜만 (라운드 일자 등): "2026. 5. 18."
     private func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        return formatter.string(from: date)
+    }
+
+    /// 만료 시각용 (분 단위): "2026-05-25 11:35 KST"
+    private func formattedExpiry(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm 'KST'"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return formatter.string(from: date)
     }
 }
