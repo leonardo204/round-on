@@ -25,6 +25,8 @@ struct HoleScoreGrid: View {
     let frontLabel: String?
     /// 섹션 후반 라벨 (nil이면 "후반")
     let backLabel: String?
+    /// 하단 큰 합계 카드 노출 여부. ActiveRoundView=true 기본, RoundDetailView=false (자체 컴팩트 합계 표시)
+    let showTotalCard: Bool
 
     // MARK: Init
 
@@ -36,7 +38,8 @@ struct HoleScoreGrid: View {
         onScoreTap: ((Int, UUID) -> Void)? = nil,
         onScoreLongPress: ((Int, UUID) -> Void)? = nil,
         frontLabel: String? = nil,
-        backLabel: String? = nil
+        backLabel: String? = nil,
+        showTotalCard: Bool = true
     ) {
         self.scoreVM = scoreVM
         self.interactive = interactive
@@ -46,6 +49,7 @@ struct HoleScoreGrid: View {
         self.onScoreLongPress = onScoreLongPress
         self.frontLabel = frontLabel
         self.backLabel = backLabel
+        self.showTotalCard = showTotalCard
     }
 
     // MARK: Body
@@ -72,8 +76,8 @@ struct HoleScoreGrid: View {
                 )
             }
 
-            // 합계 행
-            if !scoreVM.players.isEmpty {
+            // 합계 행 — RoundDetailView 등에서는 false 처리 (자체 컴팩트 합계 사용)
+            if showTotalCard && !scoreVM.players.isEmpty {
                 totalRowBlock()
                     .padding(.horizontal, 4)
             }
@@ -217,6 +221,7 @@ struct HoleScoreGrid: View {
                     holeNumber: h,
                     playerName: player.name,
                     par: par,
+                    interactive: interactive,
                     onTap: {
                         if interactive {
                             onScoreTap?(h, player.id)

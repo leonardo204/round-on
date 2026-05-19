@@ -320,21 +320,40 @@ struct RoundDetailView: View {
     // MARK: Score Section
 
     private var scoreSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
                 sectionLabel("스코어")
+
+                // 편집 토글 (펜슬 아이콘)
+                Button {
+                    if isEditMode {
+                        saveEdit()
+                    } else {
+                        enterEditMode()
+                    }
+                } label: {
+                    Image(systemName: isEditMode ? "checkmark.circle.fill" : "square.and.pencil")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Color.springGreenPrimary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(isEditMode ? "편집 완료" : "스코어 편집")
+
                 if isEditMode {
-                    Spacer()
                     Text("탭+1 / 길게누르기-1")
                         .font(.system(size: 11))
                         .foregroundStyle(Color.springTextSecondary)
                 }
+                Spacer()
             }
             .padding(.horizontal, 16)
 
+            // 컴팩트 합계 — 그리드 위, 플레이어별 한 줄씩 "타수(±diff)"
+            compactTotalsRow
+                .padding(.horizontal, 16)
+
             // 홀별 스코어카드 그리드 (read-only 또는 편집 모드)
             if isEditMode {
-                // 편집 모드: interactive 그리드 (par 탭 + score 탭/길게누르기)
                 HoleScoreGrid(
                     scoreVM: scoreVM,
                     interactive: true,
@@ -353,26 +372,59 @@ struct RoundDetailView: View {
                         editDecrement(hole: hole, playerId: playerId)
                     },
                     frontLabel: round.frontCourseName,
-                    backLabel: round.backCourseName
+                    backLabel: round.backCourseName,
+                    showTotalCard: false
                 )
                 .padding(.horizontal, 12)
-
-                Text("서브 코스: \(round.displaySubLabel ?? "기본")")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .padding(.horizontal, 20)
             } else {
-                // 일반 모드: read-only 그리드 (그리드 안에 합계 셀 포함 → 별도 합계 행 불필요)
                 HoleScoreGrid(
                     scoreVM: scoreVM,
                     interactive: false,
                     currentHoleNumber: Int?.none,
                     frontLabel: round.frontCourseName,
-                    backLabel: round.backCourseName
+                    backLabel: round.backCourseName,
+                    showTotalCard: false
                 )
                 .padding(.horizontal, 12)
             }
         }
+    }
+
+    /// 그리드 위 컴팩트 합계 — 플레이어별 한 줄 "이름  타수(±diff)"
+    private var compactTotalsRow: some View {
+        let totalPar = scoreVM.totalPar
+        return VStack(alignment: .leading, spacing: 4) {
+            ForEach(scoreVM.players) { player in
+                let total = scoreVM.totalByPlayer[player.id] ?? 0
+                let (diffText, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: totalPar)
+                HStack(spacing: 6) {
+                    Text(player.name)
+                        .font(.system(size: 13, weight: player.isOwner ? .semibold : .regular))
+                        .foregroundStyle(player.isOwner ? Color.springGreenPrimary : Color.springTextSecondary)
+                        .frame(width: 56, alignment: .leading)
+                        .lineLimit(1)
+                    if total > 0 {
+                        Text("\(total)")
+                            .font(.system(size: 16, weight: .bold))
+                            .monospacedDigit()
+                            .foregroundStyle(Color.springTextPrimary)
+                        Text("(\(diffText))")
+                            .font(.system(size: 13, weight: .semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(parityColor(parity))
+                    } else {
+                        Text("-")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(Color.springTextSecondary)
+                    }
+                    Spacer()
+                }
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color.springSurfaceElevated)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
     /// 편집 모드에서 특정 플레이어의 홀별 타수 그리드

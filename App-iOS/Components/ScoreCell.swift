@@ -22,6 +22,8 @@ public struct ScoreCell: View {
 
     public let onTap: () -> Void
     public let onLongPress: () -> Void
+    /// true이면 편집 hint(우하단 - 아이콘) + contextMenu 활성. false면 깔끔한 read-only.
+    public let interactive: Bool
 
     // MARK: Init
 
@@ -32,6 +34,7 @@ public struct ScoreCell: View {
         holeNumber: Int,
         playerName: String,
         par: Int,
+        interactive: Bool = true,
         onTap: @escaping () -> Void,
         onLongPress: @escaping () -> Void
     ) {
@@ -41,6 +44,7 @@ public struct ScoreCell: View {
         self.holeNumber = holeNumber
         self.playerName = playerName
         self.par = par
+        self.interactive = interactive
         self.onTap = onTap
         self.onLongPress = onLongPress
     }
@@ -68,8 +72,8 @@ public struct ScoreCell: View {
                     .padding(.trailing, 2)
             }
 
-            // count > 0일 때 우하단에 작은 ⊖ visual hint — long press 또는 contextMenu로 -1 가능 안내
-            if count > 0 {
+            // count > 0이면서 interactive일 때만 우하단 ⊖ 편집 hint (read-only 시 숨김)
+            if count > 0 && interactive {
                 Image(systemName: "minus.circle.fill")
                     .font(.system(size: 9))
                     .foregroundStyle(Color.springTextSecondary.opacity(0.45))
@@ -85,10 +89,10 @@ public struct ScoreCell: View {
                         lineWidth: isCurrentHole ? 2 : 1.5)
         )
         .contentShape(Rectangle())
-        .onTapGesture { onTap() }
-        .onLongPressGesture(minimumDuration: 0.4) { onLongPress() }
+        .onTapGesture { if interactive { onTap() } }
+        .onLongPressGesture(minimumDuration: 0.4) { if interactive { onLongPress() } }
         .contextMenu {
-            if count > 0 {
+            if interactive && count > 0 {
                 Button {
                     onLongPress()
                 } label: {
