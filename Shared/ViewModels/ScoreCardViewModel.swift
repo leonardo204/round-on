@@ -64,6 +64,19 @@ public final class ScoreCardViewModel {
     /// 전체 par 합계
     public var totalPar: Int { outParTotal + inParTotal }
 
+    // MARK: Score vs Par 표시 헬퍼
+
+    /// "110 (+38)" / "72 (E)" / "70 (-2)" 형식 문자열 반환
+    public static func formatScoreVsPar(score: Int, par: Int) -> (text: String, parity: Int) {
+        guard score > 0 else { return ("-", 0) }
+        let diff = score - par
+        let diffStr: String
+        if diff == 0 { diffStr = "E" }
+        else if diff > 0 { diffStr = "+\(diff)" }
+        else { diffStr = "\(diff)" }
+        return ("\(score) (\(diffStr))", diff)
+    }
+
     // MARK: Refresh (SwiftData → 캐시 갱신)
 
     /// Round 변경 시 캐시 재빌드

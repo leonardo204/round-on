@@ -494,6 +494,25 @@ public final class RoundViewModel {
         applyPenalty(holeNumber: holeNumber, playerId: playerId, delta: PenaltySettings.okDelta, kind: .ok)
     }
 
+    /// 더블파 탭 — 해당 홀의 타수를 par×2로 강제 설정.
+    /// - Returns: 성공 시 true, 라운드/홀 없으면 false
+    @discardableResult
+    public func setToDoublePar(holeNumber: Int, playerId: UUID) -> Bool {
+        guard let round = currentRound else { return false }
+        guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return false }
+        let target = max(2, holeScore.par * 2)
+        let current = holeScore.count(for: playerId)
+        let delta = target - current
+        if delta != 0 {
+            upsertCount(in: holeScore, playerId: playerId, delta: delta)
+        }
+        save()
+        scoreCardViewModel?.refresh(from: round)
+        emitShot(type: .increment, holeNumber: holeNumber, playerId: playerId)
+        AppLogger.counter.info("더블파 설정: 홀\(holeNumber) \(current)→\(target)")
+        return true
+    }
+
     private enum PenaltyKind { case ob, hazard, ok }
 
     private func applyPenalty(holeNumber: Int, playerId: UUID, delta: Int, kind: PenaltyKind) -> Bool {

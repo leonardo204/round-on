@@ -13,6 +13,8 @@ struct ActiveRoundView: View {
     @State private var showPenaltySheet = false
     @State private var bannerMessage: String?
     @State private var prefillToastMessage: String?
+    /// double par 차단 등 일회성 알림 토스트 (1.5초 자동 사라짐)
+    @State private var blockToast: String?
 
     // 10홀 진입 시 잠정 코스 확인 팝업
     @State private var showBackCoursePrompt = false
@@ -74,6 +76,24 @@ struct ActiveRoundView: View {
                     }
                     .transition(.opacity.combined(with: .move(edge: .bottom)))
                     .animation(.easeInOut(duration: 0.25), value: prefillToastMessage)
+                }
+
+                // 차단 알림 토스트 (double par 초과 등, 1.5초 자동 사라짐)
+                if let msg = blockToast {
+                    VStack {
+                        Spacer()
+                        Text(msg)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(Color(red: 0.6, green: 0.3, blue: 0.1).opacity(0.92))
+                            .clipShape(Capsule())
+                            .shadow(color: .black.opacity(0.18), radius: 8, x: 0, y: 4)
+                            .padding(.bottom, prefillToastMessage != nil ? 84 : 40)
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .animation(.easeInOut(duration: 0.25), value: blockToast)
                 }
             }
             .onChange(of: roundVM.lastPrefillToastMessage) { _, newMsg in
@@ -336,7 +356,7 @@ struct ActiveRoundView: View {
                 Text("합")
                     .font(.system(size: 11))
                     .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 28)
+                    .frame(width: 34)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 4)
@@ -354,7 +374,7 @@ struct ActiveRoundView: View {
                 Text("\(parTotal)")
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 28)
+                    .frame(width: 34)
             }
             .padding(.vertical, 3)
             .padding(.horizontal, 4)
@@ -366,7 +386,8 @@ struct ActiveRoundView: View {
                     player: player,
                     holes: holes,
                     scoreVM: scoreVM,
-                    sectionTotal: totalFunc(player.id)
+                    sectionTotal: totalFunc(player.id),
+                    sectionParTotal: parTotal
                 )
             }
         }
@@ -379,10 +400,12 @@ struct ActiveRoundView: View {
         player: Player,
         holes: [Int],
         scoreVM: ScoreCardViewModel,
-        sectionTotal: Int
+        sectionTotal: Int,
+        sectionParTotal: Int
     ) -> some View {
         let isActive = roundVM.playerListViewModel?.activePlayer?.id == player.id
         let currentHole = roundVM.holeViewModel?.currentHoleNumber
+        let (totalText, parity) = ScoreCardViewModel.formatScoreVsPar(score: sectionTotal, par: sectionParTotal)
 
         return HStack(spacing: 2) {
             // 플레이어 이름 — 동반자명 잘림 방지 위해 폭 확대 + 약어 처리
@@ -413,7 +436,7 @@ struct ActiveRoundView: View {
                         if ok {
                             Task { await HapticEngine.shared.play(.shotIncrement) }
                         } else {
-                            bannerMessage = "double par(\(par * 2)) 이상은 입력할 수 없어요."
+                            showBlockToast("더 추가할 수 없어요 (double par)")
                             Task { await HapticEngine.shared.play(.penaltyOB) }
                         }
                     },
@@ -424,11 +447,23 @@ struct ActiveRoundView: View {
                 )
             }
 
-            // 구간 합계
-            Text(sectionTotal > 0 ? "\(sectionTotal)" : "-")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(Color.springTextPrimary)
-                .frame(width: 28)
+            // 구간 합계 — "친타수 (par-diff)" 형식, 2줄
+            VStack(spacing: 0) {
+                if sectionTotal > 0 {
+                    Text("\(sectionTotal)")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Color.springTextPrimary)
+                    Text(parDiffBadge(score: sectionTotal, par: sectionParTotal))
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundStyle(parDiffColor(parity: parity))
+                } else {
+                    Text("-")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+            }
+            .frame(width: 34)
+            .accessibilityLabel(totalText)
         }
         .padding(.vertical, 3)
         .padding(.horizontal, 4)
@@ -436,7 +471,8 @@ struct ActiveRoundView: View {
     }
 
     private func totalRow(scoreVM: ScoreCardViewModel) -> some View {
-        VStack(spacing: 0) {
+        let totalPar = scoreVM.totalPar
+        return VStack(spacing: 0) {
             HStack {
                 Text("합계")
                     .font(.system(size: 13, weight: .semibold))
@@ -448,15 +484,26 @@ struct ActiveRoundView: View {
 
             HStack(spacing: 8) {
                 ForEach(scoreVM.players) { player in
+                    let total = scoreVM.totalByPlayer[player.id] ?? 0
+                    let (_, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: totalPar)
                     VStack(spacing: 2) {
                         Text(player.name)
                             .font(.system(size: 12))
                             .foregroundStyle(Color.springTextSecondary)
                             .lineLimit(1)
-                        let total = scoreVM.totalByPlayer[player.id] ?? 0
-                        Text(total > 0 ? "\(total)" : "-")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundStyle(Color.springTextPrimary)
+                        if total > 0 {
+                            Text("\(total)")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundStyle(Color.springTextPrimary)
+                                .monospacedDigit()
+                            Text(parDiffBadge(score: total, par: totalPar))
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(parDiffColor(parity: parity))
+                        } else {
+                            Text("-")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundStyle(Color.springTextSecondary)
+                        }
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -486,21 +533,31 @@ struct ActiveRoundView: View {
                             .foregroundStyle(Color.springTextPrimary)
                             .padding(.top, 8)
 
+                        // 2x2 그리드 레이아웃 (OB/해저드/컨시드/더블파)
                         VStack(spacing: 8) {
-                            PenaltyButton(variant: .ob) {
-                                roundVM.tapOB(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
-                                Task { await HapticEngine.shared.play(.penaltyOB) }
-                                showPenaltySheet = false
+                            HStack(spacing: 8) {
+                                PenaltyButton(variant: .ob) {
+                                    roundVM.tapOB(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                    Task { await HapticEngine.shared.play(.penaltyOB) }
+                                    showPenaltySheet = false
+                                }
+                                PenaltyButton(variant: .hazard) {
+                                    roundVM.tapHazard(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                    Task { await HapticEngine.shared.play(.penaltyHazard) }
+                                    showPenaltySheet = false
+                                }
                             }
-                            PenaltyButton(variant: .hazard) {
-                                roundVM.tapHazard(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
-                                Task { await HapticEngine.shared.play(.penaltyHazard) }
-                                showPenaltySheet = false
-                            }
-                            PenaltyButton(variant: .ok) {
-                                roundVM.tapOK(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
-                                Task { await HapticEngine.shared.play(.penaltyOK) }
-                                showPenaltySheet = false
+                            HStack(spacing: 8) {
+                                PenaltyButton(variant: .ok) {
+                                    roundVM.tapOK(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                    Task { await HapticEngine.shared.play(.penaltyOK) }
+                                    showPenaltySheet = false
+                                }
+                                PenaltyButton(variant: .doublePar) {
+                                    roundVM.setToDoublePar(holeNumber: holeVM.currentHoleNumber, playerId: activePlayer.id)
+                                    Task { await HapticEngine.shared.play(.penaltyOB) }
+                                    showPenaltySheet = false
+                                }
                             }
                         }
                         .padding(.horizontal, 16)
@@ -517,7 +574,7 @@ struct ActiveRoundView: View {
                 }
             }
         }
-        .presentationDetents([.fraction(0.4)])
+        .presentationDetents([.fraction(0.48)])
     }
 
     // MARK: Back Course Change Sheet (잠정 코스 수정용)
@@ -698,25 +755,33 @@ struct ActiveRoundView: View {
                     if ok {
                         Task { await HapticEngine.shared.play(.shotIncrement) }
                     } else {
-                        bannerMessage = "double par(\(par * 2)) 이상은 입력할 수 없어요."
+                        showBlockToast("더 추가할 수 없어요 (double par)")
                         Task { await HapticEngine.shared.play(.penaltyOB) }
                     }
                 }
             }
 
-            // 벌타 3종
-            HStack(spacing: 8) {
-                penaltyBigButton(label: "OB", icon: "flag", delta: obDelta, tint: Color(red: 0.76, green: 0.15, blue: 0.15)) {
-                    let ok = roundVM.tapOB(holeNumber: currentHole, playerId: player.id)
-                    handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOB)
+            // 벌타 2x2 그리드 (OB / 해저드 / 컨시드 / 더블파)
+            VStack(spacing: 6) {
+                HStack(spacing: 8) {
+                    penaltyBigButton(label: "OB", icon: "exclamationmark.triangle.fill", delta: obDelta, tint: Color(red: 0.76, green: 0.15, blue: 0.15)) {
+                        let ok = roundVM.tapOB(holeNumber: currentHole, playerId: player.id)
+                        handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOB)
+                    }
+                    penaltyBigButton(label: "해저드", icon: "water.waves", delta: hazardDelta, tint: Color(red: 0.08, green: 0.40, blue: 0.75)) {
+                        let ok = roundVM.tapHazard(holeNumber: currentHole, playerId: player.id)
+                        handlePenaltyResult(ok: ok, par: par, haptic: .penaltyHazard)
+                    }
                 }
-                penaltyBigButton(label: "해저드", icon: "drop.fill", delta: hazardDelta, tint: Color(red: 0.08, green: 0.40, blue: 0.75)) {
-                    let ok = roundVM.tapHazard(holeNumber: currentHole, playerId: player.id)
-                    handlePenaltyResult(ok: ok, par: par, haptic: .penaltyHazard)
-                }
-                penaltyBigButton(label: "컨시드", icon: "checkmark.circle.fill", delta: okDelta, tint: Color.springGreenPrimary) {
-                    let ok = roundVM.tapOK(holeNumber: currentHole, playerId: player.id)
-                    handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOK)
+                HStack(spacing: 8) {
+                    penaltyBigButton(label: "컨시드", icon: "checkmark.circle.fill", delta: okDelta, tint: Color.springGreenPrimary) {
+                        let ok = roundVM.tapOK(holeNumber: currentHole, playerId: player.id)
+                        handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOK)
+                    }
+                    doubleParBigButton(par: par) {
+                        roundVM.setToDoublePar(holeNumber: currentHole, playerId: player.id)
+                        Task { await HapticEngine.shared.play(.penaltyOB) }
+                    }
                 }
             }
         }
@@ -762,6 +827,27 @@ struct ActiveRoundView: View {
         .accessibilityLabel("\(label) +\(delta)")
     }
 
+    private func doubleParBigButton(par: Int, action: @escaping () -> Void) -> some View {
+        let tint = Color(red: 0.62, green: 0.40, blue: 0.12)
+        return Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: "2.square.fill")
+                    .font(.system(size: 18))
+                Text("더블파")
+                    .font(.system(size: 13, weight: .semibold))
+                Text("par×2 (\(par * 2))")
+                    .font(.system(size: 11, weight: .medium))
+                    .opacity(0.75)
+            }
+            .foregroundStyle(tint)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(tint.opacity(0.15), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("더블파 par\(par)의 2배 \(par * 2)로 설정")
+    }
+
     private func holeNavBar(holeVM: HoleViewModel) -> some View {
         let isFirst = holeVM.currentHoleNumber <= 1
         let isLast = holeVM.currentHoleNumber >= holeVM.totalHoles
@@ -784,23 +870,40 @@ struct ActiveRoundView: View {
 
             Spacer()
 
-            Button {
-                holeVM.nextHole()
-            } label: {
-                HStack(spacing: 4) {
-                    Text("\(min(holeVM.totalHoles, holeVM.currentHoleNumber + 1))번 홀")
-                    Image(systemName: "chevron.right")
+            if isLast {
+                // 마지막 홀에서 종료 버튼 노출
+                Button {
+                    showFinishConfirm = true
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "flag.checkered")
+                        Text("종료")
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.red, in: RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: Color.red.opacity(0.3), radius: 6, y: 2)
                 }
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
-                .background(isLast ? Color.springTextSecondary : Color.springGreenPrimary,
-                            in: RoundedRectangle(cornerRadius: 12))
-                .shadow(color: isLast ? .clear : Color.springGreenPrimary.opacity(0.3), radius: 6, y: 2)
+                .buttonStyle(.plain)
+            } else {
+                Button {
+                    holeVM.nextHole()
+                } label: {
+                    HStack(spacing: 4) {
+                        Text("\(min(holeVM.totalHoles, holeVM.currentHoleNumber + 1))번 홀")
+                        Image(systemName: "chevron.right")
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color.springGreenPrimary, in: RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: Color.springGreenPrimary.opacity(0.3), radius: 6, y: 2)
+                }
+                .buttonStyle(.plain)
             }
-            .disabled(isLast)
-            .buttonStyle(.plain)
         }
     }
 
@@ -816,8 +919,16 @@ struct ActiveRoundView: View {
         if ok {
             Task { await HapticEngine.shared.play(haptic) }
         } else {
-            bannerMessage = "double par(\(par * 2)) 초과 — 더 추가할 수 없어요."
+            showBlockToast("더 추가할 수 없어요 (double par)")
             Task { await HapticEngine.shared.play(.penaltyOB) }
+        }
+    }
+
+    private func showBlockToast(_ message: String) {
+        withAnimation { blockToast = message }
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            withAnimation { blockToast = nil }
         }
     }
 
@@ -841,6 +952,22 @@ struct ActiveRoundView: View {
                 .contentShape(Rectangle())
         }
         .accessibilityLabel("\(holeNumber)번 홀 Par, 현재 \(par). 탭하여 변경.")
+    }
+
+    /// par 대비 차이 뱃지 문자열 — "(+3)" / "(E)" / "(-2)"
+    private func parDiffBadge(score: Int, par: Int) -> String {
+        guard score > 0, par > 0 else { return "" }
+        let diff = score - par
+        if diff == 0 { return "(E)" }
+        if diff > 0 { return "(+\(diff))" }
+        return "(\(diff))"
+    }
+
+    /// parity 값(양수/0/음수)에 따른 색상
+    private func parDiffColor(parity: Int) -> Color {
+        if parity < 0 { return Color(red: 0.13, green: 0.60, blue: 0.28) }  // 언더 → 녹색
+        if parity == 0 { return Color.springTextSecondary }                  // 이븐 → 회색
+        return Color(red: 0.85, green: 0.35, blue: 0.10)                     // 오버 → 오렌지-빨강
     }
 
     /// 동반자 이름이 길면 약어로 표시 — "동반자1" → "동1", "동반자2" → "동2"
