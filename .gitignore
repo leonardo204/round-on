@@ -50,3 +50,6 @@ __pycache__/
 *.json.bak
 *.json.bak[0-9]*
 *.bak
+
+# 로컬 테스트 자산 (개인정보 포함 가능 — 커밋 금지)
+samples/
