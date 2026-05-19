@@ -19,12 +19,15 @@ if [[ -z "$KEY" ]]; then
   exit 1
 fi
 
+BEARER=$(grep "^ROUNDON_API_BEARER=" "$LOCAL" | cut -d'=' -f2- || true)
+
 cat > "$XCCONFIG" <<XCCONF
 // Secrets.xcconfig — 로컬 전용, .gitignore에 포함됨. 절대 커밋 금지.
 // scripts/sync-secrets.sh 가 .api-keys.local 에서 자동 생성.
 // 갱신: scripts/sync-secrets.sh 재실행.
 
 KAKAO_REST_API_KEY = $KEY
+ROUNDON_API_BEARER = $BEARER
 XCCONF
 
-echo "Secrets.xcconfig 동기화 완료 (KAKAO_REST_API_KEY ${#KEY}자)"
+echo "Secrets.xcconfig 동기화 완료 (KAKAO ${#KEY}자, ROUNDON ${#BEARER}자)"
