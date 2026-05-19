@@ -316,30 +316,34 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     }
     /* score-table 합계 셀 하단 par-diff */
     .col-sum-diff {
-      font-size: 10px; font-weight: 600;
+      font-size: 9px; font-weight: 600; display: block;
     }
     .col-sum-diff.under { color: var(--green-primary); }
     .col-sum-diff.even  { color: var(--text-2); }
     .col-sum-diff.over  { color: var(--red-text); }
 
     /* ── 스코어카드 영역 ───────────────────────────────────────────── */
-    main { padding: 0 16px; }
+    main { padding: 0 16px; overflow-x: hidden; }
     .scorecard-section {
-      margin-top: 14px; overflow: hidden;
-      padding: 0 6px;
+      margin-top: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding: 0 10px 8px;
     }
     .score-table {
       width: 100%; border-collapse: collapse; font-size: 13px;
       font-feature-settings: 'tnum';
+      table-layout: fixed;
     }
     .score-table th, .score-table td {
-      padding: 8px 4px; text-align: center;
+      padding: 8px 2px; text-align: center;
       border-bottom: 1px solid var(--divider);
-      min-width: 28px;
     }
     .score-table th.col-label, .score-table td.col-label {
-      text-align: left; padding-left: 12px;
-      color: var(--text-2); font-weight: 600; min-width: 56px;
+      text-align: left; padding-left: 10px;
+      color: var(--text-2); font-weight: 600;
+      width: 44px;
+    }
+    .score-table th.col-sum, .score-table td.col-sum {
+      width: 44px; padding-right: 10px;
     }
     .score-table thead th {
       background: var(--divider); color: var(--text-2);
