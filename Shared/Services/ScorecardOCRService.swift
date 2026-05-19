@@ -41,6 +41,8 @@ public struct ScorecardOCRResult: Sendable {
     public let pars: [Int]          // 9 또는 18 길이
     public let players: [OCRPlayer]
     public let rawLines: [OCRTextLine]
+    /// 부분 인식 경고 — 편집 화면 상단에 사용자 안내용으로 표시
+    public let warnings: [ScorecardOCRWarning]
 
     public init(
         courseName: String?,
@@ -50,7 +52,8 @@ public struct ScorecardOCRResult: Sendable {
         backCourseName: String?,
         pars: [Int],
         players: [OCRPlayer],
-        rawLines: [OCRTextLine]
+        rawLines: [OCRTextLine],
+        warnings: [ScorecardOCRWarning] = []
     ) {
         self.courseName = courseName
         self.date = date
@@ -60,6 +63,7 @@ public struct ScorecardOCRResult: Sendable {
         self.pars = pars
         self.players = players
         self.rawLines = rawLines
+        self.warnings = warnings
     }
 }
 
@@ -73,11 +77,34 @@ public enum ScorecardOCRError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .noTextFound:
-            return "이미지에서 텍스트를 찾을 수 없습니다."
+            return "이미지에서 텍스트를 찾을 수 없어요. 사진이 흐리거나 글자가 작아 보일 수 있어요."
         case .insufficientData(let reason):
-            return "스코어카드 데이터를 충분히 인식하지 못했습니다: \(reason)"
+            return "스코어카드를 충분히 인식하지 못했어요. (\(reason))\n사진을 다시 찍어 보거나 직접 입력해 보세요."
         case .imageProcessingFailed:
-            return "이미지 처리에 실패했습니다."
+            return "이미지 처리에 실패했어요. 다른 사진으로 시도해 주세요."
+        }
+    }
+}
+
+/// 부분 인식 경고 — par는 잡혔으나 일부 필드가 누락된 경우 사용자에게 알림용.
+public enum ScorecardOCRWarning: String, Sendable, CaseIterable {
+    case missingCourseName        // 골프장명 인식 못함
+    case missingDate              // 날짜 인식 못함
+    case missingFrontCourseName   // 전반 코스명
+    case missingBackCourseName    // 후반 코스명 (18홀 케이스에서)
+    case onlyHalfRound            // 9홀만 인식 (18홀일 수도)
+    case noPlayers                // 플레이어 행 0개
+    case fewPlayers               // 플레이어 1명 (동반자 인식 못함)
+
+    public var message: String {
+        switch self {
+        case .missingCourseName:     return "골프장명을 인식하지 못했어요 — 직접 선택해 주세요"
+        case .missingDate:           return "날짜를 인식하지 못했어요 — 오늘 날짜로 설정됐어요"
+        case .missingFrontCourseName: return "전반 코스명을 인식하지 못했어요"
+        case .missingBackCourseName:  return "후반 코스명을 인식하지 못했어요"
+        case .onlyHalfRound:         return "9홀만 인식됐어요 — 18홀이라면 후반 정보를 추가해 주세요"
+        case .noPlayers:             return "플레이어 점수를 인식하지 못했어요 — 직접 입력해 주세요"
+        case .fewPlayers:            return "본인 외 동반자가 인식되지 않았어요 — 필요하면 추가해 주세요"
         }
     }
 }
@@ -300,6 +327,19 @@ public enum ScorecardOCRService {
             pars = []
         }
 
+        // 부분 인식 경고 진단
+        var warnings: [ScorecardOCRWarning] = []
+        if courseName == nil { warnings.append(.missingCourseName) }
+        if dateFound == nil { warnings.append(.missingDate) }
+        if frontCourseName == nil { warnings.append(.missingFrontCourseName) }
+        if pars.count == 9 { warnings.append(.onlyHalfRound) }
+        if pars.count >= 18 && backCourseName == nil { warnings.append(.missingBackCourseName) }
+        if players.isEmpty {
+            warnings.append(.noPlayers)
+        } else if players.count == 1 {
+            warnings.append(.fewPlayers)
+        }
+
         return ScorecardOCRResult(
             courseName: courseName,
             date: dateFound,
@@ -308,7 +348,8 @@ public enum ScorecardOCRService {
             backCourseName: backCourseName,
             pars: pars,
             players: players,
-            rawLines: lines
+            rawLines: lines,
+            warnings: warnings
         )
     }
 

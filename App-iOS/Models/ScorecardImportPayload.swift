@@ -35,10 +35,13 @@ class ScorecardImportPayload {
 
     var matchedCourses: [GolfCourse] = []   // fuzzy 매칭 후보
     var isCourseConfirmed: Bool = false
+    /// OCR 부분 인식 경고 — 편집 화면 상단 배너용
+    var warnings: [ScorecardOCRWarning] = []
 
     // MARK: Init from OCR Result
 
     init(from ocr: ScorecardOCRResult) {
+        self.warnings = ocr.warnings
         self.courseName = ocr.courseName ?? ""
         self.date = ocr.date ?? Date.now
         self.teeOffTime = ocr.teeOffTime ?? ""

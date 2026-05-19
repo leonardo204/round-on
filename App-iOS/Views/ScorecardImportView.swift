@@ -131,6 +131,35 @@ struct ScorecardImportView: View {
     @ViewBuilder
     private func editingView(payload: ScorecardImportPayload) -> some View {
         List {
+            // 부분 인식 경고 (있을 때만)
+            if !payload.warnings.isEmpty {
+                Section {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.orange)
+                            Text("일부만 인식했어요")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                        ForEach(payload.warnings, id: \.self) { w in
+                            HStack(alignment: .top, spacing: 6) {
+                                Text("•")
+                                    .foregroundStyle(.orange)
+                                Text(w.message)
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        Text("아래에서 직접 채우거나 수정한 뒤 저장해 주세요.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 4)
+                    }
+                    .padding(.vertical, 4)
+                }
+                .listRowBackground(Color.orange.opacity(0.08))
+            }
+
             // 골프장 섹션
             Section("골프장") {
                 HStack {
