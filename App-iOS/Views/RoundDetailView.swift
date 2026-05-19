@@ -144,35 +144,37 @@ struct RoundDetailView: View {
     // MARK: Summary Header
 
     private var summaryHeader: some View {
-        VStack(spacing: 8) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
+        HStack(alignment: .center, spacing: 8) {
+            VStack(alignment: .leading, spacing: 2) {
+                // 1줄: 코스명/홀수
+                HStack(spacing: 6) {
                     if let sub = round.displaySubLabel {
                         Text(sub)
-                            .font(.system(size: 13))
-                            .foregroundStyle(Color.springTextSecondary)
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(Color.springTextPrimary)
                     }
-                    Text(formattedDate(round.finishedAt ?? round.date))
-                        .font(.system(size: 13))
-                        .foregroundStyle(Color.springTextSecondary)
-                    Text("\(round.holeList.count)홀")
+                    Text("· \(round.holeList.count)홀")
                         .font(.system(size: 13))
                         .foregroundStyle(Color.springTextSecondary)
                 }
-                Spacer()
-                // 완료 뱃지
-                Text("완료")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color.springGreenPrimary)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(Color.springGreenSecondary.opacity(0.3))
-                    .clipShape(Capsule())
+                // 2줄: 날짜
+                Text(formattedDate(round.finishedAt ?? round.date))
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.springTextSecondary)
             }
-            .padding(16)
+            Spacer()
+            Text("완료")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color.springGreenPrimary)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 3)
+                .background(Color.springGreenSecondary.opacity(0.3))
+                .clipShape(Capsule())
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
         .background(Color.springSurfaceElevated)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
         .padding(.horizontal, 16)
     }
@@ -185,86 +187,42 @@ struct RoundDetailView: View {
                 .padding(.horizontal, 16)
 
             if let url = round.sharedURL, round.sharedShortId != nil {
-                VStack(spacing: 10) {
-                    // URL 텍스트 표시
-                    HStack {
-                        Text(url)
-                            .font(.system(size: 13, design: .monospaced))
-                            .foregroundStyle(Color.springGreenPrimary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 14)
-                    .padding(.bottom, 4)
+                HStack(spacing: 8) {
+                    // URL — 좌측 flex
+                    Text(url.replacingOccurrences(of: "https://", with: ""))
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(Color.springGreenPrimary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // 3-아이콘 행
-                    HStack(spacing: 0) {
-                        // 바로보기
-                        shareActionButton(
-                            icon: "safari",
-                            label: "바로보기",
-                            tintColor: Color.springGreenPrimary
-                        ) {
+                    // 3 아이콘 (32x32 작은 버튼)
+                    HStack(spacing: 6) {
+                        compactIconButton(icon: "safari", label: "바로보기") {
                             showSafari = true
                             AppLogger.share.info("[RoundDetail] 바로보기: \(url)")
                         }
-
-                        Divider().frame(height: 44)
-
-                        // 복사
-                        shareActionButton(
-                            icon: "link",
-                            label: "복사",
-                            tintColor: Color.springGreenPrimary
-                        ) {
+                        compactIconButton(icon: "doc.on.doc", label: "복사") {
                             UIPasteboard.general.string = url
                             AppLogger.share.info("[RoundDetail] 링크 복사: \(url)")
                             Task { await HapticEngine.shared.play(.shareSuccess) }
-                            withAnimation {
-                                showCopyToast = true
-                            }
+                            withAnimation { showCopyToast = true }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                                 withAnimation { showCopyToast = false }
                             }
                         }
-
-                        Divider().frame(height: 44)
-
-                        // 공유
-                        shareActionButton(
-                            icon: "square.and.arrow.up",
-                            label: "공유",
-                            tintColor: Color.springGreenPrimary
-                        ) {
+                        compactIconButton(icon: "square.and.arrow.up", label: "공유") {
                             if let u = URL(string: url) {
                                 AppLogger.share.info("[RoundDetail] 시스템 공유 시트: \(url)")
                                 presentActivitySheet(url: u)
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.bottom, 14)
-
-                    // 만료일
-                    if let expiresAt = round.sharedExpiresAt {
-                        let expired = expiresAt < .now
-                        HStack {
-                            Image(systemName: expired ? "exclamationmark.circle" : "clock")
-                                .font(.system(size: 12))
-                                .foregroundStyle(expired ? .red : Color.springTextSecondary)
-                            Text(expired
-                                ? "만료됨 (\(formattedExpiry(expiresAt)))"
-                                : "만료: \(formattedExpiry(expiresAt))")
-                                .font(.system(size: 12))
-                                .foregroundStyle(expired ? .red : Color.springTextSecondary)
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 8)
-                    }
                 }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
                 .background(Color.springSurfaceElevated)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
                 .padding(.horizontal, 16)
                 .overlay(alignment: .bottom) {
@@ -280,6 +238,22 @@ struct RoundDetailView: View {
                             .ignoresSafeArea()
                     }
                 }
+
+                // 만료일 — 카드 아래 작은 캡션
+                if let expiresAt = round.sharedExpiresAt {
+                    let expired = expiresAt < .now
+                    HStack(spacing: 4) {
+                        Image(systemName: expired ? "exclamationmark.circle" : "clock")
+                            .font(.system(size: 11))
+                        Text(expired
+                            ? "만료됨 (\(formattedExpiry(expiresAt)))"
+                            : "만료: \(formattedExpiry(expiresAt))")
+                            .font(.system(size: 11))
+                    }
+                    .foregroundStyle(expired ? .red : Color.springTextSecondary)
+                    .padding(.horizontal, 22)
+                    .padding(.top, 2)
+                }
             } else {
                 Text("아직 공유하지 않았어요.")
                     .font(.system(size: 14))
@@ -287,6 +261,20 @@ struct RoundDetailView: View {
                     .padding(.horizontal, 16)
             }
         }
+    }
+
+    /// 컴팩트 아이콘 버튼 — 32x32 둥근 사각형, 공유 카드 우측 인라인 액션용
+    private func compactIconButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundStyle(Color.springGreenPrimary)
+                .frame(width: 32, height: 32)
+                .background(Color.springGreenSecondary.opacity(0.25))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
     }
 
     private func shareActionButton(icon: String, label: String, tintColor: Color, action: @escaping () -> Void) -> some View {
@@ -390,41 +378,43 @@ struct RoundDetailView: View {
         }
     }
 
-    /// 그리드 위 컴팩트 합계 — 플레이어별 한 줄 "이름  타수(±diff)"
+    /// 그리드 위 컴팩트 합계 — 플레이어별 가로 컬럼 (N-up). 1~4명 자동 균등 분배.
     private var compactTotalsRow: some View {
         let totalPar = scoreVM.totalPar
-        return VStack(alignment: .leading, spacing: 4) {
+        return HStack(spacing: 6) {
             ForEach(scoreVM.players) { player in
                 let total = scoreVM.totalByPlayer[player.id] ?? 0
                 let (diffText, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: totalPar)
-                HStack(spacing: 6) {
+                VStack(spacing: 2) {
                     Text(player.name)
-                        .font(.system(size: 13, weight: player.isOwner ? .semibold : .regular))
+                        .font(.system(size: 11, weight: player.isOwner ? .bold : .medium))
                         .foregroundStyle(player.isOwner ? Color.springGreenPrimary : Color.springTextSecondary)
-                        .frame(width: 56, alignment: .leading)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     if total > 0 {
                         Text("\(total)")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 20, weight: .heavy))
                             .monospacedDigit()
                             .foregroundStyle(Color.springTextPrimary)
-                        Text("(\(diffText))")
-                            .font(.system(size: 13, weight: .semibold))
+                        Text(diffText)
+                            .font(.system(size: 11, weight: .bold))
                             .monospacedDigit()
                             .foregroundStyle(parityColor(parity))
                     } else {
                         Text("-")
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 20, weight: .heavy))
                             .foregroundStyle(Color.springTextSecondary)
+                        Text(" ")
+                            .font(.system(size: 11))
                     }
-                    Spacer()
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color.springSurfaceElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.springSurfaceElevated)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
     /// 편집 모드에서 특정 플레이어의 홀별 타수 그리드
