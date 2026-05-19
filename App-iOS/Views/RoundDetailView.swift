@@ -332,57 +332,45 @@ struct RoundDetailView: View {
             }
             .padding(.horizontal, 16)
 
-            VStack(spacing: 0) {
-                ForEach(scoreVM.players) { player in
-                    let total = scoreVM.totalByPlayer[player.id] ?? 0
-                    let parTotal = scoreVM.totalPar
-                    let (diffText, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: parTotal)
-
-                    HStack {
-                        PlayerChip(
-                            player: player,
-                            variant: player.isOwner ? .active : .readonly
-                        )
-                        .padding(.leading, 16)
-
-                        Spacer()
-
-                        VStack(alignment: .trailing, spacing: 1) {
-                            Text(total > 0 ? "\(total)" : "-")
-                                .font(.system(size: 18, weight: .semibold))
-                                .monospacedDigit()
-                                .foregroundStyle(Color.springTextPrimary)
-                            if total > 0 {
-                                Text(diffText)
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .monospacedDigit()
-                                    .foregroundStyle(parityColor(parity))
-                            }
-                        }
-                        .frame(width: 70, alignment: .trailing)
-                        .padding(.trailing, 16)
-                    }
-                    .padding(.vertical, 12)
-                    // 편집 모드: 홀별 편집 영역 펼침
-                    if isEditMode {
-                        holeEditGrid(player: player)
-                    }
-
-                    if player.id != scoreVM.players.last?.id {
-                        Divider().padding(.leading, 16)
-                    }
-                }
-            }
-            .background(Color.springSurfaceElevated)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
-            .padding(.horizontal, 16)
-
+            // 홀별 스코어카드 그리드 (read-only 또는 편집 모드)
             if isEditMode {
+                // 편집 모드: interactive 그리드 (par 탭 + score 탭/길게누르기)
+                HoleScoreGrid(
+                    scoreVM: scoreVM,
+                    interactive: true,
+                    currentHoleNumber: Int?.none,
+                    onParChange: { holeNumber, newPar in
+                        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+                        hole.par = newPar
+                        scoreVM.refresh(from: round)
+                    },
+                    onScoreTap: { holeNumber, playerId in
+                        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+                        editIncrement(hole: hole, playerId: playerId)
+                    },
+                    onScoreLongPress: { holeNumber, playerId in
+                        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+                        editDecrement(hole: hole, playerId: playerId)
+                    },
+                    frontLabel: round.frontCourseName,
+                    backLabel: round.backCourseName
+                )
+                .padding(.horizontal, 12)
+
                 Text("서브 코스: \(round.displaySubLabel ?? "기본")")
                     .font(.system(size: 11))
                     .foregroundStyle(Color.springTextSecondary)
                     .padding(.horizontal, 20)
+            } else {
+                // 일반 모드: read-only 그리드 (그리드 안에 합계 셀 포함 → 별도 합계 행 불필요)
+                HoleScoreGrid(
+                    scoreVM: scoreVM,
+                    interactive: false,
+                    currentHoleNumber: Int?.none,
+                    frontLabel: round.frontCourseName,
+                    backLabel: round.backCourseName
+                )
+                .padding(.horizontal, 12)
             }
         }
     }

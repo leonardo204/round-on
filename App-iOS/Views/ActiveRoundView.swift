@@ -289,231 +289,37 @@ struct ActiveRoundView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, x: 0, y: 1)
     }
 
-    // MARK: Score Card Grid (split9x2)
+    // MARK: Score Card Grid (split9x2) — HoleScoreGrid 위임
 
     private func scoreCardGrid(scoreVM: ScoreCardViewModel) -> some View {
         ScrollView {
-            VStack(spacing: 16) {
-                // 전반 (1-9홀) — 코스 라벨이 있으면 그것 우선, 없으면 "전반"
-                if !scoreVM.outHoles.isEmpty {
-                    let outLabel = roundVM.currentRound?.frontCourseName ?? "전반"
-                    scoreSection(
-                        title: outLabel,
-                        holes: scoreVM.outHoles,
-                        scoreVM: scoreVM,
-                        parTotal: scoreVM.outParTotal,
-                        totalFunc: scoreVM.outTotal
-                    )
-                }
-
-                // 후반 (10-18홀) — 코스 라벨이 있으면 그것 우선, 없으면 "후반". 9홀이면 자동 숨김.
-                if !scoreVM.inHoles.isEmpty {
-                    let inLabel = roundVM.currentRound?.backCourseName ?? "후반"
-                    scoreSection(
-                        title: inLabel,
-                        holes: scoreVM.inHoles,
-                        scoreVM: scoreVM,
-                        parTotal: scoreVM.inParTotal,
-                        totalFunc: scoreVM.inTotal
-                    )
-                }
-
-                // 합계
-                if !scoreVM.players.isEmpty {
-                    totalRow(scoreVM: scoreVM)
-                        .padding(.horizontal, 4)
-                }
-
-                Spacer(minLength: 20)
-            }
-            .padding(.top, 16)
-            .padding(.horizontal, 4)
-        }
-    }
-
-    private func scoreSection(
-        title: String,
-        holes: [Int],
-        scoreVM: ScoreCardViewModel,
-        parTotal: Int,
-        totalFunc: @escaping (UUID) -> Int
-    ) -> some View {
-        VStack(spacing: 0) {
-            // 섹션 헤더: 홀 번호 행
-            HStack(spacing: 2) {
-                Text(title)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 44, alignment: .center)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                ForEach(holes, id: \.self) { h in
-                    Text("\(h)")
-                        .font(.system(size: 11))
-                        .foregroundStyle(Color.springTextSecondary)
-                        .frame(maxWidth: .infinity)
-                }
-                Text("합")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 34)
-            }
-            .padding(.vertical, 4)
-            .padding(.horizontal, 4)
-            .background(Color.springBorder.opacity(0.3))
-
-            // Par 행 — 각 셀 long press(또는 tap)로 3/4/5 선택
-            HStack(spacing: 2) {
-                Text("Par")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 44, alignment: .center)
-                ForEach(holes, id: \.self) { h in
-                    parCell(holeNumber: h, par: scoreVM.parByHole[h] ?? 4)
-                }
-                Text("\(parTotal)")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color.springTextSecondary)
-                    .frame(width: 34)
-            }
-            .padding(.vertical, 3)
-            .padding(.horizontal, 4)
-            .background(Color.springSurfaceElevated)
-
-            // 플레이어별 점수 행
-            ForEach(scoreVM.players) { player in
-                playerRow(
-                    player: player,
-                    holes: holes,
-                    scoreVM: scoreVM,
-                    sectionTotal: totalFunc(player.id),
-                    sectionParTotal: parTotal
-                )
-            }
-        }
-        .background(Color.springSurfaceElevated)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.04), radius: 1, x: 0, y: 0)
-    }
-
-    private func playerRow(
-        player: Player,
-        holes: [Int],
-        scoreVM: ScoreCardViewModel,
-        sectionTotal: Int,
-        sectionParTotal: Int
-    ) -> some View {
-        let isActive = roundVM.playerListViewModel?.activePlayer?.id == player.id
-        let currentHole = roundVM.holeViewModel?.currentHoleNumber
-        let (totalText, parity) = ScoreCardViewModel.formatScoreVsPar(score: sectionTotal, par: sectionParTotal)
-
-        return HStack(spacing: 2) {
-            // 플레이어 이름 — 동반자명 잘림 방지 위해 폭 확대 + 약어 처리
-            Text(playerShortName(player.name))
-                .font(.system(size: 12, weight: isActive ? .semibold : .regular))
-                .foregroundStyle(isActive ? Color.springGreenPrimary : Color.springTextPrimary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .frame(width: 44, alignment: .center)
-
-            // 각 홀 셀 (ScoreCell 컴포넌트 사용)
-            ForEach(holes, id: \.self) { h in
-                let count = scoreVM.count(holeNumber: h, playerId: player.id)
-                let cat = scoreVM.scoreCategory(holeNumber: h, playerId: player.id)
-                let isCurrent = h == currentHole
-                let par = scoreVM.parByHole[h] ?? 4
-
-                ScoreCell(
-                    count: count,
-                    category: cat,
-                    isCurrentHole: isCurrent,
-                    holeNumber: h,
-                    playerName: player.name,
-                    par: par,
-                    onTap: {
-                        let ok = roundVM.increment(holeNumber: h, playerId: player.id)
-                        roundVM.holeViewModel?.goToHole(index: h - 1)
-                        if ok {
-                            Task { await HapticEngine.shared.play(.shotIncrement) }
-                        } else {
-                            showBlockToast("더 추가할 수 없어요 (double par)")
-                            Task { await HapticEngine.shared.play(.penaltyOB) }
-                        }
-                    },
-                    onLongPress: {
-                        roundVM.decrement(holeNumber: h, playerId: player.id)
-                        Task { await HapticEngine.shared.play(.shotDecrement) }
+            HoleScoreGrid(
+                scoreVM: scoreVM,
+                interactive: true,
+                currentHoleNumber: roundVM.holeViewModel?.currentHoleNumber,
+                onParChange: { holeNumber, newPar in
+                    roundVM.setPar(holeNumber: holeNumber, par: newPar)
+                    Task { await HapticEngine.shared.play(.shotIncrement) }
+                },
+                onScoreTap: { holeNumber, playerId in
+                    let ok = roundVM.increment(holeNumber: holeNumber, playerId: playerId)
+                    roundVM.holeViewModel?.goToHole(index: holeNumber - 1)
+                    if ok {
+                        Task { await HapticEngine.shared.play(.shotIncrement) }
+                    } else {
+                        showBlockToast("더 추가할 수 없어요 (double par)")
+                        Task { await HapticEngine.shared.play(.penaltyOB) }
                     }
-                )
-            }
-
-            // 구간 합계 — "친타수 (par-diff)" 형식, 2줄
-            VStack(spacing: 0) {
-                if sectionTotal > 0 {
-                    Text("\(sectionTotal)")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(Color.springTextPrimary)
-                    Text(parDiffBadge(score: sectionTotal, par: sectionParTotal))
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(parDiffColor(parity: parity))
-                } else {
-                    Text("-")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(Color.springTextSecondary)
-                }
-            }
-            .frame(width: 34)
-            .accessibilityLabel(totalText)
+                },
+                onScoreLongPress: { holeNumber, playerId in
+                    roundVM.decrement(holeNumber: holeNumber, playerId: playerId)
+                    Task { await HapticEngine.shared.play(.shotDecrement) }
+                },
+                frontLabel: roundVM.currentRound?.frontCourseName,
+                backLabel: roundVM.currentRound?.backCourseName
+            )
+            Spacer(minLength: 20)
         }
-        .padding(.vertical, 3)
-        .padding(.horizontal, 4)
-        .background(isActive ? Color.springGreenAccent.opacity(0.08) : Color.clear)
-    }
-
-    private func totalRow(scoreVM: ScoreCardViewModel) -> some View {
-        let totalPar = scoreVM.totalPar
-        return VStack(spacing: 0) {
-            HStack {
-                Text("합계")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.springTextPrimary)
-                Spacer()
-            }
-            .padding(.horizontal, 8)
-            .padding(.top, 4)
-
-            HStack(spacing: 8) {
-                ForEach(scoreVM.players) { player in
-                    let total = scoreVM.totalByPlayer[player.id] ?? 0
-                    let (_, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: totalPar)
-                    VStack(spacing: 2) {
-                        Text(player.name)
-                            .font(.system(size: 12))
-                            .foregroundStyle(Color.springTextSecondary)
-                            .lineLimit(1)
-                        if total > 0 {
-                            Text("\(total)")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundStyle(Color.springTextPrimary)
-                                .monospacedDigit()
-                            Text(parDiffBadge(score: total, par: totalPar))
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundStyle(parDiffColor(parity: parity))
-                        } else {
-                            Text("-")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundStyle(Color.springTextSecondary)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-            }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 8)
-        }
-        .background(Color.springSurfaceElevated)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.04), radius: 1, x: 0, y: 0)
     }
 
     // MARK: Penalty Sheet (iphone-2.4)
@@ -933,42 +739,6 @@ struct ActiveRoundView: View {
     }
 
     // MARK: Helpers
-
-    /// Par 셀: tap → menu(3/4/5)로 즉시 변경
-    private func parCell(holeNumber: Int, par: Int) -> some View {
-        Menu {
-            ForEach([3, 4, 5], id: \.self) { p in
-                Button("Par \(p)") {
-                    roundVM.setPar(holeNumber: holeNumber, par: p)
-                    Task { await HapticEngine.shared.play(.shotIncrement) }
-                }
-            }
-        } label: {
-            Text("\(par)")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(Color.springTextSecondary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 22)
-                .contentShape(Rectangle())
-        }
-        .accessibilityLabel("\(holeNumber)번 홀 Par, 현재 \(par). 탭하여 변경.")
-    }
-
-    /// par 대비 차이 뱃지 문자열 — "(+3)" / "(E)" / "(-2)"
-    private func parDiffBadge(score: Int, par: Int) -> String {
-        guard score > 0, par > 0 else { return "" }
-        let diff = score - par
-        if diff == 0 { return "(E)" }
-        if diff > 0 { return "(+\(diff))" }
-        return "(\(diff))"
-    }
-
-    /// parity 값(양수/0/음수)에 따른 색상
-    private func parDiffColor(parity: Int) -> Color {
-        if parity < 0 { return Color(red: 0.13, green: 0.60, blue: 0.28) }  // 언더 → 녹색
-        if parity == 0 { return Color.springTextSecondary }                  // 이븐 → 회색
-        return Color(red: 0.85, green: 0.35, blue: 0.10)                     // 오버 → 오렌지-빨강
-    }
 
     /// 동반자 이름이 길면 약어로 표시 — "동반자1" → "동1", "동반자2" → "동2"
     private func playerShortName(_ name: String) -> String {

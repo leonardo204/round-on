@@ -84,6 +84,7 @@
 		92C978503B9334D3569B6908 /* Shared-Watch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E228343F6A89E0C2084FCFE9 /* Shared-Watch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9344CD0EF5751B153BDE6A88 /* DiscoveredCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */; };
 		93C68F0692C9576ADBB09EC6 /* ScoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */; };
+		A1B2C3D4E5F6A1B2C3D4E5F6 /* HoleScoreGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E5D4C3B2A1F6E5D4C3B2A1 /* HoleScoreGrid.swift */; };
 		956F1CDF34233EFF1E66E2AE /* courses.json in Resources */ = {isa = PBXBuildFile; fileRef = 666F27BF49E7F5BDBDB8E259 /* courses.json */; };
 		960B0E022F9766B79F1A85AC /* ScoreCardViewModelStressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E1ACA8E338CA62003F521A /* ScoreCardViewModelStressTests.swift */; };
 		9613145FEE984F837E36F075 /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178DEE19966BE7071D4D2287 /* PenaltyButton.swift */; };
@@ -308,6 +309,7 @@
 		B4580BE6E4C15B85485CCC4F /* RoundViewModelHealthKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundViewModelHealthKitTests.swift; sourceTree = "<group>"; };
 		B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
 		BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCell.swift; sourceTree = "<group>"; };
+		F6E5D4C3B2A1F6E5D4C3B2A1 /* HoleScoreGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleScoreGrid.swift; sourceTree = "<group>"; };
 		BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+WatchColors.swift"; sourceTree = "<group>"; };
 		BF006E866BFD030D2C951470 /* Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		C6976C8E2598D26A933D1B57 /* RoundViewModel+Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoundViewModel+Workout.swift"; sourceTree = "<group>"; };
@@ -394,6 +396,7 @@
 			isa = PBXGroup;
 			children = (
 				A67F5A9716DF43BC037C82FD /* HoleProgress.swift */,
+				F6E5D4C3B2A1F6E5D4C3B2A1 /* HoleScoreGrid.swift */,
 				139D8E2C353187EFFD42A389 /* PenaltyButton.swift */,
 				8C6B01B395738B0326DEF2C4 /* PinInputField.swift */,
 				8252CDB85171329812400D1D /* PlayerChip.swift */,
@@ -1043,6 +1046,7 @@
 				904AE64B2AF0234F4814A01C /* RoundViewModel+Workout.swift in Sources */,
 				350ED9CB2AB111214A132133 /* SafariView.swift in Sources */,
 				93C68F0692C9576ADBB09EC6 /* ScoreCell.swift in Sources */,
+				A1B2C3D4E5F6A1B2C3D4E5F6 /* HoleScoreGrid.swift in Sources */,
 				7701E1314E19BA5640CB8313 /* SettingsView.swift in Sources */,
 				BBFB1BF83C16FBF9120338B6 /* ShareAPIClient.swift in Sources */,
 				C764DE27949FC710FD120E31 /* SharePayload.swift in Sources */,
