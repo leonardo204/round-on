@@ -20,9 +20,6 @@ struct ScorecardImportView: View {
     @State private var showHelp = false
     @State private var showCoursePicker = false
     @State private var isSaving = false
-    /// 디버그 — 최근 OCR raw 결과 (실패/부분인식 시 사용자에게 노출)
-    @State private var lastRawOCR: String = ""
-    @State private var showRawDebug = false
 
     // MARK: Phase
 
@@ -157,26 +154,10 @@ struct ScorecardImportView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                             .padding(.top, 4)
-
-                        if !lastRawOCR.isEmpty {
-                            Button {
-                                showRawDebug.toggle()
-                            } label: {
-                                Label(showRawDebug ? "OCR 디버그 닫기" : "OCR 디버그 보기", systemImage: "ladybug")
-                                    .font(.caption)
-                            }
-                            .padding(.top, 4)
-                        }
                     }
                     .padding(.vertical, 4)
                 }
                 .listRowBackground(Color.orange.opacity(0.08))
-
-                if showRawDebug && !lastRawOCR.isEmpty {
-                    Section("OCR raw") {
-                        rawDebugBox
-                    }
-                }
             }
 
             // 골프장 섹션
@@ -252,8 +233,8 @@ struct ScorecardImportView: View {
                 }
             }
 
-            // PAR 섹션
-            Section("PAR") {
+            // Hole(par) 섹션
+            Section("Hole") {
                 parEditSection(payload: payload)
             }
 
@@ -308,33 +289,48 @@ struct ScorecardImportView: View {
         }
     }
 
-    // MARK: - PAR 편집
+    // MARK: - Hole(par) 편집
 
     @ViewBuilder
     private func parEditSection(payload: ScorecardImportPayload) -> some View {
         let holeCount = payload.holeCount
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 4) {
-                ForEach(0..<holeCount, id: \.self) { idx in
-                    VStack(spacing: 4) {
-                        Text("\(idx + 1)")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                        Picker("", selection: Binding(
-                            get: { payload.pars.indices.contains(idx) ? payload.pars[idx] : 4 },
-                            set: { if payload.pars.indices.contains(idx) { payload.pars[idx] = $0 } }
-                        )) {
-                            ForEach([3, 4, 5], id: \.self) { Text("\($0)").tag($0) }
+        VStack(spacing: 8) {
+            // 전반 (1~9)
+            parRow(payload: payload, start: 0, end: min(9, holeCount))
+            // 후반 (10~18) — 18홀일 때만
+            if holeCount > 9 {
+                parRow(payload: payload, start: 9, end: holeCount)
+            }
+        }
+        .listRowInsets(EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8))
+    }
+
+    /// 9홀 par row (Menu picker — 컴팩트)
+    @ViewBuilder
+    private func parRow(payload: ScorecardImportPayload, start: Int, end: Int) -> some View {
+        HStack(spacing: 2) {
+            ForEach(start..<end, id: \.self) { idx in
+                VStack(spacing: 3) {
+                    Text("\(idx + 1)")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.secondary)
+                    Menu {
+                        ForEach([3, 4, 5], id: \.self) { v in
+                            Button("\(v)") {
+                                if payload.pars.indices.contains(idx) { payload.pars[idx] = v }
+                            }
                         }
-                        .pickerStyle(.wheel)
-                        .frame(width: 44, height: 80)
-                        .clipped()
+                    } label: {
+                        Text("\(payload.pars.indices.contains(idx) ? payload.pars[idx] : 4)")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 28)
+                            .background(Color.secondary.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
                     }
                 }
             }
-            .padding(.horizontal, 4)
         }
-        .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
     }
 
     // MARK: - 플레이어 편집
@@ -370,60 +366,23 @@ struct ScorecardImportView: View {
                     .buttonStyle(.plain)
                 }
 
-                // 점수 그리드 (스크롤)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 4) {
-                        ForEach(0..<payload.holeCount, id: \.self) { holeIdx in
-                            VStack(spacing: 2) {
-                                Text("\(holeIdx + 1)")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                    .frame(width: 28)
-
-                                let par = payload.pars.indices.contains(holeIdx) ? payload.pars[holeIdx] : 4
-                                let score = payload.players[playerIdx].scores.indices.contains(holeIdx)
-                                    ? payload.players[playerIdx].scores[holeIdx] : 0
-                                let diff = score - par
-
-                                TextField("",
-                                    value: Binding(
-                                        get: {
-                                            payload.players[playerIdx].scores.indices.contains(holeIdx)
-                                                ? payload.players[playerIdx].scores[holeIdx] : 0
-                                        },
-                                        set: {
-                                            if payload.players[playerIdx].scores.indices.contains(holeIdx) {
-                                                payload.players[playerIdx].scores[holeIdx] = $0
-                                            }
-                                        }
-                                    ),
-                                    format: .number
-                                )
-                                .keyboardType(.numberPad)
-                                .multilineTextAlignment(.center)
-                                .font(.system(.body, design: .rounded, weight: .semibold))
-                                .foregroundStyle(scoreColor(diff: diff))
-                                .frame(width: 28, height: 28)
-                                .background(scoreBackground(diff: diff))
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
-                            }
-                        }
-
-                        // 합계
-                        VStack(spacing: 2) {
-                            Text("합계")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                                .frame(width: 36)
-                            Text("\(payload.players[playerIdx].computedTotal)")
-                                .font(.system(.body, design: .rounded, weight: .bold))
-                                .frame(width: 36, height: 28)
-                                .background(Color.secondary.opacity(0.08))
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
-                        }
+                // 점수 그리드 — 9홀씩 2행 (18홀일 때), 스크롤 없음
+                VStack(spacing: 6) {
+                    scoreRow(payload: payload, playerIdx: playerIdx, start: 0, end: min(9, payload.holeCount))
+                    if payload.holeCount > 9 {
+                        scoreRow(payload: payload, playerIdx: playerIdx, start: 9, end: payload.holeCount)
+                    }
+                    // 합계
+                    HStack {
+                        Spacer()
+                        Text("합계 \(payload.players[playerIdx].computedTotal)")
+                            .font(.system(.subheadline, design: .rounded, weight: .bold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(Color.secondary.opacity(0.1))
+                            .clipShape(Capsule())
                     }
                 }
-                .listRowSeparator(.hidden, edges: .bottom)
             }
             .padding(.vertical, 4)
         }
@@ -432,82 +391,72 @@ struct ScorecardImportView: View {
         }
     }
 
-    // MARK: - 오류 화면
-
-    private func errorView(message: String) -> some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Image(systemName: "exclamationmark.triangle")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.orange)
-                    .padding(.top, 30)
-                Text("인식 실패")
-                    .font(.title3.weight(.semibold))
-                Text(message)
-                    .font(.body)
-                    .foregroundStyle(.secondary)
+    /// 9홀 점수 row — 1~9 또는 10~18 단위. 컬럼 폭 균등 분배 (스크롤 없음)
+    @ViewBuilder
+    private func scoreRow(payload: ScorecardImportPayload, playerIdx: Int, start: Int, end: Int) -> some View {
+        HStack(spacing: 2) {
+            ForEach(start..<end, id: \.self) { holeIdx in
+                let par = payload.pars.indices.contains(holeIdx) ? payload.pars[holeIdx] : 4
+                let score = payload.players[playerIdx].scores.indices.contains(holeIdx)
+                    ? payload.players[playerIdx].scores[holeIdx] : 0
+                let diff = score - par
+                VStack(spacing: 2) {
+                    Text("\(holeIdx + 1)")
+                        .font(.system(size: 9))
+                        .foregroundStyle(.secondary)
+                    TextField("",
+                        value: Binding(
+                            get: {
+                                payload.players[playerIdx].scores.indices.contains(holeIdx)
+                                    ? payload.players[playerIdx].scores[holeIdx] : 0
+                            },
+                            set: {
+                                if payload.players[playerIdx].scores.indices.contains(holeIdx) {
+                                    payload.players[playerIdx].scores[holeIdx] = $0
+                                }
+                            }
+                        ),
+                        format: .number
+                    )
+                    .keyboardType(.numberPad)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-
-                HStack(spacing: 12) {
-                    Button("다시 시도") {
-                        phase = .picking
-                        selectedPhoto = nil
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accentGreen)
-
-                    if !lastRawOCR.isEmpty {
-                        Button {
-                            showRawDebug.toggle()
-                        } label: {
-                            Label(showRawDebug ? "디버그 닫기" : "디버그 보기", systemImage: "ladybug")
-                                .font(.footnote)
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                }
-                .padding(.top, 8)
-
-                // 인식 실패 시에도 raw OCR이 있으면 펼쳐서 사용자가 복사/공유 가능
-                if showRawDebug && !lastRawOCR.isEmpty {
-                    rawDebugBox
-                        .padding(.horizontal, 16)
+                    .font(.system(.callout, design: .rounded, weight: .semibold))
+                    .foregroundStyle(scoreColor(diff: diff))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 30)
+                    .background(scoreBackground(diff: diff))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
             }
-            .padding(.bottom, 30)
         }
     }
 
-    /// raw OCR 텍스트 박스 — 복사 + 디버그 정보 노출
-    private var rawDebugBox: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("OCR raw (\(lastRawOCR.split(separator: "\n").count)줄)")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Button {
-                    UIPasteboard.general.string = lastRawOCR
-                    AppLogger.ocr.info("[Import] raw OCR 복사 — \(lastRawOCR.count) chars")
-                } label: {
-                    Label("복사", systemImage: "doc.on.doc")
-                        .font(.caption)
-                }
-                .buttonStyle(.bordered)
+    // MARK: - 오류 화면
+
+    private func errorView(message: String) -> some View {
+        VStack(spacing: 24) {
+            Spacer()
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 48))
+                .foregroundStyle(.orange)
+            Text("인식 실패")
+                .font(.title3.weight(.semibold))
+            Text(message)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+
+            Button("다시 시도") {
+                phase = .picking
+                selectedPhoto = nil
             }
-            ScrollView {
-                Text(lastRawOCR)
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(.primary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .textSelection(.enabled)
-            }
-            .frame(maxHeight: 280)
-            .padding(8)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .buttonStyle(.borderedProminent)
+            .tint(.accentGreen)
+
+            Spacer()
         }
+        .padding()
     }
 
     // MARK: - 사진 처리
@@ -520,25 +469,16 @@ struct ScorecardImportView: View {
             guard let data = try await item.loadTransferable(type: Data.self),
                   let image = UIImage(data: data) else {
                 AppLogger.ocr.error("[Import] PhotosPicker 데이터 로드 실패")
-                lastRawOCR = ""
                 phase = .error("이미지 로드에 실패했습니다.")
                 return
             }
             AppLogger.ocr.info("[Import] 이미지 로드 OK: \(data.count) bytes, \(Int(image.size.width))x\(Int(image.size.height))")
 
-            // OCR 시도. 실패해도 raw 텍스트는 디버그용으로 보존.
-            do {
-                let result = try await ScorecardOCRService.recognize(image: image)
-                lastRawOCR = formatRawDump(lines: result.rawLines)
-                let p = ScorecardImportPayload(from: result)
-                payload = p
-                phase = .editing
-                AppLogger.ocr.info("[Import] 편집 화면 진입 (warnings \(result.warnings.count))")
-            } catch {
-                // OCR 실패 — 가능한 경우 raw 텍스트만 추출해서 디버그용으로 보관
-                lastRawOCR = (try? await rawOCRDump(image: image)) ?? ""
-                throw error
-            }
+            let result = try await ScorecardOCRService.recognize(image: image)
+            let p = ScorecardImportPayload(from: result)
+            payload = p
+            phase = .editing
+            AppLogger.ocr.info("[Import] 편집 화면 진입 (warnings \(result.warnings.count))")
 
         } catch let ocrError as ScorecardOCRError {
             AppLogger.ocr.error("[Import] ScorecardOCRError: \(ocrError.localizedDescription, privacy: .public)")
@@ -547,18 +487,6 @@ struct ScorecardImportView: View {
             AppLogger.ocr.error("[Import] 알 수 없는 오류: \(error.localizedDescription, privacy: .public)")
             phase = .error("오류: \(error.localizedDescription)")
         }
-    }
-
-    /// 실패 시에도 raw OCR을 추출해 사용자에게 노출 (개선/공유용)
-    private func rawOCRDump(image: UIImage) async throws -> String {
-        let raw = await ScorecardOCRService.diagnoseRawText(image: image)
-        return formatRawDump(lines: raw)
-    }
-
-    private func formatRawDump(lines: [OCRTextLine]) -> String {
-        lines.enumerated().map { i, l in
-            "\(i): y=\(String(format: "%.2f", l.topLeftY)) x=\(String(format: "%.2f", l.leftX)) | \(l.text)"
-        }.joined(separator: "\n")
     }
 
     // MARK: - 코스 매칭

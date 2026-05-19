@@ -45,8 +45,6 @@ class ScorecardImportPayload {
         self.courseName = ocr.courseName ?? ""
         self.date = ocr.date ?? Date.now
         self.teeOffTime = ocr.teeOffTime ?? ""
-        self.frontCourseName = ocr.frontCourseName ?? ""
-        self.backCourseName = ocr.backCourseName ?? ""
 
         // pars 정규화: 9홀 단위로 유효한 값만, 나머지 4로 채움
         let rawPars = ocr.pars
@@ -54,6 +52,10 @@ class ScorecardImportPayload {
         var normalizedPars = rawPars.prefix(holeCount).map { max(3, min(5, $0)) }
         while normalizedPars.count < holeCount { normalizedPars.append(4) }
         self.pars = Array(normalizedPars)
+
+        // 코스명 — 못 인식했으면 "전반"/"후반" default (사용자가 수정 가능)
+        self.frontCourseName = ocr.frontCourseName ?? "전반"
+        self.backCourseName = holeCount == 18 ? (ocr.backCourseName ?? "후반") : ""
 
         // 플레이어 변환
         self.players = ocr.players.map { ocrPlayer in
