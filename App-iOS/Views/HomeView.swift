@@ -617,6 +617,7 @@ private struct RoundRow: View {
     private var scoreView: some View {
         VStack(alignment: .trailing, spacing: 1) {
             if round.isFinished, let total = totalScore {
+                let (_, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: totalPar)
                 Text("\(total)")
                     .font(.title3.weight(.bold))
                     .monospacedDigit()
@@ -625,13 +626,23 @@ private struct RoundRow: View {
                     Text(diff.label)
                         .font(.caption.weight(.semibold))
                         .monospacedDigit()
-                        .foregroundStyle(diff.color)
+                        .foregroundStyle(parityColor(parity))
                 }
             } else {
                 Text("진행 중")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.orange)
             }
+        }
+    }
+
+    /// ActiveRoundView/RoundDetailView와 통일된 색상 분기.
+    /// parity: -1=under(녹색) / 0=even(회색) / 1=over(오렌지-빨강)
+    private func parityColor(_ parity: Int) -> Color {
+        switch parity {
+        case ..<0: return Color.springGreenPrimary
+        case 0: return Color.springTextSecondary
+        default: return Color(red: 0.86, green: 0.42, blue: 0.16)
         }
     }
 

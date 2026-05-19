@@ -272,7 +272,8 @@ struct RoundDetailView: View {
             VStack(spacing: 0) {
                 ForEach(scoreVM.players) { player in
                     let total = scoreVM.totalByPlayer[player.id] ?? 0
-                    let vsPar = scoreVM.vsParByPlayer[player.id] ?? 0
+                    let parTotal = scoreVM.totalPar
+                    let (diffText, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: parTotal)
 
                     HStack {
                         PlayerChip(
@@ -283,15 +284,20 @@ struct RoundDetailView: View {
 
                         Spacer()
 
-                        Text(total > 0 ? "\(total)" : "-")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(Color.springTextPrimary)
-
-                        Text(vsParText(vsPar))
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundStyle(vsParColor(vsPar))
-                            .frame(width: 48)
-                            .padding(.trailing, 16)
+                        VStack(alignment: .trailing, spacing: 1) {
+                            Text(total > 0 ? "\(total)" : "-")
+                                .font(.system(size: 18, weight: .semibold))
+                                .monospacedDigit()
+                                .foregroundStyle(Color.springTextPrimary)
+                            if total > 0 {
+                                Text(diffText)
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .monospacedDigit()
+                                    .foregroundStyle(parityColor(parity))
+                            }
+                        }
+                        .frame(width: 70, alignment: .trailing)
+                        .padding(.trailing, 16)
                     }
                     .padding(.vertical, 12)
                     // 편집 모드: 홀별 편집 영역 펼침
@@ -476,17 +482,14 @@ struct RoundDetailView: View {
             .textCase(.uppercase)
     }
 
-    private func vsParText(_ vsPar: Int) -> String {
-        if vsPar == 0 { return "E" }
-        return vsPar > 0 ? "+\(vsPar)" : "\(vsPar)"
-    }
-
-    private func vsParColor(_ vsPar: Int) -> Color {
-        if vsPar <= -2 { return Color.springGreenPrimary }
-        if vsPar < 0  { return Color.springGreenSecondary }
-        if vsPar == 0 { return Color.springTextSecondary }
-        if vsPar == 1 { return Color(red: 0.85, green: 0.3, blue: 0.3) }
-        return Color(red: 0.7, green: 0.1, blue: 0.1)
+    /// ActiveRoundView/HomeView와 통일된 색상 분기.
+    /// parity: -1=under(녹색) / 0=even(회색) / 1=over(오렌지-빨강)
+    private func parityColor(_ parity: Int) -> Color {
+        switch parity {
+        case ..<0: return Color.springGreenPrimary
+        case 0: return Color.springTextSecondary
+        default: return Color(red: 0.86, green: 0.42, blue: 0.16)
+        }
     }
 
     /// 날짜만 (라운드 일자 등): "2026. 5. 18."
