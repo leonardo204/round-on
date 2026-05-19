@@ -6,6 +6,9 @@ import SwiftUI
 
 public struct PinInputField: View {
 
+    @FocusState private var isFocused: Bool
+
+
     // MARK: Props
 
     @Binding public var pin: String
@@ -26,20 +29,25 @@ public struct PinInputField: View {
                 digitBox(index: idx)
             }
         }
-        .overlay(
-            // 숨겨진 TextField로 키보드 입력 받기
+        .background(
+            // 숨겨진 TextField — 박스 탭 시 focus 부여하여 numberPad 표시
             TextField("", text: Binding(
                 get: { pin },
                 set: { newValue in
-                    // 숫자만 허용, 4자리 제한
                     let filtered = newValue.filter { $0.isNumber }
                     pin = String(filtered.prefix(4))
                 }
             ))
             .keyboardType(.numberPad)
+            .textContentType(.oneTimeCode)
+            .focused($isFocused)
             .opacity(0.01)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            isFocused = true
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("PIN 입력 4자리")
         .accessibilityValue(pin.isEmpty ? "비어있음" : "\(pin.count)자리 입력됨")
