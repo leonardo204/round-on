@@ -68,6 +68,9 @@ struct NewRoundView: View {
     /// Par 안내 alert (라운드 시작 직전 표시)
     @State private var showParGuideAlert: Bool = false
 
+    /// 매칭된 골프장의 주소 (DB address nil 시 카카오 lazy resolve 결과)
+    @State private var resolvedMatchedAddress: String?
+
     /// 복원 모드 — true이면 onAppear에서 NewRoundDraftStore.load() 적용
     private let restoreDraft: Bool
 
@@ -159,8 +162,21 @@ struct NewRoundView: View {
                 } else {
                     await matchNearestCourse()
                 }
+                // 초기 매칭 완료 후 address resolve (onChange가 task에서 발화 안 될 수 있으므로 직접 처리)
+                if let course = matchedCourse, course.address?.nilIfEmpty == nil {
+                    resolvedMatchedAddress = await CourseAddressResolver.shared.address(for: course)
+                }
             }
-            .onChange(of: matchedCourse?.id) { _, _ in saveDraft() }
+            .onChange(of: matchedCourse?.id) { _, newId in
+                saveDraft()
+                // 골프장 변경 시 주소 초기화 후 lazy resolve
+                resolvedMatchedAddress = nil
+                if let course = matchedCourse, course.address?.nilIfEmpty == nil {
+                    Task {
+                        resolvedMatchedAddress = await CourseAddressResolver.shared.address(for: course)
+                    }
+                }
+            }
             .onChange(of: selectedFrontSubCourse?.id) { _, _ in saveDraft() }
             .onChange(of: selectedBackSubCourse?.id) { _, _ in saveDraft() }
             .onChange(of: isBackTentative) { _, _ in saveDraft() }
@@ -230,6 +246,14 @@ struct NewRoundView: View {
                                 Text("\(holes)홀")
                                     .font(.system(size: 13))
                                     .foregroundStyle(Color.springTextSecondary)
+                            }
+                            // 주소 표시 — DB address 우선, 없으면 lazy resolve 결과
+                            if let addr = course.address?.nilIfEmpty ?? resolvedMatchedAddress {
+                                Text(addr)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(Color.springTextSecondary)
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
                             }
                         }
                         Spacer()
@@ -354,35 +378,7 @@ struct NewRoundView: View {
                 Button {
                     selectCourse(course)
                 } label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(course.name)
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundStyle(Color.springTextPrimary)
-                            if let region = course.region.nilIfEmpty {
-                                Text(region)
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(Color.springTextSecondary)
-                            }
-                        }
-                        Spacer()
-                        if let userLoc = userLocation, let ch = course.clubhouse {
-                            let dist = haversineKm(
-                                lat1: userLoc.coordinate.latitude, lng1: userLoc.coordinate.longitude,
-                                lat2: ch.lat, lng2: ch.lng
-                            )
-                            Text(String(format: "%.1fkm", dist))
-                                .font(.system(size: 13, weight: .medium))
-                                .foregroundStyle(Color.springGreenPrimary)
-                        }
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Color.springTextSecondary)
-                    }
-                    .padding(14)
-                    .background(Color.springSurfaceElevated)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(.horizontal, 16)
+                    CandidateCourseRowView(course: course, userLocation: userLocation)
                 }
             }
 
@@ -945,7 +941,7 @@ private struct CourseSearchSheet: View {
                             Button {
                                 onSelectLocal(course)
                             } label: {
-                                courseRowLocal(course)
+                                LocalCourseRowView(course: course)
                             }
                         }
                     } header: {
@@ -996,50 +992,6 @@ private struct CourseSearchSheet: View {
     }
 
     // MARK: - Row Builders
-
-    private func courseRowLocal(_ course: GolfCourse) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack(spacing: 6) {
-                Text(course.name)
-                    .foregroundStyle(Color.springTextPrimary)
-                // 출처 배지
-                sourceBadge(for: course)
-            }
-            HStack(spacing: 8) {
-                if !course.region.isEmpty {
-                    Text(course.region)
-                        .font(.system(size: 13))
-                        .foregroundStyle(Color.springTextSecondary)
-                }
-                if let holes = course.holesCount {
-                    Text("\(holes)홀")
-                        .font(.system(size: 13))
-                        .foregroundStyle(Color.springTextSecondary)
-                }
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func sourceBadge(for course: GolfCourse) -> some View {
-        if course.sources?.contains("kakao_persisted") == true {
-            Text("발견 캐시")
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(Color(red: 0.9, green: 0.5, blue: 0.0))
-                .padding(.horizontal, 5)
-                .padding(.vertical, 1)
-                .background(Color.yellow.opacity(0.15))
-                .clipShape(Capsule())
-        } else {
-            Text("DB 등록")
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(Color.springGreenPrimary)
-                .padding(.horizontal, 5)
-                .padding(.vertical, 1)
-                .background(Color.springGreenSecondary.opacity(0.2))
-                .clipShape(Capsule())
-        }
-    }
 
     private func courseRowDiscovered(_ discovered: DiscoveredCourse) -> some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -1103,6 +1055,130 @@ private struct CourseSearchSheet: View {
             } catch {
                 // 기타 에러 — 조용히 무시
             }
+        }
+    }
+}
+
+// MARK: - CandidateCourseRowView
+
+/// 다중 후보 선택 카드의 개별 row. per-item address lazy resolve를 위해 별도 View로 분리.
+@MainActor
+private struct CandidateCourseRowView: View {
+    let course: GolfCourse
+    let userLocation: CLLocation?
+
+    @State private var resolvedAddress: String?
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(course.name)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Color.springTextPrimary)
+                if let region = course.region.nilIfEmpty {
+                    Text(region)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                // 주소 표시 — DB address 우선, 없으면 lazy resolve 결과
+                let displayAddress = course.address?.nilIfEmpty ?? resolvedAddress
+                if let addr = displayAddress {
+                    Text(addr)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.springTextSecondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+            }
+            Spacer()
+            if let userLoc = userLocation, let ch = course.clubhouse {
+                let dist = haversineKm(
+                    lat1: userLoc.coordinate.latitude, lng1: userLoc.coordinate.longitude,
+                    lat2: ch.lat, lng2: ch.lng
+                )
+                Text(String(format: "%.1fkm", dist))
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color.springGreenPrimary)
+            }
+            Image(systemName: "chevron.right")
+                .font(.system(size: 11))
+                .foregroundStyle(Color.springTextSecondary)
+        }
+        .padding(14)
+        .background(Color.springSurfaceElevated)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, 16)
+        .task {
+            if course.address?.nilIfEmpty == nil {
+                resolvedAddress = await CourseAddressResolver.shared.address(for: course)
+            }
+        }
+    }
+}
+
+// MARK: - LocalCourseRowView
+
+/// CourseSearchSheet 로컬 결과 row. per-item address lazy resolve를 위해 별도 View로 분리.
+@MainActor
+private struct LocalCourseRowView: View {
+    let course: GolfCourse
+
+    @State private var resolvedAddress: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 6) {
+                Text(course.name)
+                    .foregroundStyle(Color.springTextPrimary)
+                sourceBadge(for: course)
+            }
+            HStack(spacing: 8) {
+                if !course.region.isEmpty {
+                    Text(course.region)
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+                if let holes = course.holesCount {
+                    Text("\(holes)홀")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.springTextSecondary)
+                }
+            }
+            // 주소 표시 — DB address 우선, 없으면 lazy resolve 결과
+            let displayAddress = course.address?.nilIfEmpty ?? resolvedAddress
+            if let addr = displayAddress {
+                Text(addr)
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.springTextSecondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+        }
+        .task {
+            if course.address?.nilIfEmpty == nil {
+                resolvedAddress = await CourseAddressResolver.shared.address(for: course)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func sourceBadge(for course: GolfCourse) -> some View {
+        if course.sources?.contains("kakao_persisted") == true {
+            Text("발견 캐시")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color(red: 0.9, green: 0.5, blue: 0.0))
+                .padding(.horizontal, 5)
+                .padding(.vertical, 1)
+                .background(Color.yellow.opacity(0.15))
+                .clipShape(Capsule())
+        } else {
+            Text("DB 등록")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color.springGreenPrimary)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 1)
+                .background(Color.springGreenSecondary.opacity(0.2))
+                .clipShape(Capsule())
         }
     }
 }
