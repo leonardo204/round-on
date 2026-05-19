@@ -15332,12 +15332,13 @@
       "areaM2": 746919,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "kakao_phone",
         "mcst",
         "mois",
-        "osm"
+        "osm",
+        "golfzon-lobby-api"
       ],
       "kakaoPlaceUrl": "http://place.map.kakao.com/1971105967"
     },
@@ -18427,10 +18428,13 @@
     {
       "id": "원더클럽신라",
       "name": "원더클럽 신라",
-      "region": "",
-      "address": null,
+      "region": "경기",
+      "address": "경기도 여주시 북내면 신라그린길 84",
       "phone": null,
-      "clubhouse": null,
+      "clubhouse": {
+        "lat": 37.358100734042,
+        "lng": 127.691896053855
+      },
       "holesCount": 27,
       "courseType": null,
       "ownerType": null,
@@ -22088,35 +22092,6 @@
           "name": "중"
         }
       ]
-    },
-    {
-      "id": "청우_강원",
-      "name": "청우 GC",
-      "region": "강원",
-      "address": "강원특별자치도 횡성군 우천면 한우로 1295",
-      "phone": "033-340-8000",
-      "clubhouse": {
-        "lat": 37.4612973730308,
-        "lng": 128.074450027055
-      },
-      "holesCount": 18,
-      "courseType": null,
-      "ownerType": null,
-      "subCourses": [
-        {
-          "name": "전반"
-        },
-        {
-          "name": "후반"
-        }
-      ],
-      "dataQuality": "verified",
-      "sources": [
-        "golf-db-pack-v3",
-        "golfzon-lobby-api",
-        "kakao-local-api"
-      ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1971105967"
     },
     {
       "id": "청통_경북",
