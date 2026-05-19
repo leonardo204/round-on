@@ -23,6 +23,7 @@ import { handleVerifyPin }   from "./handlers/verifyPin.js";
 import { handleGetCourses }  from "./handlers/getCourses.js";
 import { handleRefreshCourses } from "./handlers/refreshCourses.js";
 import { handleRefreshPayload } from "./handlers/refreshPayload.js";
+import { handleGetLanding }     from "./handlers/getLanding.js";
 import { errorResponse }     from "./middleware/security.js";
 
 // shortId 패턴: base62 8자 (33-SECURITY §2)
@@ -43,6 +44,11 @@ export async function route(
   const url = new URL(request.url);
   const { pathname } = url;
   const method = request.method.toUpperCase();
+
+  // ── / — 앱 소개 페이지 ──────────────────────────────────────────────────
+  if (pathname === "/" && method === "GET") {
+    return handleGetLanding();
+  }
 
   // ── /healthz ────────────────────────────────────────────────────────────
   if (pathname === "/healthz" && method === "GET") {
