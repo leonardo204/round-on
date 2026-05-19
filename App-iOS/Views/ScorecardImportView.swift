@@ -20,6 +20,9 @@ struct ScorecardImportView: View {
     @State private var showHelp = false
     @State private var showCoursePicker = false
     @State private var isSaving = false
+    /// 디버그 — 최근 OCR raw 결과 (실패/부분인식 시 사용자에게 노출)
+    @State private var lastRawOCR: String = ""
+    @State private var showRawDebug = false
 
     // MARK: Phase
 
@@ -154,10 +157,26 @@ struct ScorecardImportView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                             .padding(.top, 4)
+
+                        if !lastRawOCR.isEmpty {
+                            Button {
+                                showRawDebug.toggle()
+                            } label: {
+                                Label(showRawDebug ? "OCR 디버그 닫기" : "OCR 디버그 보기", systemImage: "ladybug")
+                                    .font(.caption)
+                            }
+                            .padding(.top, 4)
+                        }
                     }
                     .padding(.vertical, 4)
                 }
                 .listRowBackground(Color.orange.opacity(0.08))
+
+                if showRawDebug && !lastRawOCR.isEmpty {
+                    Section("OCR raw") {
+                        rawDebugBox
+                    }
+                }
             }
 
             // 골프장 섹션
@@ -416,53 +435,130 @@ struct ScorecardImportView: View {
     // MARK: - 오류 화면
 
     private func errorView(message: String) -> some View {
-        VStack(spacing: 24) {
-            Spacer()
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
-                .foregroundStyle(.orange)
-            Text("인식 실패")
-                .font(.title3.weight(.semibold))
-            Text(message)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+        ScrollView {
+            VStack(spacing: 20) {
+                Image(systemName: "exclamationmark.triangle")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.orange)
+                    .padding(.top, 30)
+                Text("인식 실패")
+                    .font(.title3.weight(.semibold))
+                Text(message)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
 
-            Button("다시 시도") {
-                phase = .picking
-                selectedPhoto = nil
+                HStack(spacing: 12) {
+                    Button("다시 시도") {
+                        phase = .picking
+                        selectedPhoto = nil
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.accentGreen)
+
+                    if !lastRawOCR.isEmpty {
+                        Button {
+                            showRawDebug.toggle()
+                        } label: {
+                            Label(showRawDebug ? "디버그 닫기" : "디버그 보기", systemImage: "ladybug")
+                                .font(.footnote)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                .padding(.top, 8)
+
+                // 인식 실패 시에도 raw OCR이 있으면 펼쳐서 사용자가 복사/공유 가능
+                if showRawDebug && !lastRawOCR.isEmpty {
+                    rawDebugBox
+                        .padding(.horizontal, 16)
+                }
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.accentGreen)
-
-            Spacer()
+            .padding(.bottom, 30)
         }
-        .padding()
+    }
+
+    /// raw OCR 텍스트 박스 — 복사 + 디버그 정보 노출
+    private var rawDebugBox: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("OCR raw (\(lastRawOCR.split(separator: "\n").count)줄)")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button {
+                    UIPasteboard.general.string = lastRawOCR
+                    AppLogger.ocr.info("[Import] raw OCR 복사 — \(lastRawOCR.count) chars")
+                } label: {
+                    Label("복사", systemImage: "doc.on.doc")
+                        .font(.caption)
+                }
+                .buttonStyle(.bordered)
+            }
+            ScrollView {
+                Text(lastRawOCR)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .textSelection(.enabled)
+            }
+            .frame(maxHeight: 280)
+            .padding(8)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
     }
 
     // MARK: - 사진 처리
 
     private func processPhoto(item: PhotosPickerItem) async {
         phase = .processing
+        AppLogger.ocr.info("[Import] processPhoto 시작")
 
         do {
             guard let data = try await item.loadTransferable(type: Data.self),
                   let image = UIImage(data: data) else {
+                AppLogger.ocr.error("[Import] PhotosPicker 데이터 로드 실패")
+                lastRawOCR = ""
                 phase = .error("이미지 로드에 실패했습니다.")
                 return
             }
+            AppLogger.ocr.info("[Import] 이미지 로드 OK: \(data.count) bytes, \(Int(image.size.width))x\(Int(image.size.height))")
 
-            let result = try await ScorecardOCRService.recognize(image: image)
-            let p = ScorecardImportPayload(from: result)
-            payload = p
-            phase = .editing
+            // OCR 시도. 실패해도 raw 텍스트는 디버그용으로 보존.
+            do {
+                let result = try await ScorecardOCRService.recognize(image: image)
+                lastRawOCR = formatRawDump(lines: result.rawLines)
+                let p = ScorecardImportPayload(from: result)
+                payload = p
+                phase = .editing
+                AppLogger.ocr.info("[Import] 편집 화면 진입 (warnings \(result.warnings.count))")
+            } catch {
+                // OCR 실패 — 가능한 경우 raw 텍스트만 추출해서 디버그용으로 보관
+                lastRawOCR = (try? await rawOCRDump(image: image)) ?? ""
+                throw error
+            }
 
         } catch let ocrError as ScorecardOCRError {
+            AppLogger.ocr.error("[Import] ScorecardOCRError: \(ocrError.localizedDescription, privacy: .public)")
             phase = .error(ocrError.localizedDescription)
         } catch {
+            AppLogger.ocr.error("[Import] 알 수 없는 오류: \(error.localizedDescription, privacy: .public)")
             phase = .error("오류: \(error.localizedDescription)")
         }
+    }
+
+    /// 실패 시에도 raw OCR을 추출해 사용자에게 노출 (개선/공유용)
+    private func rawOCRDump(image: UIImage) async throws -> String {
+        let raw = await ScorecardOCRService.diagnoseRawText(image: image)
+        return formatRawDump(lines: raw)
+    }
+
+    private func formatRawDump(lines: [OCRTextLine]) -> String {
+        lines.enumerated().map { i, l in
+            "\(i): y=\(String(format: "%.2f", l.topLeftY)) x=\(String(format: "%.2f", l.leftX)) | \(l.text)"
+        }.joined(separator: "\n")
     }
 
     // MARK: - 코스 매칭

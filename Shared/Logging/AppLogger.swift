@@ -29,4 +29,6 @@ public enum AppLogger {
     public static let share = Logger(subsystem: subsystem, category: "share")
     /// HealthKit
     public static let health = Logger(subsystem: subsystem, category: "health")
+    /// 스코어카드 OCR import
+    public static let ocr = Logger(subsystem: subsystem, category: "ocr")
 }

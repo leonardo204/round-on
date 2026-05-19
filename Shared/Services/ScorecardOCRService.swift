@@ -118,26 +118,51 @@ public enum ScorecardOCRService {
     /// - Parameter image: UIImage (스마트스코어 정밀 표 형식 권장)
     /// - Returns: ScorecardOCRResult
     public static func recognize(image: UIImage) async throws -> ScorecardOCRResult {
+        AppLogger.ocr.info("OCR 시작: image \(Int(image.size.width))x\(Int(image.size.height))")
         guard let cgImage = image.cgImage else {
+            AppLogger.ocr.error("OCR 실패: cgImage nil — UIImage 변환 실패")
             throw ScorecardOCRError.imageProcessingFailed
         }
 
         // 1. VNRecognizeTextRequest 실행
         let lines = try await runOCR(on: cgImage)
+        AppLogger.ocr.info("Vision OCR 완료: \(lines.count)개 라인 추출")
 
         guard !lines.isEmpty else {
+            AppLogger.ocr.warning("OCR 실패: 텍스트 0건 — 사진 품질 또는 해상도 문제 추정")
             throw ScorecardOCRError.noTextFound
+        }
+
+        // raw OCR 텍스트 dump (디버그용)
+        for (i, l) in lines.prefix(60).enumerated() {
+            AppLogger.ocr.debug("[raw \(i)] y=\(String(format: "%.3f", l.topLeftY)) x=\(String(format: "%.3f", l.leftX)) text=\"\(l.text, privacy: .public)\"")
+        }
+        if lines.count > 60 {
+            AppLogger.ocr.debug("[raw ...] +\(lines.count - 60)개 추가 라인")
         }
 
         // 2. 파싱
         let result = parse(lines: lines)
+        AppLogger.ocr.info("파싱 결과: 코스=\(result.courseName ?? "nil", privacy: .public) date=\(result.date.map { "\($0)" } ?? "nil", privacy: .public) front=\(result.frontCourseName ?? "nil", privacy: .public) back=\(result.backCourseName ?? "nil", privacy: .public) par=\(result.pars.count)개 players=\(result.players.count)명 warnings=\(result.warnings.count)개")
+        for w in result.warnings {
+            AppLogger.ocr.warning("[warning] \(w.rawValue, privacy: .public): \(w.message, privacy: .public)")
+        }
 
         // 3. 최소 데이터 검증
         if result.pars.count < 9 {
+            AppLogger.ocr.error("OCR 실패: PAR 정보 부족 \(result.pars.count)개 (최소 9개 필요)")
             throw ScorecardOCRError.insufficientData(reason: "PAR 정보 \(result.pars.count)개 (최소 9개 필요)")
         }
 
+        AppLogger.ocr.info("OCR 성공")
         return result
+    }
+
+    /// 진단용 — raw OCR 라인만 추출 (파싱/검증 없이). 실패 시 빈 배열.
+    /// 인식 실패 시 사용자에게 raw 텍스트를 노출해 사진 품질 진단에 사용.
+    public static func diagnoseRawText(image: UIImage) async -> [OCRTextLine] {
+        guard let cgImage = image.cgImage else { return [] }
+        return (try? await runOCR(on: cgImage)) ?? []
     }
 
     // MARK: - OCR 실행
@@ -185,6 +210,7 @@ public enum ScorecardOCRService {
     private static func parse(lines: [OCRTextLine]) -> ScorecardOCRResult {
         // Y 좌표로 행 군집화 (tolerance ±2%)
         let rows = groupIntoRows(lines: lines, tolerance: 0.02)
+        AppLogger.ocr.debug("[parse] 행 군집화: \(rows.count)행 (tolerance 2%)")
 
         var courseName: String? = nil
         var dateFound: Date? = nil
@@ -229,12 +255,14 @@ public enum ScorecardOCRService {
 
             if isParRow {
                 let nums = extractNineNumbers(from: tokens)
+                AppLogger.ocr.debug("[parse] PAR 후보 행 #\(rowIdx) tokens=\(tokens, privacy: .public) nums=\(nums, privacy: .public)")
                 if nums.count >= 9 {
                     parRows.append(Array(nums.prefix(9)))
                     parRowIndices.append(rowIdx)
                 }
             }
         }
+        AppLogger.ocr.debug("[parse] PAR 블록 \(parRows.count)개 탐지 (rowIdx=\(parRowIndices, privacy: .public))")
 
         // --- 3. 코스명 (PAR 행 바로 위 행의 첫 토큰) ---
         for parIdx in parRowIndices {
