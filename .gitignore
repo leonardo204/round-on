@@ -49,3 +49,4 @@ __pycache__/
 # Build backups
 *.json.bak
 *.json.bak[0-9]*
+*.bak
