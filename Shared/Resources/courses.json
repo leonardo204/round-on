@@ -5378,7 +5378,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/744590633"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/744590633",
+      "holes": []
     },
     {
       "id": "더시에나cc대중형18홀_kr",
@@ -6519,7 +6520,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25042337"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25042337",
+      "holes": []
     },
     {
       "id": "레이크사이드대중_kr",
@@ -8024,7 +8026,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1128341865"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1128341865",
+      "holes": []
     },
     {
       "id": "목동골프타운_서울",
@@ -8312,7 +8315,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/8189122"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/8189122",
+      "holes": []
     },
     {
       "id": "문경레저타운_경북",
@@ -11752,7 +11756,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/18479336"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/18479336",
+      "holes": []
     },
     {
       "id": "서창퍼블릭_경기",
@@ -17118,7 +17123,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1685793314"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1685793314",
+      "holes": []
     },
     {
       "id": "오로라골프앤리조트_kr",
@@ -18453,7 +18459,8 @@
       "sources": [
         "golf-db-pack-v3",
         "golfzon-lobby-api"
-      ]
+      ],
+      "holes": []
     },
     {
       "id": "원더클럽파가니카cc_강원",
@@ -22322,7 +22329,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/757997198"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/757997198",
+      "holes": []
     },
     {
       "id": "캐슬렉스서울캐슬렉스gc_경기",
@@ -22657,7 +22665,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1407421179"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1407421179",
+      "holes": []
     },
     {
       "id": "코스모스링스_전남",
@@ -22686,7 +22695,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1974252037"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1974252037",
+      "holes": []
     },
     {
       "id": "코스카_충북",
@@ -23127,7 +23137,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/14758107"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/14758107",
+      "holes": []
     },
     {
       "id": "클럽모우골프라이프스타일_강원",
@@ -24715,7 +24726,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1118670876"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1118670876",
+      "holes": []
     },
     {
       "id": "포천아도니스cc_경기_1",
@@ -26045,7 +26057,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1902188886"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1902188886",
+      "holes": []
     },
     {
       "id": "해라cc_부산",
@@ -27441,7 +27454,8 @@
         "golfzon-lobby-api",
         "kakao-local-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/2038715571"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/2038715571",
+      "holes": []
     },
     {
       "id": "imgnationalcc_kr",

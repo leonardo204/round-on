@@ -364,6 +364,7 @@ function makeNewDbEntry(baseName, subs, kakaoDoc, existingIds) {
     courseType: null,
     ownerType: null,
     subCourses: subs.map(({ subCourseName }) => ({ name: subCourseName })),
+    holes: [],   // GolfCourse.holes는 non-optional — iOS 디코딩 throw 방지
     dataQuality: (lat && lng) ? "verified" : "minimal",
     sources: [
       "golf-db-pack-v3",
