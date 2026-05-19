@@ -204,7 +204,6 @@ export function renderViewer(opts: ViewerRenderOptions): string {
 
   const courseName = escapeHtml(round.courseName || "코스 정보 없음");
   const roundDate = round.date ? escapeHtml(formatKSTDate(round.date)) : "";
-  const dataQuality = round.dataQuality ?? "low";
 
   const allHoles = round.holes ?? [];
   const outHoles = allHoles.filter((h) => h.number >= 1 && h.number <= 9);
@@ -277,14 +276,6 @@ export function renderViewer(opts: ViewerRenderOptions): string {
       background: white; opacity: 0.7;
     }
 
-    /* ── 데이터 품질 배지 ───────────────────────────────────────────── */
-    .badge-low {
-      padding: 8px 16px;
-      font-size: 12px; color: var(--text-2);
-      background: var(--divider); text-align: center;
-      border-bottom: 1px solid #DCE0DA;
-    }
-
     /* ── 카드 공통 ────────────────────────────────────────────────── */
     .card {
       background: var(--card);
@@ -335,6 +326,7 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     main { padding: 0 16px; }
     .scorecard-section {
       margin-top: 14px; overflow: hidden;
+      padding: 0 6px;
     }
     .score-table {
       width: 100%; border-collapse: collapse; font-size: 13px;
@@ -424,12 +416,6 @@ export function renderViewer(opts: ViewerRenderOptions): string {
       ${playerLabel ? '<span class="meta-dot"></span><span>' + playerLabel + '</span>' : ''}
     </div>
   </header>
-
-  ${
-    dataQuality === "low"
-      ? `<div class="badge-low">GPS 홀 자동 감지가 지원되지 않는 코스입니다.</div>`
-      : ""
-  }
 
   ${heroHtml}
 
