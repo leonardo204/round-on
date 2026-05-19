@@ -1,6 +1,6 @@
 {
   "version": "2026.05.12-v3",
-  "generatedAt": "2026-05-19T04:18:43.775Z",
+  "generatedAt": "2026-05-19T04:23:28.404Z",
   "sources": [
     "문화체육관광부 전국 골프장 현황 (data.go.kr/15118920, 2022-12-31)",
     "행정안전부 LOCALDATA 생활 골프장 (data.go.kr/15045080)",
@@ -4474,10 +4474,11 @@
       "areaM2": null,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "mois",
-        "osm_coord"
+        "osm_coord",
+        "golfzon-lobby-api"
       ],
       "subCourses": [
         {
@@ -18444,7 +18445,7 @@
           "name": "서"
         }
       ],
-      "dataQuality": "minimal",
+      "dataQuality": "verified",
       "sources": [
         "golf-db-pack-v3",
         "golfzon-lobby-api"
@@ -19129,13 +19130,22 @@
       "areaM2": null,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "kakao_phone",
         "mois",
-        "osm_coord"
+        "osm_coord",
+        "golfzon-lobby-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/9414050"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/9414050",
+      "subCourses": [
+        {
+          "name": "전반"
+        },
+        {
+          "name": "후반"
+        }
+      ]
     },
     {
       "id": "이스트힐cc_경북",
@@ -21588,13 +21598,25 @@
       "areaM2": null,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "kakao_coord",
         "kakao_phone",
-        "mois"
+        "mois",
+        "golfzon-lobby-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/17151845"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/17151845",
+      "subCourses": [
+        {
+          "name": "남"
+        },
+        {
+          "name": "서"
+        },
+        {
+          "name": "동"
+        }
+      ]
     },
     {
       "id": "지산cc_경기_1",
@@ -22135,13 +22157,22 @@
       "areaM2": null,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "kakao_address",
         "kakao_phone",
-        "osm"
+        "osm",
+        "golfzon-lobby-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/576978653"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/576978653",
+      "subCourses": [
+        {
+          "name": "전반"
+        },
+        {
+          "name": "후반"
+        }
+      ]
     },
     {
       "id": "청평마이다스gc_경기",
@@ -22388,13 +22419,22 @@
       "areaM2": null,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "kakao_address",
         "kakao_phone",
-        "osm"
+        "osm",
+        "golfzon-lobby-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/25070448"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/25070448",
+      "subCourses": [
+        {
+          "name": "전반"
+        },
+        {
+          "name": "후반"
+        }
+      ]
     },
     {
       "id": "캐슬렉스제주gc_제주_1",
@@ -25592,13 +25632,25 @@
       "areaM2": null,
       "courses": [],
       "holes": [],
-      "dataQuality": "low",
+      "dataQuality": "verified",
       "sources": [
         "kakao_phone",
         "mois",
-        "osm_coord"
+        "osm_coord",
+        "golfzon-lobby-api"
       ],
-      "kakaoPlaceUrl": "http://place.map.kakao.com/1812042126"
+      "kakaoPlaceUrl": "http://place.map.kakao.com/1812042126",
+      "subCourses": [
+        {
+          "name": "다이아몬드"
+        },
+        {
+          "name": "사파이어"
+        },
+        {
+          "name": "루비"
+        }
+      ]
     },
     {
       "id": "한림용인cc_경기",
