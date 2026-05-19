@@ -358,7 +358,7 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
     </div>
     <div class="footer-meta">
       © 2026 zerolive.co.kr<br>
-      <a href="mailto:zerolive@altimedia.com">zerolive@altimedia.com</a><br>
+      <a href="mailto:zerolive7@gmail.com">zerolive7@gmail.com</a><br>
       <span style="font-size:11px;color:var(--light)">© OpenStreetMap contributors, ODbL 1.0</span>
     </div>
   </div>
