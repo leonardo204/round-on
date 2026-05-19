@@ -8,13 +8,16 @@ on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Dry run (KV 저장 안 함, Worker 호출 안 함)"
+        description: "Dry run (KV 저장 안 함, Worker 호출 안 함, DB 쓰기 안 함)"
         required: false
         default: "false"
         type: choice
         options:
           - "false"
           - "true"
+
+permissions:
+  contents: write  # courses.json 자동 커밋/푸시를 위해 필요
 
 jobs:
   sync:
@@ -25,6 +28,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # 자동 커밋 푸시를 위해 fetch-depth: 0 필요
+          fetch-depth: 0
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
@@ -35,5 +41,22 @@ jobs:
         env:
           WORKER_ENDPOINT: "https://golf.zerolive.co.kr"
           REFRESH_HMAC_SECRET: ${{ secrets.REFRESH_HMAC_SECRET }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: node scripts/sync-courses.mjs
+
+      - name: Commit DB changes
+        if: success() && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet Shared/Resources/courses.json; then
+            echo "DB 변경 없음 — skip"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Shared/Resources/courses.json
+          git commit -m "[Bot] 분기 코스 동기화 — DB 자동 보강 ($(date -u +%Y-%m-%d))"
+          git push origin main
+          echo "DB 변경사항 커밋/푸시 완료"
