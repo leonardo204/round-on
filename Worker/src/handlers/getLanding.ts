@@ -67,7 +67,12 @@ section{padding:96px 24px}
 .devices{display:flex;justify-content:center;gap:18px;margin-top:56px;flex-wrap:wrap}
 .device-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow);min-width:220px;max-width:240px;text-align:left}
 .device-card .dev-label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:.6px;text-transform:uppercase}
-.device-card .dev-num{font-size:40px;font-weight:800;color:var(--dark);margin:8px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.device-card .dev-num{font-size:40px;font-weight:800;color:var(--dark);margin:8px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-1px;display:flex;align-items:baseline;gap:6px}
+.device-card .dev-diff{font-size:18px;font-weight:700;color:var(--green);letter-spacing:-.3px}
+.device-card.b .dev-diff{color:var(--green-accent)}
+.appstore-badge{display:inline-block;line-height:0;transition:transform .2s,opacity .2s;cursor:default;opacity:.85}
+.appstore-badge:hover{transform:translateY(-1px);opacity:1}
+.appstore-badge svg{display:block;border-radius:9px;box-shadow:var(--shadow-lg)}
 .device-card .dev-sub{font-size:12px;color:var(--mid)}
 .device-card.b{background:var(--dark);color:#fff;border-color:var(--dark)}
 .device-card.b .dev-label{color:var(--green-accent)}
@@ -108,7 +113,8 @@ section{padding:96px 24px}
 .viewer-mock .vm-grid{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .viewer-mock .vm-cell{background:var(--surface);border-radius:10px;padding:14px;border:1px solid var(--border)}
 .viewer-mock .vm-cell .k{font-size:11px;color:var(--mid);text-transform:uppercase;font-weight:700;letter-spacing:.4px}
-.viewer-mock .vm-cell .v{font-size:24px;font-weight:800;color:var(--dark);margin-top:2px;font-variant-numeric:tabular-nums}
+.viewer-mock .vm-cell .v{font-size:24px;font-weight:800;color:var(--dark);margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:5px}
+.viewer-mock .vm-cell .v-diff{font-size:13px;font-weight:700;color:var(--green)}
 .viewer-mock .vm-foot{margin-top:18px;font-size:12px;color:var(--light);display:flex;justify-content:space-between}
 
 /* CTA */
@@ -164,20 +170,27 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
   <div class="container">
     <div class="section-badge">iPhone · Apple Watch</div>
     <h1 class="section-title">
-      라운드, 가장 단순한 <span class="accent">한 번의 탭</span>으로
+      샷마다 <span class="accent">+1</span>, 그게 전부.
     </h1>
     <p class="section-sub">
-      par 4에서 시작하지 않습니다. 0에서 시작해 샷마다 +1, OB는 +2, 해저드는 +1.
-      복잡한 룰 입력 없이, 손목에서 카운트하고 화면 한 장으로 공유합니다.
+      복잡한 계산 없이 손목에서 한 번 탭하면 됩니다.
+      OB·해저드·OK까지 한 번에 정리되어, 18홀 후 정확한 타수가 카드 한 장으로 남습니다.
     </p>
-    <a href="#cta" class="hero-cta">앱 출시 알림 받기 →</a>
-    <div class="hero-meta">곧 App Store에서 만나요</div>
+    <a href="#" class="appstore-badge" aria-label="App Store에서 다운로드 (곧 출시)">
+      <svg width="160" height="48" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+        <rect width="160" height="48" rx="9" fill="#000"/>
+        <path d="M27.9 24.6c0-3.1 2.5-4.6 2.7-4.7-1.5-2.1-3.7-2.4-4.5-2.5-1.9-.2-3.8 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.1 0-4.1 1.2-5.1 3.1-2.2 3.8-.6 9.4 1.5 12.5 1.1 1.5 2.3 3.2 4 3.1 1.6-.1 2.2-1 4.2-1s2.5 1 4.2 1c1.7 0 2.9-1.5 4-3 1.3-1.7 1.8-3.4 1.8-3.5-.1 0-3.5-1.3-3.5-5.3zm-3.1-9.7c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.5 2.5-1.3 4 1.4.1 2.9-.7 3.8-1.8z" fill="#fff"/>
+        <text x="49" y="20" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="#fff" letter-spacing=".3">Download on the</text>
+        <text x="49" y="36" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17" font-weight="600" fill="#fff" letter-spacing="-.3">App Store</text>
+      </svg>
+    </a>
+    <div class="hero-meta">곧 만나요</div>
 
     <div class="devices">
       <div class="device-card">
         <div class="dev-label">현재 홀</div>
         <div class="dev-num">7</div>
-        <div class="dev-sub">par 4 · 총 18홀 진행</div>
+        <div class="dev-sub">par 4 · 18홀 진행</div>
       </div>
       <div class="device-card b">
         <div class="dev-label">손목 카운터</div>
@@ -186,8 +199,8 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
       </div>
       <div class="device-card">
         <div class="dev-label">오늘 합계</div>
-        <div class="dev-num">+3</div>
-        <div class="dev-sub">동반자 3인 동시 기록</div>
+        <div class="dev-num">75 <span class="dev-diff">+3</span></div>
+        <div class="dev-sub">par 72 기준 · 4인 라운드</div>
       </div>
     </div>
   </div>
@@ -202,40 +215,28 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
     </div>
     <div class="features-grid">
       <div class="feature">
-        <div class="ic">⛳</div>
-        <h3>0에서 시작하는 카운터</h3>
-        <p>par에서 빼지 않고, 친 만큼 더합니다. OB는 +2, 해저드는 +1, OK는 +1.
-        직관적인 한 번의 탭으로 정확한 스코어가 남습니다.</p>
-      </div>
-      <div class="feature">
-        <div class="ic">⌚️</div>
-        <h3>Apple Watch 양방향 동기화</h3>
-        <p>손목에서 카운트하면 폰의 스코어카드가 즉시 갱신됩니다.
-        파/거리·코스 picker도 손목에서 바로. 5종 메시지 양방향 sync.</p>
-      </div>
-      <div class="feature">
         <div class="ic">📍</div>
         <h3>골프장 자동 인식</h3>
-        <p>GPS로 현재 위치의 골프장과 서브코스를 자동으로 찾아 줍니다.
-        매칭이 애매하면 후보를 보여주거나 직접 검색할 수 있습니다.</p>
+        <p>도착하면 GPS가 현재 골프장과 전반/후반 코스를 자동으로 잡아줍니다.
+        매칭이 애매하면 후보를 보여주거나 직접 검색할 수 있어요.</p>
       </div>
       <div class="feature">
         <div class="ic">🏌️</div>
-        <h3>par 자동 설정</h3>
-        <p>전국 골프장 데이터를 분기마다 자동 갱신합니다.
-        익숙한 골프장이면 첫 홀부터 par가 맞춰져 있습니다.</p>
+        <h3>코스 정보 자동 제공</h3>
+        <p>전국 골프장의 par와 서브코스 정보가 미리 채워져 있습니다.
+        첫 홀부터 신경 쓸 일 없이 시작하면 됩니다.</p>
+      </div>
+      <div class="feature">
+        <div class="ic">⌚️</div>
+        <h3>Apple Watch 연동</h3>
+        <p>손목에서 한 번 탭하면 폰의 스코어카드가 즉시 갱신됩니다.
+        OB·해저드·OK도 손목에서 바로. 폰을 꺼낼 일이 없어요.</p>
       </div>
       <div class="feature">
         <div class="ic">📊</div>
         <h3>라운드 카드 공유</h3>
         <p>라운드가 끝나면 한 장의 카드가 됩니다.
-        링크 하나로 동반자에게 공유, 본인만 PIN으로 보호할 수도 있습니다.</p>
-      </div>
-      <div class="feature">
-        <div class="ic">✏️</div>
-        <h3>당신의 par가 기준</h3>
-        <p>라운드 중 par를 수정하면, 같은 골프장 다음 라운드에 자동으로 반영됩니다.
-        앱이 사용자의 기록을 학습합니다.</p>
+        링크 하나로 동반자에게 공유, PIN으로 보호할 수도 있어요.</p>
       </div>
     </div>
   </div>
@@ -285,9 +286,9 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
       <div class="vm-title">아리지CC · 햇님 / 달님</div>
       <div class="vm-sub">2026-05-19 화 · 18홀 · 4인 라운드</div>
       <div class="vm-grid">
-        <div class="vm-cell"><div class="k">나</div><div class="v">+3</div></div>
-        <div class="vm-cell"><div class="k">동반자1</div><div class="v">+7</div></div>
-        <div class="vm-cell"><div class="k">동반자2</div><div class="v">+12</div></div>
+        <div class="vm-cell"><div class="k">나</div><div class="v">75 <span class="v-diff">+3</span></div></div>
+        <div class="vm-cell"><div class="k">동반자1</div><div class="v">79 <span class="v-diff">+7</span></div></div>
+        <div class="vm-cell"><div class="k">동반자2</div><div class="v">84 <span class="v-diff">+12</span></div></div>
       </div>
       <div class="vm-foot">
         <span>KST · 7일 후 자동 삭제</span>
@@ -330,9 +331,16 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
 <section id="cta" class="cta">
   <div class="container">
     <h2 class="section-title">곧 만나요</h2>
-    <p class="section-sub mx-auto">라운드온은 App Store 출시를 준비 중입니다. 알림을 받아보세요.</p>
-    <a href="mailto:zerolive@altimedia.com?subject=%EB%9D%BC%EC%9A%B4%EB%93%9C%EC%98%A8%20%EC%B6%9C%EC%8B%9C%20%EC%95%8C%EB%A6%BC">출시 알림 받기 ✉</a>
-    <div class="cta-note">App Store 정식 출시 후 곧 다운로드 링크를 보내드립니다</div>
+    <p class="section-sub mx-auto">App Store에서 만나뵐 준비를 하고 있습니다.</p>
+    <a href="#" class="appstore-badge appstore-badge-cta" aria-label="App Store에서 다운로드 (곧 출시)">
+      <svg width="180" height="54" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+        <rect width="160" height="48" rx="9" fill="#000"/>
+        <path d="M27.9 24.6c0-3.1 2.5-4.6 2.7-4.7-1.5-2.1-3.7-2.4-4.5-2.5-1.9-.2-3.8 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.1 0-4.1 1.2-5.1 3.1-2.2 3.8-.6 9.4 1.5 12.5 1.1 1.5 2.3 3.2 4 3.1 1.6-.1 2.2-1 4.2-1s2.5 1 4.2 1c1.7 0 2.9-1.5 4-3 1.3-1.7 1.8-3.4 1.8-3.5-.1 0-3.5-1.3-3.5-5.3zm-3.1-9.7c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.5 2.5-1.3 4 1.4.1 2.9-.7 3.8-1.8z" fill="#fff"/>
+        <text x="49" y="20" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9" fill="#fff" letter-spacing=".3">Download on the</text>
+        <text x="49" y="36" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17" font-weight="600" fill="#fff" letter-spacing="-.3">App Store</text>
+      </svg>
+    </a>
+    <div class="cta-note">출시 알림은 추후 이 자리에서 안내드립니다</div>
   </div>
 </section>
 
