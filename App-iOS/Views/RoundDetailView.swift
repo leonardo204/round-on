@@ -123,6 +123,12 @@ struct RoundDetailView: View {
             ShareSheetView(round: round, shareVM: shareVM, onShared: { url in
                 bannerMessage = "공유 링크가 생성되었어요."
                 bannerSeverity = .success
+                let snapshot = bannerMessage
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    if bannerMessage == snapshot {
+                        withAnimation { bannerMessage = nil }
+                    }
+                }
             })
         }
         .task {
@@ -497,9 +503,17 @@ struct RoundDetailView: View {
             scoreVM.refresh(from: round)
             bannerMessage = "수정 내용을 저장했어요."
             bannerSeverity = .success
+            // success 토스트는 2초 후 자동 dismiss — 사용자가 X 누를 필요 없음
+            let snapshotMessage = bannerMessage
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                if bannerMessage == snapshotMessage {
+                    withAnimation { bannerMessage = nil }
+                }
+            }
         } catch {
             bannerMessage = "저장 중 오류가 발생했어요."
             bannerSeverity = .error
+            // 오류는 사용자 확인 필요 — 자동 dismiss 없음
         }
         isEditMode = false
         editRoundVM = nil
