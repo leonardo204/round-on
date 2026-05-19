@@ -20,6 +20,9 @@ import { handleUpdateShare } from "./handlers/updateShare.js";
 import { handleDeleteShare } from "./handlers/deleteShare.js";
 import { handleGetViewer }   from "./handlers/getViewer.js";
 import { handleVerifyPin }   from "./handlers/verifyPin.js";
+import { handleGetCourses }  from "./handlers/getCourses.js";
+import { handleRefreshCourses } from "./handlers/refreshCourses.js";
+import { handleRefreshPayload } from "./handlers/refreshPayload.js";
 import { errorResponse }     from "./middleware/security.js";
 
 // shortId 패턴: base62 8자 (33-SECURITY §2)
@@ -61,6 +64,33 @@ export async function route(
       status: 204,
       headers: { "Cache-Control": "public, max-age=86400" },
     });
+  }
+
+  // ── /v1/* — 코스 DB API (SHORT_ID_RE 보다 반드시 먼저 처리) ────────────
+
+  // GET /v1/courses
+  if (pathname === "/v1/courses" && method === "GET") {
+    return handleGetCourses(request, env, "courses");
+  }
+
+  // GET /v1/course-pars
+  if (pathname === "/v1/course-pars" && method === "GET") {
+    return handleGetCourses(request, env, "course-pars");
+  }
+
+  // POST /v1/courses/refresh (운영자 수동 트리거 — Worker 내부에서 골프존 fetch 실행)
+  if (pathname === "/v1/courses/refresh" && method === "POST") {
+    return handleRefreshCourses(request, env, _ctx);
+  }
+
+  // POST /v1/courses/refresh-payload (GitHub Action이 수집 완료 payload를 직접 전달)
+  if (pathname === "/v1/courses/refresh-payload" && method === "POST") {
+    return handleRefreshPayload(request, env, _ctx);
+  }
+
+  // /v1/* fallthrough → 404 (알 수 없는 v1 경로)
+  if (pathname.startsWith("/v1/")) {
+    return errorResponse("NOT_FOUND", "API 엔드포인트를 찾을 수 없습니다.", 404);
   }
 
   // ── /api/share ──────────────────────────────────────────────────────────

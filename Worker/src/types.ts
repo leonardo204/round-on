@@ -11,14 +11,19 @@ export interface Env {
   KV_RATELIMIT: KVNamespace;  // Rate limit 카운터 (33-SECURITY §6)
   KV_PINLOCK: KVNamespace;    // PIN 오답 잠금 카운터 (33-SECURITY §5)
   KV_SESSION: KVNamespace;    // viewer 세션 쿠키 검증값 (33-SECURITY §5.4)
+  KV_COURSES: KVNamespace;    // courses/course-pars 데이터 (코스 DB 동기화)
 
   // vars
   ENVIRONMENT: string;         // "development" | "production"
   VIEWER_DOMAIN: string;       // "golf.zerolive.co.kr"
 
   // secrets (wrangler secret put으로 등록 — wrangler.toml에 없음)
-  BCRYPT_PEPPER?: string;      // bcrypt 추가 보안 pepper (선택)
-  SESSION_HMAC_KEY?: string;   // HMAC-SHA256 세션 쿠키 서명 키 (필수)
+  BCRYPT_PEPPER?: string;       // bcrypt 추가 보안 pepper (선택)
+  SESSION_HMAC_KEY?: string;    // HMAC-SHA256 세션 쿠키 서명 키 (필수)
+  COURSES_API_KEY?: string;     // GET /v1/courses, /v1/course-pars Bearer 키
+  REFRESH_HMAC_SECRET?: string; // POST /v1/courses/refresh HMAC-SHA256 시크릿
+  TELEGRAM_BOT_TOKEN?: string;  // Telegram 알림 봇 토큰
+  TELEGRAM_CHAT_ID?: string;    // Telegram 알림 채팅 ID
 }
 
 // ── 공유 라운드 데이터 ──────────────────────────────────────────────────────
