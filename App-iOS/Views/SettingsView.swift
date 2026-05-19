@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreLocation
 import UIKit
+import SwiftData
 import Shared
 
 // MARK: - SettingsView
@@ -8,8 +9,18 @@ import Shared
 
 struct SettingsView: View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var modelContext
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @State private var iCloudLoggedIn: Bool = false
+
+    // DB 업데이트 상태
+    @State private var dbUpdateState: DBUpdateState = .idle
+    private enum DBUpdateState: Equatable {
+        case idle
+        case loading
+        case success(String)
+        case failure
+    }
 
     // 벌타 기본값 (PenaltySettings.Key와 일치)
     @AppStorage(PenaltySettings.Key.obDelta) private var obDelta: Int = PenaltySettings.Default.obDelta
@@ -38,6 +49,14 @@ struct SettingsView: View {
                 Text("벌타 기본값")
             } footer: {
                 Text("홀 입력 모드의 OB / 해저드 / 컨시드 버튼이 추가하는 타수입니다.")
+            }
+
+            Section {
+                dbUpdateRow
+            } header: {
+                Text("골프장 데이터")
+            } footer: {
+                Text("앱 실행 시 자동으로 최신 골프장 정보를 확인합니다. 수동으로 즉시 갱신하려면 버튼을 탭하세요.")
             }
 
             Section("정보") {
@@ -220,6 +239,74 @@ struct SettingsView: View {
 
     private func refreshLocationStatus() {
         locationStatus = LocationService.shared.authorizationStatus
+    }
+
+    // MARK: - DB update row
+
+    private var dbUpdateRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "arrow.triangle.2.circlepath")
+                .font(.system(size: 17))
+                .foregroundStyle(dbUpdateIconColor)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("골프장 DB 업데이트")
+                    .font(.body)
+                Text(dbUpdateSubtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            if dbUpdateState == .loading {
+                ProgressView()
+                    .controlSize(.small)
+            } else {
+                Button("지금 갱신") {
+                    triggerDBUpdate()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .tint(.accentGreen)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var dbUpdateIconColor: Color {
+        switch dbUpdateState {
+        case .idle: return .secondary
+        case .loading: return .accentGreen
+        case .success: return .accentGreen
+        case .failure: return .red
+        }
+    }
+
+    private var dbUpdateSubtitle: String {
+        switch dbUpdateState {
+        case .idle: return "최근 갱신 일시 확인 불가"
+        case .loading: return "서버에서 확인 중..."
+        case .success(let msg): return msg
+        case .failure: return "업데이트 실패 — 잠시 후 다시 시도해 주세요"
+        }
+    }
+
+    private func triggerDBUpdate() {
+        guard dbUpdateState != .loading else { return }
+        dbUpdateState = .loading
+        Task {
+            let (coursesUpdated, _) = await CourseRepository.shared.fetchRemoteForce(context: modelContext)
+            if coursesUpdated {
+                dbUpdateState = .success("업데이트 완료")
+            } else {
+                dbUpdateState = .success("최신 데이터입니다")
+            }
+            // 3초 후 idle 복귀
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            dbUpdateState = .idle
+        }
     }
 
     // MARK: - App version

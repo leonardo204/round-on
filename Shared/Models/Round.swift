@@ -31,6 +31,11 @@ public final class Round {
 
     // RoundPhoto 관계는 2026-05-18 폐기 (사진 공유 기능 제거)
 
+    /// 후반 코스를 "추후 결정"으로 잠정 배정한 경우 true.
+    /// 사용자가 후반 코스를 확인/수정하면 false로 클리어.
+    /// SwiftData default 값 제공 — 라이트웨이트 마이그레이션 안전.
+    public var isBackTentative: Bool = false
+
     public var isFinished: Bool = false
     public var startedAt: Date = Date.now
     public var finishedAt: Date?

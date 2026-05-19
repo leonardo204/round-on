@@ -45,8 +45,8 @@ struct NewRoundView: View {
     // 서브코스 선택 (전반/후반 각각)
     @State private var selectedFrontSubCourse: SubCourse?
     @State private var selectedBackSubCourse: SubCourse?
-    /// 후반 코스를 모름으로 선택한 상태 — 전반 par prefill 후 후반은 par 4
-    @State private var isBackUnknown: Bool = false
+    /// 후반 코스를 "추후 결정"으로 선택한 상태 — 전반 다음 순번 코스 잠정 배정
+    @State private var isBackTentative: Bool = false
 
     // holesCount nil 처리 (라운드는 9 또는 18홀만)
     @State private var selectedHolesCount: Int = 18
@@ -115,13 +115,13 @@ struct NewRoundView: View {
                             let courseHoles = course.holesCount ?? 0
                             let holes = (courseHoles == 9 || courseHoles == 18) ? courseHoles : selectedHolesCount
                             if holes == 18 {
-                                if isBackUnknown {
-                                    // 전반 par prefill 가능하면 모름 케이스도 prefill로 간주 (후반만 par 4)
-                                    return CourseParsCatalog.pars(for: course.id, subCourseName: selectedFrontSubCourse?.name) != nil
+                                if isBackTentative {
+                                    // 추후 결정: 전반 par prefill 가능하면 잠정 배정 코스로도 prefill 시도 (정상 경로)
+                                    return CourseParsResolver.pars(courseId: course.id, subCourseName: selectedFrontSubCourse?.name, context: modelContext) != nil
                                 }
-                                return CourseParsCatalog.pars18(courseId: course.id, front: selectedFrontSubCourse?.name, back: selectedBackSubCourse?.name) != nil
+                                return CourseParsResolver.pars18(courseId: course.id, front: selectedFrontSubCourse?.name, back: selectedBackSubCourse?.name, context: modelContext) != nil
                             } else {
-                                return CourseParsCatalog.pars(for: course.id, subCourseName: selectedFrontSubCourse?.name) != nil
+                                return CourseParsResolver.pars(courseId: course.id, subCourseName: selectedFrontSubCourse?.name, context: modelContext) != nil
                             }
                         }()
                         if canPrefill { startRound() } else { showParGuideAlert = true }
@@ -163,7 +163,7 @@ struct NewRoundView: View {
             .onChange(of: matchedCourse?.id) { _, _ in saveDraft() }
             .onChange(of: selectedFrontSubCourse?.id) { _, _ in saveDraft() }
             .onChange(of: selectedBackSubCourse?.id) { _, _ in saveDraft() }
-            .onChange(of: isBackUnknown) { _, _ in saveDraft() }
+            .onChange(of: isBackTentative) { _, _ in saveDraft() }
             .onChange(of: selectedHolesCount) { _, _ in saveDraft() }
             .onChange(of: playerCount) { _, _ in saveDraft() }
             .onChange(of: playerNames) { _, _ in saveDraft() }
@@ -545,9 +545,9 @@ struct NewRoundView: View {
                         HStack(spacing: 8) {
                             // 일반 서브코스 칩
                             ForEach(subCourses) { sub in
-                                let isSelected = !isBackUnknown && selectedBackSubCourse?.name == sub.name
+                                let isSelected = !isBackTentative && selectedBackSubCourse?.name == sub.name
                                 Button {
-                                    isBackUnknown = false
+                                    isBackTentative = false
                                     selectedBackSubCourse = isSelected ? nil : sub
                                 } label: {
                                     Text(sub.name)
@@ -563,20 +563,20 @@ struct NewRoundView: View {
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
                             }
-                            // "모름" 칩
+                            // "추후 결정" 칩 — 전반 다음 순번 코스 잠정 배정
                             Button {
-                                isBackUnknown = true
+                                isBackTentative = true
                                 selectedBackSubCourse = nil
                             } label: {
-                                Text("모름")
+                                Text("추후 결정")
                                     .font(.system(size: 15, weight: .medium))
-                                    .foregroundStyle(isBackUnknown
+                                    .foregroundStyle(isBackTentative
                                         ? Color.springTextPrimary
                                         : Color.springTextSecondary)
                                     .padding(.horizontal, 16)
                                     .frame(height: 44)
-                                    .background(isBackUnknown
-                                        ? Color.springGreenPrimary
+                                    .background(isBackTentative
+                                        ? Color.orange
                                         : Color.springSurfaceElevated)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
@@ -842,8 +842,8 @@ struct NewRoundView: View {
             courseId: course.id,
             courseName: course.name,
             frontCourseName: selectedFrontSubCourse?.name,
-            backCourseName: isBackUnknown ? nil : selectedBackSubCourse?.name,
-            backUnknown: isBackUnknown,
+            backCourseName: isBackTentative ? nil : selectedBackSubCourse?.name,
+            backTentative: isBackTentative,
             players: players,
             holesCount: holes
         )
@@ -861,7 +861,7 @@ struct NewRoundView: View {
             courseName: matchedCourse?.name ?? "",
             frontSubCourseName: selectedFrontSubCourse?.name,
             backSubCourseName: selectedBackSubCourse?.name,
-            backUnknown: isBackUnknown,
+            isBackTentative: isBackTentative,
             holesCount: selectedHolesCount,
             playerNames: playerNames,
             playerCount: playerCount
@@ -882,7 +882,7 @@ struct NewRoundView: View {
             }
         }
         selectedHolesCount = draft.holesCount
-        isBackUnknown = draft.backUnknown
+        isBackTentative = draft.isBackTentative
         playerCount = draft.playerCount
         playerNames = draft.playerNames
         AppLogger.view.info("NewRoundDraft 복원: course=\(draft.courseName, privacy: .private), \(draft.playerCount)명")

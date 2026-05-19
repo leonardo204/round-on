@@ -15,6 +15,7 @@
 		1130B0769735C447963E6343 /* PlayerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */; };
 		1502B88CF3CA9A658971B3A2 /* ShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */; };
 		16FAD1A1CA872FBFA7BD4D6B /* SyncCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BF69E3C181D9405358D0FC /* SyncCoordinatorTests.swift */; };
+		1712F80421C19B4CB3D2DD62 /* UserParOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */; };
 		186C9F61BAB5BCF8D854BF5C /* HoleScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8BC201905AB97743D9446 /* HoleScore.swift */; };
 		1D0682D67DADBC173CE8D4E5 /* CourseRepositoryAdaptiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29DE1880EE95068A319023D /* CourseRepositoryAdaptiveTests.swift */; };
 		29B712EBDA0319068F84D4C1 /* DeviceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB6A503C6F8133F2C995B25 /* DeviceIdentifier.swift */; };
@@ -29,6 +30,7 @@
 		3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AA5181B0AC6CA697186AC2 /* StatsView.swift */; };
 		35330D84B85CE0EAFF1C6225 /* Color+WatchColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */; };
 		36DDEDE8C4BF65E47A8E182A /* PenaltySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */; };
+		383CC5C843D177D65E5EE583 /* CourseParsResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1124F748810A59153C4B40DB /* CourseParsResolver.swift */; };
 		3914E6C2382AB945DAB2E235 /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC043DB752CF9F5CC38601DB /* HapticEngine.swift */; };
 		39A7BEDA7FD5288004686679 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F03B2BB0667E31677AC402 /* HomeView.swift */; };
 		3A4C3518B16BF3E0A294EEEB /* HaversineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B422356FF277D5F06DD486 /* HaversineTests.swift */; };
@@ -38,9 +40,11 @@
 		434915EAC489DA0572D5CB13 /* HoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49302CB886665828D6966CF2 /* HoleInfo.swift */; };
 		46E3B42FF684F0037ED32230 /* PersistedDiscoveredCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC651CE3038389DC2273F08 /* PersistedDiscoveredCourse.swift */; };
 		4D2E191EF28B8326E0AE183F /* RoundOnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */; };
+		4DFA89B68EB6C037F65FF29B /* UserParOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */; };
 		5062F11A1515D711B81D8254 /* WatchHoleSwipeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC784D81F59A3D8626A1EFD /* WatchHoleSwipeContainer.swift */; };
 		5121A9F2F7EB6CA36330C281 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9539182D15057C32C5477 /* SyncCoordinator.swift */; };
 		51ECB292269A1BDF7168D454 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */; };
+		52255E834BF909709C05ABE7 /* CoursesSyncMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081ECD0B68C85030322DBBA5 /* CoursesSyncMeta.swift */; };
 		52B4DAFFA9558462C9DF1BCA /* KakaoVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */; };
 		55DE5A06D64E0FED99F65E9F /* CourseParsCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55077583A70D3214323B529F /* CourseParsCatalog.swift */; };
 		563CB27A5BDB5E89F45E141E /* Round+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8586200D803A247A39C2BCA0 /* Round+Display.swift */; };
@@ -94,6 +98,7 @@
 		BBF4257DF94F117CC865B85B /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF006E866BFD030D2C951470 /* Round.swift */; };
 		BBFB1BF83C16FBF9120338B6 /* ShareAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3848762312A4A1FA8FB773 /* ShareAPIClient.swift */; };
 		BDC46F454887437ABDD4CCF4 /* CourseDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */; };
+		BE06698AC9118892EF3A9E5D /* CourseParsResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1124F748810A59153C4B40DB /* CourseParsResolver.swift */; };
 		BE0961DEDFC435F673A8D61B /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC043DB752CF9F5CC38601DB /* HapticEngine.swift */; };
 		BE1E2C1F0C9FCF62AF42E036 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC8F7887F8DB86E5E9CBAC5 /* KeychainStore.swift */; };
 		BF5F28E7D508B850E5697D08 /* SeasonTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B76960238B796F51EF83760 /* SeasonTheme.swift */; };
@@ -121,6 +126,7 @@
 		E38FA528C02032009D2E5477 /* WorkoutCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92721D7C200DC1BC4B5B5FFF /* WorkoutCoordinator.swift */; };
 		E63102B4354A04F77D3BC81A /* BannerNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84545407C4587D1671AA6A29 /* BannerNotice.swift */; };
 		E6EBE1B5368F448B4E72B982 /* ShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */; };
+		E6FD17170D993DC3471E4350 /* CoursesSyncMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081ECD0B68C85030322DBBA5 /* CoursesSyncMeta.swift */; };
 		F3B031F38ED20E9AB6BB3238 /* CourseDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */; };
 		F610C5FD790A8DD07B15CC83 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB288B76FE366FF249081E /* WCBroker.swift */; };
 		F6BC069E673C88B3FF76DD07 /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F8C7C724E980752FC0A307 /* ShareViewModel.swift */; };
@@ -213,8 +219,10 @@
 		004003D3075ED161398FE093 /* WCRoundBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCRoundBridge.swift; sourceTree = "<group>"; };
 		00CE161EF58F00C4D3CB7395 /* CourseDiscoveryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDiscoveryServiceTests.swift; sourceTree = "<group>"; };
 		01DD16CE2349CE3F77D14D00 /* RoundOn.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RoundOn.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		081ECD0B68C85030322DBBA5 /* CoursesSyncMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoursesSyncMeta.swift; sourceTree = "<group>"; };
 		0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListViewModel.swift; sourceTree = "<group>"; };
 		104BC08A43F8064A677945D2 /* RoundEditTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundEditTests.swift; sourceTree = "<group>"; };
+		1124F748810A59153C4B40DB /* CourseParsResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseParsResolver.swift; sourceTree = "<group>"; };
 		116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenaltySettings.swift; sourceTree = "<group>"; };
 		11AA5181B0AC6CA697186AC2 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		139D8E2C353187EFFD42A389 /* PenaltyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenaltyButton.swift; sourceTree = "<group>"; };
@@ -275,6 +283,7 @@
 		8586200D803A247A39C2BCA0 /* Round+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Round+Display.swift"; sourceTree = "<group>"; };
 		89B10F7FF48A15ECD6D979FB /* RoundStatisticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundStatisticsTests.swift; sourceTree = "<group>"; };
 		8C6B01B395738B0326DEF2C4 /* PinInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinInputField.swift; sourceTree = "<group>"; };
+		8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserParOverride.swift; sourceTree = "<group>"; };
 		8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOptions.swift; sourceTree = "<group>"; };
 		91F6ABA41B47BEB7F15EE68F /* RoundOnWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOnWatch.entitlements; sourceTree = "<group>"; };
 		924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreTests.swift; sourceTree = "<group>"; };
@@ -311,7 +320,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_6FBA3DA2-EFB6-47AE-A9E7-DF25BB34BFC1" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_A11A9F3E-F07B-432C-8850-2B5AE05B94F2" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -578,6 +587,7 @@
 			isa = PBXGroup;
 			children = (
 				55077583A70D3214323B529F /* CourseParsCatalog.swift */,
+				1124F748810A59153C4B40DB /* CourseParsResolver.swift */,
 				328B7409441442909D75CE09 /* NewRoundDraft.swift */,
 				116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */,
 			);
@@ -648,6 +658,7 @@
 		E13DC8D6C2021E3B5CC85245 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				081ECD0B68C85030322DBBA5 /* CoursesSyncMeta.swift */,
 				75E9C8B256CD2EBCDCC1611D /* DiscoveredCourse.swift */,
 				4C203EFDBD24AB1F09291328 /* GolfCourse.swift */,
 				49302CB886665828D6966CF2 /* HoleInfo.swift */,
@@ -657,6 +668,7 @@
 				BF006E866BFD030D2C951470 /* Round.swift */,
 				8586200D803A247A39C2BCA0 /* Round+Display.swift */,
 				8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */,
+				8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -681,10 +693,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_A0655266-A14B-4B58-8AE3-1E8DB2AC30FD" /* golfCounter */ = {
+		"TEMP_6E2AAFE4-0F9E-43C2-8AB6-24B035B3BC28" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_6FBA3DA2-EFB6-47AE-A9E7-DF25BB34BFC1" /* Secrets.xcconfig */,
+				"TEMP_A11A9F3E-F07B-432C-8850-2B5AE05B94F2" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -888,7 +900,9 @@
 				E63102B4354A04F77D3BC81A /* BannerNotice.swift in Sources */,
 				2DF85F12B672687E500E3230 /* Color+SeasonalGreen.swift in Sources */,
 				8B3B2711582F7AF50D41331A /* CourseParsCatalog.swift in Sources */,
+				383CC5C843D177D65E5EE583 /* CourseParsResolver.swift in Sources */,
 				D732C3B2D782808264071EDE /* CourseRepository.swift in Sources */,
+				52255E834BF909709C05ABE7 /* CoursesSyncMeta.swift in Sources */,
 				29B712EBDA0319068F84D4C1 /* DeviceIdentifier.swift in Sources */,
 				DC21B45303E0BE1F8B8A4029 /* DiscoveredCourse.swift in Sources */,
 				A4911A665D5AE576C963F82D /* GolfCourse.swift in Sources */,
@@ -913,6 +927,7 @@
 				1502B88CF3CA9A658971B3A2 /* ShareOptions.swift in Sources */,
 				F6BC069E673C88B3FF76DD07 /* ShareViewModel.swift in Sources */,
 				626057D85619D703724C37A6 /* SyncCoordinator.swift in Sources */,
+				4DFA89B68EB6C037F65FF29B /* UserParOverride.swift in Sources */,
 				3FB37761B0ABFD37B8A70394 /* WCMessages.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -923,6 +938,8 @@
 			files = (
 				C9577C2B92C5043C62E1CF7C /* AppLogger.swift in Sources */,
 				55DE5A06D64E0FED99F65E9F /* CourseParsCatalog.swift in Sources */,
+				BE06698AC9118892EF3A9E5D /* CourseParsResolver.swift in Sources */,
+				E6FD17170D993DC3471E4350 /* CoursesSyncMeta.swift in Sources */,
 				C5020ADC62EB8E14406995DE /* DeviceIdentifier.swift in Sources */,
 				9344CD0EF5751B153BDE6A88 /* DiscoveredCourse.swift in Sources */,
 				2F30D70BCEC9F96E424F4E1D /* GolfCourse.swift in Sources */,
@@ -942,6 +959,7 @@
 				DC8E1433F243301FE0461228 /* SeasonTheme.swift in Sources */,
 				E6EBE1B5368F448B4E72B982 /* ShareOptions.swift in Sources */,
 				5121A9F2F7EB6CA36330C281 /* SyncCoordinator.swift in Sources */,
+				1712F80421C19B4CB3D2DD62 /* UserParOverride.swift in Sources */,
 				D3761F2207355382FB20C330 /* WCMessages.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1161,7 +1179,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_6FBA3DA2-EFB6-47AE-A9E7-DF25BB34BFC1" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_A11A9F3E-F07B-432C-8850-2B5AE05B94F2" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1176,6 +1194,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon;
+				ROUNDON_API_BEARER = "$(ROUNDON_API_BEARER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1183,7 +1202,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_6FBA3DA2-EFB6-47AE-A9E7-DF25BB34BFC1" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_A11A9F3E-F07B-432C-8850-2B5AE05B94F2" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1198,6 +1217,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon;
+				ROUNDON_API_BEARER = "$(ROUNDON_API_BEARER)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

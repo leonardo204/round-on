@@ -1,14 +1,31 @@
 import Foundation
+import SwiftData
 
 // MARK: - CourseRepository
 
 /// 번들 JSON에서 골프장 목록을 로드하는 actor.
 /// cold load는 첫 호출 시 1회만 수행하고 이후 메모리 캐시를 반환한다.
 /// Watch 앱에는 포함되지 않음 (WatchConnectivity로 수신). iOS 앱 전용.
+///
+/// 원격 fetch 지원:
+/// - fetchRemoteIfStale: cold start 시 호출. 7일 stale 시 GET /v1/courses
+/// - fetchRemoteForce: SettingsView 수동 갱신 버튼 시 호출
+/// 4단 fallback: 원격(200) → 304/캐시 → 번들 → 빈 배열 + 로그
 public actor CourseRepository {
     public static let shared = CourseRepository()
 
     private var cache: [GolfCourse]?
+
+    // MARK: - 원격 fetch 설정
+
+    /// Worker API base URL (30-API §2.1)
+    private static let baseURL = "https://golf.zerolive.co.kr"
+
+    /// Application Support 디스크 캐시 경로
+    private static var diskCachePath: URL? {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("courses.cache.json")
+    }
 
     // MARK: Public API
 
@@ -26,6 +43,193 @@ public actor CourseRepository {
         let courses = dto.courses
         self.cache = courses
         return courses
+    }
+
+    // MARK: - 원격 fetch (4단 fallback)
+
+    /// cold start 트리거용. staleAfterSeconds 이상 경과 시에만 원격 요청.
+    /// context: CoursesSyncMeta ETag 보존용. 라운드 진행 중 호출 금지.
+    /// - Returns: (coursesUpdated, parsUpdated) 갱신 여부
+    @discardableResult
+    public func fetchRemoteIfStale(
+        staleAfterSeconds: TimeInterval = 7 * 86_400,
+        context: ModelContext
+    ) async -> (coursesUpdated: Bool, parsUpdated: Bool) {
+        let meta = fetchOrCreateSyncMeta(endpoint: "courses", context: context)
+        let elapsed = Date().timeIntervalSince(meta.lastSuccessAt)
+        guard elapsed >= staleAfterSeconds else {
+            AppLogger.persistence.debug("CourseRepository: stale 미경과 (\(Int(elapsed))s < \(Int(staleAfterSeconds))s) — fetch 생략")
+            return (false, false)
+        }
+        let coursesUpdated = await fetchEndpoint("courses", meta: meta, context: context)
+        let parsMeta = fetchOrCreateSyncMeta(endpoint: "course-pars", context: context)
+        let parsUpdated = await fetchEndpoint("course-pars", meta: parsMeta, context: context)
+        return (coursesUpdated, parsUpdated)
+    }
+
+    /// SettingsView 수동 갱신 — stale 여부 무관하게 강제 fetch.
+    /// - Returns: (coursesUpdated, parsUpdated) 갱신 여부
+    @discardableResult
+    public func fetchRemoteForce(context: ModelContext) async -> (coursesUpdated: Bool, parsUpdated: Bool) {
+        let meta = fetchOrCreateSyncMeta(endpoint: "courses", context: context)
+        let coursesUpdated = await fetchEndpoint("courses", meta: meta, context: context)
+        let parsMeta = fetchOrCreateSyncMeta(endpoint: "course-pars", context: context)
+        let parsUpdated = await fetchEndpoint("course-pars", meta: parsMeta, context: context)
+        return (coursesUpdated, parsUpdated)
+    }
+
+    // MARK: - Private fetch logic
+
+    /// 단일 endpoint fetch. 4단 fallback 처리.
+    /// - Returns: 새 데이터로 캐시 갱신 여부
+    private func fetchEndpoint(
+        _ endpoint: String,
+        meta: CoursesSyncMeta,
+        context: ModelContext
+    ) async -> Bool {
+        let urlString = "\(Self.baseURL)/v1/\(endpoint)"
+        guard let url = URL(string: urlString) else {
+            AppLogger.persistence.error("CourseRepository: 잘못된 URL — \(urlString)")
+            return false
+        }
+
+        meta.lastFetchedAt = Date()
+        try? context.save()
+
+        // A. 원격 요청
+        var request = URLRequest(url: url, timeoutInterval: 15)
+        request.httpMethod = "GET"
+        if !meta.etag.isEmpty {
+            request.setValue(meta.etag, forHTTPHeaderField: "If-None-Match")
+        }
+        if let token = bearerToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else {
+                return await fallbackToCache(endpoint: endpoint)
+            }
+
+            if http.statusCode == 304 {
+                // B. 304 — 캐시 그대로
+                AppLogger.persistence.info("CourseRepository [\(endpoint)]: 304 Not Modified — 캐시 유효")
+                meta.lastSuccessAt = Date()
+                try? context.save()
+                return false
+            }
+
+            if (200...299).contains(http.statusCode) {
+                // A. 200 — 새 데이터
+                let newEtag = http.value(forHTTPHeaderField: "ETag") ?? ""
+                meta.etag = newEtag
+                meta.lastSuccessAt = Date()
+                try? context.save()
+
+                // 디스크 캐시 기록 (endpoint별)
+                writeDiskCache(data: data, endpoint: endpoint)
+
+                // courses 엔드포인트면 인메모리 캐시 갱신
+                if endpoint == "courses" {
+                    await updateCourseCache(data: data, source: "remote")
+                    return true
+                }
+                return true
+            }
+
+            AppLogger.persistence.warning("CourseRepository [\(endpoint)]: HTTP \(http.statusCode) — fallback")
+            return await fallbackToCache(endpoint: endpoint)
+
+        } catch {
+            AppLogger.persistence.warning("CourseRepository [\(endpoint)]: 네트워크 오류 — \(error.localizedDescription)")
+            return await fallbackToCache(endpoint: endpoint)
+        }
+    }
+
+    /// B/C: 디스크 캐시 → 번들 순서 fallback. 캐시 7일 stale 여부와 무관하게 디스크 우선.
+    private func fallbackToCache(endpoint: String) async -> Bool {
+        // B. 디스크 캐시
+        if endpoint == "courses", let cacheURL = diskCacheURL(endpoint: endpoint),
+           let data = try? Data(contentsOf: cacheURL) {
+            AppLogger.persistence.info("CourseRepository [\(endpoint)]: 디스크 캐시 사용")
+            await updateCourseCache(data: data, source: "disk-cache")
+            return false
+        }
+
+        // C. 번들 리소스 (이미 loadAll에서 처리되므로 여기서는 로그만)
+        AppLogger.persistence.info("CourseRepository [\(endpoint)]: 번들 리소스 fallback")
+        // D: 캐시/번들 모두 실패 시 현재 인메모리 상태 유지 (크래시 금지)
+        return false
+    }
+
+    /// 새 JSON 데이터로 인메모리 courses 캐시 업데이트.
+    private func updateCourseCache(data: Data, source: String) async {
+        do {
+            let dto = try JSONDecoder().decode(CourseDatasetDTO.self, from: data)
+            self.cache = dto.courses
+            AppLogger.persistence.info("CourseRepository: 캐시 갱신 (\(source)) — \(dto.courses.count)개 골프장")
+        } catch {
+            AppLogger.persistence.error("CourseRepository: JSON 파싱 실패 (\(source)) — \(error.localizedDescription)")
+        }
+    }
+
+    /// Bearer 토큰 로딩.
+    /// Info.plist → .api-keys.local 순서 (카카오 키 패턴과 동일).
+    private func bearerToken() -> String? {
+        // 1순위: Info.plist (빌드 타임 .xcconfig 주입)
+        if let token = Bundle.main.object(forInfoDictionaryKey: "ROUNDON_API_BEARER") as? String,
+           !token.isEmpty,
+           token != "$(ROUNDON_API_BEARER)" {
+            return token
+        }
+        // 2순위: .api-keys.local
+        let candidatePaths = [
+            Bundle.main.bundlePath + "/../../../../.api-keys.local",
+            Bundle.main.bundlePath + "/../../../../../.api-keys.local",
+        ]
+        for path in candidatePaths {
+            let url = URL(fileURLWithPath: path).standardized
+            if let content = try? String(contentsOf: url, encoding: .utf8) {
+                for line in content.components(separatedBy: .newlines) {
+                    let t = line.trimmingCharacters(in: .whitespaces)
+                    guard !t.hasPrefix("#"), t.contains("=") else { continue }
+                    let parts = t.components(separatedBy: "=")
+                    guard parts.count >= 2,
+                          parts[0].trimmingCharacters(in: .whitespaces) == "ROUNDON_API_BEARER" else { continue }
+                    let value = parts[1...].joined(separator: "=").trimmingCharacters(in: .whitespaces)
+                    return value.isEmpty ? nil : value
+                }
+            }
+        }
+        return nil
+    }
+
+    /// CoursesSyncMeta fetch or create (FetchDescriptor 조회 후 없으면 insert)
+    private func fetchOrCreateSyncMeta(endpoint: String, context: ModelContext) -> CoursesSyncMeta {
+        var descriptor = FetchDescriptor<CoursesSyncMeta>(
+            predicate: #Predicate { $0.endpoint == endpoint }
+        )
+        descriptor.fetchLimit = 1
+        if let existing = (try? context.fetch(descriptor))?.first {
+            return existing
+        }
+        let meta = CoursesSyncMeta(endpoint: endpoint)
+        context.insert(meta)
+        try? context.save()
+        return meta
+    }
+
+    private func writeDiskCache(data: Data, endpoint: String) {
+        guard let url = diskCacheURL(endpoint: endpoint) else { return }
+        let dir = url.deletingLastPathComponent()
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        try? data.write(to: url, options: .atomic)
+    }
+
+    private func diskCacheURL(endpoint: String) -> URL? {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("\(endpoint).cache.json")
     }
 
     /// 이름 prefix로 골프장 검색 (대소문자 무시, 한글 포함).

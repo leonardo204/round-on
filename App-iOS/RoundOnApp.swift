@@ -15,7 +15,8 @@ struct RoundOnApp: App {
             AppLogger.persistence.error("모든 ModelContainer 초기화 실패 — 인메모리 fallback 진입")
             let schema = Schema([
                 Round.self, Player.self, HoleScore.self,
-                PersistedDiscoveredCourse.self
+                PersistedDiscoveredCourse.self,
+                UserParOverride.self, CoursesSyncMeta.self
             ])
             // swiftlint:disable:next force_try
             self.modelContainer = try! ModelContainer(
@@ -31,7 +32,9 @@ struct RoundOnApp: App {
             Round.self,
             Player.self,
             HoleScore.self,
-            PersistedDiscoveredCourse.self  // 카카오 발견 골프장 영구 캐시 (신규)
+            PersistedDiscoveredCourse.self,  // 카카오 발견 골프장 영구 캐시
+            UserParOverride.self,             // 사용자 par 수정 영구 저장 (신규)
+            CoursesSyncMeta.self             // 원격 fetch 동기화 메타 (신규)
         ])
 
         // GolfCourse는 등록 안 함 (20-ARCHITECTURE §6 옵션 A — 번들 JSON 인메모리 로드)
@@ -80,6 +83,11 @@ struct RoundOnApp: App {
                 .modelContainer(modelContainer)
                 .onAppear {
                     AppLogger.app.info("RoundOn 앱 시작")
+                    // cold start 원격 fetch (7일 stale 기준, 라운드 진행 중 호출 금지)
+                    let context = modelContainer.mainContext
+                    Task {
+                        await CourseRepository.shared.fetchRemoteIfStale(context: context)
+                    }
                 }
         }
     }

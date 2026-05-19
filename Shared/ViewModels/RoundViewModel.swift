@@ -148,7 +148,7 @@ public final class RoundViewModel {
     ///   - courseName: 골프장 이름
     ///   - frontCourseName: 전반 9홀 코스 라벨 (예: "동코스"). nil이면 화면에서 "전반" 표시.
     ///   - backCourseName: 후반 9홀 코스 라벨 (예: "남코스"). 9홀 라운드면 nil.
-    ///   - backUnknown: 후반 코스를 모름으로 선택한 경우 — 전반 par prefill 후 후반은 par 4.
+    ///   - backTentative: 후반 코스를 "추후 결정"으로 잠정 배정한 경우 — 전반 다음 순번 코스 자동 배정.
     ///   - players: 참가 플레이어 목록
     ///   - holesCount: 9 또는 18만 허용. 그 외 값은 release 빌드에서도 안전 거부.
     public func startRound(
@@ -156,7 +156,7 @@ public final class RoundViewModel {
         courseName: String,
         frontCourseName: String? = nil,
         backCourseName: String? = nil,
-        backUnknown: Bool = false,
+        backTentative: Bool = false,
         players: [Player],
         holesCount: Int
     ) {
@@ -169,8 +169,20 @@ public final class RoundViewModel {
         // 9홀 라운드이면 backCourseName을 강제로 nil 처리 (UI 미리셋 누락 방어)
         let normalizedBack = (holesCount == 9) ? nil : backCourseName
 
+        // 잠정 배정: 전반 다음 순번 코스 자동 결정 (wrap-around)
+        let tentativeBackName: String?
+        if holesCount == 18 && backTentative {
+            tentativeBackName = deriveTentativeBackCourseName(courseId: courseId, frontCourseName: frontCourseName)
+            AppLogger.round.info("후반 잠정 배정: courseId=\(courseId) front=\(frontCourseName ?? "-") → tentative=\(tentativeBackName ?? "nil")")
+        } else {
+            tentativeBackName = nil
+        }
+
+        // 실제 사용할 후반 코스명 결정
+        let resolvedBack = backTentative ? tentativeBackName : normalizedBack
+
         // legacy courseSubName: displaySubLabel과 동기화 (18홀 front+back 모두 보존)
-        let legacyJoined = [frontCourseName, normalizedBack]
+        let legacyJoined = [frontCourseName, resolvedBack]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: " / ")
@@ -182,29 +194,21 @@ public final class RoundViewModel {
             // legacy courseSubName: front/back 합성 값으로 동기화 (displaySubLabel과 일치)
             courseSubName: legacySubName,
             frontCourseName: frontCourseName,
-            backCourseName: normalizedBack,
+            backCourseName: resolvedBack,
             players: players,
             startedAt: .now
         )
+        round.isBackTentative = backTentative && (tentativeBackName != nil)
 
-        // HoleScore 초기화 — 가능하면 CourseParsCatalog prefill, 없으면 par 4
+        // HoleScore 초기화 — CourseParsResolver (UserParOverride > CourseParsCatalog)
         let prefillPars: [Int]?
-        if holesCount == 18 && backUnknown {
-            // 후반 모름 선택: 전반 par prefill + 후반 par 4
-            if let frontPars = CourseParsCatalog.pars(for: courseId, subCourseName: frontCourseName),
-               frontPars.count == 9 {
-                prefillPars = frontPars + Array(repeating: 4, count: 9)
-                AppLogger.round.info("Par prefill 적용 (전반만): courseId=\(courseId) front=\(frontCourseName ?? "-") → \(frontPars) + [4×9]")
-            } else {
-                prefillPars = nil
-            }
-        } else if holesCount == 18 {
-            prefillPars = CourseParsCatalog.pars18(courseId: courseId, front: frontCourseName, back: normalizedBack)
+        if holesCount == 18 {
+            prefillPars = CourseParsResolver.pars18(courseId: courseId, front: frontCourseName, back: resolvedBack, context: modelContext)
             if let pp = prefillPars {
-                AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") back=\(normalizedBack ?? "-") → \(pp)")
+                AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") back=\(resolvedBack ?? "-") → \(pp)")
             }
         } else {
-            prefillPars = CourseParsCatalog.pars(for: courseId, subCourseName: frontCourseName)
+            prefillPars = CourseParsResolver.pars(courseId: courseId, subCourseName: frontCourseName, context: modelContext)
             if let pp = prefillPars {
                 AppLogger.round.info("Par prefill 적용: courseId=\(courseId) front=\(frontCourseName ?? "-") → \(pp)")
             }
@@ -228,10 +232,10 @@ public final class RoundViewModel {
 
         // par prefill 성공 시 토스트 메시지 세팅 (ActiveRoundView에서 소비)
         if let pp = prefillPars, pp.count == holesCount {
-            if holesCount == 18 && backUnknown {
-                let frontLabel = frontCourseName.map { "\($0) " } ?? ""
-                lastPrefillToastMessage = "\(frontLabel)전반 par 자동 설정 완료"
-            } else if let front = frontCourseName, let back = normalizedBack {
+            if backTentative, let tentative = tentativeBackName {
+                let frontLabel = frontCourseName.map { "\($0)/" } ?? ""
+                lastPrefillToastMessage = "\(frontLabel)\(tentative) par 자동 설정 (후반 잠정)"
+            } else if let front = frontCourseName, let back = resolvedBack {
                 lastPrefillToastMessage = "\(front)/\(back) par 자동 설정 완료"
             } else if let front = frontCourseName {
                 lastPrefillToastMessage = "\(front) par 자동 설정 완료"
@@ -303,10 +307,16 @@ public final class RoundViewModel {
         // courseName 필드 업데이트
         switch half {
         case .front: round.frontCourseName = newSubCourseName
-        case .back:  round.backCourseName = newSubCourseName
+        case .back:
+            round.backCourseName = newSubCourseName
+            // 후반 코스를 수동 변경하면 잠정 상태 해제
+            if round.isBackTentative {
+                round.isBackTentative = false
+                AppLogger.round.info("후반 잠정 상태 해제: 수동 변경 → \(newSubCourseName)")
+            }
         }
-        // 새 9홀 par 조회
-        let pars = CourseParsCatalog.pars(for: round.courseId, subCourseName: newSubCourseName)
+        // 새 9홀 par 조회 (CourseParsResolver: UserParOverride 우선)
+        let pars = CourseParsResolver.pars(courseId: round.courseId, subCourseName: newSubCourseName, context: modelContext)
         if let pars = pars, pars.count == 9 {
             let range = (half == .front) ? (1...9) : (10...18)
             for hole in round.holeList where range.contains(hole.holeNumber) {
@@ -322,7 +332,31 @@ public final class RoundViewModel {
         emitSnapshot()  // Watch sync
     }
 
-    /// 홀의 par 변경 (3/4/5만 허용). 변경 시 RoundSnapshot 재전송.
+    /// 후반 코스 잠정 확인 — "맞아요"를 선택했을 때 호출.
+    /// isBackTentative를 false로 클리어하고 저장 + Watch sync.
+    public func confirmBackCourse() {
+        guard let round = currentRound else { return }
+        round.isBackTentative = false
+        save()
+        emitSnapshot()
+        AppLogger.round.info("후반 잠정 코스 확인됨: \(round.backCourseName ?? "-", privacy: .private)")
+    }
+
+    // MARK: - Private helpers
+
+    /// 전반 코스 다음 순번의 서브코스를 자동 배정 (wrap-around).
+    /// 예: [A, B, C]에서 front=A이면 → B. front=C이면 → A.
+    /// 매칭 실패(front가 nil 또는 목록에 없음)이면 첫 번째 코스 반환.
+    private func deriveTentativeBackCourseName(courseId: String, frontCourseName: String?) -> String? {
+        let subs = CourseParsCatalog.subCourseNames(for: courseId)
+        guard !subs.isEmpty else { return nil }
+        guard let front = frontCourseName, let idx = subs.firstIndex(of: front) else {
+            return subs.first  // 전반 미지정 또는 매칭 실패 → 첫 코스
+        }
+        return subs[(idx + 1) % subs.count]  // wrap-around
+    }
+
+    /// 홀의 par 변경 (3/4/5만 허용). 변경 시 RoundSnapshot 재전송 + UserParOverride upsert.
     public func setPar(holeNumber: Int, par: Int) {
         guard [3, 4, 5].contains(par) else { return }
         guard let round = currentRound else { return }
@@ -333,6 +367,57 @@ public final class RoundViewModel {
         save()
         scoreCardViewModel?.refresh(from: round)
         emitSnapshot()  // par 변경은 snapshot으로 전체 동기화
+
+        // UserParOverride upsert — 같은 서브코스의 9홀 par를 취합해 저장
+        upsertParOverride(round: round, changedHoleNumber: holeNumber)
+    }
+
+    /// 라운드 중 par 변경 시 서브코스 단위(9홀) UserParOverride를 upsert한다.
+    /// - 같은 서브코스 내 변경되지 않은 홀은 현재 HoleScore.par 값 유지
+    /// - composite key (courseId|subCourseName) 으로 기존 레코드 갱신 또는 신규 insert
+    private func upsertParOverride(round: Round, changedHoleNumber: Int) {
+        // 서브코스 이름 결정 (홀 번호 기준: 1-9=front, 10-18=back)
+        let isBack = changedHoleNumber >= 10
+        let subCourseName: String
+        if isBack {
+            subCourseName = round.backCourseName ?? round.frontCourseName ?? ""
+        } else {
+            subCourseName = round.frontCourseName ?? ""
+        }
+
+        // 9홀 범위 결정
+        let range = isBack ? (10...18) : (1...9)
+        let holes = round.holeList.filter { range.contains($0.holeNumber) }
+            .sorted { $0.holeNumber < $1.holeNumber }
+        guard holes.count == 9 else { return }
+        let pars = holes.map { $0.par }
+
+        // FetchDescriptor로 기존 레코드 조회 (로컬 변수로 predicate 캡처)
+        let courseIdCopy = round.courseId
+        let roundId = round.id
+        var descriptor = FetchDescriptor<UserParOverride>(
+            predicate: #Predicate { $0.courseId == courseIdCopy && $0.subCourseName == subCourseName },
+            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        let existing = (try? modelContext.fetch(descriptor))?.first
+
+        if let override = existing {
+            override.pars = pars
+            override.updatedAt = .now
+            override.roundIdLast = roundId
+        } else {
+            let override = UserParOverride(
+                courseId: courseIdCopy,
+                subCourseName: subCourseName,
+                pars: pars,
+                updatedAt: .now,
+                roundIdLast: roundId
+            )
+            modelContext.insert(override)
+        }
+        try? modelContext.save()
+        AppLogger.persistence.info("UserParOverride upsert: courseId=\(courseIdCopy) sub=\(subCourseName) pars=\(pars)")
     }
 
     /// 라운드 폐기 (저장 없이 영구 삭제)

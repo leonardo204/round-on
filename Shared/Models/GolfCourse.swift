@@ -113,22 +113,48 @@ public struct SubCourse: Codable, Sendable, Identifiable {
 // MARK: - DataQuality
 
 /// 데이터 품질 등급. F3 GPS 자동 감지 활성 여부 결정에 사용.
-/// - complete : 홀별 tee/green 좌표 완비 → GPS 자동 감지 가능
-/// - partial  : 일부 홀 좌표 보유
-/// - minimal  : 클럽하우스 + 일부 메타데이터
-/// - low      : 클럽하우스 좌표만 (v3 전체의 약 98%)
-/// - unknown  : 파싱 실패 fallback
+/// - complete      : 홀별 tee/green 좌표 완비 → GPS 자동 감지 가능
+/// - partial       : 일부 홀 좌표 보유
+/// - minimal       : 클럽하우스 + 일부 메타데이터
+/// - low           : 클럽하우스 좌표만 (v3 전체의 약 98%)
+/// - unknown       : 파싱 실패 fallback
+/// - verified      : 골프존 par 검증 완료
+/// - metadataOnly  : 메타데이터 + 좌표만 (par 데이터 없음)
+/// - userDiscovered: 카카오 API로 사용자가 직접 발견한 코스
 public enum DataQuality: String, Codable, Sendable {
     case complete
     case partial
     case minimal
     case low
     case unknown
+    case verified        // 신규 — 골프존 par 검증
+    case metadataOnly    // 신규 — 메타+좌표만
+    case userDiscovered  // 신규 — 카카오 발견
 
     // 알 수 없는 rawValue → .unknown으로 안전 fallback
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let raw = try container.decode(String.self)
         self = DataQuality(rawValue: raw) ?? .unknown
+    }
+}
+
+// MARK: - GolfCourse computed helpers
+
+public extension GolfCourse {
+    /// par 데이터 신뢰 여부. verified 또는 complete이면 true.
+    var hasReliablePars: Bool {
+        dataQuality == .verified || dataQuality == .complete
+    }
+
+    /// GPS 자동 감지 지원 여부.
+    /// 클럽하우스 좌표가 있고 par 신뢰 등급이면 true.
+    var supportsGPSAutoDetect: Bool {
+        clubhouse != nil && hasReliablePars
+    }
+
+    /// 사용자가 직접 발견한 코스 여부.
+    var isUserDerived: Bool {
+        dataQuality == .userDiscovered
     }
 }

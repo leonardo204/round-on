@@ -108,26 +108,27 @@ private struct OwnerHoleContentView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Par \(par). 탭하여 \(par == 3 ? 4 : (par == 4 ? 5 : 3))로 변경")
 
-                // 코스 수정 버튼 — 탭하면 picker sheet
+                // 코스 수정 버튼 — 탭하면 picker sheet. 후반 잠정 시 노란 배경으로 구분.
                 if let round = roundVM.currentRound {
                     let subs = CourseParsCatalog.subCourseNames(for: round.courseId)
                     if subs.count >= 2 {
                         let isBack = holeNumber > 9
                         let cur = isBack ? round.backCourseName : round.frontCourseName
+                        let isTentative = isBack && round.isBackTentative
                         Button {
                             showCoursePicker = true
                         } label: {
-                            Text(cur ?? "코스 수정")
+                            Text(isTentative ? "잠정: \(cur ?? "-")" : (cur ?? "코스 수정"))
                                 .font(.system(size: 10, weight: .medium))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(isTentative ? Color.orange : .white)
                                 .padding(.horizontal, 5)
                                 .padding(.vertical, 2)
-                                .background(Color.green, in: Capsule())
+                                .background(isTentative ? Color.orange.opacity(0.25) : Color.green, in: Capsule())
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.7)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("코스 수정. 현재: \(cur ?? "미선택")")
+                        .accessibilityLabel(isTentative ? "잠정 코스 수정. 현재: \(cur ?? "미선택")" : "코스 수정. 현재: \(cur ?? "미선택")")
                         .sheet(isPresented: $showCoursePicker) {
                             CoursePickerSheet(
                                 round: round,

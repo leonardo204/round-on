@@ -82,6 +82,8 @@ targets:
         # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
         # CI/CD 또는 Xcode Cloud 배포 시 시크릿 환경변수로 대체
         KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
+        # Worker /v1/courses Bearer 토큰
+        ROUNDON_API_BEARER: $(ROUNDON_API_BEARER)
 
   RoundOn-Watch:
     type: application

@@ -14,6 +14,12 @@ struct ActiveRoundView: View {
     @State private var bannerMessage: String?
     @State private var prefillToastMessage: String?
 
+    // 10홀 진입 시 잠정 코스 확인 팝업
+    @State private var showBackCoursePrompt = false
+    @State private var backCoursePrompted = false
+    // 코스 변경 sheet (후반 잠정 확인 → 수정 경로)
+    @State private var showCourseChangeSheet = false
+
     @AppStorage(PenaltySettings.Key.activeRoundMode) private var activeMode: String = PenaltySettings.Default.activeRoundMode
     @AppStorage(PenaltySettings.Key.obDelta) private var obDelta: Int = PenaltySettings.Default.obDelta
     @AppStorage(PenaltySettings.Key.hazardDelta) private var hazardDelta: Int = PenaltySettings.Default.hazardDelta
@@ -78,6 +84,32 @@ struct ActiveRoundView: View {
                     try? await Task.sleep(for: .seconds(1.5))
                     withAnimation { prefillToastMessage = nil }
                 }
+            }
+            .onChange(of: holeVM?.currentHoleNumber) { _, newHole in
+                // 10홀 첫 진입 시 잠정 코스 확인 팝업 (1회만)
+                guard let hole = newHole, hole == 10,
+                      roundVM.currentRound?.isBackTentative == true,
+                      !backCoursePrompted else { return }
+                showBackCoursePrompt = true
+            }
+            .alert("후반 코스 확인", isPresented: $showBackCoursePrompt) {
+                Button("맞아요") {
+                    roundVM.confirmBackCourse()
+                    backCoursePrompted = true
+                }
+                Button("수정할게요") {
+                    backCoursePrompted = true
+                    showCourseChangeSheet = true
+                }
+            } message: {
+                if let back = roundVM.currentRound?.backCourseName {
+                    Text("후반 코스가 '\(back)'(으)로 설정되어 있어요. 이 코스가 맞나요?")
+                } else {
+                    Text("후반 코스를 확인해주세요.")
+                }
+            }
+            .sheet(isPresented: $showCourseChangeSheet) {
+                backCourseChangeSheet
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -146,7 +178,27 @@ struct ActiveRoundView: View {
                     Text(roundVM.currentRound?.courseName ?? "")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color.springTextPrimary)
-                    if let subLabel = roundVM.currentRound?.displaySubLabel {
+                    // 후반 잠정 badge 또는 일반 서브라벨
+                    if roundVM.currentRound?.isBackTentative == true,
+                       let backName = roundVM.currentRound?.backCourseName {
+                        HStack(spacing: 4) {
+                            if let front = roundVM.currentRound?.frontCourseName {
+                                Text(front)
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(Color.springTextSecondary)
+                                Text("/")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(Color.springTextSecondary)
+                            }
+                            Text("잠정: \(backName)")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(Color.orange)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.orange.opacity(0.15))
+                                .clipShape(Capsule())
+                        }
+                    } else if let subLabel = roundVM.currentRound?.displaySubLabel {
                         Text(subLabel)
                             .font(.system(size: 13))
                             .foregroundStyle(Color.springTextSecondary)
@@ -466,6 +518,47 @@ struct ActiveRoundView: View {
             }
         }
         .presentationDetents([.fraction(0.4)])
+    }
+
+    // MARK: Back Course Change Sheet (잠정 코스 수정용)
+
+    @ViewBuilder
+    private var backCourseChangeSheet: some View {
+        if let round = roundVM.currentRound {
+            let courseId = round.courseId
+            let subs = CourseParsCatalog.subCourseNames(for: courseId)
+            NavigationStack {
+                List {
+                    Section("후반 코스 선택") {
+                        ForEach(subs, id: \.self) { name in
+                            let isCurrent = round.backCourseName == name
+                            Button {
+                                roundVM.changeSubCourse(half: .back, to: name)
+                                showCourseChangeSheet = false
+                            } label: {
+                                HStack {
+                                    Text(name)
+                                        .foregroundStyle(isCurrent ? Color.springGreenPrimary : Color.springTextPrimary)
+                                    Spacer()
+                                    if isCurrent {
+                                        Image(systemName: "checkmark")
+                                            .foregroundStyle(Color.springGreenPrimary)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .navigationTitle("후반 코스 수정")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("취소") { showCourseChangeSheet = false }
+                    }
+                }
+            }
+            .presentationDetents([.medium])
+        }
     }
 
     // MARK: Mode toggle (보기 / 입력)

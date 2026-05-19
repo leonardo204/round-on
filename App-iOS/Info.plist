@@ -22,6 +22,8 @@
 	<string>1</string>
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
+	<key>ROUNDON_API_BEARER</key>
+	<string>$(ROUNDON_API_BEARER)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>라운드 사진을 첨부하여 공유 viewer에 포함할 수 있습니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
