@@ -28,6 +28,7 @@
 		2F30D70BCEC9F96E424F4E1D /* GolfCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C203EFDBD24AB1F09291328 /* GolfCourse.swift */; };
 		30A75A43FED855C21E53232D /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; };
 		3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AA5181B0AC6CA697186AC2 /* StatsView.swift */; };
+		350ED9CB2AB111214A132133 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D34CB04D33E89E3E2B9853 /* SafariView.swift */; };
 		35330D84B85CE0EAFF1C6225 /* Color+WatchColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */; };
 		36DDEDE8C4BF65E47A8E182A /* PenaltySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */; };
 		383CC5C843D177D65E5EE583 /* CourseParsResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1124F748810A59153C4B40DB /* CourseParsResolver.swift */; };
@@ -88,6 +89,7 @@
 		9613145FEE984F837E36F075 /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178DEE19966BE7071D4D2287 /* PenaltyButton.swift */; };
 		9AF4F7644F80C690F0A1C5A8 /* HoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49302CB886665828D6966CF2 /* HoleInfo.swift */; };
 		9DA722260EE9AD51841D5D38 /* NewRoundDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328B7409441442909D75CE09 /* NewRoundDraft.swift */; };
+		9F01CAE00F8692F31BE53447 /* AllRoundsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726E7EF39F0F1C22851AB9D /* AllRoundsView.swift */; };
 		9FF481C2DA4735C05099C476 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */; };
 		A4911A665D5AE576C963F82D /* GolfCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C203EFDBD24AB1F09291328 /* GolfCourse.swift */; };
 		A5DD7E023BDFC4455A4D2AFE /* RoundDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */; };
@@ -248,6 +250,7 @@
 		3EB1519F15CB865DEA48F1D8 /* Haversine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haversine.swift; sourceTree = "<group>"; };
 		42986E42065FED896B713847 /* CoursePars */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CoursePars; path = Shared/Resources/CoursePars; sourceTree = SOURCE_ROOT; };
 		469A2B894F35A244DC5B16EA /* WCBroker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCBroker.swift; sourceTree = "<group>"; };
+		4726E7EF39F0F1C22851AB9D /* AllRoundsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRoundsView.swift; sourceTree = "<group>"; };
 		477CCAE0392D2D63F49A7977 /* KakaoVerificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoVerificationServiceTests.swift; sourceTree = "<group>"; };
 		49302CB886665828D6966CF2 /* HoleInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleInfo.swift; sourceTree = "<group>"; };
 		4C203EFDBD24AB1F09291328 /* GolfCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfCourse.swift; sourceTree = "<group>"; };
@@ -297,6 +300,7 @@
 		A5BF69E3C181D9405358D0FC /* SyncCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinatorTests.swift; sourceTree = "<group>"; };
 		A67F5A9716DF43BC037C82FD /* HoleProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleProgress.swift; sourceTree = "<group>"; };
 		A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoleViewModel.swift; sourceTree = "<group>"; };
+		A7D34CB04D33E89E3E2B9853 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		AC043DB752CF9F5CC38601DB /* HapticEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEngine.swift; sourceTree = "<group>"; };
 		AC66E53654897E7FB3267E75 /* KakaoVerificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoVerificationService.swift; sourceTree = "<group>"; };
 		AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
@@ -322,7 +326,7 @@
 		F6A2B4BCF4A4450819726C61 /* CourseRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepository.swift; sourceTree = "<group>"; };
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
-		"TEMP_AF6D7AD5-AD5C-46DC-BAE3-FF9067948A57" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_A60A2188-5D40-4429-A9CF-92873F0F6A79" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -601,10 +605,12 @@
 			isa = PBXGroup;
 			children = (
 				F31B2548CE1454A51A3B7C61 /* ActiveRoundView.swift */,
+				4726E7EF39F0F1C22851AB9D /* AllRoundsView.swift */,
 				E6F03B2BB0667E31677AC402 /* HomeView.swift */,
 				1545EDCE02FB42A61FB4EB3B /* NewRoundView.swift */,
 				7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */,
 				94A3913330580DF5181D0D64 /* RoundSummaryView.swift */,
+				A7D34CB04D33E89E3E2B9853 /* SafariView.swift */,
 				1B927F0B15DD49B8664A4773 /* SettingsView.swift */,
 				AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */,
 				11AA5181B0AC6CA697186AC2 /* StatsView.swift */,
@@ -696,10 +702,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_815467CA-F0F7-41ED-8E03-7190D9B36600" /* golfCounter */ = {
+		"TEMP_B4141A4C-C166-4B94-9D5A-EB107E6AA394" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_AF6D7AD5-AD5C-46DC-BAE3-FF9067948A57" /* Secrets.xcconfig */,
+				"TEMP_A60A2188-5D40-4429-A9CF-92873F0F6A79" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1019,6 +1025,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E429984813CD4AA2C6039CC /* ActiveRoundView.swift in Sources */,
+				9F01CAE00F8692F31BE53447 /* AllRoundsView.swift in Sources */,
 				FFAD3DDC5CA2B717FE295249 /* ContentView.swift in Sources */,
 				4FDA85BC4A8979749CA27362 /* CourseAddressResolver.swift in Sources */,
 				BDC46F454887437ABDD4CCF4 /* CourseDiscoveryService.swift in Sources */,
@@ -1034,6 +1041,7 @@
 				4D2E191EF28B8326E0AE183F /* RoundOnApp.swift in Sources */,
 				85FC47B97FC1625737C64876 /* RoundSummaryView.swift in Sources */,
 				904AE64B2AF0234F4814A01C /* RoundViewModel+Workout.swift in Sources */,
+				350ED9CB2AB111214A132133 /* SafariView.swift in Sources */,
 				93C68F0692C9576ADBB09EC6 /* ScoreCell.swift in Sources */,
 				7701E1314E19BA5640CB8313 /* SettingsView.swift in Sources */,
 				BBFB1BF83C16FBF9120338B6 /* ShareAPIClient.swift in Sources */,
@@ -1183,7 +1191,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_AF6D7AD5-AD5C-46DC-BAE3-FF9067948A57" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_A60A2188-5D40-4429-A9CF-92873F0F6A79" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1206,7 +1214,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_AF6D7AD5-AD5C-46DC-BAE3-FF9067948A57" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_A60A2188-5D40-4429-A9CF-92873F0F6A79" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";

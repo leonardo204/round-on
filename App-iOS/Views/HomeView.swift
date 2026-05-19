@@ -18,6 +18,7 @@ struct HomeView: View {
     @State private var showResumeNewRound = false  // draft 복원 모드
     @State private var showStats = false
     @State private var showSettings = false
+    @State private var showAllRounds = false
     @State private var selectedRound: Round?
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @State private var pendingDraft: NewRoundDraft?  // 홈에 표시될 hint banner
@@ -79,6 +80,16 @@ struct HomeView: View {
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button("닫기") { showSettings = false }
+                        }
+                    }
+            }
+        }
+        .fullScreenCover(isPresented: $showAllRounds) {
+            NavigationStack {
+                AllRoundsView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button("닫기") { showAllRounds = false }
                         }
                     }
             }
@@ -188,6 +199,11 @@ struct HomeView: View {
 
             HStack(spacing: 6) {
                 Button {
+                    showAllRounds = true
+                } label: {
+                    navActionIconSF("list.bullet", label: "전체 라운드")
+                }
+                Button {
                     showStats = true
                 } label: {
                     navActionIcon("trending_up", label: "통계")
@@ -205,6 +221,19 @@ struct HomeView: View {
     }
 
     // MARK: - Nav action icon (36×36 원형 그레이 배경)
+
+    /// SF Symbol 버전 (asset bundle 없이 systemName 직접 사용)
+    private func navActionIconSF(_ systemName: String, label: String) -> some View {
+        ZStack {
+            Circle()
+                .fill(Color(.systemFill))
+            Image(systemName: systemName)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.tint)
+        }
+        .frame(width: 36, height: 36)
+        .accessibilityLabel(label)
+    }
 
     private func navActionIcon(_ assetName: String, label: String) -> some View {
         ZStack {
@@ -237,8 +266,8 @@ struct HomeView: View {
                         .padding(.bottom, 8)
                 }
 
-                sectionHeaderWithAction("최근 라운드", actionLabel: rounds.count > 5 ? "전체 보기" : nil) {
-                    showStats = true
+                sectionHeaderWithAction("최근 라운드", actionLabel: rounds.count > 3 ? "전체 보기" : nil) {
+                    showAllRounds = true
                 }
                 recentList
                     .padding(.horizontal, 16)
@@ -482,8 +511,9 @@ struct HomeView: View {
     // MARK: - Recent list
 
     private var recentList: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(rounds.prefix(5).enumerated()), id: \.element.id) { idx, round in
+        let recentItems = Array(rounds.prefix(3))
+        return VStack(spacing: 0) {
+            ForEach(Array(recentItems.enumerated()), id: \.element.id) { idx, round in
                 Button {
                     selectedRound = round
                 } label: {
@@ -491,7 +521,7 @@ struct HomeView: View {
                 }
                 .buttonStyle(.plain)
 
-                if idx < min(rounds.count, 5) - 1 {
+                if idx < recentItems.count - 1 {
                     Divider()
                         .padding(.leading, 70)
                 }

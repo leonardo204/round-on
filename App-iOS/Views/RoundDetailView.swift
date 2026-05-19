@@ -24,6 +24,8 @@ struct RoundDetailView: View {
     @State private var showDeleteConfirm = false
     @State private var bannerMessage: String?
     @State private var bannerSeverity: BannerNotice.Severity = .info
+    @State private var showSafari = false
+    @State private var showCopyToast = false
 
     // F7 편집 모드
     @State private var isEditMode = false
@@ -180,53 +182,69 @@ struct RoundDetailView: View {
     private var shareLinkSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionLabel("공유 링크")
-            .padding(.horizontal, 16)
+                .padding(.horizontal, 16)
 
             if let url = round.sharedURL, round.sharedShortId != nil {
-                VStack(spacing: 8) {
-                    HStack(spacing: 10) {
+                VStack(spacing: 10) {
+                    // URL 텍스트 표시
+                    HStack {
                         Text(url)
                             .font(.system(size: 13, design: .monospaced))
                             .foregroundStyle(Color.springGreenPrimary)
                             .lineLimit(1)
                             .truncationMode(.middle)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 14)
+                    .padding(.bottom, 4)
 
-                        Spacer()
+                    // 3-아이콘 행
+                    HStack(spacing: 0) {
+                        // 바로보기
+                        shareActionButton(
+                            icon: "safari",
+                            label: "바로보기",
+                            tintColor: Color.springGreenPrimary
+                        ) {
+                            showSafari = true
+                            AppLogger.share.info("[RoundDetail] 바로보기: \(url)")
+                        }
 
-                        // 복사 버튼
-                        Button {
+                        Divider().frame(height: 44)
+
+                        // 복사
+                        shareActionButton(
+                            icon: "link",
+                            label: "복사",
+                            tintColor: Color.springGreenPrimary
+                        ) {
                             UIPasteboard.general.string = url
-                            bannerMessage = "링크를 복사했어요."
-                            bannerSeverity = .success
                             AppLogger.share.info("[RoundDetail] 링크 복사: \(url)")
                             Task { await HapticEngine.shared.play(.shareSuccess) }
-                        } label: {
-                            Image(systemName: "doc.on.doc")
-                                .font(.system(size: 16))
-                                .foregroundStyle(Color.springGreenPrimary)
-                                .frame(width: 36, height: 36)
-                                .background(Color.springGreenSecondary.opacity(0.25), in: Circle())
+                            withAnimation {
+                                showCopyToast = true
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                withAnimation { showCopyToast = false }
+                            }
                         }
-                        .accessibilityLabel("링크 복사")
 
-                        // 공유 버튼 (UIActivityViewController)
-                        Button {
+                        Divider().frame(height: 44)
+
+                        // 공유
+                        shareActionButton(
+                            icon: "square.and.arrow.up",
+                            label: "공유",
+                            tintColor: Color.springGreenPrimary
+                        ) {
                             if let u = URL(string: url) {
-                                AppLogger.share.info("[RoundDetail] 시스템 공유 시트 호출: \(url)")
+                                AppLogger.share.info("[RoundDetail] 시스템 공유 시트: \(url)")
                                 presentActivitySheet(url: u)
                             }
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
-                                .font(.system(size: 16))
-                                .foregroundStyle(.white)
-                                .frame(width: 36, height: 36)
-                                .background(Color.springGreenPrimary, in: Circle())
                         }
-                        .accessibilityLabel("공유")
                     }
-                    .padding(16)
-                    .background(Color.springSurfaceElevated)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 14)
 
                     // 만료일
                     if let expiresAt = round.sharedExpiresAt {
@@ -241,10 +259,27 @@ struct RoundDetailView: View {
                                 .font(.system(size: 12))
                                 .foregroundStyle(expired ? .red : Color.springTextSecondary)
                         }
-                        .padding(.horizontal, 4)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 8)
                     }
                 }
+                .background(Color.springSurfaceElevated)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
                 .padding(.horizontal, 16)
+                .overlay(alignment: .bottom) {
+                    if showCopyToast {
+                        copyToast
+                            .offset(y: -12)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                }
+                .sheet(isPresented: $showSafari) {
+                    if let u = URL(string: url) {
+                        SafariView(url: u)
+                            .ignoresSafeArea()
+                    }
+                }
             } else {
                 Text("아직 공유하지 않았어요.")
                     .font(.system(size: 14))
@@ -252,6 +287,34 @@ struct RoundDetailView: View {
                     .padding(.horizontal, 16)
             }
         }
+    }
+
+    private func shareActionButton(icon: String, label: String, tintColor: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(tintColor)
+                Text(label)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(tintColor)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+    }
+
+    private var copyToast: some View {
+        Text("링크 복사됨")
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Color.springGreenPrimary.opacity(0.95), in: Capsule())
+            .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 2)
     }
 
     // MARK: Score Section
