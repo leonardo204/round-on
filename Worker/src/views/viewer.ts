@@ -65,7 +65,19 @@ function renderScorecardHalf(
         const score = hole.scores.find((s) => s.playerId === player.id);
         return acc + (score?.shots ?? 0);
       }, 0);
-      const sumDisplay = sum > 0 ? `<strong>${sum}</strong>` : "—";
+
+      let sumDisplay: string;
+      if (sum === 0) {
+        sumDisplay = "—";
+      } else {
+        const diff = sum - parTotal;
+        let diffLabel: string;
+        let diffClass: string;
+        if (diff === 0) { diffLabel = "E"; diffClass = "even"; }
+        else if (diff > 0) { diffLabel = `+${diff}`; diffClass = "over"; }
+        else { diffLabel = `${diff}`; diffClass = "under"; }
+        sumDisplay = `<strong>${sum}</strong><br><span class="col-sum-diff ${diffClass}">${diffLabel}</span>`;
+      }
 
       return `<tr>
         <td class="col-label">${escapeHtml(player.name)}</td>
@@ -108,20 +120,29 @@ function renderHero(holes: Hole[], players: Player[]): string {
         const score = hole.scores.find((s) => s.playerId === player.id);
         return acc + (score?.shots ?? 0);
       }, 0);
-      const diff = sum - totalPar;
-      let diffLabel = "—";
-      let diffClass = "even";
-      if (sum > 0) {
-        if (diff === 0) { diffLabel = "E"; diffClass = "even"; }
-        else if (diff > 0) { diffLabel = `+${diff}`; diffClass = "over"; }
-        else { diffLabel = `${diff}`; diffClass = "under"; }
+
+      if (sum === 0) {
+        return `
+        <div class="player-block">
+          <div class="p-name">${escapeHtml(player.name)}</div>
+          <div class="p-total">—</div>
+          <div class="p-vs-par even">—</div>
+        </div>`;
       }
-      const sumDisplay = sum > 0 ? `${sum}` : "—";
+
+      const diff = sum - totalPar;
+      let diffLabel: string;
+      let diffClass: string;
+      if (diff === 0) { diffLabel = "E"; diffClass = "even"; }
+      else if (diff > 0) { diffLabel = `+${diff}`; diffClass = "over"; }
+      else { diffLabel = `${diff}`; diffClass = "under"; }
+
+      // 친 타수 + par-diff를 한 줄로: "110 (+38)"
       return `
         <div class="player-block">
           <div class="p-name">${escapeHtml(player.name)}</div>
-          <div class="p-total">${sumDisplay}</div>
-          <div class="p-vs-par ${diffClass}">${diffLabel}</div>
+          <div class="p-total">${sum} <span class="p-diff ${diffClass}">(${diffLabel})</span></div>
+          <div class="p-vs-par">par ${totalPar}</div>
         </div>`;
     })
     .join("");
@@ -288,13 +309,27 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     .p-total {
       font-size: 30px; font-weight: 800; margin-top: 4px;
       font-feature-settings: 'tnum'; color: var(--text-1);
+      line-height: 1.1;
     }
+    /* par-diff 인라인 스팬: "(+38)" */
+    .p-diff {
+      font-size: 16px; font-weight: 700;
+    }
+    .p-diff.under { color: var(--green-primary); }
+    .p-diff.even  { color: var(--text-2); }
+    .p-diff.over  { color: var(--red-text); }
+    /* "par 72" 부연 표시 */
     .p-vs-par {
-      font-size: 13px; font-weight: 600; margin-top: 2px;
+      font-size: 12px; font-weight: 500; margin-top: 4px;
+      color: var(--text-3);
     }
-    .p-vs-par.under { color: var(--green-primary); }
-    .p-vs-par.even  { color: var(--text-2); }
-    .p-vs-par.over  { color: var(--red-text); }
+    /* score-table 합계 셀 하단 par-diff */
+    .col-sum-diff {
+      font-size: 10px; font-weight: 600;
+    }
+    .col-sum-diff.under { color: var(--green-primary); }
+    .col-sum-diff.even  { color: var(--text-2); }
+    .col-sum-diff.over  { color: var(--red-text); }
 
     /* ── 스코어카드 영역 ───────────────────────────────────────────── */
     main { padding: 0 16px; }
