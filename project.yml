@@ -23,6 +23,9 @@ targets:
         type: folder                 # JSON 파일을 bundle 내 폴더 그대로 유지
     info:
       path: Shared/Info.plist
+    configFiles:
+      Debug: Secrets.xcconfig
+      Release: Secrets.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.shared
@@ -85,6 +88,27 @@ targets:
         # Worker /v1/courses Bearer 토큰
         ROUNDON_API_BEARER: $(ROUNDON_API_BEARER)
 
+  RoundOn-Watch-Complication:
+    type: app-extension
+    platform: watchOS
+    deploymentTarget: "10.0"
+    sources:
+      - path: App-Watch-Complication
+    info:
+      path: App-Watch-Complication/Info.plist
+      properties:
+        CFBundleDisplayName: RoundOn Complication
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.watchkitapp.complication
+        CODE_SIGN_STYLE: Automatic
+        SDKROOT: watchos
+        INFOPLIST_FILE: App-Watch-Complication/Info.plist
+        ENABLE_DEBUG_DYLIB: NO
+        ENABLE_DEBUG_DYLIB_OVERRIDE: NO
+
   RoundOn-Watch:
     type: application
     platform: watchOS
@@ -93,6 +117,9 @@ targets:
       - path: App-Watch
     dependencies:
       - target: Shared-Watch
+        embed: true
+        codeSign: true
+      - target: RoundOn-Watch-Complication
         embed: true
         codeSign: true
     settings:
@@ -125,6 +152,10 @@ targets:
       # KakaoVerificationService / CourseDiscoveryService 직접 테스트를 위해 소스 포함
       - path: App-iOS/Network/KakaoVerificationService.swift
       - path: App-iOS/Network/CourseDiscoveryService.swift
+    # 이미지 기반 OCR 테스트용 샘플 번들 리소스 (sources가 아닌 resources로 등록)
+    resources:
+      - path: Tests/SharedTests/Resources/samples
+        type: folder
     info:
       path: Tests/SharedTests/Info.plist
       properties:

@@ -13,10 +13,6 @@ struct SettingsView: View {
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @State private var iCloudLoggedIn: Bool = false
 
-    // 라운드 불러오기
-    @State private var showImport = false
-    @State private var showImportHelp = false
-
     // DB 업데이트 상태
     @State private var dbUpdateState: DBUpdateState = .idle
     private enum DBUpdateState: Equatable {
@@ -63,26 +59,12 @@ struct SettingsView: View {
                 Text("앱 실행 시 자동으로 최신 골프장 정보를 확인합니다. 수동으로 즉시 갱신하려면 버튼을 탭하세요.")
             }
 
-            Section {
-                importRow
-            } header: {
-                Text("라운드 불러오기")
-            } footer: {
-                Text("스마트스코어 등 앱의 스코어카드 사진을 분석해 라운드 기록으로 저장합니다. 기기 내 OCR 처리 — 외부 전송 없음.")
-            }
-
             Section("정보") {
                 LabeledContent("앱 버전", value: appVersionText)
             }
         }
         .navigationTitle("설정")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showImport) {
-            ScorecardImportView()
-        }
-        .sheet(isPresented: $showImportHelp) {
-            ImportHelpView()
-        }
         .task {
             refreshLocationStatus()
             refreshICloudStatus()
@@ -325,38 +307,6 @@ struct SettingsView: View {
             try? await Task.sleep(nanoseconds: 3_000_000_000)
             dbUpdateState = .idle
         }
-    }
-
-    // MARK: - Import row
-
-    private var importRow: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "photo.badge.arrow.down")
-                .font(.system(size: 17))
-                .foregroundStyle(.tint)
-                .frame(width: 24)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("라운드 불러오기 (이미지)")
-                    .font(.body)
-                Text("스코어카드 사진 → OCR 자동 인식")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-
-            Button {
-                showImportHelp = true
-            } label: {
-                Image(systemName: "questionmark.circle")
-                    .foregroundStyle(.secondary)
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(.vertical, 4)
-        .contentShape(Rectangle())
-        .onTapGesture { showImport = true }
     }
 
     // MARK: - App version

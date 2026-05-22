@@ -53,3 +53,9 @@ __pycache__/
 
 # 로컬 테스트 자산 (개인정보 포함 가능 — 커밋 금지)
 samples/
+
+# OCR 벤치 sandbox (제거된 기능 — 향후 참조용 로컬 유지)
+test-bed/
+
+# 임시 스크린샷 (커밋 노이즈 회피)
+screen-shot/
