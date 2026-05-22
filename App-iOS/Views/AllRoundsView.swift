@@ -9,6 +9,32 @@ struct AllRoundsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Round.startedAt, order: .reverse) private var rounds: [Round]
     @State private var selectedRound: Round?
+    /// nil = 전체, 특정 Int = 해당 년도만 표시
+    @State private var filterYear: Int? = nil
+
+    // MARK: - 년도 그룹 계산
+
+    private var availableYears: [Int] {
+        let calendar = Calendar.current
+        let years = rounds.map { calendar.component(.year, from: $0.startedAt) }
+        return Array(Set(years)).sorted(by: >)
+    }
+
+    private var filteredRounds: [Round] {
+        guard let year = filterYear else { return rounds }
+        let calendar = Calendar.current
+        return rounds.filter { calendar.component(.year, from: $0.startedAt) == year }
+    }
+
+    private var groupedRounds: [(year: Int, rounds: [Round])] {
+        let calendar = Calendar.current
+        let dict = Dictionary(grouping: filteredRounds) { round in
+            calendar.component(.year, from: round.startedAt)
+        }
+        return dict.keys.sorted(by: >).map { year in
+            (year: year, rounds: dict[year]!.sorted { $0.startedAt > $1.startedAt })
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -16,12 +42,44 @@ struct AllRoundsView: View {
 
             if rounds.isEmpty {
                 emptyState
+            } else if filteredRounds.isEmpty {
+                emptyFilterState
             } else {
                 roundList
             }
         }
         .navigationTitle("전체 라운드")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button {
+                        filterYear = nil
+                    } label: {
+                        if filterYear == nil {
+                            Label("전체", systemImage: "checkmark")
+                        } else {
+                            Text("전체")
+                        }
+                    }
+                    Divider()
+                    ForEach(availableYears, id: \.self) { year in
+                        Button {
+                            filterYear = year
+                        } label: {
+                            if filterYear == year {
+                                Label("\(String(year))년", systemImage: "checkmark")
+                            } else {
+                                Text(verbatim: "\(String(year))년")
+                            }
+                        }
+                    }
+                } label: {
+                    Label(filterYear.map { "\(String($0))년" } ?? "전체", systemImage: "calendar")
+                        .font(.system(size: 15))
+                }
+            }
+        }
         .fullScreenCover(item: $selectedRound) { round in
             NavigationStack {
                 RoundDetailView(round: round)
@@ -38,30 +96,71 @@ struct AllRoundsView: View {
 
     private var roundList: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(Array(rounds.enumerated()), id: \.element.id) { idx, round in
-                    Button {
-                        selectedRound = round
-                    } label: {
-                        RoundRow(round: round)
-                    }
-                    .buttonStyle(.plain)
+            LazyVStack(spacing: 16, pinnedViews: .sectionHeaders) {
+                ForEach(groupedRounds, id: \.year) { group in
+                    Section {
+                        LazyVStack(spacing: 0) {
+                            ForEach(Array(group.rounds.enumerated()), id: \.element.id) { idx, round in
+                                Button {
+                                    selectedRound = round
+                                } label: {
+                                    RoundRow(round: round)
+                                }
+                                .buttonStyle(.plain)
 
-                    if idx < rounds.count - 1 {
-                        Divider()
-                            .padding(.leading, 70)
+                                if idx < group.rounds.count - 1 {
+                                    Divider()
+                                        .padding(.leading, 70)
+                                }
+                            }
+                        }
+                        .background(Color(.secondarySystemGroupedBackground),
+                                    in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .padding(.horizontal, 16)
+                    } header: {
+                        HStack {
+                            Text(verbatim: "\(String(group.year))년")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 6)
+                            Spacer()
+                            Text("\(group.rounds.count)회")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 20)
+                        }
+                        .background(Color(.systemGroupedBackground))
                     }
                 }
             }
-            .background(Color(.secondarySystemGroupedBackground),
-                        in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .padding(.horizontal, 16)
             .padding(.top, 8)
             .padding(.bottom, 32)
         }
     }
 
-    // MARK: - Empty State
+    // MARK: - Empty States
+
+    private var emptyFilterState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "calendar.badge.exclamationmark")
+                .font(.system(size: 52))
+                .foregroundStyle(Color.accentGreen.opacity(0.5))
+                .accessibilityHidden(true)
+
+            Text(verbatim: "\(filterYear.map { "\(String($0))년" } ?? "")에는 라운드가 없어요")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(.primary)
+
+            Button("전체 보기") {
+                filterYear = nil
+            }
+            .font(.system(size: 15))
+            .foregroundStyle(Color.accentGreen)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 32)
+    }
 
     private var emptyState: some View {
         VStack(spacing: 16) {
@@ -143,7 +242,7 @@ private struct RoundRow: View {
     private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "M월 d일"
+        f.dateFormat = "M/d (E)"
         return f
     }()
 
