@@ -19,6 +19,7 @@ targets:
       - path: Shared
         excludes:
           - "Resources/CoursePars"  # 별도 folder 리소스로 등록 (Swift 컴파일 제외)
+          # OCR 디렉토리는 iOS 전용 — Vision 링킹이 필요하므로 Shared 타겟에만 포함
       - path: Shared/Resources/CoursePars
         type: folder                 # JSON 파일을 bundle 내 폴더 그대로 유지
     info:
@@ -72,6 +73,8 @@ targets:
         embed: true
       - target: RoundOn-Watch
         embed: true
+      - sdk: PhotosUI.framework
+        weak: false
     configFiles:
       Debug: Secrets.xcconfig
       Release: Secrets.xcconfig

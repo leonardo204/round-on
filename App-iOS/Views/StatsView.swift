@@ -9,11 +9,19 @@ import Shared
 
 struct StatsView: View {
 
+    /// import된 라운드 포함 여부 토글. 기본 ON.
+    @AppStorage("stats.includeImported") private var includeImported: Bool = true
+
     @Query(
         filter: #Predicate<Round> { $0.isFinished == true },
         sort: \Round.startedAt,
         order: .reverse
     ) private var finishedRounds: [Round]
+
+    /// includeImported 토글에 따라 필터링된 라운드 배열
+    private var displayedRounds: [Round] {
+        includeImported ? finishedRounds : finishedRounds.filter { !$0.isImported }
+    }
 
     // MARK: Body
 
@@ -21,12 +29,23 @@ struct StatsView: View {
         ZStack {
             Color.springSurface.ignoresSafeArea()
 
-            if finishedRounds.isEmpty {
+            if displayedRounds.isEmpty {
                 emptyStateView
             } else {
-                let stats = aggregateStatistics(rounds: finishedRounds)
+                let stats = aggregateStatistics(rounds: displayedRounds)
                 ScrollView {
                     VStack(spacing: 16) {
+                        // import 라운드 포함/제외 토글
+                        HStack {
+                            Toggle(isOn: $includeImported) {
+                                Text("가져온 라운드 포함")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(Color.springTextSecondary)
+                            }
+                            .toggleStyle(SwitchToggleStyle(tint: Color.springGreenPrimary))
+                        }
+                        .padding(.horizontal, 4)
+
                         summarySection(stats: stats)
                         bestRoundSection(stats: stats)
                         recentSection(stats: stats)
@@ -164,7 +183,7 @@ struct StatsView: View {
                 sectionLabel("최근 \(stats.recentScores.count)라운드")
 
                 VStack(spacing: 0) {
-                    let recentFinished = Array(finishedRounds.prefix(stats.recentScores.count).reversed())
+                    let recentFinished = Array(displayedRounds.prefix(stats.recentScores.count).reversed())
 
                     ForEach(Array(zip(recentFinished, stats.recentScores)), id: \.0.id) { round, score in
                         HStack {

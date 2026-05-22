@@ -3,6 +3,7 @@ import CoreLocation
 import UIKit
 import SwiftData
 import Shared
+import PhotosUI
 
 // MARK: - SettingsView
 // 설정 화면: 위치 권한 상태 + 앱 버전 정보 (확장 예정)
@@ -12,6 +13,9 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @State private var iCloudLoggedIn: Bool = false
+
+    // 가져오기 진입
+    @State private var showImportLanding = false
 
     // DB 업데이트 상태
     @State private var dbUpdateState: DBUpdateState = .idle
@@ -59,12 +63,24 @@ struct SettingsView: View {
                 Text("앱 실행 시 자동으로 최신 골프장 정보를 확인합니다. 수동으로 즉시 갱신하려면 버튼을 탭하세요.")
             }
 
+            // ★ 가져오기 섹션
+            Section {
+                importRow
+            } header: {
+                Text("가져오기")
+            } footer: {
+                Text("사진 보관함의 스코어카드를 인식해 라운드로 저장합니다. 원본 이미지는 저장되지 않습니다.")
+            }
+
             Section("정보") {
                 LabeledContent("앱 버전", value: appVersionText)
             }
         }
         .navigationTitle("설정")
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showImportLanding) {
+            ImportLandingView()
+        }
         .task {
             refreshLocationStatus()
             refreshICloudStatus()
@@ -239,6 +255,37 @@ struct SettingsView: View {
 
     private func refreshLocationStatus() {
         locationStatus = LocationService.shared.authorizationStatus
+    }
+
+    // MARK: - Import row
+
+    private var importRow: some View {
+        Button {
+            showImportLanding = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "square.and.arrow.down")
+                    .font(.system(size: 17))
+                    .foregroundStyle(.tint)
+                    .frame(width: 24)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("스코어보드 가져오기")
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                    Text("사진의 스코어카드를 라운드로 변환")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Color(.tertiaryLabel))
+            }
+            .padding(.vertical, 4)
+        }
     }
 
     // MARK: - DB update row

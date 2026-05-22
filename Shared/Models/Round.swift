@@ -36,6 +36,10 @@ public final class Round {
     /// SwiftData default 값 제공 — 라이트웨이트 마이그레이션 안전.
     public var isBackTentative: Bool = false
 
+    /// OCR/사진으로 가져온 라운드 여부. 기본값 false.
+    /// SwiftData default 값 제공 — 기존 레코드는 false로 라이트웨이트 마이그레이션 적용.
+    public var isImported: Bool = false
+
     public var isFinished: Bool = false
     public var startedAt: Date = Date.now
     public var finishedAt: Date?
