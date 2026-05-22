@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>라운드온 — 스코어보드 가져오기 (Mockup)</title>
+<style>
+  :root {
+    --bg: #f2f2f7;
+    --card: #ffffff;
+    --line: #e5e5ea;
+    --text: #1c1c1e;
+    --sub: #8e8e93;
+    --tint: #0a84ff;
+    --tint-soft: #d5e7ff;
+    --warn: #ff453a;
+    --warn-soft: #ffe0de;
+    --ok: #34c759;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+    background: #d0d0d8;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    padding: 24px;
+  }
+  .row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+  .phone {
+    width: 393px;
+    height: 852px;
+    background: var(--bg);
+    border-radius: 44px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.25), 0 0 0 10px #111 inset, 0 0 0 12px #2a2a2a;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .notch {
+    position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 30px; background: #111; border-radius: 18px; z-index: 50;
+  }
+  .nav {
+    height: 54px; padding: 0 12px; display: flex; align-items: flex-end;
+    padding-bottom: 8px; background: rgba(242,242,247,.85);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 20;
+  }
+  .nav .left, .nav .right { flex: 1; display: flex; align-items: center; }
+  .nav .right { justify-content: flex-end; }
+  .nav .title { font-weight: 600; font-size: 16px; }
+  .nav button {
+    background: none; border: 0; color: var(--tint);
+    font-size: 16px; padding: 6px 4px; cursor: pointer;
+  }
+  .nav button[disabled] { color: var(--sub); }
+  .label { font-size: 12px; color: var(--sub); }
+
+  /* ---- IMAGE VIEWER (top — fixed share, panel scrolls below) ---- */
+  .viewer {
+    flex: 0.85;
+    background: linear-gradient(180deg, #0e1218 0%, #1c1f26 100%);
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+  }
+  .viewer .meta-overlay {
+    position: absolute; top: 10px; left: 10px; right: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: #cfd6e4;
+    pointer-events: none;
+  }
+  .viewer .card-img {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .viewer .card-img img {
+    max-width: 92%; max-height: 92%; border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    transform: scale(1.0);
+    transition: transform .25s ease;
+  }
+  .viewer.zoom .card-img img { transform: scale(1.6) translate(-8%, -8%); }
+
+  /* OCR bounding boxes (mock) */
+  .bbox {
+    position: absolute;
+    border: 1.5px solid rgba(255,221,87,.85);
+    background: rgba(255,221,87,.10);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .bbox.warn { border-color: var(--warn); background: rgba(255,69,58,.18); }
+  .bbox.active { border-color: #0a84ff; background: rgba(10,132,255,.20); box-shadow: 0 0 0 2px rgba(10,132,255,.4); }
+
+  .viewer .controls {
+    position: absolute; right: 10px; bottom: 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .viewer .controls button {
+    width: 36px; height: 36px; border-radius: 18px;
+    background: rgba(255,255,255,.14); border: 0; color: #fff;
+    font-size: 18px; backdrop-filter: blur(6px);
+  }
+  .viewer .legend {
+    position: absolute; left: 10px; bottom: 12px;
+    display: flex; gap: 10px; font-size: 11px;
+    background: rgba(0,0,0,.4); padding: 6px 10px; border-radius: 10px;
+  }
+  .legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .legend .ok { background: #ffdd57; }
+  .legend .warn { background: var(--warn); }
+
+  /* ---- RESULT PANEL (scrolls — holds both sections at once) ---- */
+  .panel {
+    flex: 1.15;
+    background: var(--bg);
+    overflow-y: auto;
+    padding: 10px 12px 92px;
+  }
+  .group {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .group .gtitle {
+    font-size: 12px; color: var(--sub);
+    padding: 10px 14px 4px;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+
+  .meta-row { display: grid; grid-template-columns: 84px 1fr auto; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); }
+  .meta-row:first-of-type { border-top: 0; }
+  .meta-row .k { color: var(--sub); font-size: 13px; }
+  .meta-row .v { font-size: 15px; font-weight: 500; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--tint-soft); color: var(--tint);
+    border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: 600;
+  }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); }
+  .chip.ok { background: #d8f3dd; color: #1f8a3f; }
+
+  .section-tabs { display: flex; gap: 6px; padding: 8px 12px; }
+  .section-tabs button {
+    flex: 1; border: 0; background: var(--card); color: var(--text);
+    padding: 8px 10px; border-radius: 10px; font-weight: 600; font-size: 14px;
+    box-shadow: var(--shadow);
+  }
+  .section-tabs button.active { background: var(--tint); color: #fff; }
+
+  /* score grid — fixed 10 columns (1~9 + TOTAL), no horizontal scroll */
+  .player {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 10px; overflow: hidden;
+  }
+  .player .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .player .head .name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .player .head .name .lock { font-size: 11px; color: var(--sub); }
+  .player .head .total {
+    font-size: 13px; font-weight: 600;
+    background: #f0f0f5; color: var(--text);
+    padding: 4px 8px; border-radius: 8px;
+  }
+
+  .grid-wrap { padding: 8px 8px 10px; }
+  .cells {
+    display: grid;
+    /* 9홀 동일폭 + TOTAL 살짝 강조(1.2fr) */
+    grid-template-columns: repeat(9, 1fr) 1.25fr;
+    gap: 3px;
+  }
+  .cell {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 4px 0 5px;
+    border-radius: 7px; background: #f7f7fa;
+    border: 1px solid transparent;
+    position: relative;
+    min-width: 0;
+  }
+  .cell .h { font-size: 9px; color: var(--sub); line-height: 1; margin-bottom: 1px; }
+  .cell .v {
+    font-size: 15px; font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+  }
+  .cell.total { background: #eef3ff; }
+  .cell.total .h { color: var(--tint); }
+  .cell.suspect { background: var(--warn-soft); border-color: rgba(255,69,58,.45); }
+  .cell.null .v { color: var(--warn); }
+  .cell.active { background: #e5f0ff; border-color: var(--tint); box-shadow: 0 0 0 2px rgba(10,132,255,.18); }
+  .cell.readonly { background: #fafafd; }
+  .cell.readonly .v { color: #6b6b72; }
+
+  .player.readonly .head { background: #fafafd; }
+  .player.readonly .head .name { color: #4a4a52; }
+
+  /* 섹션 라벨 (힐/크리크) — 패널 안 sub-title */
+  .section-label {
+    font-size: 12px; color: var(--sub);
+    padding: 12px 4px 6px;
+    text-transform: uppercase; letter-spacing: .04em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--tint);
+  }
+  .section-label .par-info { margin-left: auto; color: var(--sub); font-size: 11px; }
+
+  .cell .conf {
+    position: absolute; top: 4px; right: 4px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #ffdd57;
+  }
+  .cell .conf.low { background: var(--warn); }
+  .cell .conf.high { background: var(--ok); }
+
+  .stepper {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 10px 12px;
+    border-top: 1px dashed var(--line);
+    justify-content: center;
+  }
+  .stepper .lbl { font-size: 12px; color: var(--sub); margin-right: 4px; }
+  .stepper button {
+    width: 40px; height: 40px; border-radius: 20px;
+    border: 0; background: var(--tint); color: #fff;
+    font-size: 22px; font-weight: 700;
+    box-shadow: 0 2px 6px rgba(10,132,255,.35);
+  }
+  .stepper button.m { background: #f0f0f5; color: var(--text); box-shadow: none; }
+  .stepper .val {
+    min-width: 56px; text-align: center;
+    font-size: 26px; font-weight: 800; letter-spacing: -.02em;
+  }
+  .stepper .hint { font-size: 11px; color: var(--sub); margin-left: 6px; }
+
+  /* bottom action bar */
+  .actions {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 12px 16px 28px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    display: flex; gap: 10px;
+  }
+  .actions button {
+    flex: 1; height: 48px; border-radius: 14px; border: 0;
+    font-size: 16px; font-weight: 600;
+  }
+  .actions .ghost { background: #f0f0f5; color: var(--text); }
+  .actions .primary { background: var(--tint); color: #fff; }
+
+  /* state list (right phone) */
+  .stage-caption {
+    text-align: center; color: #1c1c1e; font-size: 13px; margin-top: 8px;
+    opacity: .8;
+  }
+
+  /* simple list rows (legacy) */
+  .listrow { display: flex; align-items: center; padding: 12px 14px; border-top: 1px solid var(--line); gap: 10px; font-size: 15px; }
+  .listrow:first-child { border-top: 0; }
+  .listrow .ic { width: 28px; height: 28px; border-radius: 8px; background: var(--tint-soft); color: var(--tint); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .listrow .grow { flex: 1; }
+  .listrow .chev { color: var(--sub); font-size: 18px; }
+
+  /* iOS InsetGrouped settings list */
+  .sec-head {
+    font-size: 11px; color: var(--sub);
+    padding: 14px 18px 6px;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .sec-foot {
+    font-size: 12px; color: var(--sub);
+    padding: 6px 18px 4px;
+    line-height: 1.45;
+  }
+  .group.highlight { box-shadow: 0 0 0 1px rgba(10,132,255,.35), var(--shadow); }
+  .settings-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px;
+    border-top: 1px solid var(--line);
+    min-height: 44px;
+  }
+  .settings-row:first-child { border-top: 0; }
+  .settings-row .ic-sf {
+    width: 24px; height: 24px; flex: 0 0 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tint); font-size: 16px;
+  }
+  .settings-row .grow { flex: 1; min-width: 0; }
+  .settings-row .grow .t { font-size: 15px; }
+  .settings-row .grow .s { font-size: 12px; color: var(--sub); margin-top: 1px; }
+  .settings-row .chev { color: #c7c7cc; font-size: 18px; }
+  .settings-row .s { font-size: 13px; color: var(--sub); }
+  .stepper-mini {
+    font-size: 14px; font-weight: 600; color: var(--tint);
+    background: #f0f0f5; border-radius: 8px; padding: 3px 10px;
+  }
+  .pill-btn {
+    background: #34c759; color: #fff; border: 0;
+    padding: 5px 12px; border-radius: 14px;
+    font-size: 13px; font-weight: 600;
+  }
+
+  /* warning banner */
+  .banner {
+    background: var(--warn-soft); color: var(--warn);
+    padding: 8px 12px; border-radius: 10px;
+    font-size: 12px; margin: 6px 12px 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .banner .dot { width: 6px; height: 6px; background: var(--warn); border-radius: 50%; }
+
+  h2.headline { color: #1c1c1e; font-weight: 600; text-align: center; margin: 0 0 14px; }
+</style>
+</head>
+<body>
+
+<h2 class="headline">스코어보드 가져오기 — 검토용 Mockup</h2>
+
+<div class="row">
+
+  <!-- ===== Stage 1: 진입 (실제 SettingsView 구조 그대로 + 신규 Section 1개) ===== -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="nav">
+        <div class="left"></div>
+        <div class="title">설정</div>
+        <div class="right"></div>
+      </div>
+      <div class="panel" style="flex:1;padding-top:6px">
+        <div class="sec-head">권한</div>
+        <div class="group">
+          <div class="settings-row">
+            <div class="ic-sf">📍</div>
+            <div class="grow"><div class="t">위치</div><div class="s">앱 사용 중 허용됨</div></div>
+          </div>
+        </div>
+
+        <div class="sec-head">iCloud 동기화</div>
+        <div class="group">
+          <div class="settings-row">
+            <div class="ic-sf">☁︎</div>
+            <div class="grow"><div class="t">iCloud</div><div class="s">Apple 계정 로그인됨 — 라운드 자동 동기화</div></div>
+          </div>
+        </div>
+        <div class="sec-foot">iPhone 「설정 → 사용자 이름」에 Apple 계정 로그인 시 동기화됩니다.</div>
+
+        <div class="sec-head">벌타 기본값</div>
+        <div class="group">
+          <div class="settings-row">
+            <div class="ic-sf">⚑</div>
+            <div class="grow"><div class="t">OB</div><div class="s">아웃 오브 바운즈 · 타수 자동 추가</div></div>
+            <div class="stepper-mini">+2</div>
+          </div>
+          <div class="settings-row">
+            <div class="ic-sf">💧</div>
+            <div class="grow"><div class="t">해저드</div><div class="s">워터·벙커 등 · 타수 자동 추가</div></div>
+            <div class="stepper-mini">+1</div>
+          </div>
+          <div class="settings-row">
+            <div class="ic-sf">✓</div>
+            <div class="grow"><div class="t">컨시드 (OK)</div><div class="s">기브 · 마지막 한 타 인정</div></div>
+            <div class="stepper-mini">+1</div>
+          </div>
+        </div>
+
+        <div class="sec-head">골프장 데이터</div>
+        <div class="group">
+          <div class="settings-row">
+            <div class="ic-sf">↻</div>
+            <div class="grow"><div class="t">골프장 DB 업데이트</div><div class="s">최신 데이터입니다</div></div>
+            <button class="pill-btn">지금 갱신</button>
+          </div>
+        </div>
+
+        <!-- ★ 신규 Section — 가져오기 -->
+        <div class="sec-head">가져오기</div>
+        <div class="group highlight">
+          <div class="settings-row" id="open-import">
+            <div class="ic-sf">⇣</div>
+            <div class="grow">
+              <div class="t">스코어보드 가져오기</div>
+              <div class="s">사진의 스코어카드를 라운드로 변환</div>
+            </div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+        <div class="sec-foot">카메라/사진에서 스코어카드를 인식해 라운드로 저장합니다. 원본 이미지는 저장되지 않습니다.</div>
+
+        <div class="sec-head">정보</div>
+        <div class="group">
+          <div class="settings-row">
+            <div class="grow"><div class="t">앱 버전</div></div>
+            <div class="s">1.0 (12)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stage-caption">① 진입 — 설정 (기존 5개 Section + 「가져오기」 Section 신설)</div>
+  </div>
+
+  <!-- ===== Stage 2: 검토·편집 (핵심) ===== -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="nav">
+        <div class="left"><button>‹ 취소</button></div>
+        <div class="title">가져오기 검토</div>
+        <div class="right"><button>저장</button></div>
+      </div>
+
+      <!-- TOP: image viewer -->
+      <div class="viewer zoom" id="viewer">
+        <div class="meta-overlay">
+          <span>IMG_1335.PNG · 1/1</span>
+          <span style="background:rgba(0,0,0,.35);padding:2px 8px;border-radius:10px">신뢰도 92%</span>
+        </div>
+        <div class="card-img">
+          <img src="../../test-bed/samples/IMG_1335.PNG" alt="scorecard"
+               onerror="this.style.display='none';this.parentNode.insertAdjacentHTML('beforeend','<div style=&quot;color:#9aa0ad;font-size:13px&quot;>(스코어카드 이미지 영역)</div>')" />
+        </div>
+
+        <!-- mock bounding boxes (positioned over the viewer area) -->
+        <div class="bbox" style="left:18%;top:24%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:28%;top:24%;width:8%;height:5%"></div>
+        <div class="bbox warn" style="left:38%;top:24%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:48%;top:24%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:58%;top:24%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:18%;top:33%;width:8%;height:5%"></div>
+        <div class="bbox active" style="left:28%;top:33%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:38%;top:33%;width:8%;height:5%"></div>
+        <div class="bbox warn" style="left:48%;top:33%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:18%;top:42%;width:8%;height:5%"></div>
+        <div class="bbox" style="left:28%;top:42%;width:8%;height:5%"></div>
+
+        <div class="controls">
+          <button title="확대">＋</button>
+          <button title="축소">－</button>
+          <button title="원본 보기" style="font-size:14px">⤢</button>
+        </div>
+        <div class="legend">
+          <span><i class="dot ok"></i>인식</span>
+          <span><i class="dot warn"></i>의심</span>
+        </div>
+      </div>
+
+      <!-- BOTTOM: recognized panel -->
+      <div class="panel">
+        <div class="banner"><span class="dot"></span> 의심 셀 3개를 확인해 주세요 · 값은 PAR 대비 가감(예: 파3에 「1」이면 4타)</div>
+
+        <div class="group">
+          <div class="gtitle">메타 정보</div>
+          <div class="meta-row"><span class="k">클럽</span><span class="v">진양밸리CC</span><span class="chip ok">DB 매칭</span></div>
+          <div class="meta-row"><span class="k">날짜</span><span class="v">2026/04/30 PM 01:20</span><span class="chip">편집</span></div>
+          <div class="meta-row"><span class="k">본인</span><span class="v">이용섭</span><span class="chip">프로필</span></div>
+        </div>
+
+        <!-- ===== 힐 (전반) ===== -->
+        <div class="section-label"><span class="dot"></span> 힐 (전반)<span class="par-info">PAR 36</span></div>
+
+        <div class="player readonly">
+          <div class="head">
+            <span class="name">PAR <span class="lock">· 코스 기준 · 읽기 전용</span></span>
+            <span class="total">36</span>
+          </div>
+          <div class="grid-wrap">
+            <div class="cells">
+              <div class="cell readonly"><span class="h">1</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">2</span><span class="v">4</span></div>
+              <div class="cell readonly null suspect"><span class="h">3</span><span class="v">?</span></div>
+              <div class="cell readonly"><span class="h">4</span><span class="v">3</span></div>
+              <div class="cell readonly"><span class="h">5</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">6</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">7</span><span class="v">3</span></div>
+              <div class="cell readonly null suspect"><span class="h">8</span><span class="v">?</span></div>
+              <div class="cell readonly"><span class="h">9</span><span class="v">4</span></div>
+              <div class="cell total"><span class="h">TOT</span><span class="v">36</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="player">
+          <div class="head">
+            <span class="name">이용섭 <span class="lock">· 본인</span></span>
+            <span class="total">+18 · 54타</span>
+          </div>
+          <div class="grid-wrap">
+            <div class="cells">
+              <div class="cell"><span class="h">1</span><span class="v">1</span></div>
+              <div class="cell active"><span class="h">2</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">3</span><span class="v">3</span></div>
+              <div class="cell"><span class="h">4</span><span class="v">3</span></div>
+              <div class="cell"><span class="h">5</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">6</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">7</span><span class="v">1</span></div>
+              <div class="cell"><span class="h">8</span><span class="v">4</span></div>
+              <div class="cell suspect"><span class="h">9</span><span class="v">0</span></div>
+              <div class="cell total"><span class="h">TOT</span><span class="v">+18</span></div>
+            </div>
+          </div>
+          <div class="stepper">
+            <span class="lbl">2번 홀 · PAR 4</span>
+            <button class="m">−</button>
+            <span class="val">2</span>
+            <button>＋</button>
+            <span class="hint">+/−로 점수 조정 (내부 6타)</span>
+          </div>
+        </div>
+
+        <div class="player">
+          <div class="head">
+            <span class="name">문** <span class="chip" style="margin-left:6px">동반자 매칭</span></span>
+            <span class="total">+9 · 45타</span>
+          </div>
+          <div class="grid-wrap">
+            <div class="cells">
+              <div class="cell"><span class="h">1</span><span class="v">0</span></div>
+              <div class="cell"><span class="h">2</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">3</span><span class="v">1</span></div>
+              <div class="cell"><span class="h">4</span><span class="v">1</span></div>
+              <div class="cell"><span class="h">5</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">6</span><span class="v">1</span></div>
+              <div class="cell"><span class="h">7</span><span class="v">0</span></div>
+              <div class="cell"><span class="h">8</span><span class="v">1</span></div>
+              <div class="cell suspect"><span class="h">9</span><span class="v">1</span></div>
+              <div class="cell total"><span class="h">TOT</span><span class="v">+9</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 크리크 (후반) ===== -->
+        <div class="section-label"><span class="dot"></span> 크리크 (후반)<span class="par-info">PAR 36</span></div>
+
+        <div class="player readonly">
+          <div class="head">
+            <span class="name">PAR <span class="lock">· 코스 기준 · 읽기 전용</span></span>
+            <span class="total">36</span>
+          </div>
+          <div class="grid-wrap">
+            <div class="cells">
+              <div class="cell readonly null suspect"><span class="h">1</span><span class="v">?</span></div>
+              <div class="cell readonly"><span class="h">2</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">3</span><span class="v">3</span></div>
+              <div class="cell readonly"><span class="h">4</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">5</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">6</span><span class="v">3</span></div>
+              <div class="cell readonly"><span class="h">7</span><span class="v">4</span></div>
+              <div class="cell readonly"><span class="h">8</span><span class="v">4</span></div>
+              <div class="cell readonly null suspect"><span class="h">9</span><span class="v">?</span></div>
+              <div class="cell total"><span class="h">TOT</span><span class="v">36</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="player">
+          <div class="head">
+            <span class="name">이용섭 <span class="lock">· 본인</span></span>
+            <span class="total">+24 · 60타</span>
+          </div>
+          <div class="grid-wrap">
+            <div class="cells">
+              <div class="cell"><span class="h">1</span><span class="v">3</span></div>
+              <div class="cell"><span class="h">2</span><span class="v">1</span></div>
+              <div class="cell"><span class="h">3</span><span class="v">3</span></div>
+              <div class="cell"><span class="h">4</span><span class="v">4</span></div>
+              <div class="cell"><span class="h">5</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">6</span><span class="v">3</span></div>
+              <div class="cell"><span class="h">7</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">8</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">9</span><span class="v">4</span></div>
+              <div class="cell total"><span class="h">TOT</span><span class="v">+24</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="player">
+          <div class="head">
+            <span class="name">문** <span class="chip" style="margin-left:6px">동반자 매칭</span></span>
+            <span class="total">+11 · 47타</span>
+          </div>
+          <div class="grid-wrap">
+            <div class="cells">
+              <div class="cell"><span class="h">1</span><span class="v">1</span></div>
+              <div class="cell"><span class="h">2</span><span class="v">0</span></div>
+              <div class="cell suspect"><span class="h">3</span><span class="v">?</span></div>
+              <div class="cell"><span class="h">4</span><span class="v">0</span></div>
+              <div class="cell"><span class="h">5</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">6</span><span class="v">0</span></div>
+              <div class="cell"><span class="h">7</span><span class="v">2</span></div>
+              <div class="cell"><span class="h">8</span><span class="v">3</span></div>
+              <div class="cell"><span class="h">9</span><span class="v">3</span></div>
+              <div class="cell total"><span class="h">TOT</span><span class="v">+11</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="ghost">취소</button>
+        <button class="primary">저장</button>
+      </div>
+    </div>
+    <div class="stage-caption">② 검토·편집 — 이미지 viewer + 인식 표 (셀 탭 ↔ viewer 줌 연동)</div>
+  </div>
+
+  <!-- ===== Stage 3: 동반자 매칭 시트 ===== -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="nav">
+        <div class="left"><button>‹</button></div>
+        <div class="title">동반자 매칭</div>
+        <div class="right"><button>완료</button></div>
+      </div>
+      <div class="panel">
+        <div style="font-size:13px;color:var(--sub);padding:4px 4px 10px">
+          스코어카드의 별명을 기존 동반자와 연결하거나 새로 추가하세요.
+        </div>
+
+        <div class="group">
+          <div class="meta-row" style="grid-template-columns: 80px 1fr auto">
+            <span class="k">카드 별명</span><span class="v">문**</span>
+            <span class="chip">미매칭</span>
+          </div>
+          <div style="padding:8px 14px 14px;display:flex;gap:8px;flex-wrap:wrap">
+            <button style="padding:8px 12px;border-radius:10px;border:1px solid var(--tint);background:var(--tint-soft);color:var(--tint);font-weight:600">문성호 (3회 라운드)</button>
+            <button style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#fff">문재인</button>
+            <button style="padding:8px 12px;border-radius:10px;border:0;background:#f0f0f5">＋ 새 동반자</button>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="meta-row" style="grid-template-columns: 80px 1fr auto">
+            <span class="k">카드 별명</span><span class="v">이**</span>
+            <span class="chip ok">자동 매칭</span>
+          </div>
+          <div style="padding:0 14px 14px;font-size:13px;color:var(--sub)">→ 이상민 (12회 라운드)</div>
+        </div>
+
+        <div class="group">
+          <div class="meta-row" style="grid-template-columns: 80px 1fr auto">
+            <span class="k">카드 별명</span><span class="v">양**</span>
+            <span class="chip warn">선택 필요</span>
+          </div>
+          <div style="padding:8px 14px 14px;display:flex;gap:8px;flex-wrap:wrap">
+            <button style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#fff">양준석</button>
+            <button style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#fff">양형준</button>
+            <button style="padding:8px 12px;border-radius:10px;border:0;background:#f0f0f5">＋ 새 동반자</button>
+          </div>
+        </div>
+
+        <div class="banner" style="margin-top:6px"><span class="dot"></span> 미매칭 동반자가 1명 남았습니다.</div>
+      </div>
+    </div>
+    <div class="stage-caption">③ 동반자 매칭 (저장 직전)</div>
+  </div>
+
+</div>
+
+<div class="row" style="margin-top:24px">
+
+  <!-- ===== Stage 4: OCR 진행 ===== -->
+  <div>
+    <div class="phone" style="height:520px">
+      <div class="notch"></div>
+      <div class="nav">
+        <div class="left"><button>‹ 취소</button></div>
+        <div class="title">인식 중</div>
+        <div class="right"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:0 30px;text-align:center">
+        <div style="width:90px;height:90px;border-radius:24px;background:var(--tint-soft);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--tint)">⛳</div>
+        <div style="font-size:17px;font-weight:600">스코어카드를 분석하고 있어요</div>
+        <div style="font-size:13px;color:var(--sub);line-height:1.6">
+          파란 헤더 영역 검출 → 점수 영역 크롭 → OCR → 표 재구성<br>
+          평균 1~3초 소요됩니다.
+        </div>
+        <div style="width:200px;height:4px;background:#e5e5ea;border-radius:2px;overflow:hidden;margin-top:10px">
+          <div style="width:60%;height:100%;background:var(--tint);border-radius:2px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="stage-caption">④ OCR 진행 (취소 가능)</div>
+  </div>
+
+  <!-- ===== Stage 5: 검증 결과 / 저장 직전 ===== -->
+  <div>
+    <div class="phone" style="height:600px">
+      <div class="notch"></div>
+      <div class="nav">
+        <div class="left"><button>‹</button></div>
+        <div class="title">검증 결과</div>
+        <div class="right"></div>
+      </div>
+      <div class="panel" style="padding-bottom:90px">
+        <div class="group" style="margin-top:6px">
+          <div class="gtitle">저장 요약</div>
+          <div class="meta-row"><span class="k">코스</span><span class="v">진양밸리CC · 힐+크리크</span><span></span></div>
+          <div class="meta-row"><span class="k">날짜</span><span class="v">2026/04/30 13:20</span><span></span></div>
+          <div class="meta-row"><span class="k">본인 스코어</span><span class="v">114</span><span></span></div>
+          <div class="meta-row"><span class="k">동반자</span><span class="v">3명 (1명 신규)</span><span></span></div>
+        </div>
+
+        <div class="group">
+          <div class="gtitle">미입력 셀</div>
+          <div class="meta-row"><span class="k">⚠︎</span><span class="v">PAR 8번 홀 비어 있음</span><span class="chip warn">확인</span></div>
+        </div>
+
+        <div style="font-size:11px;color:var(--sub);padding:0 14px 12px;line-height:1.5">
+          미입력 셀이 있어도 저장할 수 있습니다. 저장 후 ‘이번 라운드’에서 언제든 편집할 수 있어요.
+          원본 이미지는 저장되지 않습니다.
+        </div>
+      </div>
+      <div class="actions">
+        <button class="ghost">되돌아가기</button>
+        <button class="primary">저장하고 닫기</button>
+      </div>
+    </div>
+    <div class="stage-caption">⑤ 저장 직전 검증</div>
+  </div>
+
+</div>
+
+<div style="max-width:900px;margin:30px auto 0;color:#1c1c1e;font-size:13px;line-height:1.7;background:#fff;padding:16px 20px;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+  <strong>핵심 인터랙션 메모</strong>
+  <ul style="margin:8px 0 0;padding-left:18px">
+    <li>스코어 값은 <strong>PAR 대비 가감(스코어카드 표기 그대로)</strong>. 파3 홀에 「1」이면 내부 4타로 환산해 저장. 사용자는 카드 표기와 1:1 비교만 확인하면 됨.</li>
+    <li>두 섹션(힐/크리크)을 <strong>탭 전환 없이 위·아래로 동시 표시</strong>. 하단 패널은 세로 스크롤.</li>
+    <li>PAR 행은 <strong>읽기 전용</strong>(코스 기준). +/− 조정은 본인 + 동반자 점수 셀에만 적용.</li>
+    <li>셀 탭 → 그 셀이 active(파란 외곽) → 하단 +/− stepper로 점수 조정. 동시에 이미지 viewer가 해당 셀 영역으로 줌.</li>
+    <li>의심 셀(빨강)·null 셀은 자동으로 stepper 포커스. 정상 셀은 탭으로 선택.</li>
+    <li>스코어 그리드는 9홀 + TOTAL 고정 10열 — 가로 스크롤 없음.</li>
+    <li>합계 자동 검증은 하지 않음. 저장 후 ‘이번 라운드’에서 자유 편집.</li>
+    <li>원본 이미지는 저장하지 않음 (사진 저장 폐기 정책 준수).</li>
+  </ul>
+</div>
+
+<script>
+  // 시각적 상호작용 — 본인/동반자 셀만 선택 가능. PAR(readonly)·TOT는 선택 무시.
+  document.querySelectorAll('.cell').forEach(c => c.addEventListener('click', () => {
+    if (c.classList.contains('readonly') || c.classList.contains('total')) return;
+    document.querySelectorAll('.cell.active').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  }));
+</script>
+
+</body>
+</html>
