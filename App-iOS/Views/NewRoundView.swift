@@ -888,7 +888,7 @@ struct NewRoundView: View {
 // MARK: - CourseSearchSheet (카카오 통합 검색 — 옵션 B)
 
 /// 로컬 DB + 영구 캐시 + 카카오 로컬 API 통합 검색 Sheet.
-private struct CourseSearchSheet: View {
+struct CourseSearchSheet: View {
     let localCourses: [GolfCourse]
     @Binding var searchText: String
     let userLocation: CLLocation?
@@ -1063,7 +1063,7 @@ private struct CourseSearchSheet: View {
 
 /// 다중 후보 선택 카드의 개별 row. per-item address lazy resolve를 위해 별도 View로 분리.
 @MainActor
-private struct CandidateCourseRowView: View {
+struct CandidateCourseRowView: View {
     let course: GolfCourse
     let userLocation: CLLocation?
 
@@ -1120,7 +1120,7 @@ private struct CandidateCourseRowView: View {
 
 /// CourseSearchSheet 로컬 결과 row. per-item address lazy resolve를 위해 별도 View로 분리.
 @MainActor
-private struct LocalCourseRowView: View {
+struct LocalCourseRowView: View {
     let course: GolfCourse
 
     @State private var resolvedAddress: String?
@@ -1185,6 +1185,6 @@ private struct LocalCourseRowView: View {
 
 // MARK: - String helper
 
-private extension String {
+extension String {
     var nilIfEmpty: String? { isEmpty ? nil : self }
 }
