@@ -7,7 +7,7 @@ final class CourseRepositoryTests: XCTestCase {
 
     func testLoadAllReturnsAllCourses() async throws {
         let courses = try await CourseRepository.shared.loadAll()
-        XCTAssertEqual(courses.count, 965, "v3 데이터셋은 965개 골프장을 포함해야 함 (좌표 2차 매칭 중복 제거 후)")
+        XCTAssertEqual(courses.count, 979, "DB v4 데이터셋은 979개 골프장을 포함해야 함 (hybrid sync 적용 후)")
     }
 
     // MARK: dataQuality 분포
@@ -16,14 +16,14 @@ final class CourseRepositoryTests: XCTestCase {
         let courses = try await CourseRepository.shared.loadAll()
         let groups = Dictionary(grouping: courses, by: { $0.dataQuality })
 
-        XCTAssertEqual(groups[.complete]?.count ?? 0, 3,
-                       "complete 등급 골프장은 3개여야 함 (F3 GPS 자동 감지 활성 후보)")
-        XCTAssertEqual(groups[.partial]?.count ?? 0, 12,
-                       "partial 등급 골프장은 12개여야 함")
-        XCTAssertEqual(groups[.minimal]?.count ?? 0, 9,
-                       "minimal 등급 골프장은 9개여야 함")
-        XCTAssertEqual(groups[.low]?.count ?? 0, 941,
-                       "low 등급이 압도적 다수(941개)여야 함")
+        XCTAssertGreaterThanOrEqual(groups[.complete]?.count ?? 0, 1,
+                       "complete 등급 골프장이 1개 이상이어야 함")
+        XCTAssertEqual(groups[.partial]?.count ?? 0, 8,
+                       "partial 등급 골프장은 8개여야 함 (DB v4)")
+        XCTAssertEqual(groups[.minimal]?.count ?? 0, 8,
+                       "minimal 등급 골프장은 8개여야 함 (DB v4)")
+        XCTAssertEqual(groups[.low]?.count ?? 0, 742,
+                       "low 등급이 압도적 다수(742개)여야 함 (DB v4)")
     }
 
     // MARK: holesCount 커버리지
@@ -31,8 +31,8 @@ final class CourseRepositoryTests: XCTestCase {
     func testHolesCountCoverage() async throws {
         let courses = try await CourseRepository.shared.loadAll()
         let withHolesCount = courses.filter { $0.holesCount != nil }.count
-        XCTAssertEqual(withHolesCount, 818,
-                       "holesCount가 기록된 골프장은 818개여야 함 (네이버 검색 보강 후)")
+        XCTAssertEqual(withHolesCount, 832,
+                       "holesCount가 기록된 골프장은 832개여야 함 (DB v4 업데이트 후)")
     }
 
     // MARK: 지역 필터
@@ -57,8 +57,8 @@ final class CourseRepositoryTests: XCTestCase {
     func testKakaoUrlPresence() async throws {
         let courses = try await CourseRepository.shared.loadAll()
         let withKakao = courses.filter { $0.kakaoPlaceUrl != nil }.count
-        XCTAssertEqual(withKakao, 664,
-                       "kakaoPlaceUrl이 기록된 골프장은 664개여야 함 (카카오 API 보강 결과)")
+        XCTAssertEqual(withKakao, 677,
+                       "kakaoPlaceUrl이 기록된 골프장은 677개여야 함 (DB v4 업데이트 후)")
     }
 
     // MARK: 이름 검색

@@ -8,6 +8,7 @@ import SwiftData
 // - inverse 관계 설정 확인
 // - in-memory ModelContainer 라운드트립
 // - PersistedDiscoveredCourse 중복 방지 로직
+// Note: RoundPhoto 관련 테스트는 2026-05-18 사진 기능 폐기로 제거됨
 
 final class CloudKitCompatibilityTests: XCTestCase {
 
@@ -17,7 +18,7 @@ final class CloudKitCompatibilityTests: XCTestCase {
     private func makeContainer() throws -> ModelContainer {
         let schema = Schema([
             Round.self, Player.self, HoleScore.self,
-            RoundPhoto.self, PersistedDiscoveredCourse.self
+            PersistedDiscoveredCourse.self
         ])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: config)
@@ -41,10 +42,8 @@ final class CloudKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(r.courseId, "", "courseId 기본값은 빈 문자열이어야 해요")
         XCTAssertEqual(r.courseName, "", "courseName 기본값은 빈 문자열이어야 해요")
         XCTAssertEqual(r.isFinished, false, "isFinished 기본값은 false여야 해요")
-        // playerList/holeList/photoList Optional fallback 동작
         XCTAssertTrue(r.playerList.isEmpty, "playerList fallback은 빈 배열이어야 해요")
         XCTAssertTrue(r.holeList.isEmpty, "holeList fallback은 빈 배열이어야 해요")
-        XCTAssertTrue(r.photoList.isEmpty, "photoList fallback은 빈 배열이어야 해요")
     }
 
     // MARK: - Player default 값 검증
@@ -87,24 +86,6 @@ final class CloudKitCompatibilityTests: XCTestCase {
         XCTAssertTrue(h.hazardCount.isEmpty, "hazardCount 기본값은 빈 배열이어야 해요")
     }
 
-    // MARK: - RoundPhoto default 값 검증
-
-    @MainActor
-    func test_RoundPhoto_defaultValues_CloudKitCompatible() throws {
-        let container = try makeContainer()
-        let ctx = container.mainContext
-
-        let photo = RoundPhoto()
-        ctx.insert(photo)
-        try ctx.save()
-
-        let fetched = try ctx.fetch(FetchDescriptor<RoundPhoto>())
-        let p = try XCTUnwrap(fetched.first)
-
-        XCTAssertEqual(p.localPath, "", "localPath 기본값은 빈 문자열이어야 해요")
-        XCTAssertNil(p.remoteURL, "remoteURL 기본값은 nil이어야 해요")
-    }
-
     // MARK: - PersistedDiscoveredCourse default 값 검증
 
     @MainActor
@@ -112,7 +93,6 @@ final class CloudKitCompatibilityTests: XCTestCase {
         let container = try makeContainer()
         let ctx = container.mainContext
 
-        // PersistedDiscoveredCourse init은 kakaoPlaceId/name/lat/lng 필수
         let course = PersistedDiscoveredCourse(kakaoPlaceId: "", name: "", lat: 0.0, lng: 0.0)
         ctx.insert(course)
         try ctx.save()
@@ -140,7 +120,6 @@ final class CloudKitCompatibilityTests: XCTestCase {
         round.players = [player]
         try ctx.save()
 
-        // Player에서 inverse round 조회
         let fetchedPlayers = try ctx.fetch(FetchDescriptor<Player>())
         let p = try XCTUnwrap(fetchedPlayers.first(where: { $0.name == "테스트" }))
         XCTAssertNotNil(p.round, "Player.round inverse 관계가 설정되어야 해요")
@@ -167,27 +146,7 @@ final class CloudKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(h.round?.courseId, "r2", "HoleScore.round가 올바른 Round를 참조해야 해요")
     }
 
-    // MARK: - inverse 관계 (RoundPhoto.round) 라운드트립
-
-    @MainActor
-    func test_inverseRelationship_RoundPhoto_round_roundTrip() throws {
-        let container = try makeContainer()
-        let ctx = container.mainContext
-
-        let photo = RoundPhoto(localPath: "/test/photo.jpg")
-        let round = Round(courseId: "r3", courseName: "사진 관계 테스트장")
-        ctx.insert(photo)
-        ctx.insert(round)
-        round.photos = [photo]
-        try ctx.save()
-
-        let fetchedPhotos = try ctx.fetch(FetchDescriptor<RoundPhoto>())
-        let p = try XCTUnwrap(fetchedPhotos.first(where: { $0.localPath == "/test/photo.jpg" }))
-        XCTAssertNotNil(p.round, "RoundPhoto.round inverse 관계가 설정되어야 해요")
-        XCTAssertEqual(p.round?.courseId, "r3", "RoundPhoto.round가 올바른 Round를 참조해야 해요")
-    }
-
-    // MARK: - Round 전체 라운드트립 (관계 포함)
+    // MARK: - Round 전체 라운드트립 (players/holes 관계 포함)
 
     @MainActor
     func test_Round_fullRelationships_roundTrip() throws {
@@ -197,29 +156,23 @@ final class CloudKitCompatibilityTests: XCTestCase {
         let player = Player(name: "나", isOwner: true, order: 0)
         let hole = HoleScore(holeNumber: 1, par: 4)
         hole.counts.append(ScoreEntry(playerId: player.id, value: 5))
-        let photo = RoundPhoto(localPath: "/photos/abc.jpg")
 
         ctx.insert(player)
         ctx.insert(hole)
-        ctx.insert(photo)
 
         let round = Round(courseId: "full-test", courseName: "전체 관계 테스트장")
         round.isFinished = true
         ctx.insert(round)
         round.players = [player]
         round.holes = [hole]
-        round.photos = [photo]
         try ctx.save()
 
-        // fetch 후 검증
         let rounds = try ctx.fetch(FetchDescriptor<Round>())
         let r = try XCTUnwrap(rounds.first)
 
         XCTAssertEqual(r.playerList.count, 1, "플레이어 1명이어야 해요")
         XCTAssertEqual(r.holeList.count, 1, "홀 1개여야 해요")
-        XCTAssertEqual(r.photoList.count, 1, "사진 1장이어야 해요")
         XCTAssertEqual(r.holeList.first?.count(for: player.id), 5, "타수 5타여야 해요")
-        XCTAssertEqual(r.photoList.first?.localPath, "/photos/abc.jpg", "사진 경로가 맞아야 해요")
     }
 
     // MARK: - PersistedDiscoveredCourse 중복 방지 로직 (no unique constraint)
@@ -231,7 +184,6 @@ final class CloudKitCompatibilityTests: XCTestCase {
 
         let kakaoId = "kakao-test-001"
 
-        // 첫 번째 insert
         let course1 = PersistedDiscoveredCourse(
             kakaoPlaceId: kakaoId, name: "테스트 CC",
             lat: 37.0, lng: 127.0
@@ -239,7 +191,6 @@ final class CloudKitCompatibilityTests: XCTestCase {
         ctx.insert(course1)
         try ctx.save()
 
-        // 중복 방지 조회 후 조건부 insert (NewRoundView 패턴)
         let predicate = #Predicate<PersistedDiscoveredCourse> { $0.kakaoPlaceId == kakaoId }
         let existing = (try? ctx.fetch(FetchDescriptor(predicate: predicate))) ?? []
         if existing.isEmpty {
@@ -251,7 +202,6 @@ final class CloudKitCompatibilityTests: XCTestCase {
             try ctx.save()
         }
 
-        // 중복이 없어야 함
         let all = try ctx.fetch(FetchDescriptor<PersistedDiscoveredCourse>())
         XCTAssertEqual(all.count, 1, "중복 방지 로직으로 1건만 저장되어야 해요")
         XCTAssertEqual(all.first?.kakaoPlaceId, kakaoId, "kakaoPlaceId가 일치해야 해요")

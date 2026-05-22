@@ -5,7 +5,7 @@ import SwiftData
 final class SwiftDataModelTests: XCTestCase {
     @MainActor
     func test_Round_roundTrip() throws {
-        let schema = Schema([Round.self, Player.self, HoleScore.self, RoundPhoto.self])
+        let schema = Schema([Round.self, Player.self, HoleScore.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: schema, configurations: config)
         let ctx = container.mainContext
@@ -21,7 +21,7 @@ final class SwiftDataModelTests: XCTestCase {
 
     @MainActor
     func test_HoleScore_ScoreEntry_roundTrip() throws {
-        let schema = Schema([Round.self, Player.self, HoleScore.self, RoundPhoto.self])
+        let schema = Schema([Round.self, Player.self, HoleScore.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: schema, configurations: config)
         let ctx = container.mainContext

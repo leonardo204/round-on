@@ -9,7 +9,7 @@ final class ScoreCardViewModelStressTests: XCTestCase {
 
     @MainActor
     private func makeContainer() throws -> ModelContainer {
-        let schema = Schema([Round.self, Player.self, HoleScore.self, RoundPhoto.self])
+        let schema = Schema([Round.self, Player.self, HoleScore.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: config)
     }

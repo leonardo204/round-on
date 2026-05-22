@@ -16,7 +16,7 @@ final class ShareViewModelTests: XCTestCase {
 
     @MainActor
     private func makeContainer() throws -> ModelContainer {
-        let schema = Schema([Round.self, Player.self, HoleScore.self, RoundPhoto.self])
+        let schema = Schema([Round.self, Player.self, HoleScore.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: config)
     }
@@ -65,15 +65,6 @@ final class ShareViewModelTests: XCTestCase {
         XCTAssertFalse(vm.canShare, "isLoading 중엔 canShare가 false여야 한다")
     }
 
-    // MARK: canShare — 사진 업로드 중엔 false
-
-    @MainActor
-    func test_canShare_falseWhenUploadingPhotos() {
-        let vm = ShareViewModel()
-        vm.isUploadingPhotos = true
-        XCTAssertFalse(vm.canShare, "isUploadingPhotos 중엔 canShare가 false여야 한다")
-    }
-
     // MARK: canShare — PIN 4자리 아니면 false
 
     @MainActor
@@ -120,22 +111,6 @@ final class ShareViewModelTests: XCTestCase {
         vm.checkExpiration()
 
         XCTAssertNotNil(round.sharedShortId, "만료되지 않았으면 sharedShortId가 유지되어야 한다")
-    }
-
-    // MARK: 사진 업로드 진행 상태 리셋
-
-    @MainActor
-    func test_resetPhotoUploadProgress_clearsState() {
-        let vm = ShareViewModel()
-        vm.photoUploadCurrent = 3
-        vm.photoUploadTotal = 5
-        vm.isUploadingPhotos = true
-
-        vm.resetPhotoUploadProgress()
-
-        XCTAssertEqual(vm.photoUploadCurrent, 0)
-        XCTAssertEqual(vm.photoUploadTotal, 0)
-        XCTAssertFalse(vm.isUploadingPhotos)
     }
 
     // MARK: currentOptions — PIN 적용 검증
