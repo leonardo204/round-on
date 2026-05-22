@@ -260,7 +260,7 @@ struct HomeView: View {
                     .padding(.top, 8)
 
                 if !finishedRounds.isEmpty {
-                    sectionHeader("이번 달")
+                    sectionHeader("요약")
                     metricsGrid
                         .padding(.horizontal, 16)
                         .padding(.bottom, 8)
@@ -476,12 +476,12 @@ struct HomeView: View {
         .padding(.bottom, 8)
     }
 
-    // MARK: - Metrics (이번 달)
+    // MARK: - Metrics (전체)
 
     private var metricsGrid: some View {
         HStack(spacing: 10) {
-            metricCard(label: "라운드", value: "\(monthlyCount)", unit: "회")
-            metricCard(label: "평균", value: averageScoreText, unit: "타")
+            metricCard(label: "전체 라운드", value: "\(finishedRounds.count)", unit: "회")
+            metricCard(label: "평균 스코어", value: averageScoreText, unit: "타")
         }
     }
 
@@ -552,14 +552,6 @@ struct HomeView: View {
 
     private var finishedRounds: [Round] {
         rounds.filter { $0.isFinished }
-    }
-
-    private var monthlyCount: Int {
-        let cal = Calendar.current
-        let now = Date()
-        return finishedRounds.filter {
-            cal.isDate($0.startedAt, equalTo: now, toGranularity: .month)
-        }.count
     }
 
     private var averageScoreText: String {
