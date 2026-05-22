@@ -887,6 +887,12 @@ struct NewRoundView: View {
 
 // MARK: - CourseSearchSheet (카카오 통합 검색 — 옵션 B)
 
+/// 이전 라운드 이력 요약 (count + 가장 최근 날짜).
+struct RoundHistorySummary {
+    let count: Int
+    let latestDate: Date
+}
+
 /// 로컬 DB + 영구 캐시 + 카카오 로컬 API 통합 검색 Sheet.
 struct CourseSearchSheet: View {
     let localCourses: [GolfCourse]
@@ -903,6 +909,12 @@ struct CourseSearchSheet: View {
     @State private var isSearchingKakao: Bool = false
     /// 카카오 검색 debounce 태스크
     @State private var kakaoSearchTask: Task<Void, Never>?
+
+    // MARK: - 이전 라운드 이력 (courseId 기준 + courseName 폴백)
+    /// courseId → 이력 요약 (isFinished == true 라운드만)
+    @State private var historyById: [String: RoundHistorySummary] = [:]
+    /// courseName → 이력 요약 (courseId 없을 때 폴백)
+    @State private var historyByName: [String: RoundHistorySummary] = [:]
 
     // MARK: - 결과 분류
 
@@ -941,7 +953,10 @@ struct CourseSearchSheet: View {
                             Button {
                                 onSelectLocal(course)
                             } label: {
-                                LocalCourseRowView(course: course)
+                                LocalCourseRowView(
+                                    course: course,
+                                    history: historySummary(for: course)
+                                )
                             }
                         }
                     } header: {
@@ -982,6 +997,7 @@ struct CourseSearchSheet: View {
             }
             .task {
                 loadPersistedCourses()
+                loadRoundHistory()
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -1026,6 +1042,46 @@ struct CourseSearchSheet: View {
     private func loadPersistedCourses() {
         let fetched = (try? modelContext.fetch(FetchDescriptor<PersistedDiscoveredCourse>())) ?? []
         persistedCourses = fetched.map { $0.toGolfCourse() }
+    }
+
+    /// 완료된 라운드(isFinished == true)를 courseId / courseName 기준으로 집계.
+    /// O(N) 1회 스캔 후 O(1) lookup dictionary 구성.
+    private func loadRoundHistory() {
+        var descriptor = FetchDescriptor<Round>()
+        descriptor.predicate = #Predicate { $0.isFinished == true }
+        let finished = (try? modelContext.fetch(descriptor)) ?? []
+
+        var byId: [String: (count: Int, latest: Date)] = [:]
+        var byName: [String: (count: Int, latest: Date)] = [:]
+
+        for round in finished {
+            let date = round.finishedAt ?? round.startedAt
+            let cid = round.courseId
+            if !cid.isEmpty {
+                if let existing = byId[cid] {
+                    byId[cid] = (existing.count + 1, max(existing.latest, date))
+                } else {
+                    byId[cid] = (1, date)
+                }
+            }
+            let cname = round.courseName
+            if !cname.isEmpty {
+                if let existing = byName[cname] {
+                    byName[cname] = (existing.count + 1, max(existing.latest, date))
+                } else {
+                    byName[cname] = (1, date)
+                }
+            }
+        }
+
+        historyById = byId.mapValues { RoundHistorySummary(count: $0.count, latestDate: $0.latest) }
+        historyByName = byName.mapValues { RoundHistorySummary(count: $0.count, latestDate: $0.latest) }
+    }
+
+    /// courseId 우선, 없으면 courseName으로 이력 조회.
+    func historySummary(for course: GolfCourse) -> RoundHistorySummary? {
+        if !course.id.isEmpty, let s = historyById[course.id] { return s }
+        return historyByName[course.name]
     }
 
     /// 검색어 변경 → 300ms debounce → 카카오 API 호출
@@ -1122,8 +1178,16 @@ struct CandidateCourseRowView: View {
 @MainActor
 struct LocalCourseRowView: View {
     let course: GolfCourse
+    var history: RoundHistorySummary? = nil
 
     @State private var resolvedAddress: String?
+
+    private static let historyDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -1152,6 +1216,12 @@ struct LocalCourseRowView: View {
                     .foregroundStyle(Color.springTextSecondary)
                     .lineLimit(1)
                     .truncationMode(.middle)
+            }
+            // 이전 라운드 이력 (isFinished 완료 라운드만)
+            if let h = history {
+                Text("이전 \(h.count)회 · \(Self.historyDateFormatter.string(from: h.latestDate))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .task {
