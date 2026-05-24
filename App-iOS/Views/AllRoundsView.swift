@@ -194,10 +194,15 @@ private struct RoundRow: View {
             roundIcon
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(round.courseName)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
+                HStack(spacing: 6) {
+                    Text(round.courseName)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                    if round.isImported {
+                        importedBadge
+                    }
+                }
                 Text(metaText)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -216,6 +221,22 @@ private struct RoundRow: View {
         .padding(.vertical, 14)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+    }
+
+    /// 가져온 라운드임을 표시하는 소형 배지
+    private var importedBadge: some View {
+        HStack(spacing: 3) {
+            Image(systemName: "square.and.arrow.down.fill")
+                .font(.system(size: 9, weight: .semibold))
+            Text("가져옴")
+                .font(.system(size: 10, weight: .semibold))
+        }
+        .foregroundStyle(Color(red: 0.6, green: 0.5, blue: 0.1))
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .background(Color(red: 1.0, green: 0.95, blue: 0.7).opacity(0.9))
+        .clipShape(Capsule())
+        .accessibilityLabel("스코어카드에서 가져온 라운드")
     }
 
     private var roundIcon: some View {
