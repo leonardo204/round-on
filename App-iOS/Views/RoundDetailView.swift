@@ -7,6 +7,7 @@ import Shared
 // iphone-2.8: 완료 라운드 사후 보기 (12-SCREENS 2.8)
 // viewer URL 복사 + 만료 표시 + 재공유 진입
 // 사진 기능은 2026-05-18 폐기 (개인정보보호, 비용 절감)
+// 디자인: viewer.ts v6 (2026-05-24) 이식
 
 struct RoundDetailView: View {
 
@@ -46,25 +47,35 @@ struct RoundDetailView: View {
 
     var body: some View {
         ZStack {
-            Color.springSurface.ignoresSafeArea()
+            Color.paleSageBg.ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(spacing: 18) {
                     // 배너
                     if let msg = bannerMessage {
                         BannerNotice(message: msg, severity: bannerSeverity, dismissAction: {
                             bannerMessage = nil
                         })
+                        .padding(.horizontal, 16)
                     }
 
-                    // 라운드 요약
-                    summaryHeader
+                    // Hero 카드 (viewer eyebrow + 코스명 + 메타)
+                    heroCard
+                        .padding(.horizontal, 16)
 
                     // 공유 링크 섹션
                     shareLinkSection
 
-                    // 홀별 스코어 요약
-                    scoreSection
+                    // Player 요약 카드
+                    playerSummarySection
+                        .padding(.horizontal, 16)
+
+                    // 홀별 스코어카드 (전반/후반)
+                    scorecardSection
+
+                    // 범례
+                    legendCard
+                        .padding(.horizontal, 16)
 
                     Spacer(minLength: 80)
                 }
@@ -86,7 +97,7 @@ struct RoundDetailView: View {
                         saveEdit()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color.springGreenPrimary)
+                    .foregroundStyle(Color.houseGreen)
                 } else {
                     Menu {
                         Button {
@@ -101,7 +112,7 @@ struct RoundDetailView: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis.circle")
-                            .foregroundStyle(Color.springGreenPrimary)
+                            .foregroundStyle(Color.houseGreen)
                     }
                     .accessibilityLabel("라운드 메뉴")
                 }
@@ -147,45 +158,110 @@ struct RoundDetailView: View {
         }
     }
 
-    // MARK: Summary Header
+    // MARK: - Hero Card (viewer eyebrow + 코스명 + 메타)
 
-    private var summaryHeader: some View {
-        HStack(alignment: .center, spacing: 8) {
-            VStack(alignment: .leading, spacing: 2) {
-                // 1줄: 코스명/홀수
-                HStack(spacing: 6) {
-                    if let sub = round.displaySubLabel {
-                        Text(sub)
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(Color.springTextPrimary)
-                    }
-                    Text("· \(round.holeList.count)홀")
-                        .font(.system(size: 13))
-                        .foregroundStyle(Color.springTextSecondary)
+    private var heroCard: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // 상단 5pt 그라데이션 라인
+            LinearGradient(
+                colors: [Color.houseGreen, Color.heroLeaderDelta, Color.accentGreen],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+            .frame(height: 5)
+
+            VStack(alignment: .leading, spacing: 12) {
+                // eyebrow
+                HStack(spacing: 7) {
+                    Circle()
+                        .fill(Color.accentGreen)
+                        .frame(width: 6, height: 6)
+                    Text("ROUND SCORECARD")
+                        .font(.system(size: 11, weight: .bold))
+                        .tracking(1.8)
+                        .foregroundStyle(Color.accentGreen)
                 }
-                // 2줄: 날짜
-                Text(formattedDate(round.finishedAt ?? round.date))
-                    .font(.system(size: 12))
-                    .foregroundStyle(Color.springTextSecondary)
+
+                // 코스명
+                Text(round.courseName)
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(Color.inkPrimary)
+                    .lineLimit(2)
+
+                // 메타 (날짜 · 플레이어 · Par)
+                heroMeta
             }
-            Spacer()
-            Text("완료")
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(Color.springGreenPrimary)
-                .padding(.horizontal, 9)
-                .padding(.vertical, 3)
-                .background(Color.springGreenSecondary.opacity(0.3))
-                .clipShape(Capsule())
+            .padding(.horizontal, 22)
+            .padding(.top, 22)
+            .padding(.bottom, 22)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(Color.springSurfaceElevated)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
-        .padding(.horizontal, 16)
+        .background(Color.cardSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .strokeBorder(Color.cardBorder, lineWidth: 1)
+        )
+        .shadow(color: Color(red: 0.059, green: 0.239, blue: 0.180).opacity(0.04), radius: 2, x: 0, y: 1)
+        .shadow(color: Color(red: 0.059, green: 0.239, blue: 0.180).opacity(0.10), radius: 20, x: 0, y: 10)
     }
 
-    // MARK: Share Link Section
+    private var heroMeta: some View {
+        let dateStr = formattedViewerDate(round.finishedAt ?? round.date)
+        let players = scoreVM.players
+        let playerLabel: String = {
+            if players.isEmpty { return "" }
+            if players.count == 1 { return players[0].name }
+            return "\(players[0].name) 외 \(players.count - 1)명"
+        }()
+        let totalPar = scoreVM.totalPar
+
+        return HStack(spacing: 12) {
+            if !dateStr.isEmpty {
+                Text(dateStr)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color.inkSoft)
+            }
+            if !dateStr.isEmpty && !playerLabel.isEmpty {
+                Circle()
+                    .fill(Color.inkFaint)
+                    .frame(width: 4, height: 4)
+            }
+            if !playerLabel.isEmpty {
+                Text(playerLabel)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color.inkSoft)
+                    .lineLimit(1)
+            }
+            if totalPar > 0 {
+                Circle()
+                    .fill(Color.inkFaint)
+                    .frame(width: 4, height: 4)
+                Text("Par \(totalPar)")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color.inkSoft)
+            }
+            if round.isImported {
+                importedChip
+            }
+        }
+    }
+
+    private var importedChip: some View {
+        HStack(spacing: 3) {
+            Image(systemName: "square.and.arrow.down")
+                .font(.system(size: 9, weight: .semibold))
+            Text("가져옴")
+                .font(.system(size: 10, weight: .semibold))
+        }
+        .foregroundStyle(Color(red: 0.55, green: 0.45, blue: 0.05))
+        .padding(.horizontal, 7)
+        .padding(.vertical, 2)
+        .background(Color(red: 1.0, green: 0.95, blue: 0.7).opacity(0.9))
+        .clipShape(Capsule())
+        .accessibilityLabel("스코어카드에서 가져온 라운드")
+    }
+
+    // MARK: - Share Link Section
 
     private var shareLinkSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -194,15 +270,13 @@ struct RoundDetailView: View {
 
             if let url = round.sharedURL, round.sharedShortId != nil {
                 HStack(spacing: 8) {
-                    // URL — 좌측 flex
                     Text(url.replacingOccurrences(of: "https://", with: ""))
                         .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(Color.springGreenPrimary)
+                        .foregroundStyle(Color.houseGreen)
                         .lineLimit(1)
                         .truncationMode(.middle)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // 3 아이콘 (32x32 작은 버튼)
                     HStack(spacing: 6) {
                         compactIconButton(icon: "safari", label: "바로보기") {
                             showSafari = true
@@ -227,8 +301,12 @@ struct RoundDetailView: View {
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background(Color.springSurfaceElevated)
+                .background(Color.cardSurface)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .strokeBorder(Color.cardBorder, lineWidth: 1)
+                )
                 .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
                 .padding(.horizontal, 16)
                 .overlay(alignment: .bottom) {
@@ -245,7 +323,6 @@ struct RoundDetailView: View {
                     }
                 }
 
-                // 만료일 — 카드 아래 작은 캡션
                 if let expiresAt = round.sharedExpiresAt {
                     let expired = expiresAt < .now
                     HStack(spacing: 4) {
@@ -256,46 +333,27 @@ struct RoundDetailView: View {
                             : "만료: \(formattedExpiry(expiresAt))")
                             .font(.system(size: 11))
                     }
-                    .foregroundStyle(expired ? .red : Color.springTextSecondary)
+                    .foregroundStyle(expired ? .red : Color.inkSoft)
                     .padding(.horizontal, 22)
                     .padding(.top, 2)
                 }
             } else {
                 Text("아직 공유하지 않았어요.")
                     .font(.system(size: 14))
-                    .foregroundStyle(Color.springTextSecondary)
+                    .foregroundStyle(Color.inkSoft)
                     .padding(.horizontal, 16)
             }
         }
     }
 
-    /// 컴팩트 아이콘 버튼 — 32x32 둥근 사각형, 공유 카드 우측 인라인 액션용
     private func compactIconButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: icon)
                 .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(Color.springGreenPrimary)
+                .foregroundStyle(Color.houseGreen)
                 .frame(width: 32, height: 32)
-                .background(Color.springGreenSecondary.opacity(0.25))
+                .background(Color.accentGreen.opacity(0.12))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(label)
-    }
-
-    private func shareActionButton(icon: String, label: String, tintColor: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(tintColor)
-                Text(label)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(tintColor)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
@@ -307,28 +365,83 @@ struct RoundDetailView: View {
             .foregroundStyle(.white)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
-            .background(Color.springGreenPrimary.opacity(0.95), in: Capsule())
+            .background(Color.houseGreen.opacity(0.95), in: Capsule())
             .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 2)
     }
 
-    // MARK: Score Section
+    // MARK: - Player Summary Section (viewer .players 3-card hero)
 
-    private var scoreSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 8) {
-                sectionLabel("스코어")
+    private var playerSummarySection: some View {
+        let players = scoreVM.players
+        let totalPar = scoreVM.totalPar
 
-                // 편집 토글 (펜슬 아이콘)
+        // (player, sum) 목록 — 점수 낮은 순 정렬 (미입력 0점은 후미)
+        let sums: [(player: Player, sum: Int)] = players.map { player in
+            let sum = scoreVM.totalByPlayer[player.id] ?? 0
+            return (player, sum)
+        }.sorted {
+            if $0.sum == 0 && $1.sum == 0 { return false }
+            if $0.sum == 0 { return false }
+            if $1.sum == 0 { return true }
+            return $0.sum < $1.sum
+        }
+
+        let validSums = sums.filter { $0.sum > 0 }
+        let minSum = validSums.map(\.sum).min() ?? 0
+
+        // 1~4명: 한 행에 모두 표시 / 5명 이상: 4열 wrap
+        let colCount = min(players.count, 4)
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: max(1, colCount))
+        let isTight = colCount == 4
+
+        return LazyVGrid(columns: columns, spacing: 8) {
+            ForEach(Array(sums.enumerated()), id: \.offset) { _, entry in
+                let isLeader = entry.sum > 0 && entry.sum == minSum
+                let rank = rankLabel(for: entry.player.id, sums: sums)
+                PlayerHeroCard(
+                    player: entry.player,
+                    sum: entry.sum,
+                    totalPar: totalPar,
+                    isLeader: isLeader,
+                    rank: rank,
+                    isTight: isTight
+                )
+            }
+        }
+    }
+
+    private func rankLabel(for playerId: UUID, sums: [(player: Player, sum: Int)]) -> String {
+        let validSorted = sums.filter { $0.sum > 0 }.sorted { $0.sum < $1.sum }
+        var i = 0
+        while i < validSorted.count {
+            let currentSum = validSorted[i].sum
+            var j = i
+            while j < validSorted.count && validSorted[j].sum == currentSum { j += 1 }
+            let tied = j - i
+            for k in i..<j {
+                if validSorted[k].player.id == playerId {
+                    return tied > 1 ? "T\(i + 1)" : "\(i + 1)"
+                }
+            }
+            i = j
+        }
+        return ""
+    }
+
+    // MARK: - Scorecard Section (전반/후반 카드)
+
+    private var scorecardSection: some View {
+        VStack(spacing: 18) {
+            // 편집 토글 버튼
+            HStack {
+                sectionLabel("스코어카드")
+                    .padding(.leading, 16)
                 Button {
-                    if isEditMode {
-                        saveEdit()
-                    } else {
-                        enterEditMode()
-                    }
+                    if isEditMode { saveEdit() } else { enterEditMode() }
                 } label: {
                     Image(systemName: isEditMode ? "checkmark.circle.fill" : "square.and.pencil")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(Color.springGreenPrimary)
+                        .foregroundStyle(Color.houseGreen)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(isEditMode ? "편집 완료" : "스코어 편집")
@@ -336,129 +449,288 @@ struct RoundDetailView: View {
                 if isEditMode {
                     Text("탭+1 / 길게누르기-1")
                         .font(.system(size: 11))
-                        .foregroundStyle(Color.springTextSecondary)
+                        .foregroundStyle(Color.inkSoft)
                 }
                 Spacer()
             }
-            .padding(.horizontal, 16)
 
-            // 컴팩트 합계 — 그리드 위, 플레이어별 한 줄씩 "타수(±diff)"
-            compactTotalsRow
+            // 전반 카드
+            if !scoreVM.outHoles.isEmpty {
+                halfCard(
+                    holes: scoreVM.outHoles,
+                    groupLabel: "OUT",
+                    halfTitle: round.frontCourseName ?? "전반 홀",
+                    groupPar: scoreVM.outParTotal
+                )
                 .padding(.horizontal, 16)
+            }
 
-            // 홀별 스코어카드 그리드 (read-only 또는 편집 모드)
-            if isEditMode {
-                HoleScoreGrid(
-                    scoreVM: scoreVM,
-                    interactive: true,
-                    currentHoleNumber: Int?.none,
-                    onParChange: { holeNumber, newPar in
-                        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
-                        hole.par = newPar
-                        scoreVM.refresh(from: round)
-                    },
-                    onScoreTap: { holeNumber, playerId in
-                        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
-                        editIncrement(hole: hole, playerId: playerId)
-                    },
-                    onScoreLongPress: { holeNumber, playerId in
-                        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
-                        editDecrement(hole: hole, playerId: playerId)
-                    },
-                    frontLabel: round.frontCourseName,
-                    backLabel: round.backCourseName,
-                    showTotalCard: false
+            // 후반 카드
+            if !scoreVM.inHoles.isEmpty {
+                halfCard(
+                    holes: scoreVM.inHoles,
+                    groupLabel: "IN",
+                    halfTitle: round.backCourseName ?? "후반 홀",
+                    groupPar: scoreVM.inParTotal
                 )
-                .padding(.horizontal, 12)
-            } else {
-                HoleScoreGrid(
-                    scoreVM: scoreVM,
-                    interactive: false,
-                    currentHoleNumber: Int?.none,
-                    frontLabel: round.frontCourseName,
-                    backLabel: round.backCourseName,
-                    showTotalCard: false
-                )
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 16)
             }
         }
     }
 
-    /// 그리드 위 컴팩트 합계 — 플레이어별 가로 컬럼 (N-up). 1~4명 자동 균등 분배.
-    private var compactTotalsRow: some View {
-        let totalPar = scoreVM.totalPar
-        return HStack(spacing: 6) {
-            ForEach(scoreVM.players) { player in
-                let total = scoreVM.totalByPlayer[player.id] ?? 0
-                let (diffText, parity) = ScoreCardViewModel.formatScoreVsPar(score: total, par: totalPar)
-                VStack(spacing: 2) {
-                    Text(player.name)
-                        .font(.system(size: 11, weight: player.isOwner ? .bold : .medium))
-                        .foregroundStyle(player.isOwner ? Color.springGreenPrimary : Color.springTextSecondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                    if total > 0 {
-                        Text("\(total)")
-                            .font(.system(size: 20, weight: .heavy))
-                            .monospacedDigit()
-                            .foregroundStyle(Color.springTextPrimary)
-                        Text(diffText)
-                            .font(.system(size: 11, weight: .bold))
-                            .monospacedDigit()
-                            .foregroundStyle(parityColor(parity))
-                    } else {
-                        Text("-")
-                            .font(.system(size: 20, weight: .heavy))
-                            .foregroundStyle(Color.springTextSecondary)
-                        Text(" ")
-                            .font(.system(size: 11))
+    // MARK: Half Card (전반/후반 공통)
+
+    private func halfCard(
+        holes: [Int],
+        groupLabel: String,
+        halfTitle: String,
+        groupPar: Int
+    ) -> some View {
+        VStack(spacing: 0) {
+            // 카드 헤더
+            HStack {
+                Text(halfTitle)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(Color.inkPrimary)
+                Spacer()
+                // OUT/IN pill
+                Text("\(groupLabel) · Par \(groupPar)")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(1.0)
+                    .foregroundStyle(Color.accentGreen)
+                    .padding(.horizontal, 11)
+                    .padding(.vertical, 5)
+                    .background(Color.tableHeaderBg)
+                    .overlay(
+                        Capsule()
+                            .strokeBorder(Color.accentGreen.opacity(0.25), lineWidth: 1)
+                    )
+                    .clipShape(Capsule())
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+
+            // 테이블 — device width fit (가로 스크롤 없음, viewer @media max-width 방식)
+            GeometryReader { geo in
+                // 라벨 컬럼: 72pt 고정, 합계 컬럼: 52pt 고정, 나머지를 홀 개수로 균등 분배
+                let labelW: CGFloat = 72
+                let sumW: CGFloat = 52
+                let holeW: CGFloat = max(24, (geo.size.width - labelW - sumW) / CGFloat(max(1, holes.count)))
+                VStack(spacing: 0) {
+                    // 헤더 행 (green-50 배경)
+                    HStack(spacing: 0) {
+                        tableHeaderPlayerCol(width: labelW)
+                        ForEach(holes, id: \.self) { h in
+                            tableHeaderHoleCol(holeNumber: h, par: scoreVM.parByHole[h] ?? 4, width: holeW)
+                        }
+                        tableHeaderSumCol(groupLabel: groupLabel, groupPar: groupPar, width: sumW)
+                    }
+                    .background(Color.tableHeaderBg)
+
+                    Divider().background(Color.cardBorder)
+
+                    // 플레이어 행
+                    ForEach(Array(scoreVM.players.enumerated()), id: \.offset) { idx, player in
+                        playerTableRow(
+                            player: player,
+                            holes: holes,
+                            groupPar: groupPar,
+                            isEven: idx % 2 == 1,
+                            labelW: labelW,
+                            holeW: holeW,
+                            sumW: sumW
+                        )
+                        if idx < scoreVM.players.count - 1 {
+                            Divider().background(Color.cardBorder)
+                        }
                     }
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(Color.springSurfaceElevated)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
             }
+            .frame(height: CGFloat(scoreVM.players.count + 1) * 40 + 1)
         }
+        .background(Color.cardSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .strokeBorder(Color.cardBorder, lineWidth: 1)
+        )
+        .shadow(color: Color(red: 0.059, green: 0.239, blue: 0.180).opacity(0.04), radius: 2, x: 0, y: 1)
     }
 
-    /// 편집 모드에서 특정 플레이어의 홀별 타수 그리드
-    private func holeEditGrid(player: Player) -> some View {
-        LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 9),
-            spacing: 4
-        ) {
-            ForEach(round.holeList.sorted { $0.holeNumber < $1.holeNumber }) { hole in
-                let count = hole.count(for: player.id)
-                VStack(spacing: 1) {
-                    Text("\(hole.holeNumber)")
-                        .font(.system(size: 9))
-                        .foregroundStyle(Color.springTextSecondary)
-                    Text(count > 0 ? "\(count)" : "-")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(Color.springTextPrimary)
-                        .frame(width: 32, height: 32)
-                        .background(count > 0 ? Color.springGreenSecondary.opacity(0.25) : Color.springSurface)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .onTapGesture {
-                            // 탭: +1
+    // MARK: Table Header Cells
+
+    private func tableHeaderPlayerCol(width: CGFloat) -> some View {
+        Text("홀")
+            .font(.system(size: 13, weight: .bold))
+            .foregroundStyle(Color.inkPrimary)
+            .frame(width: width, alignment: .leading)
+            .padding(.leading, 10)
+            .padding(.vertical, 9)
+    }
+
+    private func tableHeaderHoleCol(holeNumber: Int, par: Int, width: CGFloat) -> some View {
+        VStack(spacing: 2) {
+            Text("\(holeNumber)")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(Color.inkPrimary)
+                .minimumScaleFactor(0.7)
+            Text("(\(par))")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(Color.inkFaint)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(width: width)
+        .padding(.vertical, 9)
+    }
+
+    private func tableHeaderSumCol(groupLabel: String, groupPar: Int, width: CGFloat) -> some View {
+        VStack(spacing: 2) {
+            Text(groupLabel)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(.white)
+                .minimumScaleFactor(0.7)
+            Text("(\(groupPar))")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(.white.opacity(0.6))
+                .minimumScaleFactor(0.7)
+        }
+        .frame(width: width)
+        .padding(.vertical, 9)
+        .background(Color.houseGreen)
+    }
+
+    // MARK: Player Table Row
+
+    private func playerTableRow(
+        player: Player,
+        holes: [Int],
+        groupPar: Int,
+        isEven: Bool,
+        labelW: CGFloat,
+        holeW: CGFloat,
+        sumW: CGFloat
+    ) -> some View {
+        let cellH: CGFloat = 38
+        return HStack(spacing: 0) {
+            // 이름 셀 (좌측 swatch + 이름)
+            HStack(spacing: 6) {
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(Color.accentGreen)
+                    .frame(width: 6, height: 6)
+                Text(player.name)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color.inkPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .frame(width: labelW, alignment: .leading)
+            .padding(.leading, 10)
+            .padding(.vertical, 8)
+
+            // 홀별 점수 셀
+            ForEach(holes, id: \.self) { h in
+                let count = scoreVM.count(holeNumber: h, playerId: player.id)
+                let cat = scoreVM.scoreCategory(holeNumber: h, playerId: player.id)
+                let par = scoreVM.parByHole[h] ?? 4
+
+                if isEditMode {
+                    ScoreCell(
+                        count: count,
+                        category: cat,
+                        isCurrentHole: false,
+                        holeNumber: h,
+                        playerName: player.name,
+                        par: par,
+                        interactive: true,
+                        onTap: {
+                            guard let hole = round.holeList.first(where: { $0.holeNumber == h }) else { return }
                             editIncrement(hole: hole, playerId: player.id)
-                        }
-                        .onLongPressGesture(minimumDuration: 0.4) {
-                            // 길게 누르기: -1
+                        },
+                        onLongPress: {
+                            guard let hole = round.holeList.first(where: { $0.holeNumber == h }) else { return }
                             editDecrement(hole: hole, playerId: player.id)
                         }
+                    )
+                    .frame(width: holeW, height: cellH)
+                } else {
+                    ScoreCellView(
+                        strokes: count,
+                        par: par,
+                        cellSize: min(24, holeW - 4),
+                        holeNumber: h,
+                        playerName: player.name
+                    )
+                    .frame(width: holeW, height: cellH)
                 }
             }
+
+            // 합계 셀
+            let groupSum: Int = holes.reduce(0) { acc, h in
+                acc + scoreVM.count(holeNumber: h, playerId: player.id)
+            }
+            VStack(spacing: 1) {
+                if groupSum > 0 {
+                    Text("\(groupSum)")
+                        .font(.system(size: 15, weight: .semibold))
+                        .monospacedDigit()
+                        .minimumScaleFactor(0.7)
+                        .foregroundStyle(Color.inkPrimary)
+                    let delta = groupSum - groupPar
+                    Text(delta == 0 ? "E" : delta > 0 ? "+\(delta)" : "\(delta)")
+                        .font(.system(size: 9, weight: .bold))
+                        .monospacedDigit()
+                        .foregroundStyle(Color.sumDelta)
+                } else {
+                    Text("—")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.inkFaint)
+                }
+            }
+            .frame(width: sumW)
+            .padding(.vertical, 8)
+            .background(Color.tableHeaderBg)
         }
-        .padding(.horizontal, 16)
-        .padding(.bottom, 12)
+        .background(isEven ? Color(red: 0.988, green: 0.996, blue: 0.988) : Color.clear)
     }
 
-    // MARK: Photo Section
+    // MARK: - Legend Card
 
-    // MARK: Share Button
+    private var legendCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 20) {
+                legendChip(label: "버디 이상 (≤-1)", diff: -1, par: 4)
+                legendChip(label: "파 (E)", diff: 0, par: 4)
+            }
+            HStack(spacing: 20) {
+                legendChip(label: "보기 (+1)", diff: 1, par: 4)
+                legendChip(label: "더블+ (≥+2)", diff: 2, par: 4)
+            }
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.cardSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .strokeBorder(Color.cardBorder, lineWidth: 1)
+        )
+    }
+
+    private func legendChip(label: String, diff: Int, par: Int) -> some View {
+        let strokes = par + diff
+        return HStack(spacing: 10) {
+            ScoreCellView(strokes: strokes, par: par, cellSize: 30)
+                .frame(width: 30, height: 30)
+            Text(label)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Color.inkSoft)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Share Button
 
     private var shareButton: some View {
         Button {
@@ -469,27 +741,32 @@ struct RoundDetailView: View {
                 Text(round.sharedShortId != nil ? "viewer 업데이트 / 회수" : "공유하기")
                     .font(.system(size: 17, weight: .semibold))
             }
-            .foregroundStyle(Color.springTextPrimary)
+            .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .frame(height: 54)
-            .background(Color.springGreenPrimary)
+            .background(
+                LinearGradient(
+                    colors: [Color.houseGreen, Color(red: 0.078, green: 0.282, blue: 0.184)],
+                    startPoint: UnitPoint(x: 0.1, y: 0),
+                    endPoint: UnitPoint(x: 0.9, y: 1)
+                )
+            )
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 16)
             .padding(.bottom, 32)
         }
         .background(
             LinearGradient(
-                colors: [Color.springSurface.opacity(0), Color.springSurface],
+                colors: [Color.paleSageBg.opacity(0), Color.paleSageBg],
                 startPoint: .top,
                 endPoint: .bottom
             )
         )
     }
 
-    // MARK: F7: 사후 편집 헬퍼
+    // MARK: - F7: 사후 편집 헬퍼
 
     private func enterEditMode() {
-        // RoundViewModel을 편집 전용으로 초기화
         let vm = RoundViewModel(modelContext: modelContext)
         vm.editRound(round)
         editRoundVM = vm
@@ -499,11 +776,9 @@ struct RoundDetailView: View {
     private func saveEdit() {
         do {
             try editRoundVM?.commitEdit()
-            // ScoreCardViewModel 갱신
             scoreVM.refresh(from: round)
             bannerMessage = "수정 내용을 저장했어요."
             bannerSeverity = .success
-            // success 토스트는 2초 후 자동 dismiss — 사용자가 X 누를 필요 없음
             let snapshotMessage = bannerMessage
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 if bannerMessage == snapshotMessage {
@@ -513,7 +788,6 @@ struct RoundDetailView: View {
         } catch {
             bannerMessage = "저장 중 오류가 발생했어요."
             bannerSeverity = .error
-            // 오류는 사용자 확인 필요 — 자동 dismiss 없음
         }
         isEditMode = false
         editRoundVM = nil
@@ -540,7 +814,7 @@ struct RoundDetailView: View {
         scoreVM.refresh(from: round)
     }
 
-    // MARK: 라운드 삭제
+    // MARK: - 라운드 삭제
 
     private func deleteRound() {
         AppLogger.view.info("라운드 삭제: \(round.courseName) (id=\(round.id))")
@@ -556,9 +830,6 @@ struct RoundDetailView: View {
         dismiss()
     }
 
-    // 사진 업로드 헬퍼는 2026-05-18 폐기 (사진 공유 기능 제거)
-
-    /// UIActivityViewController를 keyWindow root에 띄움.
     private func presentActivitySheet(url: URL) {
         let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
         guard let root = UIApplication.shared.connectedScenes
@@ -568,10 +839,8 @@ struct RoundDetailView: View {
             AppLogger.share.error("[RoundDetail] keyWindow rootViewController 없음 — 공유 시트 표시 실패")
             return
         }
-        // 가장 위에 표시되는 modal 위에 present
         var top = root
         while let presented = top.presentedViewController { top = presented }
-        // iPad: popover anchor
         if let pop = activityVC.popoverPresentationController {
             pop.sourceView = top.view
             pop.sourceRect = CGRect(x: top.view.bounds.midX, y: top.view.bounds.midY, width: 0, height: 0)
@@ -580,30 +849,20 @@ struct RoundDetailView: View {
         top.present(activityVC, animated: true)
     }
 
-    // MARK: Helpers
+    // MARK: - Helpers
 
     private func sectionLabel(_ title: String) -> some View {
         Text(title)
-            .font(.system(size: 13, weight: .semibold))
-            .foregroundStyle(Color.springTextSecondary)
+            .font(.system(size: 12, weight: .bold))
+            .tracking(1.2)
+            .foregroundStyle(Color.inkFaint)
             .textCase(.uppercase)
     }
 
-    /// ActiveRoundView/HomeView와 통일된 색상 분기.
-    /// parity: -1=under(녹색) / 0=even(회색) / 1=over(오렌지-빨강)
-    private func parityColor(_ parity: Int) -> Color {
-        switch parity {
-        case ..<0: return Color.springGreenPrimary
-        case 0: return Color.springTextSecondary
-        default: return Color(red: 0.86, green: 0.42, blue: 0.16)
-        }
-    }
-
-    /// 날짜만 (라운드 일자 등): "2026. 5. 18."
-    private func formattedDate(_ date: Date) -> String {
+    /// viewer.ts 날짜 포맷: "2026 · 05 · 24"
+    private func formattedViewerDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
+        formatter.dateFormat = "yyyy · MM · dd"
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return formatter.string(from: date)
@@ -616,5 +875,96 @@ struct RoundDetailView: View {
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return formatter.string(from: date)
+    }
+}
+
+// MARK: - PlayerHeroCard (viewer .player-card / .player-card.leader)
+
+private struct PlayerHeroCard: View {
+    let player: Player
+    let sum: Int
+    let totalPar: Int
+    let isLeader: Bool
+    let rank: String
+    let isTight: Bool  // 4열일 때 더 타이트한 패딩
+
+    init(player: Player, sum: Int, totalPar: Int, isLeader: Bool, rank: String, isTight: Bool = false) {
+        self.player = player
+        self.sum = sum
+        self.totalPar = totalPar
+        self.isLeader = isLeader
+        self.rank = rank
+        self.isTight = isTight
+    }
+
+    /// 점수 + delta를 단일 Text로 합성 — lineLimit/minimumScaleFactor가 합쳐진 폭 기준으로 작동해 줄바꿈 방지
+    private var scoreText: Text {
+        let scoreFontSize: CGFloat = isTight ? 24 : 28
+        let deltaFontSize: CGFloat = isTight ? 12 : 14
+        let delta = sum - totalPar
+        let deltaLabel = delta == 0 ? "E" : delta > 0 ? "+\(delta)" : "\(delta)"
+        return Text("\(sum) ")
+            .font(.system(size: scoreFontSize, weight: .semibold, design: .rounded))
+            .monospacedDigit()
+            .foregroundColor(isLeader ? .white : Color.houseGreen)
+        + Text(deltaLabel)
+            .font(.system(size: deltaFontSize, weight: .bold))
+            .monospacedDigit()
+            .foregroundColor(isLeader ? Color.accentGreen : Color.sumDelta)
+    }
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            // 카드 본문
+            VStack(alignment: .leading, spacing: 0) {
+                // 이름 (viewer .player-name)
+                Text(player.name)
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(isLeader ? Color.white.opacity(0.78) : Color.inkSoft)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+
+                // 점수 + delta (viewer .player-score) — 단일 Text로 합성해 wrap 방지
+                if sum > 0 {
+                    scoreText
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 8)
+                } else {
+                    Text("—")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(isLeader ? Color.white.opacity(0.55) : Color.inkFaint)
+                        .padding(.top, 8)
+                }
+            }
+            .padding(.horizontal, isTight ? 10 : 14)
+            .padding(.vertical, isTight ? 10 : 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                isLeader
+                ? LinearGradient(
+                    colors: [Color.houseGreen, Color(red: 0.078, green: 0.282, blue: 0.184)],
+                    startPoint: UnitPoint(x: 0.1, y: 0),
+                    endPoint: UnitPoint(x: 0.9, y: 1)
+                  )
+                : LinearGradient(colors: [Color.cardSurface, Color.cardSurface], startPoint: .top, endPoint: .bottom)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .strokeBorder(isLeader ? Color.houseGreen : Color.cardBorder, lineWidth: 1)
+            )
+            .shadow(color: Color(red: 0.059, green: 0.239, blue: 0.180).opacity(isLeader ? 0.18 : 0.06), radius: isLeader ? 12 : 4, x: 0, y: isLeader ? 6 : 2)
+
+            // 우상단 rank 뱃지 (viewer .rank)
+            if !rank.isEmpty {
+                Text(rank)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(isLeader ? Color.white.opacity(0.55) : Color.inkFaint)
+                    .padding(.top, 9)
+                    .padding(.trailing, 10)
+            }
+        }
     }
 }

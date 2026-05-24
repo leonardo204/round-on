@@ -1,4 +1,5 @@
 import SwiftUI
+import Shared
 
 // MARK: - ScoreGridView
 // 9홀 + TOTAL = 10셀 고정 그리드 (가로 스크롤 없음).
@@ -24,6 +25,7 @@ struct ScoreGridView: View {
                     ImportScoreCell(
                         holeLabel: "\(section.holeOffset + holeIdx + 1)",
                         value: cellValue(at: holeIdx),
+                        scoreDiff: scoreDiff(at: holeIdx),
                         isReadonly: isParRow,
                         isActive: activeCellIndex == holeIdx,
                         isSuspect: !isParRow && isSuspect(at: holeIdx)
@@ -34,10 +36,11 @@ struct ScoreGridView: View {
                     }
                 }
 
-                // TOTAL 셀
+                // TOTAL 셀 — diff 도형 미적용 (합계)
                 ImportScoreCell(
                     holeLabel: "TOT",
                     value: totalDisplayValue,
+                    scoreDiff: nil,
                     isReadonly: isParRow,
                     isActive: false,
                     isSuspect: false,
@@ -59,8 +62,17 @@ struct ScoreGridView: View {
             guard let relArr = section.playerScores else { return nil }
             guard let rel = relArr[safe: holeIdx] else { return nil }
             guard let value = rel else { return nil }
+            // 상대값 그대로 표시 — 사용자가 카드 표기와 직접 대조 가능
             return value >= 0 ? "+\(value)" : "\(value)"
         }
+    }
+
+    /// player 행 셀의 ScoreDiff 분류. PAR 행 / TOT / nil 값이면 nil 반환.
+    private func scoreDiff(at holeIdx: Int) -> ScoreDiff? {
+        guard !isParRow else { return nil }
+        guard let relArr = section.playerScores else { return nil }
+        guard let maybeRel = relArr[safe: holeIdx], let rel = maybeRel else { return nil }
+        return ScoreDiff.classify(diff: rel)
     }
 
     private func isSuspect(at holeIdx: Int) -> Bool {
@@ -104,6 +116,8 @@ struct ScoreGridView: View {
 private struct ImportScoreCell: View {
     let holeLabel: String
     let value: String?
+    /// nil = PAR행 / TOT 셀 / 미인식 셀 — 도형 미적용
+    let scoreDiff: ScoreDiff?
     let isReadonly: Bool
     let isActive: Bool
     let isSuspect: Bool
@@ -111,27 +125,84 @@ private struct ImportScoreCell: View {
     /// TOT 셀에서 nil 셀이 포함된 불완전 합계임을 표시
     var isPartial: Bool = false
 
-    var body: some View {
-        VStack(spacing: 2) {
-            Text(holeLabel)
-                .font(.system(size: 9))
-                .foregroundStyle(isTotal ? Color.accentColor : .secondary)
-                .lineLimit(1)
+    @Environment(\.colorScheme) private var colorScheme
 
-            Text(displayValue)
-                .font(.system(size: isTotal ? 13 : 14, weight: .bold))
-                .foregroundStyle(textColor)
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(backgroundColor)
-        .overlay(
+    var body: some View {
+        ZStack {
+            // 1) 배경
             RoundedRectangle(cornerRadius: 6)
-                .stroke(isActive ? Color.accentColor : Color.clear, lineWidth: 1.5)
-        )
+                .fill(backgroundColor)
+
+            // 2) 도형 레이어 (player 행 + 값 있을 때만)
+            if let diff = scoreDiff, value != nil {
+                diffShapeLayer(diff)
+            }
+
+            // 3) 숫자 텍스트
+            VStack(spacing: 2) {
+                Text(holeLabel)
+                    .font(.system(size: 9))
+                    .foregroundStyle(isTotal ? Color.accentColor : .secondary)
+                    .lineLimit(1)
+
+                Text(displayValue)
+                    .font(.system(size: isTotal ? 13 : 14, weight: .bold))
+                    .foregroundStyle(textColor)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+
+            // 4) active / suspect 외곽선
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(outlineColor, lineWidth: outlineWidth)
+        }
         .clipShape(RoundedRectangle(cornerRadius: 6))
         .padding(1.5)
+    }
+
+    // MARK: Diff Shape Layer
+
+    @ViewBuilder
+    private func diffShapeLayer(_ diff: ScoreDiff) -> some View {
+        let size: CGFloat = 36 // 셀 내부 도형 기준 크기 (padding 고려)
+        switch diff {
+        case .birdie:
+            // 버디 이하: terracotta 단일 원
+            Circle()
+                .strokeBorder(scoreRed, lineWidth: 1.2)
+                .frame(width: size - 4, height: size - 4)
+        case .par:
+            EmptyView()
+        case .bogey:
+            // 보기: mustard 사각형 (import 뷰는 단일 사각 유지)
+            RoundedRectangle(cornerRadius: 3)
+                .strokeBorder(scoreBlue, lineWidth: 1.2)
+                .frame(width: size - 4, height: size - 4)
+        case .double:
+            // 더블+: 이중 사각형 (import 뷰는 구 스타일 유지)
+            ZStack {
+                RoundedRectangle(cornerRadius: 3)
+                    .strokeBorder(scoreBlue, lineWidth: 1.2)
+                    .frame(width: size - 2, height: size - 2)
+                RoundedRectangle(cornerRadius: 2)
+                    .strokeBorder(scoreBlue, lineWidth: 1.2)
+                    .frame(width: size - 10, height: size - 10)
+            }
+        }
+    }
+
+    // MARK: Colors
+
+    private var scoreRed: Color {
+        colorScheme == .dark
+            ? Color(red: 1.0, green: 0.271, blue: 0.227)
+            : Color(red: 0.773, green: 0.157, blue: 0.157)
+    }
+
+    private var scoreBlue: Color {
+        colorScheme == .dark
+            ? Color(red: 0.4, green: 0.6, blue: 1.0)
+            : Color(red: 0.082, green: 0.396, blue: 0.753)
     }
 
     private var displayValue: String {
@@ -149,9 +220,23 @@ private struct ImportScoreCell: View {
         if isActive { return Color.accentColor.opacity(0.12) }
         if isTotal && !isPartial { return Color.accentColor.opacity(0.08) }
         if isPartial { return Color(.systemGray5) }
-        if isSuspect && !isReadonly { return Color.red.opacity(0.1) }
+        // suspect: 외곽선으로 표시 (배경 오버라이드 없음 — 도형 색과 구분)
         if isReadonly { return Color(.systemGray6) }
         return Color(.systemGray6).opacity(0.5)
+    }
+
+    // MARK: Outline
+
+    private var outlineColor: Color {
+        if isActive { return Color.accentColor }
+        if isSuspect && !isReadonly { return Color.red.opacity(0.6) }
+        return Color.clear
+    }
+
+    private var outlineWidth: CGFloat {
+        if isActive { return 1.5 }
+        if isSuspect && !isReadonly { return 1.2 }
+        return 0
     }
 }
 

@@ -43,6 +43,7 @@ targets:
       - path: Shared/DesignSystem
         excludes:
           - "Color+SeasonalGreen.swift"  # Asset Catalog 참조 제외 (watchOS 런타임 분리)
+          - "ScoreDiffShape.swift"       # Color.springTextPrimary Asset Catalog 의존 — watchOS 제외
       - path: Shared/Haptics
       - path: Shared/Logging
       - path: Shared/Settings  # PenaltySettings, CourseParsCatalog (watchOS 호환)

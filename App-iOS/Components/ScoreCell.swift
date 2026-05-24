@@ -3,8 +3,11 @@ import Shared
 
 // MARK: - ScoreCell
 // iOS F4 스코어카드 그리드 셀 (11-COMPONENTS §3, 12-SCREENS D-1)
-// split9x2 단일 변형: 탭 +1 / 길게 누르기 -1 / par-diff 5단계 모양 마커
-// 14-ACCESSIBILITY §7: par-diff 이중 부호화 (색상 + 모양)
+// split9x2 단일 변형: 탭 +1 / 길게 누르기 -1
+// 14-ACCESSIBILITY §7: par-diff 표준 골프 도형 시각화 (ScoreDiffShape.swift)
+// 시각화: Albatross/HIO=이중원, Eagle=이중원, Birdie=단일원 (빨강)
+//         Par=도형 없음, Bogey=단일사각, DoubleBogey=이중사각 (남색)
+//         Triple+=이중사각+채워진 빨강 배경
 
 public struct ScoreCell: View {
 
@@ -53,24 +56,16 @@ public struct ScoreCell: View {
 
     public var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            // par 대비 색상 배경
-            cellBackground
-
-            // 타수 숫자
-            Text(count > 0 ? "\(count)" : "")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(Color.springTextPrimary)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            // par-diff 모양 마커 (14-ACCESSIBILITY §7 — 셀 높이 30% 이내 우상단)
-            if let symbol = parDiff.shapeSymbol, count > 0 {
-                Text(symbol)
-                    .font(.system(size: 7))
-                    .foregroundStyle(markerColor)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .padding(.top, 2)
-                    .padding(.trailing, 2)
-            }
+            // 표준 골프 시각화: ScoreDiffShape 도형 + 숫자
+            ScoreCellView(
+                strokes: count,
+                par: par,
+                cellSize: 32,
+                holeNumber: holeNumber,
+                playerName: playerName
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .accessibilityHidden(true) // 외부 accessibilityElement가 처리
 
             // count > 0이면서 interactive일 때만 우하단 ⊖ 편집 hint (read-only 시 숨김)
             if count > 0 && interactive {
@@ -108,49 +103,9 @@ public struct ScoreCell: View {
         .accessibilityAddTraits(.isButton)
     }
 
-    // MARK: Background
-
-    @ViewBuilder
-    private var cellBackground: some View {
-        switch category {
-        case .empty:
-            Color.clear
-        case .eagle:
-            // 진한 그린 이중 원 (D-4 ◎)
-            Circle()
-                .fill(Color.springGreenPrimary)
-                .padding(2)
-        case .birdie:
-            // 연한 그린 원 (● )
-            Circle()
-                .fill(Color.springGreenSecondary.opacity(0.5))
-                .padding(2)
-        case .par:
-            Color.clear
-        case .bogey:
-            // 연한 적색 사각형 (■)
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color(red: 0.95, green: 0.87, blue: 0.87))
-                .padding(2)
-        case .doublePlus:
-            // 진한 적색 이중 사각형 (▣)
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color(red: 0.95, green: 0.78, blue: 0.78))
-                .padding(2)
-        }
-    }
-
     // MARK: Helpers
 
     private var parDiff: ParDiff { ParDiff.from(count: count, par: par) }
-
-    private var markerColor: Color {
-        switch category {
-        case .eagle, .birdie: return Color.springTextPrimary.opacity(0.6)
-        case .bogey, .doublePlus: return Color(red: 0.6, green: 0.1, blue: 0.1).opacity(0.7)
-        default: return Color.springTextSecondary
-        }
-    }
 
     private var accessibilityValue: String {
         guard count > 0 else { return "미입력" }
@@ -161,15 +116,33 @@ public struct ScoreCell: View {
 // MARK: - Preview
 
 #if DEBUG
-#Preview {
-    HStack(spacing: 4) {
-        ScoreCell(count: 0, category: .empty, isCurrentHole: false, holeNumber: 1, playerName: "나", par: 4, onTap: {}, onLongPress: {})
-        ScoreCell(count: 2, category: .eagle, isCurrentHole: false, holeNumber: 2, playerName: "나", par: 4, onTap: {}, onLongPress: {})
-        ScoreCell(count: 3, category: .birdie, isCurrentHole: true, holeNumber: 3, playerName: "나", par: 4, onTap: {}, onLongPress: {})
-        ScoreCell(count: 4, category: .par, isCurrentHole: false, holeNumber: 4, playerName: "나", par: 4, onTap: {}, onLongPress: {})
-        ScoreCell(count: 5, category: .bogey, isCurrentHole: false, holeNumber: 5, playerName: "나", par: 4, onTap: {}, onLongPress: {})
-        ScoreCell(count: 7, category: .doublePlus, isCurrentHole: false, holeNumber: 6, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+#Preview("ScoreCell — 표준 골프 시각화") {
+    VStack(spacing: 8) {
+        HStack(spacing: 4) {
+            // HIO/Albatross (par4에서 1타 = diff -3)
+            ScoreCell(count: 1, category: .eagle, isCurrentHole: false, holeNumber: 1, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            // Eagle (diff -2)
+            ScoreCell(count: 2, category: .eagle, isCurrentHole: false, holeNumber: 2, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            // Birdie (diff -1)
+            ScoreCell(count: 3, category: .birdie, isCurrentHole: true, holeNumber: 3, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            // Par (diff 0)
+            ScoreCell(count: 4, category: .par, isCurrentHole: false, holeNumber: 4, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            // Bogey (diff +1)
+            ScoreCell(count: 5, category: .bogey, isCurrentHole: false, holeNumber: 5, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            // Double Bogey (diff +2)
+            ScoreCell(count: 6, category: .doublePlus, isCurrentHole: false, holeNumber: 6, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            // Triple+ (diff +3)
+            ScoreCell(count: 7, category: .doublePlus, isCurrentHole: false, holeNumber: 7, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+        }
+        .padding()
+        .background(Color.gray.opacity(0.1))
+
+        // 미입력
+        HStack {
+            ScoreCell(count: 0, category: .empty, isCurrentHole: false, holeNumber: 8, playerName: "나", par: 4, onTap: {}, onLongPress: {})
+            Spacer()
+        }
+        .padding(.horizontal)
     }
-    .padding()
 }
 #endif
