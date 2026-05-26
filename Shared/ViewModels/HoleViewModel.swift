@@ -33,8 +33,13 @@ public final class HoleViewModel {
 
     // MARK: Init
 
-    public init(totalHoles: Int) {
+    /// - Parameters:
+    ///   - totalHoles: 전체 홀 수
+    ///   - initialHoleNumber: 복원 시작 홀 번호 (1-indexed). 기본값 1.
+    public init(totalHoles: Int, initialHoleNumber: Int = 1) {
         self.totalHoles = max(1, totalHoles)
+        let clamped = max(1, min(initialHoleNumber, self.totalHoles))
+        self.currentHoleIndex = clamped - 1
     }
 
     // MARK: Navigation

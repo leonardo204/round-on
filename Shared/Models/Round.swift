@@ -55,6 +55,20 @@ public final class Round {
 
     public var sharedOptionsData: Data?  // ShareOptions을 Codable → Data로 저장
 
+    // MARK: - 재진입 복원용 마지막 활성 상태 (F6 확장 — standby 복귀 시)
+
+    /// 마지막으로 진행하던 홀 번호 (1-indexed). 기본값 1.
+    /// SwiftData default 제공 — 라이트웨이트 마이그레이션 안전.
+    public var lastActiveHoleNumber: Int = 1
+
+    /// 마지막으로 활성화된 플레이어 인덱스 (0-indexed). 기본값 0.
+    /// SwiftData default 제공 — 라이트웨이트 마이그레이션 안전.
+    public var lastActivePlayerIndex: Int = 0
+
+    /// 마지막 활동 시각. nil = 한 번도 갱신 안 됨 (startedAt으로 정렬 폴백).
+    /// 여러 미완료 라운드 중 가장 최근 라운드 선택에 사용.
+    public var lastActiveAt: Date? = nil
+
     // MARK: - Optional 관계 편의 접근자 (non-optional 호출자 편의)
     /// players Optional fallback — 코드 전반에서 `round.playerList` 사용
     public var playerList: [Player] { players ?? [] }

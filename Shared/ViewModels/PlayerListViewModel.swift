@@ -29,8 +29,13 @@ public final class PlayerListViewModel {
 
     // MARK: Init
 
-    public init(players: [Player]) {
+    /// - Parameters:
+    ///   - players: 플레이어 목록 (order 기준 정렬됨)
+    ///   - initialIndex: 복원 시작 플레이어 인덱스 (0-indexed). 기본값 0.
+    public init(players: [Player], initialIndex: Int = 0) {
         self.players = players.sorted { $0.order < $1.order }
+        let clamped = max(0, min(initialIndex, max(0, players.count - 1)))
+        self.activePlayerIndex = clamped
     }
 
     // MARK: Navigation

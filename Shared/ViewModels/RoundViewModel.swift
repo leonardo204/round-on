@@ -23,6 +23,9 @@ public final class RoundViewModel {
     /// par prefill 성공 시 ActiveRoundView에서 일회성 토스트 표시용
     public var lastPrefillToastMessage: String?
 
+    /// 홀 완료(잠금) 직후 표시할 결과 멘트. 3초 후 자동 nil (UI가 소비).
+    public var lastHoleMessage: String?
+
     // 하위 VM (RoundViewModel이 소유)
     public private(set) var holeViewModel: HoleViewModel?
     public private(set) var scoreCardViewModel: ScoreCardViewModel?
@@ -127,19 +130,33 @@ public final class RoundViewModel {
 
     // MARK: Public API
 
-    /// 진행 중인 라운드 복구 (F6). 앱 시작 시 호출.
+    /// 진행 중인 라운드 복구 (F6). 앱 시작 및 standby 복귀(scenePhase .active) 시 호출.
+    /// 미완료 라운드가 여러 개이면 lastActiveAt desc → startedAt desc 순으로 가장 최근 1개 선택.
+    /// 이미 동일 라운드가 활성화되어 있으면 무동작 (idempotent).
     public func resumeIfNeeded() {
         let descriptor = FetchDescriptor<Round>(
             predicate: #Predicate { !$0.isFinished },
             sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
         )
-        if let rounds = try? modelContext.fetch(descriptor),
-           let latestRound = rounds.first {
-            AppLogger.round.info("미완료 라운드 복구: \(latestRound.courseName, privacy: .private)")
-            activate(round: latestRound)
-        } else {
+        guard let rounds = try? modelContext.fetch(descriptor), !rounds.isEmpty else {
             AppLogger.round.debug("복구할 미완료 라운드 없음")
+            return
         }
+        // lastActiveAt 있는 라운드 우선, 없으면 startedAt 기준 (이미 sortBy로 정렬됨)
+        let latestRound = rounds.max(by: {
+            let lhs = $0.lastActiveAt ?? $0.startedAt
+            let rhs = $1.lastActiveAt ?? $1.startedAt
+            return lhs < rhs
+        }) ?? rounds[0]
+
+        // 이미 동일 라운드 활성 → 무동작 (idempotent)
+        if let current = currentRound, current.id == latestRound.id {
+            AppLogger.round.debug("라운드 이미 활성 (idempotent): \(latestRound.courseName, privacy: .private)")
+            return
+        }
+
+        AppLogger.round.info("미완료 라운드 복구: \(latestRound.courseName, privacy: .private) hole=\(latestRound.lastActiveHoleNumber) player=\(latestRound.lastActivePlayerIndex)")
+        activate(round: latestRound)
     }
 
     /// 새 라운드 시작
@@ -259,15 +276,19 @@ public final class RoundViewModel {
         }
     }
 
-    /// 라운드 종료
+    /// 라운드 종료 — 모든 홀 isLocked = true 후 저장
     public func finishRound() {
         guard let round = currentRound else { return }
         let totalHoles = round.holeList.count
         let roundId = round.id
+        // 라운드 종료 시 모든 홀 잠금
+        for hole in round.holeList {
+            hole.isLocked = true
+        }
         round.isFinished = true
         round.finishedAt = .now
         try? modelContext.save()
-        AppLogger.round.info("라운드 종료: \(round.courseName, privacy: .private) \(totalHoles)홀")
+        AppLogger.round.info("라운드 종료: \(round.courseName, privacy: .private) \(totalHoles)홀 — 전체 홀 잠금")
         emitRoundEnd(roundId: roundId, reason: .finished)
         deactivate()
 
@@ -277,12 +298,27 @@ public final class RoundViewModel {
         }
     }
 
-    /// 카운트 +1. double par (par×2) 이상은 차단.
+    /// 특정 홀 잠금 해제. 잠긴 홀을 수정해야 할 때 UI에서 confirmation 후 호출.
+    public func unlockHole(_ holeNumber: Int) {
+        guard let round = currentRound else { return }
+        guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+        hole.isLocked = false
+        save()
+        AppLogger.round.info("홀 잠금 해제: \(holeNumber)번 홀")
+    }
+
+    /// 카운트 +1. double par (par×2) 이상 또는 잠긴 홀은 차단.
     /// - Returns: 정상 증가 시 true, 차단 시 false (UI에서 warning haptic 트리거용)
     @discardableResult
     public func increment(holeNumber: Int, playerId: UUID) -> Bool {
         guard let round = currentRound else { return false }
         guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return false }
+
+        // 잠긴 홀 차단
+        guard !holeScore.isLocked else {
+            AppLogger.counter.warning("카운터 차단: 홀\(holeNumber) 잠금 상태")
+            return false
+        }
 
         let current = holeScore.count(for: playerId)
         let limit = max(2, holeScore.par * 2)  // double par 도달 시 차단 (par 1이라면 최소 2)
@@ -460,11 +496,17 @@ public final class RoundViewModel {
         return true
     }
 
-    /// 카운트 -1. 골프 룰상 최저는 1타(홀인원)이므로 0 미만은 차단.
+    /// 카운트 -1. 골프 룰상 최저는 1타(홀인원)이므로 0 미만은 차단. 잠긴 홀도 차단.
     /// 0 = 미입력 상태(아직 안 침), 1 = 홀인원, 음수 불가.
     public func decrement(holeNumber: Int, playerId: UUID) {
         guard let round = currentRound else { return }
         guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
+
+        // 잠긴 홀 차단
+        guard !holeScore.isLocked else {
+            AppLogger.counter.warning("카운터 차단: 홀\(holeNumber) 잠금 상태")
+            return
+        }
 
         let current = holeScore.count(for: playerId)
         guard current > 0 else { return }  // 음수 금지 — 골프 룰 최저 1타
@@ -494,12 +536,16 @@ public final class RoundViewModel {
         applyPenalty(holeNumber: holeNumber, playerId: playerId, delta: PenaltySettings.okDelta, kind: .ok)
     }
 
-    /// 더블파 탭 — 해당 홀의 타수를 par×2로 강제 설정.
+    /// 더블파 탭 — 해당 홀의 타수를 par×2로 강제 설정. 잠긴 홀은 차단.
     /// - Returns: 성공 시 true, 라운드/홀 없으면 false
     @discardableResult
     public func setToDoublePar(holeNumber: Int, playerId: UUID) -> Bool {
         guard let round = currentRound else { return false }
         guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return false }
+        guard !holeScore.isLocked else {
+            AppLogger.counter.warning("더블파 차단: 홀\(holeNumber) 잠금 상태")
+            return false
+        }
         let target = max(2, holeScore.par * 2)
         let current = holeScore.count(for: playerId)
         let delta = target - current
@@ -518,6 +564,12 @@ public final class RoundViewModel {
     private func applyPenalty(holeNumber: Int, playerId: UUID, delta: Int, kind: PenaltyKind) -> Bool {
         guard let round = currentRound else { return false }
         guard let holeScore = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return false }
+
+        // 잠긴 홀 차단
+        guard !holeScore.isLocked else {
+            AppLogger.counter.warning("벌타 차단: 홀\(holeNumber) 잠금 상태")
+            return false
+        }
 
         let current = holeScore.count(for: playerId)
         let limit = max(2, holeScore.par * 2)
@@ -651,16 +703,23 @@ public final class RoundViewModel {
 
     private func activate(round: Round) {
         self.currentRound = round
-        let holeVM = HoleViewModel(totalHoles: round.holeList.count)
-        // B: 홀 이동 → WC HoleChange 송출
+
+        // 저장된 마지막 홀/플레이어 위치 복원 (clamp: 유효 범위 초과 방어)
+        let totalHoles = round.holeList.count
+        let holeNumber = max(1, min(round.lastActiveHoleNumber, max(1, totalHoles)))
+        let playerCount = round.playerList.count
+        let playerIndex = max(0, min(round.lastActivePlayerIndex, max(0, playerCount - 1)))
+
+        // B: 홀 이동 → WC HoleChange 송출 + last* 업데이트
+        let holeVM = HoleViewModel(totalHoles: totalHoles, initialHoleNumber: holeNumber)
         holeVM.onHoleChanged = { [weak self] newHoleNumber in
             self?.emitHoleChange(newHoleNumber: newHoleNumber)
         }
         self.holeViewModel = holeVM
         self.scoreCardViewModel = ScoreCardViewModel(round: round)
 
-        let playerVM = PlayerListViewModel(players: round.playerList)
-        // B: 플레이어 전환 → WC PlayerSwitch 송출
+        // B: 플레이어 전환 → WC PlayerSwitch 송출 + last* 업데이트
+        let playerVM = PlayerListViewModel(players: round.playerList, initialIndex: playerIndex)
         playerVM.onActivePlayerChanged = { [weak self] newIndex in
             self?.emitPlayerSwitch(newPlayerIndex: newIndex)
         }
@@ -668,6 +727,42 @@ public final class RoundViewModel {
     }
 
     private func emitHoleChange(newHoleNumber: Int) {
+        // 이전 홀 자동 잠금: 본인(owner) 샷이 1 이상인 홀만 잠금
+        if let round = currentRound {
+            let prevHoleNumber = newHoleNumber - 1
+            // 이전 홀 번호가 유효한 경우(1 이상)에만 잠금 시도
+            if prevHoleNumber >= 1,
+               let prevHole = round.holeList.first(where: { $0.holeNumber == prevHoleNumber }) {
+                // 본인(isOwner) 플레이어 찾기
+                let ownerShotCount: Int
+                if let owner = round.playerList.first(where: { $0.isOwner }) {
+                    ownerShotCount = prevHole.count(for: owner.id)
+                } else {
+                    // isOwner가 없으면 전체 첫 번째 플레이어
+                    ownerShotCount = round.playerList.first.map { prevHole.count(for: $0.id) } ?? 0
+                }
+                if ownerShotCount > 0 && !prevHole.isLocked {
+                    prevHole.isLocked = true
+                    AppLogger.round.info("홀 자동 잠금: \(prevHoleNumber)번 홀 (owner \(ownerShotCount)타)")
+
+                    // 멘트 생성 — owner 기준 ScoreDiff
+                    if let owner = round.playerList.first(where: { $0.isOwner }) {
+                        let diff = ScoreDiff.classify(strokes: ownerShotCount, par: prevHole.par)
+                        let message = HoleResultMessage.text(for: diff)
+                        lastHoleMessage = message
+                        // 3초 후 자동 nil
+                        Task { [weak self] in
+                            try? await Task.sleep(for: .seconds(3))
+                            self?.lastHoleMessage = nil
+                        }
+                    }
+                }
+            }
+
+            round.lastActiveHoleNumber = newHoleNumber
+            round.lastActiveAt = Date()
+            save()
+        }
         guard let broadcast = onBroadcastHole else { return }
         let subLabel: String? = {
             guard let round = currentRound else { return nil }
@@ -684,6 +779,12 @@ public final class RoundViewModel {
     }
 
     private func emitPlayerSwitch(newPlayerIndex: Int) {
+        // last* 영구 저장 — standby 복귀 시 이 플레이어로 복원
+        if let round = currentRound {
+            round.lastActivePlayerIndex = newPlayerIndex
+            round.lastActiveAt = Date()
+            save()
+        }
         guard let broadcast = onBroadcastPlayerSwitch else { return }
         let switchEvent = PlayerSwitch(
             newPlayerIndex: newPlayerIndex,
@@ -701,6 +802,8 @@ public final class RoundViewModel {
     }
 
     private func save() {
+        // 샷 입력 등 모든 저장 시점에 lastActiveAt 갱신 (정확한 마지막 활동 시각 보존)
+        currentRound?.lastActiveAt = Date()
         try? modelContext.save()
     }
 

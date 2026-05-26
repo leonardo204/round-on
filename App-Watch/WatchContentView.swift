@@ -8,6 +8,7 @@ import Shared
 struct WatchContentView: View {
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @State private var roundVM: RoundViewModel?
     @State private var showEndMenu = false
 
@@ -68,6 +69,27 @@ struct WatchContentView: View {
                 vm.resumeIfNeeded()
                 if vm.isRoundActive {
                     roundVM = vm
+                }
+            }
+        }
+        // standby/잠금 복귀 시 scenePhase .active → resumeIfNeeded (idempotent)
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active else { return }
+            Task { @MainActor in
+                if let vm = roundVM {
+                    // 이미 vm 존재 → 동일 라운드면 무동작 (idempotent)
+                    vm.resumeIfNeeded()
+                    if vm.isRoundActive && roundVM == nil {
+                        roundVM = vm
+                    }
+                } else {
+                    // vm 없음 → 새로 생성 후 복원 시도
+                    let vm = RoundViewModel(modelContext: modelContext)
+                    WCRoundBridge.shared.attach(to: vm)
+                    vm.resumeIfNeeded()
+                    if vm.isRoundActive {
+                        roundVM = vm
+                    }
                 }
             }
         }

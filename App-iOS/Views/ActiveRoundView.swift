@@ -15,6 +15,10 @@ struct ActiveRoundView: View {
     @State private var prefillToastMessage: String?
     /// double par 차단 등 일회성 알림 토스트 (1.5초 자동 사라짐)
     @State private var blockToast: String?
+    /// 홀 완료 멘트 (3초 자동 사라짐)
+    @State private var holeResultMessage: String?
+    /// 잠금 해제 확인 alert — 해제할 홀 번호
+    @State private var unlockHoleNumber: Int?
 
     // 10홀 진입 시 잠정 코스 확인 팝업
     @State private var showBackCoursePrompt = false
@@ -94,6 +98,50 @@ struct ActiveRoundView: View {
                     }
                     .transition(.opacity.combined(with: .move(edge: .bottom)))
                     .animation(.easeInOut(duration: 0.25), value: blockToast)
+                }
+
+                // 홀 결과 멘트 banner (상단, 3초 자동 사라짐)
+                if let msg = holeResultMessage {
+                    VStack {
+                        Text(msg)
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(Color.springTextPrimary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(Color.springSurfaceElevated)
+                            .clipShape(Capsule())
+                            .shadow(color: .black.opacity(0.12), radius: 6, x: 0, y: 3)
+                            .padding(.top, 8)
+                        Spacer()
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .animation(.easeInOut(duration: 0.25), value: holeResultMessage)
+                }
+            }
+            .onChange(of: roundVM.lastHoleMessage) { _, newMsg in
+                guard let msg = newMsg else {
+                    withAnimation { holeResultMessage = nil }
+                    return
+                }
+                withAnimation { holeResultMessage = msg }
+            }
+            .alert("이전 홀 수정", isPresented: Binding(
+                get: { unlockHoleNumber != nil },
+                set: { if !$0 { unlockHoleNumber = nil } }
+            )) {
+                Button("수정") {
+                    if let h = unlockHoleNumber {
+                        roundVM.unlockHole(h)
+                    }
+                    unlockHoleNumber = nil
+                }
+                Button("취소", role: .cancel) {
+                    unlockHoleNumber = nil
+                }
+            } message: {
+                if let h = unlockHoleNumber {
+                    Text("\(h)번 홀 잠금을 해제하면 다시 수정할 수 있어요.")
                 }
             }
             .onChange(of: roundVM.lastPrefillToastMessage) { _, newMsg in
@@ -298,10 +346,21 @@ struct ActiveRoundView: View {
                 interactive: true,
                 currentHoleNumber: roundVM.holeViewModel?.currentHoleNumber,
                 onParChange: { holeNumber, newPar in
+                    // 잠긴 홀 par 변경 차단
+                    let isLocked = roundVM.currentRound?.holeList.first(where: { $0.holeNumber == holeNumber })?.isLocked ?? false
+                    guard !isLocked else {
+                        unlockHoleNumber = holeNumber
+                        return
+                    }
                     roundVM.setPar(holeNumber: holeNumber, par: newPar)
                     Task { await HapticEngine.shared.play(.shotIncrement) }
                 },
                 onScoreTap: { holeNumber, playerId in
+                    let isLocked = roundVM.currentRound?.holeList.first(where: { $0.holeNumber == holeNumber })?.isLocked ?? false
+                    if isLocked {
+                        unlockHoleNumber = holeNumber
+                        return
+                    }
                     let ok = roundVM.increment(holeNumber: holeNumber, playerId: playerId)
                     roundVM.holeViewModel?.goToHole(index: holeNumber - 1)
                     if ok {
@@ -312,6 +371,11 @@ struct ActiveRoundView: View {
                     }
                 },
                 onScoreLongPress: { holeNumber, playerId in
+                    let isLocked = roundVM.currentRound?.holeList.first(where: { $0.holeNumber == holeNumber })?.isLocked ?? false
+                    if isLocked {
+                        unlockHoleNumber = holeNumber
+                        return
+                    }
                     roundVM.decrement(holeNumber: holeNumber, playerId: playerId)
                     Task { await HapticEngine.shared.play(.shotDecrement) }
                 },
@@ -441,13 +505,33 @@ struct ActiveRoundView: View {
         let currentHole = holeVM.currentHoleNumber
         let par = scoreVM.parByHole[currentHole] ?? 4
         let count = activePlayer.map { scoreVM.count(holeNumber: currentHole, playerId: $0.id) } ?? 0
+        let isCurrentHoleLocked = roundVM.currentRound?.holeList.first(where: { $0.holeNumber == currentHole })?.isLocked ?? false
 
         return VStack(spacing: 0) {
-            // 홀 헤더
-            holeHeader(currentHole: currentHole, totalHoles: holeVM.totalHoles, par: par)
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
-                .padding(.bottom, 12)
+            // 홀 헤더 + 잠금 배지
+            HStack(spacing: 8) {
+                holeHeader(currentHole: currentHole, totalHoles: holeVM.totalHoles, par: par)
+                if isCurrentHoleLocked {
+                    Button {
+                        unlockHoleNumber = currentHole
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 11))
+                            Text("잠김")
+                                .font(.system(size: 12, weight: .medium))
+                        }
+                        .foregroundStyle(Color.orange)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.orange.opacity(0.15), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+            .padding(.bottom, 12)
 
             // 동반자 4인 탭
             playerTabs(scoreVM: scoreVM, playerVM: playerVM, currentHole: currentHole)
@@ -456,7 +540,7 @@ struct ActiveRoundView: View {
 
             // 메인 입력 카드
             if let player = activePlayer {
-                inputMainCard(player: player, count: count, par: par, currentHole: currentHole)
+                inputMainCard(player: player, count: count, par: par, currentHole: currentHole, isLocked: isCurrentHoleLocked)
                     .padding(.horizontal, 16)
             }
 
@@ -534,19 +618,21 @@ struct ActiveRoundView: View {
         }
     }
 
-    private func inputMainCard(player: Player, count: Int, par: Int, currentHole: Int) -> some View {
+    private func inputMainCard(player: Player, count: Int, par: Int, currentHole: Int, isLocked: Bool = false) -> some View {
         VStack(spacing: 12) {
             // - 숫자 + 행
             HStack(spacing: 12) {
                 counterButton(symbol: "−", style: .minus) {
+                    if isLocked { unlockHoleNumber = currentHole; return }
                     roundVM.decrement(holeNumber: currentHole, playerId: player.id)
                     Task { await HapticEngine.shared.play(.shotDecrement) }
                 }
+                .disabled(isLocked)
 
                 VStack(spacing: 4) {
                     Text(count > 0 ? "\(count)" : "0")
                         .font(.system(size: 92, weight: .heavy))
-                        .foregroundStyle(Color.springTextPrimary)
+                        .foregroundStyle(isLocked ? Color.springTextSecondary : Color.springTextPrimary)
                         .monospacedDigit()
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
@@ -557,6 +643,7 @@ struct ActiveRoundView: View {
                 .frame(maxWidth: .infinity)
 
                 counterButton(symbol: "+", style: .plus) {
+                    if isLocked { unlockHoleNumber = currentHole; return }
                     let ok = roundVM.increment(holeNumber: currentHole, playerId: player.id)
                     if ok {
                         Task { await HapticEngine.shared.play(.shotIncrement) }
@@ -565,35 +652,52 @@ struct ActiveRoundView: View {
                         Task { await HapticEngine.shared.play(.penaltyOB) }
                     }
                 }
+                .disabled(isLocked)
             }
 
             // 벌타 2x2 그리드 (OB / 해저드 / 컨시드 / 더블파)
             VStack(spacing: 6) {
                 HStack(spacing: 8) {
                     penaltyBigButton(label: "OB", icon: "exclamationmark.triangle.fill", delta: obDelta, tint: Color(red: 0.76, green: 0.15, blue: 0.15)) {
+                        if isLocked { unlockHoleNumber = currentHole; return }
                         let ok = roundVM.tapOB(holeNumber: currentHole, playerId: player.id)
                         handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOB)
                     }
+                    .disabled(isLocked)
                     penaltyBigButton(label: "해저드", icon: "water.waves", delta: hazardDelta, tint: Color(red: 0.08, green: 0.40, blue: 0.75)) {
+                        if isLocked { unlockHoleNumber = currentHole; return }
                         let ok = roundVM.tapHazard(holeNumber: currentHole, playerId: player.id)
                         handlePenaltyResult(ok: ok, par: par, haptic: .penaltyHazard)
                     }
+                    .disabled(isLocked)
                 }
                 HStack(spacing: 8) {
                     penaltyBigButton(label: "컨시드", icon: "checkmark.circle.fill", delta: okDelta, tint: Color.springGreenPrimary) {
+                        if isLocked { unlockHoleNumber = currentHole; return }
                         let ok = roundVM.tapOK(holeNumber: currentHole, playerId: player.id)
                         handlePenaltyResult(ok: ok, par: par, haptic: .penaltyOK)
                     }
+                    .disabled(isLocked)
                     doubleParBigButton(par: par) {
+                        if isLocked { unlockHoleNumber = currentHole; return }
                         roundVM.setToDoublePar(holeNumber: currentHole, playerId: player.id)
                         Task { await HapticEngine.shared.play(.penaltyOB) }
                     }
+                    .disabled(isLocked)
                 }
             }
         }
         .padding(20)
         .background(Color.springSurfaceElevated, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        .overlay(alignment: .topLeading) {
+            if isLocked {
+                // 잠긴 홀 dim 오버레이
+                Color.black.opacity(0.04)
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .allowsHitTesting(false)
+            }
+        }
     }
 
     private enum CounterStyle { case minus, plus }

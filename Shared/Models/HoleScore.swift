@@ -22,6 +22,10 @@ public final class HoleScore {
     public var obCount: [ScoreEntry] = []
     public var hazardCount: [ScoreEntry] = []
 
+    /// 홀 완료 후 실수 입력 방지 잠금. 다음 홀 이동 시 자동 true.
+    /// SwiftData lightweight migration 안전 — default false, 기존 레코드 영향 없음.
+    public var isLocked: Bool = false
+
     // MARK: - CloudKit 호환 inverse 관계
     public var round: Round?
 
@@ -31,6 +35,7 @@ public final class HoleScore {
         self.counts = counts
         self.obCount = obCount
         self.hazardCount = hazardCount
+        self.isLocked = false
     }
 
     /// playerId로 타수 조회
