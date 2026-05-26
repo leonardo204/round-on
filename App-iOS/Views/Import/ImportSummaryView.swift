@@ -1,14 +1,23 @@
 import SwiftUI
+import SwiftData
 import Shared
 
 // MARK: - ImportSummaryView
 // 저장 직전 검증 요약 화면 — mockup §⑤
 // 미입력 셀 경고 표시 (차단 없음)
+// 충돌 감지: 같은 날짜 + 유사 코스명 기존 라운드가 있으면 통합 확인 Alert 표시
 
 struct ImportSummaryView: View {
+    @Environment(\.modelContext) private var modelContext
+
     let draft: ScorecardImportDraft
     let onSave: () -> Void
     let onBack: () -> Void
+
+    // MARK: - 충돌 Alert 상태
+
+    @State private var conflictRound: Round? = nil
+    @State private var showConflictAlert = false
 
     var body: some View {
         NavigationStack {
@@ -49,7 +58,7 @@ struct ImportSummaryView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
 
                     Button("저장하고 닫기") {
-                        onSave()
+                        attemptSave()
                     }
                     .font(.system(size: 16, weight: .semibold))
                     .frame(maxWidth: .infinity)
@@ -67,6 +76,49 @@ struct ImportSummaryView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .presentationDetents([.large])
+        .alert(conflictAlertTitle, isPresented: $showConflictAlert) {
+            Button("통합", role: .destructive) {
+                if let existing = conflictRound {
+                    modelContext.delete(existing)
+                    try? modelContext.save()
+                }
+                onSave()
+            }
+            Button("취소", role: .cancel) {
+                conflictRound = nil
+            }
+        } message: {
+            Text(conflictAlertMessage)
+        }
+    }
+
+    // MARK: - 충돌 감지 후 저장 흐름
+
+    private func attemptSave() {
+        let courseName = draft.clubName ?? ""
+        let conflict = CourseNameMatcher.findConflictingRound(
+            date: draft.resolvedDate,
+            courseName: courseName,
+            context: modelContext
+        )
+        if let conflict {
+            conflictRound = conflict
+            showConflictAlert = true
+        } else {
+            onSave()
+        }
+    }
+
+    // MARK: - Alert 문자열
+
+    private var conflictAlertTitle: String {
+        "같은 날짜에 라운드가 있어요"
+    }
+
+    private var conflictAlertMessage: String {
+        let dateStr = formattedDateShort(conflictRound?.date ?? draft.resolvedDate)
+        let name = conflictRound?.courseName ?? (draft.clubName ?? "알 수 없음")
+        return "\(dateStr) '\(name)' 라운드가 이미 있습니다.\n가져온 스코어카드가 기준이 되며, 이전 기록은 삭제됩니다.\n\n통합하시겠어요?"
     }
 
     // MARK: - Summary Card
@@ -206,6 +258,13 @@ struct ImportSummaryView: View {
     private func formattedDate(_ date: Date) -> String {
         let f = DateFormatter()
         f.dateFormat = "yyyy/MM/dd HH:mm"
+        f.locale = Locale(identifier: "ko_KR")
+        return f.string(from: date)
+    }
+
+    private func formattedDateShort(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
         f.locale = Locale(identifier: "ko_KR")
         return f.string(from: date)
     }
