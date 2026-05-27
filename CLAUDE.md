@@ -39,6 +39,7 @@
 - [README.md](README.md) — 프로젝트 전체 개요 (사람용)
 - [Ref-docs/specs/01-SPEC.md](Ref-docs/specs/01-SPEC.md) — 기능 명세서 v4 (마스터)
 - [Ref-docs/specs/00-OVERVIEW.md](Ref-docs/specs/00-OVERVIEW.md) — 제품 개요·Non-Goals
+- [Ref-docs/specs/15-NAVIGATION.md](Ref-docs/specs/15-NAVIGATION.md) — 화면 전환 정책 (fullScreenCover/push/sheet 사용 규칙)
 - [Ref-docs/specs/20-ARCHITECTURE.md](Ref-docs/specs/20-ARCHITECTURE.md) — 시스템 아키텍처
 - [Ref-docs/specs/21-DATA_MODEL.md](Ref-docs/specs/21-DATA_MODEL.md) — SwiftData 모델·DataQuality enum
 - [Ref-docs/specs/30-API_SPEC.md](Ref-docs/specs/30-API_SPEC.md) — Worker API 7개 엔드포인트
