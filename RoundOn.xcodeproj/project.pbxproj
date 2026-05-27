@@ -36,6 +36,7 @@
 		2F30D70BCEC9F96E424F4E1D /* GolfCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C203EFDBD24AB1F09291328 /* GolfCourse.swift */; };
 		30A75A43FED855C21E53232D /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28920937CD4E8F060CFB4431 /* Shared.framework */; };
 		3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AA5181B0AC6CA697186AC2 /* StatsView.swift */; };
+		4343857BC15E4915B9FA3C2B /* StatsMapDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDDC7EB0942142E190EFE2D8 /* StatsMapDetailView.swift */; };
 		32102A4EF0096B16513926A5 /* LaunchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114562675CCFCC652FC503D9 /* LaunchProvider.swift */; };
 		350ED9CB2AB111214A132133 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D34CB04D33E89E3E2B9853 /* SafariView.swift */; };
 		35330D84B85CE0EAFF1C6225 /* Color+WatchColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */; };
@@ -288,6 +289,7 @@
 		114562675CCFCC652FC503D9 /* LaunchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchProvider.swift; sourceTree = "<group>"; };
 		116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenaltySettings.swift; sourceTree = "<group>"; };
 		11AA5181B0AC6CA697186AC2 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		CDDC7EB0942142E190EFE2D8 /* StatsMapDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsMapDetailView.swift; sourceTree = "<group>"; };
 		139D8E2C353187EFFD42A389 /* PenaltyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenaltyButton.swift; sourceTree = "<group>"; };
 		1545EDCE02FB42A61FB4EB3B /* NewRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRoundView.swift; sourceTree = "<group>"; };
 		16CE8631B302FADCF70407E1 /* Color+SeasonalGreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+SeasonalGreen.swift"; sourceTree = "<group>"; };
@@ -802,6 +804,7 @@
 				1B927F0B15DD49B8664A4773 /* SettingsView.swift */,
 				AC8C2E3382F954E598DC5CDC /* ShareSheetView.swift */,
 				11AA5181B0AC6CA697186AC2 /* StatsView.swift */,
+				CDDC7EB0942142E190EFE2D8 /* StatsMapDetailView.swift */,
 				375C471F56FEC8D3C342D4DA /* Import */,
 			);
 			path = Views;
@@ -1336,6 +1339,7 @@
 				C764DE27949FC710FD120E31 /* SharePayload.swift in Sources */,
 				9FF481C2DA4735C05099C476 /* ShareSheetView.swift in Sources */,
 				3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */,
+				4343857BC15E4915B9FA3C2B /* StatsMapDetailView.swift in Sources */,
 				CD08C3D8464080E761344FC9 /* WCBroker.swift in Sources */,
 				88947674CEB250FB0EC25C87 /* WCRoundBridge.swift in Sources */,
 				E38FA528C02032009D2E5477 /* WorkoutCoordinator.swift in Sources */,
