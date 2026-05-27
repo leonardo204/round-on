@@ -199,11 +199,6 @@ struct HomeView: View {
 
             HStack(spacing: 6) {
                 Button {
-                    showAllRounds = true
-                } label: {
-                    navActionIconSF("list.bullet", label: "전체 라운드")
-                }
-                Button {
                     showStats = true
                 } label: {
                     navActionIcon("trending_up", label: "통계")
@@ -221,19 +216,6 @@ struct HomeView: View {
     }
 
     // MARK: - Nav action icon (36×36 원형 그레이 배경)
-
-    /// SF Symbol 버전 (asset bundle 없이 systemName 직접 사용)
-    private func navActionIconSF(_ systemName: String, label: String) -> some View {
-        ZStack {
-            Circle()
-                .fill(Color(.systemFill))
-            Image(systemName: systemName)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.tint)
-        }
-        .frame(width: 36, height: 36)
-        .accessibilityLabel(label)
-    }
 
     private func navActionIcon(_ assetName: String, label: String) -> some View {
         ZStack {
