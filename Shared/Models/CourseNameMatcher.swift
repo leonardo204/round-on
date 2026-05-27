@@ -68,6 +68,21 @@ public enum CourseNameMatcher {
         return na.contains(nb) || nb.contains(na)
     }
 
+    // MARK: - matches(course:query:)
+
+    /// query 가 course 의 name 또는 aliases 와 양방향 contains 매칭되는지.
+    /// normalize 후 비교. 빈 query 는 false.
+    public static func matches(course: GolfCourse, query: String) -> Bool {
+        let nq = normalize(query)
+        guard !nq.isEmpty else { return false }
+        for k in course.searchableKeys() {
+            if k.contains(nq) || nq.contains(k) {
+                return true
+            }
+        }
+        return false
+    }
+
     // MARK: - findConflictingRound
 
     /// SwiftData ModelContext에서 충돌 라운드를 찾는다.

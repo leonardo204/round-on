@@ -27,6 +27,8 @@ public struct GolfCourse: Codable, Sendable, Identifiable {
     public let dataQuality: DataQuality
     /// 데이터 출처 추적 (예: ["mcst", "mois", "osm"]).
     public let sources: [String]?
+    /// 영문 alias 검색 보조 필드 (예: ["BELLASTONE", "BELLA"]). v4 추가 (2026-05-27).
+    public let aliases: [String]?
 
     // MARK: computed (호출자 호환)
 
@@ -44,6 +46,7 @@ public struct GolfCourse: Codable, Sendable, Identifiable {
         case kakaoPlaceUrl
         case subCourses               // v3 enrich_subcourses.py 산출 키와 동일
         case holes, dataQuality, sources
+        case aliases
     }
 
     // MARK: Memberwise init (테스트 + 미리보기 전용)
@@ -62,7 +65,8 @@ public struct GolfCourse: Codable, Sendable, Identifiable {
         subCourses: [SubCourse]? = nil,
         holes: [HoleInfo] = [],
         dataQuality: DataQuality = .unknown,
-        sources: [String]? = nil
+        sources: [String]? = nil,
+        aliases: [String]? = nil
     ) {
         self.id = id
         self.name = name
@@ -78,6 +82,7 @@ public struct GolfCourse: Codable, Sendable, Identifiable {
         self.holes = holes
         self.dataQuality = dataQuality
         self.sources = sources
+        self.aliases = aliases
     }
 }
 
@@ -142,6 +147,21 @@ public enum DataQuality: String, Codable, Sendable {
 // MARK: - GolfCourse computed helpers
 
 public extension GolfCourse {
+    /// name + aliases 를 모두 정규화한 비교용 키 배열 (중복 제거).
+    /// CourseNameMatcher.matches(course:query:) 내부에서 사용.
+    func searchableKeys() -> [String] {
+        var keys: [String] = []
+        let n = CourseNameMatcher.normalize(name)
+        if !n.isEmpty { keys.append(n) }
+        for alias in aliases ?? [] {
+            let na = CourseNameMatcher.normalize(alias)
+            if !na.isEmpty && !keys.contains(na) {
+                keys.append(na)
+            }
+        }
+        return keys
+    }
+
     /// par 데이터 신뢰 여부. verified 또는 complete이면 true.
     var hasReliablePars: Bool {
         dataQuality == .verified || dataQuality == .complete

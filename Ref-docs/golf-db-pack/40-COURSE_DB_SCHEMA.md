@@ -483,3 +483,45 @@ v2 원본에는 다음 4가지 시설 타입이 섞여 있었으며, v3 producti
 | `screen` | 6 | 스크린골프장 |
 
 v3 이후 별도 필터로 노출 검토 가능.
+
+---
+
+## 12. v4 — aliases 필드 추가 (2026-05-27)
+
+각 골프장에 영문 alias 1~4개를 부여한 검색 보조 필드.
+
+### 스키마
+
+```json
+{
+  "id": "벨라스톤cc_강원",
+  "name": "벨라스톤컨트리클럽",
+  "aliases": ["BELLASTONE", "BELRASEUTON"],
+  "region": "강원",
+  "clubhouse": { "lat": 37.453, "lng": 127.83 }
+}
+```
+
+### 목적
+- 사용자가 영문 "BELLA", "BELLASTONE" 등으로 라운드를 입력했을 때 매칭 가능하게
+- `CourseNameMatcher.normalize` 후 양방향 contains 비교 대상에 포함
+- `GolfCourse.searchableKeys()` → `CourseNameMatcher.matches(course:query:)` 연계
+
+### 생성 방법
+- 스크립트: `Ref-docs/golf-db-pack/build_aliases.py` (idempotent)
+- 한글 토큰 → 영문 사전 (도메인 특화) + 한글 자모 RR 음차 결합
+
+### 마이그레이션
+- Optional 필드. nil 또는 빈 배열도 정상
+- 라이트마이그레이션 안전 (SwiftData 미사용, Codable 디코딩만 영향)
+- `GolfCourse.aliases: [String]?` — 기존 memberwise init에 `aliases: [String]? = nil` 추가로 기존 호출자 호환
+
+### v3 → v4 변경 요약
+
+| 항목 | v3 | v4 |
+|------|----|----|
+| 레코드 수 | 965곳 | 979곳 |
+| 신규 필드 | — | `aliases: [String]?` |
+| 커버리지 | — | 969/979 골프장에 aliases 추가 |
+| GolfCourse struct | — | `aliases`, `searchableKeys()` 추가 |
+| CourseNameMatcher | — | `matches(course:query:)` 추가 |
