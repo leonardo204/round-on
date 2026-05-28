@@ -33,6 +33,13 @@ id = "c80cc35640444de4b3a3eef50a554ec3"
 binding = "KV_COURSES"
 id = "420c31e0d5064377a0130f3608bd4f3b"
 
+# KV_STATS: 통계 공유 페이로드 저장 (7일 TTL). v1 (2026-05-27).
+# 별도 namespace 발급 없이 KV_META 와 동일 id 로 alias.
+# shortId prefix "s_" 가 라운드 viewer 키와 충돌 방지 (사용자 결정 2026-05-27).
+[[kv_namespaces]]
+binding = "KV_STATS"
+id = "7b78e911dd704dd29c684002b99247af"
+
 [vars]
 ENVIRONMENT = "development"
 VIEWER_DOMAIN = "golf.zerolive.co.kr"
@@ -71,6 +78,13 @@ id = "c80cc35640444de4b3a3eef50a554ec3"
 [[env.production.kv_namespaces]]
 binding = "KV_COURSES"
 id = "420c31e0d5064377a0130f3608bd4f3b"
+
+# KV_STATS: 통계 공유 페이로드 저장 (7일 TTL). v1 (2026-05-27).
+# 별도 namespace 발급 없이 KV_META 와 동일 id 로 alias.
+# shortId prefix "s_" 가 라운드 viewer 키와 충돌 방지.
+[[env.production.kv_namespaces]]
+binding = "KV_STATS"
+id = "7b78e911dd704dd29c684002b99247af"
 
 # 시크릿 (wrangler.toml에 값 기재 금지 — wrangler secret put으로 등록)
 # SESSION_HMAC_KEY      : 등록 완료 (2026-05-18)

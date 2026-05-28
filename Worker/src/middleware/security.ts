@@ -43,12 +43,15 @@ export function applySecurityHeaders(
       [
         "default-src 'self'",
         // 인라인 스타일 + 스크립트 허용 (viewer는 템플릿 리터럴 inline)
-        "style-src 'self' 'unsafe-inline'",
+        // unpkg.com: Leaflet CDN (statsViewer Leaflet 인터랙티브 지도)
+        "style-src 'self' 'unsafe-inline' https://unpkg.com",
         // Cloudflare가 자동 주입하는 beacon.min.js 허용 (static.cloudflareinsights.com)
-        "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+        // unpkg.com: Leaflet CDN JS
+        "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://unpkg.com",
         // Cloudflare insights는 cloudflareinsights.com으로 비콘 전송
         "connect-src 'self' https://cloudflareinsights.com",
-        "img-src 'self' data:",
+        // data: (인라인 이미지), OSM tile 서버 (Leaflet 지도 타일)
+        "img-src 'self' data: https://*.tile.openstreetmap.org",
         "font-src 'self'",
         "form-action 'self'",
         "frame-ancestors 'none'",

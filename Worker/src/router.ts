@@ -24,10 +24,22 @@ import { handleGetCourses }  from "./handlers/getCourses.js";
 import { handleRefreshCourses } from "./handlers/refreshCourses.js";
 import { handleRefreshPayload } from "./handlers/refreshPayload.js";
 import { handleGetLanding }     from "./handlers/getLanding.js";
+import { handleCreateStatsShare } from "./handlers/createStatsShare.js";
+import { handleGetStatsViewer }   from "./handlers/getStatsViewer.js";
+import { handleUpdateStatsShare } from "./handlers/updateStatsShare.js";
+import { handleDeleteStatsShare } from "./handlers/deleteStatsShare.js";
+import { handleVerifyStatsPin }   from "./handlers/verifyStatsPin.js";
 import { errorResponse }     from "./middleware/security.js";
 
 // shortId 패턴: base62 8자 (33-SECURITY §2)
 const SHORT_ID_RE = /^[0-9A-Za-z]{8}$/;
+
+// 통계 shortId 패턴: 's_' + base62 8자 (총 10자)
+const STATS_SHORT_ID_RE = /^s_[0-9A-Za-z]{8}$/;
+
+function isValidStatsShortId(id: string): boolean {
+  return STATS_SHORT_ID_RE.test(id);
+}
 
 function isValidShortId(id: string): boolean {
   return SHORT_ID_RE.test(id);
@@ -97,6 +109,53 @@ export async function route(
   // /v1/* fallthrough → 404 (알 수 없는 v1 경로)
   if (pathname.startsWith("/v1/")) {
     return errorResponse("NOT_FOUND", "API 엔드포인트를 찾을 수 없습니다.", 404);
+  }
+
+  // ── /api/share/stats — 통계 공유 (라운드 share 보다 먼저 처리) ─────────
+  if (pathname === "/api/share/stats") {
+    if (method === "POST") {
+      return handleCreateStatsShare(request, env);
+    }
+    return errorResponse("VALIDATION_ERROR", "지원하지 않는 메서드입니다.", 405);
+  }
+
+  // ── /api/share/stats/:shortId ────────────────────────────────────────────
+  const apiStatsMatch = pathname.match(/^\/api\/share\/stats\/(s_[^/]+)$/);
+  if (apiStatsMatch) {
+    const shortId = apiStatsMatch[1];
+    if (!isValidStatsShortId(shortId)) {
+      return errorResponse("NOT_FOUND", "통계 공유를 찾을 수 없습니다.", 404);
+    }
+    if (method === "PUT") {
+      return handleUpdateStatsShare(request, env, shortId);
+    }
+    if (method === "DELETE") {
+      return handleDeleteStatsShare(request, env, shortId);
+    }
+    return errorResponse("VALIDATION_ERROR", "지원하지 않는 메서드입니다.", 405);
+  }
+
+  // ── /s/:shortId — 통계 viewer (라운드 /:shortId catch-all 보다 먼저) ──────
+  const statsViewerMatch = pathname.match(/^\/s\/(s_[^/]+)$/);
+  if (statsViewerMatch) {
+    const shortId = statsViewerMatch[1];
+    if (method === "GET") {
+      return handleGetStatsViewer(request, env, shortId);
+    }
+    return errorResponse("VALIDATION_ERROR", "지원하지 않는 메서드입니다.", 405);
+  }
+
+  // ── /s/:shortId/verify-pin — 통계 PIN 검증 ──────────────────────────────
+  const statsVerifyPinMatch = pathname.match(/^\/s\/(s_[^/]+)\/verify-pin$/);
+  if (statsVerifyPinMatch) {
+    const shortId = statsVerifyPinMatch[1];
+    if (!isValidStatsShortId(shortId)) {
+      return errorResponse("NOT_FOUND", "통계 공유를 찾을 수 없습니다.", 404);
+    }
+    if (method === "POST") {
+      return handleVerifyStatsPin(request, env, shortId);
+    }
+    return errorResponse("VALIDATION_ERROR", "지원하지 않는 메서드입니다.", 405);
   }
 
   // ── /api/share ──────────────────────────────────────────────────────────

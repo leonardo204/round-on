@@ -50,7 +50,8 @@ targets:
       - path: Shared/Sync
       - path: Shared/ViewModels
         excludes:
-          - "ShareViewModel.swift"  # UIKit 의존 (iOS 전용)
+          - "ShareViewModel.swift"      # UIKit 의존 (iOS 전용)
+          - "StatsShareViewModel.swift" # ShareAPIClient 의존 (iOS 전용)
       - path: Shared/Resources/CoursePars  # 골프장별 par 사전 데이터 JSON
         type: folder
     info:
@@ -69,6 +70,8 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: App-iOS
+    resources:
+      - path: App-iOS/PrivacyInfo.xcprivacy
     dependencies:
       - target: Shared
         embed: true

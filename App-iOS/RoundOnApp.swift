@@ -16,7 +16,8 @@ struct RoundOnApp: App {
             let schema = Schema([
                 Round.self, Player.self, HoleScore.self,
                 PersistedDiscoveredCourse.self,
-                UserParOverride.self, CoursesSyncMeta.self
+                UserParOverride.self, CoursesSyncMeta.self,
+                StatsShareRecord.self
             ])
             // swiftlint:disable:next force_try
             self.modelContainer = try! ModelContainer(
@@ -34,7 +35,8 @@ struct RoundOnApp: App {
             HoleScore.self,
             PersistedDiscoveredCourse.self,  // 카카오 발견 골프장 영구 캐시
             UserParOverride.self,             // 사용자 par 수정 영구 저장 (신규)
-            CoursesSyncMeta.self             // 원격 fetch 동기화 메타 (신규)
+            CoursesSyncMeta.self,            // 원격 fetch 동기화 메타 (신규)
+            StatsShareRecord.self            // 통계 공유 영속 레코드 (stats-share-v1)
         ])
 
         // GolfCourse는 등록 안 함 (20-ARCHITECTURE §6 옵션 A — 번들 JSON 인메모리 로드)

@@ -215,3 +215,116 @@ public final class ShareAPIClient: @unchecked Sendable {
 }
 
 // multipart 헬퍼는 photo upload용이라 폐기 (2026-05-18)
+
+// MARK: - Stats 공유 응답
+
+public struct StatsShareCreateResponse: Sendable {
+    public let shortId: String        // "s_xxxxxxxx"
+    public let url: String            // "https://golf.zerolive.co.kr/s/..."
+    public let editToken: String
+    public let expiresAt: Date
+}
+
+/// Stats 공유 응답 Codable (내부 디코딩용)
+private struct StatsShareCreateResponseCodable: Decodable {
+    let shortId: String
+    let url: String
+    let editToken: String
+    let expiresAt: Date
+}
+
+// MARK: - ShareAPIClient Stats 확장
+
+extension ShareAPIClient {
+
+    /// POST /api/share/stats — 통계 공유 viewer 생성 (30-API §stats)
+    public func createStatsShare(
+        payload: StatsSharePayload,
+        pin: String?,
+        deviceToken: String
+    ) async throws -> StatsShareCreateResponse {
+        AppLogger.share.info("[Share] createStatsShare 시작 — cardKind=\(payload.cardKind.rawValue)")
+
+        let url = try makeURL(path: "/api/share/stats")
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        req.setValue(UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
+        req.setValue("Bearer \(deviceToken)", forHTTPHeaderField: "X-Device-Token")
+
+        // 요청 바디: {payload, pin?, deviceToken}
+        let body = StatsShareRequestBody(payload: payload, pin: pin, deviceToken: deviceToken)
+        do {
+            req.httpBody = try statsEncoder.encode(body)
+            AppLogger.share.debug("[Share] createStatsShare encoded bytes=\(req.httpBody?.count ?? 0)")
+        } catch {
+            AppLogger.share.error("[Share] createStatsShare encode 실패: \(error.localizedDescription)")
+            throw ShareAPIError.encodingError(error)
+        }
+
+        let data = try await perform(req)
+        let resp = try decodeStatsResponse(StatsShareCreateResponseCodable.self, from: data)
+        AppLogger.share.info("[Share] createStatsShare 성공 — shortId=\(resp.shortId)")
+        return StatsShareCreateResponse(
+            shortId: resp.shortId,
+            url: resp.url,
+            editToken: resp.editToken,
+            expiresAt: resp.expiresAt
+        )
+    }
+
+    /// DELETE /api/share/stats/:shortId — 통계 viewer 회수 (editToken Bearer)
+    public func deleteStatsShare(
+        shortId: String,
+        editToken: String
+    ) async throws {
+        AppLogger.share.info("[Share] deleteStatsShare 시작 — shortId=\(shortId)")
+        let url = try makeURL(path: "/api/share/stats/\(shortId)")
+        var req = URLRequest(url: url)
+        req.httpMethod = "DELETE"
+        req.setValue("Bearer \(editToken)", forHTTPHeaderField: "Authorization")
+
+        _ = try await perform(req, expectNoContent: true)
+        AppLogger.share.info("[Share] deleteStatsShare 성공 — shortId=\(shortId)")
+    }
+
+    // MARK: - 내부 헬퍼 (Stats 전용)
+
+    private var statsEncoder: JSONEncoder {
+        let e = JSONEncoder()
+        e.dateEncodingStrategy = .iso8601
+        return e
+    }
+
+    private func decodeStatsResponse<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
+        let d = JSONDecoder()
+        let fractional = ISO8601DateFormatter()
+        fractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let standard = ISO8601DateFormatter()
+        standard.formatOptions = [.withInternetDateTime]
+        d.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let str = try container.decode(String.self)
+            if let date = fractional.date(from: str) ?? standard.date(from: str) {
+                return date
+            }
+            throw DecodingError.dataCorruptedError(in: container,
+                debugDescription: "Invalid ISO8601 date: \(str)")
+        }
+        do {
+            return try d.decode(type, from: data)
+        } catch {
+            let bodyPreview = String(data: data.prefix(512), encoding: .utf8) ?? "<non-utf8>"
+            AppLogger.share.error("[Share] \(String(describing: type)) decode 실패: \(error.localizedDescription) — body=\(bodyPreview, privacy: .public)")
+            throw ShareAPIError.decodingError(error)
+        }
+    }
+}
+
+// MARK: - Stats 요청 바디
+
+private struct StatsShareRequestBody: Encodable {
+    let payload: StatsSharePayload
+    let pin: String?
+    let deviceToken: String
+}

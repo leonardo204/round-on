@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import MapKit
+import SafariServices
 import Shared
 
 // MARK: - StatsView
@@ -8,6 +9,37 @@ import Shared
 // mockup: .mockups/stats-v2.html (안 A)
 
 struct StatsView: View {
+
+    // MARK: - 공유 상태
+
+    /// 공유 시트 표시 여부
+    @State private var showShareSheet = false
+
+    /// 트리거 배너로 공유 시트 진입 시 사전 선택된 카드 종류
+    @State private var preselectedCardKind: StatsSignatureCardKind?
+
+    /// 회수 중 로딩
+    @State private var isRevoking = false
+
+    /// 영속 공유 카드에서 SafariView 인앱 표시용
+    @State private var safariURL: URL?
+
+    /// 영속 공유 카드에서 UIActivityViewController 공유 시트 표시용
+    @State private var activityShareURL: URL?
+
+    /// 회수 에러 메시지
+    @State private var revokeError: String?
+
+    // MARK: - 영속 공유 레코드
+
+    @Query private var statsShareRecords: [StatsShareRecord]
+
+    /// 유효한 (만료되지 않은) 공유 레코드
+    private var activeShareRecord: StatsShareRecord? {
+        statsShareRecords.first { !$0.isExpired }
+    }
+
+    // MARK: - CourseRepository 캐시
 
     /// CourseRepository 인메모리 캐시 (courseId → GolfCourse lookup용)
     @State private var courseCache: [String: GolfCourse] = [:]
@@ -49,6 +81,18 @@ struct StatsView: View {
                 let unmatchedRoundCount = max(0, totalFinished - mappedCount)
                 ScrollView {
                     VStack(spacing: 16) {
+                        // ★ 영속 공유 카드 (공유 중인 통계 — 최상단)
+                        if let record = activeShareRecord {
+                            activeShareCard(record: record)
+                                .padding(.top, 4)
+                        }
+
+                        // ★ 트리거 배너 (공유 레코드 없을 때만 표시)
+                        if activeShareRecord == nil, let kind = triggerKind(stats: stats) {
+                            triggerBanner(kind)
+                                .padding(.top, 4)
+                        }
+
                         // ① Hero: 핸디캡 추정
                         if let hcp = stats.handicapEstimate {
                             heroSection(hcp: hcp)
@@ -77,10 +121,57 @@ struct StatsView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
                 }
+                .sheet(isPresented: $showShareSheet) {
+                    let currentStats = stats
+                    let currentRegionStats = regionStats
+                    let currentMapLocations = mapLocations
+                    StatsShareSheetView(
+                        initialCardKind: preselectedCardKind ?? defaultCardKind(stats: currentStats),
+                        stats: currentStats,
+                        regionStats: currentRegionStats,
+                        roundLocations: currentMapLocations,
+                        bestRound: currentStats.bestRound,
+                        isPresented: $showShareSheet
+                    )
+                    .presentationDetents([.large])
+                }
+                .sheet(isPresented: Binding(
+                    get: { safariURL != nil },
+                    set: { if !$0 { safariURL = nil } }
+                )) {
+                    if let url = safariURL {
+                        SafariView(url: url).ignoresSafeArea()
+                    }
+                }
+                .sheet(isPresented: Binding(
+                    get: { activityShareURL != nil },
+                    set: { if !$0 { activityShareURL = nil } }
+                )) {
+                    if let url = activityShareURL {
+                        ActivityShareSheet(url: url)
+                    }
+                }
             }
         }
         .navigationTitle("통계")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    preselectedCardKind = nil
+                    showShareSheet = true
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("공유")
+                    }
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(displayedRounds.isEmpty ? Color.inkFaint : Color.accentGreen)
+                }
+                .accessibilityLabel("통계 공유")
+                .disabled(displayedRounds.isEmpty)
+            }
+        }
         .task {
             // CourseRepository 캐시 로드 (지역별 라운드 카드 lookup용)
             if courseCache.isEmpty {
@@ -931,6 +1022,323 @@ struct StatsView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd"
         return formatter.string(from: date)
+    }
+
+    // MARK: - 영속 공유 카드 (공유 중인 통계)
+
+    @ViewBuilder
+    private func activeShareCard(record: StatsShareRecord) -> some View {
+        let accentColor: Color = {
+            switch record.cardKind {
+            case .pr:    return Color.scoreBirdie
+            case .hcp:   return Color.houseGreen
+            case .trend: return Color.accentGreen
+            case nil:    return Color.accentGreen
+            }
+        }()
+        let iconName: String = {
+            switch record.cardKind {
+            case .pr:    return "star.fill"
+            case .hcp:   return "arrow.down.right.circle.fill"
+            case .trend: return "chart.line.downtrend.xyaxis"
+            case nil:    return "square.and.arrow.up.fill"
+            }
+        }()
+        let cardLabel: String = {
+            switch record.cardKind {
+            case .pr:    return "PR"
+            case .hcp:   return "핸디캡"
+            case .trend: return "흐름"
+            case nil:    return "통계"
+            }
+        }()
+
+        VStack(alignment: .leading, spacing: 10) {
+            // 헤더
+            HStack(spacing: 10) {
+                Image(systemName: iconName)
+                    .font(.system(size: 18))
+                    .foregroundStyle(accentColor)
+                    .frame(width: 36, height: 36)
+                    .background(accentColor.opacity(0.12))
+                    .clipShape(Circle())
+
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text("공유 중인 통계")
+                            .font(.system(size: 13, weight: .heavy))
+                            .foregroundStyle(Color.inkPrimary)
+                        Text(cardLabel)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(accentColor)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(accentColor.opacity(0.10))
+                            .clipShape(Capsule())
+                    }
+                    Text("\(record.displayName)님 · \(expiresLabel(record.expiresAt))")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Color.inkSoft)
+                }
+
+                Spacer()
+
+                // 다시 만들기
+                Button {
+                    preselectedCardKind = record.cardKind
+                    showShareSheet = true
+                } label: {
+                    Text("다시 만들기")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(accentColor)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background(accentColor.opacity(0.08))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
+            }
+
+            // URL + 액션 행
+            HStack(spacing: 6) {
+                Text(record.url
+                        .replacingOccurrences(of: "https://", with: ""))
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(Color.accentGreen)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                // 바로보기 — 앱 내장 SafariView
+                compactShareButton(icon: "safari", label: "보기") {
+                    if let url = URL(string: record.url) {
+                        safariURL = url
+                    }
+                }
+                // 복사
+                compactShareButton(icon: "doc.on.doc", label: "복사") {
+                    UIPasteboard.general.string = record.url
+                    Task { await HapticEngine.shared.play(.shareSuccess) }
+                }
+                // 공유하기 — UIActivityViewController
+                compactShareButton(icon: "square.and.arrow.up", label: "공유") {
+                    if let url = URL(string: record.url) {
+                        activityShareURL = url
+                    }
+                }
+                // 회수
+                compactShareButton(icon: isRevoking ? "hourglass" : "trash", label: "회수") {
+                    Task { await revokeShare(record: record) }
+                }
+                .disabled(isRevoking)
+                .opacity(isRevoking ? 0.5 : 1.0)
+            }
+
+            if let err = revokeError {
+                Text(err)
+                    .font(.system(size: 11))
+                    .foregroundStyle(Color.red)
+            }
+        }
+        .padding(14)
+        .background(Color.cardSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(accentColor.opacity(0.25), lineWidth: 1)
+        )
+        .shadow(color: Color.houseGreen.opacity(0.04), radius: 6, x: 0, y: 2)
+    }
+
+    private func expiresLabel(_ date: Date) -> String {
+        let diff = date.timeIntervalSinceNow
+        if diff <= 0 { return "만료됨" }
+        let days = Int(diff / 86400)
+        if days <= 0 { return "오늘 만료" }
+        return "D-\(days) 만료"
+    }
+
+    private func compactShareButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 2) {
+                Image(systemName: icon)
+                    .font(.system(size: 12, weight: .semibold))
+                Text(label)
+                    .font(.system(size: 9, weight: .semibold))
+            }
+            .foregroundStyle(Color.accentGreen)
+            .frame(width: 40, height: 34)
+            .background(Color.accentGreen.opacity(0.07), in: RoundedRectangle(cornerRadius: 7))
+        }
+        .accessibilityLabel(label)
+    }
+
+    @Environment(\.modelContext) private var statsModelContext
+
+    private func revokeShare(record: StatsShareRecord) async {
+        guard !isRevoking else { return }
+        isRevoking = true
+        revokeError = nil
+
+        do {
+            // editToken 조회
+            let editToken = KeychainStore.shared.statsEditToken(for: record.shortId)
+            guard let token = editToken else {
+                // 토큰 없으면 로컬 레코드만 삭제
+                AppLogger.share.warning("[StatsView] editToken 없음 — 로컬 레코드만 삭제")
+                statsModelContext.delete(record)
+                try? statsModelContext.save()
+                isRevoking = false
+                return
+            }
+
+            // DELETE /api/share/stats/:shortId
+            let client = ShareAPIClient()
+            try await client.deleteStatsShare(shortId: record.shortId, editToken: token)
+
+            // Keychain 정리 + SwiftData 삭제
+            try? KeychainStore.shared.removeStatsEditToken(for: record.shortId)
+            statsModelContext.delete(record)
+            try? statsModelContext.save()
+            AppLogger.share.info("[StatsView] 통계 공유 회수 완료 — shortId=\(record.shortId)")
+        } catch {
+            AppLogger.share.error("[StatsView] 회수 실패: \(error.localizedDescription)")
+            revokeError = "회수 실패 — \(error.localizedDescription)"
+        }
+
+        isRevoking = false
+    }
+
+    // MARK: - 공유 트리거 배너
+
+    /// 우선순위: PR > HCP > TREND. 30일 내 동일 trigger 재push 금지.
+    private func triggerKind(stats: RoundStatisticsResult) -> StatsSignatureCardKind? {
+        // PR: bestRound가 7일 이내 + isPersonalRecord
+        if let best = stats.bestRound,
+           stats.isPersonalRecord,
+           Date().timeIntervalSince(best.date) < 7 * 86400,
+           !triggerRecentlyShown(.pr) {
+            return .pr
+        }
+        // HCP: handicapEstimate.delta <= -1.0
+        if let hcp = stats.handicapEstimate,
+           let delta = hcp.delta,
+           delta <= -1.0,
+           !triggerRecentlyShown(.hcp) {
+            return .hcp
+        }
+        // TREND: recentTrend.direction == .improving
+        if let trend = stats.recentTrend,
+           trend.direction == .improving,
+           !triggerRecentlyShown(.trend) {
+            return .trend
+        }
+        return nil
+    }
+
+    private func triggerRecentlyShown(_ kind: StatsSignatureCardKind) -> Bool {
+        let key = "stats.lastTrigger.\(kind.rawValue)"
+        let last = UserDefaults.standard.double(forKey: key)
+        return last > 0 && Date().timeIntervalSince1970 - last < 30 * 86400
+    }
+
+    private func markTriggerShown(_ kind: StatsSignatureCardKind) {
+        UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "stats.lastTrigger.\(kind.rawValue)")
+    }
+
+    /// 가용 데이터에 따라 기본 카드 결정: HCP → TREND → PR 순 fallback
+    private func defaultCardKind(stats: RoundStatisticsResult) -> StatsSignatureCardKind {
+        if stats.handicapEstimate != nil { return .hcp }
+        if stats.recentTrend != nil { return .trend }
+        return .pr
+    }
+
+    @ViewBuilder
+    private func triggerBanner(_ kind: StatsSignatureCardKind) -> some View {
+        let accentColor: Color = kind == .pr ? Color.scoreBirdie : Color.accentGreen
+        let iconName: String = {
+            switch kind {
+            case .pr:    return "star.fill"
+            case .hcp:   return "arrow.down.circle.fill"
+            case .trend: return "chart.line.uptrend.xyaxis"
+            }
+        }()
+        let bgGradient: LinearGradient = {
+            switch kind {
+            case .pr:
+                return LinearGradient(
+                    colors: [Color.scoreBirdie.opacity(0.08), Color.scoreBirdie.opacity(0.04)],
+                    startPoint: .leading, endPoint: .trailing
+                )
+            default:
+                return LinearGradient(
+                    colors: [Color.accentGreen.opacity(0.08), Color.accentGreen.opacity(0.04)],
+                    startPoint: .leading, endPoint: .trailing
+                )
+            }
+        }()
+
+        HStack(spacing: 12) {
+            Image(systemName: iconName)
+                .font(.system(size: 22))
+                .foregroundStyle(accentColor)
+                .frame(width: 44, height: 44)
+                .background(accentColor.opacity(0.15))
+                .clipShape(Circle())
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(bannerTitle(kind))
+                    .font(.system(size: 14, weight: .heavy))
+                    .foregroundStyle(Color.inkPrimary)
+                Text(bannerSubtitle(kind))
+                    .font(.system(size: 11.5))
+                    .foregroundStyle(Color.inkSoft)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(accentColor)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(bgGradient)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(accentColor.opacity(0.2), lineWidth: 1)
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            preselectedCardKind = kind
+            showShareSheet = true
+            markTriggerShown(kind)
+        }
+    }
+
+    private func bannerTitle(_ kind: StatsSignatureCardKind) -> String {
+        switch kind {
+        case .pr:    return "인생 최저타를 갱신했어요"
+        case .hcp:   return "핸디캡이 내려갔어요"
+        case .trend: return "최근 흐름이 좋아지는 중이에요"
+        }
+    }
+
+    private func bannerSubtitle(_ kind: StatsSignatureCardKind) -> String {
+        switch kind {
+        case .pr:    return "이 기록, 공유해보세요"
+        case .hcp:   return "성장 중인 지금을 기록하세요"
+        case .trend: return "라운드온 시그니처 카드로 공유해 보세요"
+        }
+    }
+}
+
+// MARK: - StatsShareRecord + cardKind (App-iOS 레이어 확장)
+
+extension StatsShareRecord {
+    /// 카드 종류 (rawValue → enum) — App-iOS 레이어에서만 사용
+    var cardKind: StatsSignatureCardKind? {
+        StatsSignatureCardKind(rawValue: cardKindRaw)
     }
 }
 

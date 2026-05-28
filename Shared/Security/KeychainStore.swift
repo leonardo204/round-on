@@ -118,6 +118,74 @@ public final class KeychainStore: KeychainStoring, @unchecked Sendable {
     }
 }
 
+// MARK: - KeychainStore Stats 확장
+// stats editToken 키 패턴: kr.co.zerolive.roundon.stats.editToken.<shortId>
+// 라운드 editToken(kr.co.zerolive.roundon.editToken.<shortId>) 과 네임스페이스 분리
+
+extension KeychainStore {
+
+    private static let statsKeyPrefix = "kr.co.zerolive.roundon.stats.editToken."
+
+    /// stats editToken을 Keychain에 저장한다
+    public func setStatsEditToken(_ token: String, for shortId: String) throws {
+        let key = Self.statsKeychainKey(for: shortId)
+        guard let data = token.data(using: .utf8) else {
+            throw KeychainError.encodingFailed
+        }
+        try? deleteStatsItem(for: key)
+        let query: [CFString: Any] = [
+            kSecClass:           kSecClassGenericPassword,
+            kSecAttrAccount:     key,
+            kSecValueData:       data,
+            kSecAttrAccessible:  kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+        ]
+        let status = SecItemAdd(query as CFDictionary, nil)
+        guard status == errSecSuccess else {
+            throw KeychainError.saveFailed(status)
+        }
+    }
+
+    /// Keychain에서 stats editToken을 조회한다
+    public func statsEditToken(for shortId: String) -> String? {
+        let key = Self.statsKeychainKey(for: shortId)
+        let query: [CFString: Any] = [
+            kSecClass:            kSecClassGenericPassword,
+            kSecAttrAccount:      key,
+            kSecReturnData:       true,
+            kSecMatchLimit:       kSecMatchLimitOne
+        ]
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        guard status == errSecSuccess,
+              let data = result as? Data,
+              let token = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        return token
+    }
+
+    /// Keychain에서 stats editToken을 삭제한다
+    public func removeStatsEditToken(for shortId: String) throws {
+        let key = Self.statsKeychainKey(for: shortId)
+        try deleteStatsItem(for: key)
+    }
+
+    private static func statsKeychainKey(for shortId: String) -> String {
+        return statsKeyPrefix + shortId
+    }
+
+    private func deleteStatsItem(for key: String) throws {
+        let query: [CFString: Any] = [
+            kSecClass:        kSecClassGenericPassword,
+            kSecAttrAccount:  key
+        ]
+        let status = SecItemDelete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else {
+            throw KeychainError.deleteFailed(status)
+        }
+    }
+}
+
 // MARK: - InMemoryKeychainStore
 // 테스트 전용 — Keychain entitlement 없이도 동작하는 인메모리 구현
 
@@ -148,6 +216,20 @@ public final class InMemoryKeychainStore: KeychainStoring {
 
         try? setEditToken(plainToken, for: shortId)
         round.sharedEditToken = nil
+    }
+
+    // MARK: Stats 네임스페이스 (인메모리: "stats:<shortId>" 키 분리)
+
+    public func setStatsEditToken(_ token: String, for shortId: String) throws {
+        storage["stats:\(shortId)"] = token
+    }
+
+    public func statsEditToken(for shortId: String) -> String? {
+        return storage["stats:\(shortId)"]
+    }
+
+    public func removeStatsEditToken(for shortId: String) throws {
+        storage.removeValue(forKey: "stats:\(shortId)")
     }
 }
 
