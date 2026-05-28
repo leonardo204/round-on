@@ -213,4 +213,88 @@ Worker name: roundon-viewer (production: roundon-viewer-production)
 
 ---
 
-*최종 업데이트: 2026-05-18*
+---
+
+## STATS_KV namespace 발급 (통계 공유 v1, 2026-05-27)
+
+`KV_STATS` binding은 통계 공유 v1 엔드포인트(`POST /api/share/stats`, `GET /s/:shortId` 등)에서 사용한다. 기존 `KV_META`(라운드 공유)와 완전히 분리된 namespace이다.
+
+### 발급 순서
+
+1. dev용 발급:
+   ```bash
+   cd /Users/zerolive/work/golfCounter/Worker
+   npx wrangler kv namespace create KV_STATS
+   ```
+   출력 예시:
+   ```
+   Add the following to your configuration file in your kv_namespaces array:
+   { binding = "KV_STATS", id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" }
+   ```
+
+2. production용 발급:
+   ```bash
+   npx wrangler kv namespace create KV_STATS --env production
+   ```
+
+3. 발급된 ID를 `wrangler.toml`에서 `PLACEHOLDER_REPLACE_AFTER_CREATE` 자리에 교체:
+   ```toml
+   # dev
+   [[kv_namespaces]]
+   binding = "KV_STATS"
+   id = "<dev에서 발급된 ID>"
+
+   # production
+   [[env.production.kv_namespaces]]
+   binding = "KV_STATS"
+   id = "<production에서 발급된 ID>"
+   ```
+
+4. 배포:
+   ```bash
+   npx wrangler deploy --env production
+   ```
+
+5. 확인:
+   ```bash
+   npx wrangler kv namespace list --env production
+   # KV_STATS binding이 목록에 표시되어야 함
+   ```
+
+### TTL 정책
+
+KV_STATS 저장 키: `stats:{shortId}` (JSON, 7일 TTL)
+
+Worker handler에서 `expirationTtl: 604800` (7일 = 7 × 86400초)로 자동 설정된다. Cloudflare KV TTL 만료 후 키가 자동 삭제된다.
+
+---
+
+## og:image 정적 자산 배치 {#og-image}
+
+통계 viewer의 og:image는 cardKind별 정적 PNG 3장을 참조한다:
+
+| 파일명 | cardKind | 카드 내용 |
+|--------|----------|---------|
+| `og-stats-pr.png` | `pr` | 개인 최고 기록 (PR) 카드 |
+| `og-stats-hcp.png` | `hcp` | 핸디캡 하락 카드 |
+| `og-stats-trend.png` | `trend` | 최근 흐름 개선 카드 |
+
+**권장 사이즈**: 1200×630 (Open Graph 표준), PNG, 200KB 이하
+
+**배치 방법 (3가지 옵션 중 택1)**:
+
+- **(옵션 A) Cloudflare Pages 연계**: Pages 프로젝트 `/public/` 디렉토리에 배치 후 `golf.zerolive.co.kr` 도메인에 연결. Pages 정적 자산이 Worker 요청보다 우선 서빙됨.
+
+- **(옵션 B) Workers Sites**: `wrangler.toml`에 `[site] bucket = "./public"` 설정 후 `./public/og-stats-*.png` 배치. `wrangler deploy` 시 자동 업로드.
+  ```toml
+  [site]
+  bucket = "./public"
+  ```
+
+- **(옵션 C) 외부 CDN**: Cloudflare Images 또는 R2 Public Bucket 업로드 후 URL을 `statsViewer.ts`의 ogImage 생성 로직에 하드코딩.
+
+**v1 임시 방안**: og:image PNG가 없으면 카톡/iMessage 미리보기에 이미지 없이 제목+설명만 표시됨. 기능 동작에는 영향 없음. PNG 배치 전 배포해도 viewer URL 공유는 가능하다.
+
+---
+
+*최종 업데이트: 2026-05-27 (STATS_KV 발급 가이드 + og:image 배치 가이드 추가)*

@@ -151,6 +151,82 @@ App Store 주요 골프 스코어 카운터 앱들을 조사한 결과는 다음
 - 친구들이 보던 링크 그대로 새 사진 보임
 - editToken 기반 인증 (본인 디바이스만 수정)
 
+### F9-A. v1 통계 공유 (2026-05-27 신규)
+
+> 통계 화면에서 시그니처 카드 1장 + viewer URL을 공유하는 기능이다. 라운드 공유(F9)와 독립 동작하며 URL prefix(`/s/`)와 KV namespace(`KV_STATS`)를 분리한다.
+
+#### 공유 단위
+
+- **시그니처 카드 1장 + viewer URL** — iOS ImageRenderer로 카드 PNG를 생성하고, Worker가 생성한 viewer URL(`https://golf.zerolive.co.kr/s/s_xxxxxxxx`)을 함께 공유 시트에 전달한다.
+- viewer URL은 7일 TTL. 영구 보관 없음.
+
+#### 카드 3종 + trigger 조건
+
+| cardKind | 한국어 라벨 | trigger 조건 |
+|----------|------------|-------------|
+| `pr` | 개인 최고 기록 (PR) | 현재 라운드 totalScore < 기존 최소 스코어 |
+| `hcp` | 핸디캡 하락 | 계산된 HCP가 이전 대비 1.0 이상 하락 |
+| `trend` | 최근 흐름 개선 | `recentTrend.improving` 조건 충족 |
+
+#### 통계 화면 진입점
+
+- 통계 화면 상단 우측 `⬆︎ 공유` 버튼 **상시 노출** — trigger 조건과 무관하게 언제든 공유 가능
+- trigger 조건 충족 시 **배너가 화면 상단에 등장** (라운드 종료 후 통계 진입 시 1회)
+  - 배너 탭 → 해당 cardKind로 공유 시트 직행
+  - 배너는 30일 내 동일 trigger 재진입 시 미등장 (iOS UserDefaults/SwiftData 기록)
+
+#### 공유 시트 구성
+
+- 카드 3종 picker: PR / HCP / TREND 전환 탭
+- 카드 미리보기 (iOS ImageRenderer PNG)
+- 닉네임 입력 + PII 마스킹 적용 (iOS Builder에서 1차 마스킹 → Worker에서 2차 마스킹)
+- PIN 토글 + 4자리 입력 (선택)
+- "공유 링크 생성" CTA → viewer URL 반환 후 iOS 공유 시트 진입
+- 공유 시트 항목: 카톡 / iMessage / 메일 / 이미지 저장 / URL 복사
+
+#### PII 화이트리스트 정책
+
+viewer 페이로드(`StatsSharePayload`)에 포함 **허용** 필드:
+
+| 필드 | 이유 |
+|------|------|
+| `displayName` | 닉네임 (PII 마스킹 적용 후) |
+| `courseName` | 골프장명 (공개 정보) |
+| `totalScore`, `vsPar`, 스코어 분포 | 점수 수치 |
+| `centroidLat/Lng` | 시도 centroid (시/도 단위, 클럽하우스 아님) |
+| `periodLabel` | 기간 라벨 |
+
+viewer 페이로드에 포함 **금지** 필드:
+
+| 필드 | 이유 |
+|------|------|
+| `roundId`, `courseId` | 개별 라운드/클럽하우스 추적 가능 |
+| `deviceId` | 디바이스 식별 |
+| 동반자 이름 | 제3자 개인정보 |
+| 클럽하우스 GPS 좌표 | 정밀 위치 추적 가능 |
+
+#### Non-Goals (v1)
+
+- 친구 추가 / 팔로우 기능 없음
+- 랭킹 / 리더보드 없음
+- 영구 보관 없음 (7일 TTL 고정)
+- KGA 공식 인증 표현 없음 ("공식 핸디캡"이 아닌 자체 계산 수치임을 명시)
+- Universal Link / App Clip 없음 (v1 web-only)
+- 댓글 / 반응 기능 없음
+
+#### 기술 경계
+
+| 계층 | 구현 파일 |
+|------|----------|
+| 페이로드 빌더 | iOS `StatsSharePayloadBuilder.swift` |
+| 카드 SwiftUI | iOS `StatsShareCardView.swift` |
+| PNG 렌더 | iOS `ImageRenderer` |
+| 공유 시트 | iOS `StatsShareSheetView.swift` |
+| Worker 생성 | `Worker/src/handlers/createStatsShare.ts` |
+| Worker viewer | `Worker/src/handlers/getStatsViewer.ts` + `views/statsViewer.ts` |
+| Worker API 명세 | `Ref-docs/specs/30-API_SPEC.md §TC-1~TC-7` |
+| viewer HTML 명세 | `Ref-docs/specs/31-VIEWER_HTML.md §10` |
+
 ### F10. Viewer 모바일 최적화 + 사진앱 저장 ⭐ (v4 신규)
 
 #### 10.1 모바일 우선 설계

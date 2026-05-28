@@ -421,6 +421,208 @@ document.getElementById('pin-form').addEventListener('submit', function (e) {
 
 ---
 
+## 10. 통계 viewer HTML (통계 공유 v1, 2026-05-27)
+
+> 본 섹션은 `GET /s/:shortId` 응답으로 Cloudflare Worker가 생성하는 **통계 viewer HTML 마크업**을 다룬다. 실제 구현 파일: `Worker/src/views/statsViewer.ts`. 라운드 viewer(§2~§8)와 별개의 독립 렌더러이다.
+
+### 10.1 목적 및 범위
+
+**다루는 영역**: 통계 viewer HTML 구조 (11개 섹션), PIN 잠금 화면, og:image 분기, 카톡 인앱 호환 가이드
+
+**다루지 않는 영역**:
+
+| 영역 | 위임 문서 |
+|------|----------|
+| 엔드포인트 요청/응답 | `30-API_SPEC §TC-2~TC-5` |
+| KV_STATS namespace, wrangler.toml | `32-CLOUDFLARE_SETUP.md` |
+| bcrypt PIN 해싱, PII 마스킹 | `33-SECURITY.md` |
+| og:image PNG 파일 배치 | `Worker/DEPLOYMENT.md` |
+
+---
+
+### 10.2 HTML 골격 (공통 head)
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#1c6b43"/>
+  <meta name="robots" content="noindex,nofollow"/>
+  <!-- og:image: cardKind 분기 (§10.8) -->
+  <meta property="og:title" content="{headline} | 라운드온"/>
+  <meta property="og:description" content="{displayName}님의 골프 통계 · {periodLabel}"/>
+  <meta property="og:image" content="https://golf.zerolive.co.kr/og-stats-{cardKind}.png"/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <!-- 시스템 폰트만 사용 (외부 폰트 X — 카톡 인앱 호환) -->
+  <style>
+    /* CSS 변수 + 본문 레이아웃 — Worker/src/views/statsViewer.ts 인라인 CSS 기준 */
+    :root { --bg:#f4f7f4; --card:#fff; --border:#e6ece7; --house:#1c6b43; --accent:#21895a; ... }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif; }
+    .shell { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+  </style>
+</head>
+<body><div class="shell">
+  <!-- 섹션 1~11 (§10.3) -->
+</div></body>
+</html>
+```
+
+**제약**:
+- 외부 폰트 로드 없음 (`font-family` 시스템 폰트 스택만)
+- 인라인 JS는 PIN 입력 폼 1개만
+- 외부 CDN 의존 없음 (CSS/JS 모두 인라인)
+
+---
+
+### 10.3 11개 섹션 명세
+
+| 순서 | 섹션 | HTML 클래스 | 내용 |
+|------|------|------------|------|
+| 1 | 헤더 | `.v-header` | 브랜드명 "라운드온" + D-day 뱃지 (만료 시각 기반 D-N) |
+| 2 | 작성자 | `.v-author` | 아바타 (닉네임 첫 글자) + `{displayName}님의 통계` + `{periodLabel}` |
+| 3 | 시그니처 hero | `.v-sig-wrap > .sig-hero` | headline / bigNumber+bigUnit / deltaText / metaPrimary+Secondary / footerLabel. cardKind별 accent 색상 분기 |
+| 4 | 요약 3카드 | `.v-mini-grid` | 총 라운드(R) / 최근 5R 평균(타) / vs Par 평균. 데이터 없음 시 "—" |
+| 5 | 스코어 분포 | `.v-dist-card` | SVG 도넛(파율%) + 5구간 범례(이글/버디/파/보기/더블+) + `comment` 태그 |
+| 6 | Par별 평균 + 최근 흐름 | `.v-par-card` | Par3/4/5 그라데이션 바 + vsPar + trend sparkline (polyline SVG) |
+| 7 | 베스트 라운드 | `.v-section > .v-best-card` | 코스명 / 날짜 / 총타 / PR 뱃지. `bestRound` null 시 섹션 생략 |
+| 8 | 지역 지도 | `.v-section > .v-map-card` | 한국 SVG 지도(200×260) + 시도 centroid 핀 (roundCount 표시). `regions` 빈 시 섹션 생략. **클럽하우스 좌표 미사용** |
+| 9 | 최근 5라운드 | `.v-section > .v-recent-card` | 코스명 / 날짜·홀수 / vsPar 색상 pill / 총타. `recentRounds` 빈 시 섹션 생략 |
+| 10 | CTA | `.viewer-cta` | "나도 골프 기록 시작하기" + App Store 링크 버튼 |
+| 11 | 푸터 | `footer` | 만료일 (YYYY.MM.DD) + OSM ODbL 저작권 표기 + "라운드온 · Round-On" |
+
+---
+
+### 10.4 시그니처 카드 accent 색상 분기
+
+| cardKind | 배경 | 텍스트/big-number | deltaText 뱃지 |
+|----------|------|-----------------|---------------|
+| `pr` | `rgba(192,87,58,0.08)` | `#c0573a` | `rgba(192,87,58,0.12)` |
+| `hcp` | `rgba(28,107,67,0.07)` | `#1c6b43` | `rgba(28,107,67,0.12)` |
+| `trend` | `rgba(33,137,90,0.07)` | `#21895a` | `rgba(33,137,90,0.12)` |
+
+---
+
+### 10.5 D-day 계산
+
+```
+diff = expiresAt - Date.now()
+days = ceil(diff / 86400000)
+days <= 0 → "만료됨"
+days == 1 → "D-1"
+else      → "D-{days}"
+```
+
+---
+
+### 10.6 도넛 SVG (스코어 분포)
+
+SVG `viewBox="0 0 90 90"`, 반지름 34, 원주 213.6, 배경 원 `stroke="#e6ece7"`.
+
+세그먼트 순서 및 색상:
+
+| 구간 | 색상 |
+|------|------|
+| 이글 이상 | `#9b2335` |
+| 버디 | `#c0573a` |
+| 파 | `#1c6b43` |
+| 보기 | `#d6a93b` |
+| 더블+ | `#1e40af` |
+
+`stroke-dasharray` 계산: `(count/totalHoles)*213.6` (비율 기반). 0% 세그먼트는 렌더링 생략.
+
+---
+
+### 10.7 지도 SVG (시도 centroid 핀)
+
+**중요**: 지도 핀은 반드시 `StatsRegionShare.centroidLat / centroidLng` (시도 centroid)를 사용한다. 클럽하우스 좌표(`courseId`, GPS 실좌표)는 페이로드에 포함시키지 않으며 지도에 표시하지 않는다. (PII 가드 — 33-SECURITY §7 정책 연장)
+
+좌표 → SVG 변환:
+
+```
+한국 위경도 범위: lat 33.0~38.6, lng 124.6~130.0
+SVG 좌표계: 200×260
+x = ((lng - 124.6) / (130.0 - 124.6)) * 200
+y = 260 - ((lat - 33.0) / (38.6 - 33.0)) * 260
+```
+
+핀: `<circle r="7" fill="#c0573a" stroke="white" stroke-width="2"/>` + roundCount 텍스트.
+
+최대 5개 지역 (roundCount 내림차순 정렬).
+
+---
+
+### 10.8 og:image cardKind 분기
+
+```html
+<!-- cardKind == "pr" -->
+<meta property="og:image" content="https://golf.zerolive.co.kr/og-stats-pr.png"/>
+<!-- cardKind == "hcp" -->
+<meta property="og:image" content="https://golf.zerolive.co.kr/og-stats-hcp.png"/>
+<!-- cardKind == "trend" -->
+<meta property="og:image" content="https://golf.zerolive.co.kr/og-stats-trend.png"/>
+```
+
+정적 3장 PNG. 배치 방법은 `Worker/DEPLOYMENT.md §og-image` 참조. 실시간 생성은 v1 범위 밖.
+
+---
+
+### 10.9 PIN 잠금 화면 분기
+
+`KV_STATS` 메타에 `pinHash` 존재 + 쿠키 `stats_pin_ok_{shortId}` 없음 → PIN 잠금 화면을 렌더링한다.
+
+**PIN 검증 엔드포인트**: `POST /s/{shortId}/verify-pin` (30-API_SPEC §TC-5)
+
+```html
+<input id="pin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="• • • •"/>
+<button onclick="submit()">확인</button>
+<div id="err"></div>
+<script>
+function submit(){
+  var pin = document.getElementById('pin').value;
+  if(!/^[0-9]{4}$/.test(pin)){
+    document.getElementById('err').textContent='4자리 숫자를 입력해 주세요.'; return;
+  }
+  fetch('/s/{shortId}/verify-pin', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({pin: pin})
+  })
+  .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+  .then(function(res){
+    if(res.ok){ location.reload(); }
+    else if(res.d.locked){ document.getElementById('err').textContent='PIN 5회 오답으로 잠겼습니다. 1시간 후 재시도하세요.'; }
+    else { document.getElementById('err').textContent='PIN이 올바르지 않습니다. ('+res.d.attempts+'/5)'; }
+  });
+}
+document.getElementById('pin').addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
+</script>
+```
+
+성공 시 `location.reload()` → Worker가 쿠키 확인 후 viewer HTML 응답.
+
+---
+
+### 10.10 카톡 인앱 호환 가이드
+
+카톡 단톡방 링크 → 카톡 인앱 브라우저에서 열림. 아래 3가지를 준수한다.
+
+1. **`viewport-fit=cover`** 필수 — safe-area-inset 요구 충족 (아이폰 노치/Dynamic Island)
+2. **외부 폰트 없음** — 카톡 인앱 브라우저는 외부 font-face 로드를 차단하거나 지연시킨다. 시스템 폰트 스택만 사용.
+3. **JS 최소화** — PIN 입력 폼 외 JS 없음. 인라인 스크립트만 허용 (CDN 스크립트 태그 금지).
+
+**og:image 미리보기**: 단톡방에서 링크 미리보기 카드 이미지가 표시되려면 `og:image` URL이 퍼블릭 접근 가능해야 한다. PIN 잠금 viewer에서도 og:image는 노출된다 (PIN 잠금 전에 Worker가 응답하는 HTML head에 포함).
+
+---
+
+### 10.11 한국어 고정
+
+통계 viewer는 다국어 지원 없음. `lang="ko"` 고정. 모든 텍스트 한국어.
+
+---
+
 ## 부록. 후속 보완 TODO + 책임 경계
 
 ### spec 미정의 항목
@@ -438,12 +640,13 @@ document.getElementById('pin-form').addEventListener('submit', function (e) {
 
 | 문서 | 책임 |
 |------|------|
-| **31-VIEWER_HTML.md** (본 문서) | 마크업 계약 — HTML 구조, CSS 클래스, 인라인 JS |
-| **30-API_SPEC.md** | HTTP 계약 — 엔드포인트, 응답 헤더, 상태 코드 |
+| **31-VIEWER_HTML.md** (본 문서) | 마크업 계약 — 라운드 viewer(§2~§8) + 통계 viewer(§10) HTML 구조, CSS 클래스, 인라인 JS |
+| **30-API_SPEC.md** | HTTP 계약 — 엔드포인트, 응답 헤더, 상태 코드 (라운드 + 통계 공유) |
 | **62-COMPAT_MATRIX.md** (작성 예정) | 브라우저 quirk 카탈로그 — 환경별 실제 동작 검증 |
-| **32-CLOUDFLARE_SETUP.md** (작성 예정) | Worker 렌더링 코드, KV/R2 키 스킴, TTL |
+| **32-CLOUDFLARE_SETUP.md** (작성 예정) | Worker 렌더링 코드, KV 키 스킴, TTL |
 | **33-SECURITY.md** | bcrypt cost, 잠금 카운터, PII 패턴 매칭 |
+| **Worker/src/views/statsViewer.ts** | 통계 viewer 실제 구현 (§10 명세의 소스 오브 트루스) |
 
 ---
 
-*최종 업데이트: 2026-05-11*
+*최종 업데이트: 2026-05-27 (§10 통계 viewer HTML — 11개 섹션 명세 추가)*

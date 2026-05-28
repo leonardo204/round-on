@@ -306,6 +306,43 @@ Content-Type: application/json
 
 `53-PERMISSIONS §8` 보강 TODO로 표기한다. 클라이언트 측에서 1차 PII 차단 가이드를 추가하는 것을 권장한다 (§10 참조).
 
+### 7.7 통계 공유 v1 PII 정책 (2026-05-27 추가 / 2026-05-27 갱신)
+
+통계 공유 v1(`StatsSharePayload`)에 §7.1~§7.4 마스킹 정책이 동일하게 적용된다. 추가로 다음 제약이 있다.
+
+**닉네임 마스킹 이중 적용**:
+- **iOS Builder 1차**: `StatsSharePayloadBuilder.swift`에서 `displayName` 필드를 §7.3 정규식으로 마스킹 후 Worker에 전송
+- **Worker 2차**: `POST /api/share/stats` handler에서 `payload.displayName`을 다시 §7.3 정규식으로 검증·마스킹 후 KV 저장
+
+**위치 정보 정책 (2026-05-27 갱신)**:
+
+| 필드 | 허용 여부 | 조건 |
+|------|----------|------|
+| `StatsRegionShare.centroidLat/Lng` | 허용 | 시도(광역시·도) centroid 좌표만 — RegionCentroidLUT 참조 |
+| `StatsRoundLocationShare.lat/lng` | **조건부 허용** | 사용자가 명시적으로 공유 버튼을 누른 경우에 한함 |
+
+**조건부 허용 근거** (`StatsRoundLocationShare`):
+- 사용자가 통계 공유 버튼을 누르는 행위는 **본인 라운드 골프장 좌표 노출에 동의**한 것으로 해석한다.
+- 동반자/제3자 위치가 아닌, **본인 라운드 이력에 포함된 골프장의 클럽하우스 좌표** (공개된 시설 위치)에 한해 허용한다.
+- `StatsSharePayload.roundLocations`는 `Optional` 필드로, 사용자 공유 시점에만 iOS Builder가 주입한다.
+
+**여전히 차단되는 필드**:
+
+| 필드 | 이유 |
+|------|------|
+| 동반자 이름(`players[].name`) | 제3자 개인정보 |
+| 라운드 ID(`roundId`) | 개별 라운드 추적 가능 |
+| `courseId` | payload JSON 키로 노출 금지 (내부 식별자 역할) |
+| `deviceId` / `deviceToken` (응답에 미포함) | 디바이스 식별 |
+
+`deviceToken`은 Rate limiting용으로 Worker에 전송되지만 KV 저장된 메타(`StatsShareMeta.deviceToken`)는 rate-limit 추적 목적으로만 보존되며 viewer HTML에 절대 노출하지 않는다.
+
+**viewer HTML PII 검증 기준**:
+viewer HTML 소스에서 다음 키워드가 발견되면 PII 가드 위반으로 간주한다:
+`courseId`, `deviceId`, `deviceToken`, `roundId`
+
+> 참고: `roundLocations` 안의 `lat/lng` 수치는 조건부 허용 대상이므로, viewer HTML에 포함되어도 위반이 아니다 (단, `courseId` 키는 여전히 금지).
+
 ---
 
 ## 8. 전송 보안 (HTTPS / 헤더)
@@ -423,4 +460,4 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 ---
 
-*최종 업데이트: 2026-05-11*
+*최종 업데이트: 2026-05-27 (§7.7 통계 공유 v1 PII 정책 추가)*
