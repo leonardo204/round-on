@@ -34,6 +34,10 @@ struct SettingsView: View {
     @AppStorage(PenaltySettings.Key.hazardDelta) private var hazardDelta: Int = PenaltySettings.Default.hazardDelta
     @AppStorage(PenaltySettings.Key.okDelta) private var okDelta: Int = PenaltySettings.Default.okDelta
 
+    #if DEBUG
+    @AppStorage("dev_season_override") private var devSeasonOverride: String = ""
+    #endif
+
     var body: some View {
         List {
             Section("권한") {
@@ -87,6 +91,21 @@ struct SettingsView: View {
             Section("정보") {
                 LabeledContent("앱 버전", value: appVersionText)
             }
+
+            #if DEBUG
+            Section {
+                Picker("계절 테마 강제", selection: $devSeasonOverride) {
+                    Text("자동 (현재 월)").tag("")
+                    ForEach(SeasonTheme.allCases, id: \.self) { s in
+                        Text(s.displayName).tag(s.rawValue)
+                    }
+                }
+            } header: {
+                Text("DEVELOPER")
+            } footer: {
+                Text("개발 빌드 전용 — App Store 빌드에는 포함되지 않습니다.")
+            }
+            #endif
         }
         .navigationTitle("설정")
         .navigationBarTitleDisplayMode(.inline)

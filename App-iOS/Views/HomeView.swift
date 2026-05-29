@@ -25,6 +25,10 @@ struct HomeView: View {
     @Binding var roundViewModel: RoundViewModel?
     let onRoundFinished: ((Round) -> Void)?
 
+    #if DEBUG
+    @AppStorage("dev_season_override") private var devSeasonOverride: String = ""
+    #endif
+
     init(roundViewModel: Binding<RoundViewModel?>, onRoundFinished: ((Round) -> Void)? = nil) {
         self._roundViewModel = roundViewModel
         self.onRoundFinished = onRoundFinished
@@ -416,13 +420,16 @@ struct HomeView: View {
         "근처 골프장을 GPS로 자동 매칭해 드려요"
     }
 
+    private var effectiveSeason: SeasonTheme {
+        #if DEBUG
+        if let s = SeasonTheme(rawValue: devSeasonOverride) { return s }
+        #endif
+        let m = Calendar.current.component(.month, from: Date())
+        return SeasonTheme.forMonth(m)
+    }
+
     private var heroGradient: some View {
-        LinearGradient(
-            colors: colorScheme == .dark
-                ? [Color(red: 0.11, green: 0.37, blue: 0.13), Color(red: 0.18, green: 0.49, blue: 0.20)]
-                : [Color(red: 0.18, green: 0.49, blue: 0.20), Color(red: 0.26, green: 0.63, blue: 0.28)],
-            startPoint: .topLeading, endPoint: .bottomTrailing
-        )
+        effectiveSeason.heroGradient(dark: colorScheme == .dark)
     }
 
     // MARK: - Section headers
