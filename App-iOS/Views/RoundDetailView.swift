@@ -659,7 +659,8 @@ struct RoundDetailView: View {
                         par: par,
                         cellSize: min(24, holeW - 4),
                         holeNumber: h,
-                        playerName: player.name
+                        playerName: player.name,
+                        showRelative: round.isImported
                     )
                     .frame(width: holeW, height: cellH)
                 }

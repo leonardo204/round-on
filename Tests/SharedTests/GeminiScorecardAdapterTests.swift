@@ -28,11 +28,14 @@ final class GeminiScorecardAdapterTests: XCTestCase {
         GeminiScorecard(courseName: courseName, date: date, rows: rows)
     }
 
-    // MARK: - B1. 가로카드(par행 있음) → 홀별 실타수 = par + delta
+    // MARK: - B1. 가로카드(par행 있음) → 홀별 over-par delta 저장
+    // ★ ScoreValue.intValue = over-par delta (절대타수 아님).
+    //   실타수(par+delta)는 ScorecardMapper.makeRound 단계에서 par+intValue로 계산된다.
+    //   어댑터가 par+delta(절대값)를 저장하면 이중 변환되어 저장 타수가 틀린다.
 
-    func test_adapt_withParRow_holeActualStrokesEqualParPlusDelta() {
-        // IMG_1335 기반: 첫 홀 par=4, delta=1 → 실타수=5
-        // 두 번째 홀 par=5, delta=2 → 실타수=7
+    func test_adapt_withParRow_holeStoresOverParDelta() {
+        // hole1: par=4, delta=1 → 저장 delta=1
+        // hole2: par=5, delta=2 → 저장 delta=2
         let parValues: [Int] = [4,5,4,3,4,4,3,5,4, 5,4,3,4,4,3,4,4,5]
         let ownerDeltas: [Int] = [1,2,3,3,2,2,1,4,0, 3,1,3,4,2,3,2,2,4]
 
@@ -55,24 +58,20 @@ final class GeminiScorecardAdapterTests: XCTestCase {
         XCTAssertNotNil(parScoreRow, "par ScoreRow가 없음")
         XCTAssertNotNil(ownerScoreRow, "owner ScoreRow가 없음")
 
-        // 홀별 실타수 검산: 전반 9홀 (index 0~8 → ScoreRow.values[1~9], [0]은 라벨)
-        // hole1: par=4, delta=1 → actual=5 (values[1])
-        // hole2: par=5, delta=2 → actual=7 (values[2])
+        // 홀별 저장값 검산: ScoreValue.intValue = over-par delta (절대타수 아님)
+        // ScoreRow.values: [hole1, ..., hole9, subtotal]
         guard let ownerValues = ownerScoreRow?.values else {
             XCTFail("owner ScoreRow values가 nil")
             return
         }
 
-        // ownerValues[0] = 라벨(ScoreRow.asArray 기준), values 배열은 hole + subtotal
-        // ScoreRow.values: [hole1, hole2, ..., hole9, subtotal] (총 10개)
-        // index 0 = 홀1 실타수
         if ownerValues.count > 0 {
-            let hole1Actual = ownerValues[0]?.intValue
-            XCTAssertEqual(hole1Actual, 5, "홀1: par=4, delta=1 → 실타수=5 기대, 실제=\(String(describing: hole1Actual))")
+            let hole1 = ownerValues[0]?.intValue
+            XCTAssertEqual(hole1, 1, "홀1 over-par delta=1 기대, 실제=\(String(describing: hole1))")
         }
         if ownerValues.count > 1 {
-            let hole2Actual = ownerValues[1]?.intValue
-            XCTAssertEqual(hole2Actual, 7, "홀2: par=5, delta=2 → 실타수=7 기대, 실제=\(String(describing: hole2Actual))")
+            let hole2 = ownerValues[1]?.intValue
+            XCTAssertEqual(hole2, 2, "홀2 over-par delta=2 기대, 실제=\(String(describing: hole2))")
         }
     }
 

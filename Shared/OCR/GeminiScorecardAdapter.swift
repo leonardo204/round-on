@@ -103,10 +103,11 @@ public enum GeminiScorecardAdapter {
                     playerDeltas = Array(repeating: 0, count: sectionHoleCount)
                 }
 
-                // delta → 실제 타수 (par + delta)
-                var rowValues: [ScoreValue?] = zip(sectionPars, playerDeltas).map { par, delta in
-                    let actual = par + delta
-                    return ScoreValue(raw: "\(actual)", intValue: actual)
+                // ★ ScorecardMapper 계약: ScoreValue.intValue = over-par delta (절대타수 아님).
+                //   makeRound이 par + intValue로 실타수를 만들고, 화면도 intValue를 상대값으로 표시한다.
+                //   여기서 par+delta(절대값)를 넣으면 이중 변환되어 저장 타수가 틀리고 "+6"처럼 보인다.
+                var rowValues: [ScoreValue?] = zip(sectionPars, playerDeltas).map { _, delta in
+                    ScoreValue(raw: "\(delta)", intValue: delta)
                 }
                 // 소계: section별 실제 타수 합
                 let subtotal = section == 0 ? player.out : player.inScore

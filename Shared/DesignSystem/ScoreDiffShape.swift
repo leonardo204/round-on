@@ -20,6 +20,10 @@ public struct ScoreCellView: View {
     public let holeNumber: Int
     /// 접근성용 플레이어 이름
     public let playerName: String
+    /// true이면 상대값(over-par) 표시: E / +N / -N
+    /// false(기본)이면 절대 타수 표시: N
+    /// ※ 도형(birdie/bogey/double 시각화)은 항상 strokes-par 기준으로 유지
+    public let showRelative: Bool
 
     // MARK: Init
 
@@ -28,13 +32,15 @@ public struct ScoreCellView: View {
         par: Int,
         cellSize: CGFloat = 32,
         holeNumber: Int = 0,
-        playerName: String = ""
+        playerName: String = "",
+        showRelative: Bool = false
     ) {
         self.strokes = strokes
         self.par = par
         self.cellSize = cellSize
         self.holeNumber = holeNumber
         self.playerName = playerName
+        self.showRelative = showRelative
     }
 
     // MARK: Computed
@@ -57,10 +63,21 @@ public struct ScoreCellView: View {
 
     // MARK: Number Label
 
+    /// 표시 텍스트: showRelative=true이면 over-par(E/+N/-N), 아니면 절대 타수
+    private var displayText: String {
+        guard strokes > 0 else { return "" }
+        if showRelative {
+            let d = strokes - par
+            if d == 0 { return "E" }
+            return d > 0 ? "+\(d)" : "\(d)"
+        }
+        return "\(strokes)"
+    }
+
     @ViewBuilder
     private var numberLabel: some View {
         if strokes > 0 {
-            Text("\(strokes)")
+            Text(displayText)
                 .font(.system(size: fontSize, weight: .semibold))
                 .monospacedDigit()
                 .foregroundStyle(numberForeground)
