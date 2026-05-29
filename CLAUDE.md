@@ -31,6 +31,7 @@
 - **OSM ODbL**: 앱 내 설정 → 정보에 `© OpenStreetMap contributors, ODbL 1.0` 표기 필수
 - **xcodebuild destination**: iPhone 16 Pro는 OS 버전을 명시해야 모호성 회피 (메모리 참조)
 - **iOS 코드 변경**: 단일 ralph에 위임 (두 ralph 동시 iOS 영역 작업 금지)
+- **로깅 필수**: 주요 흐름(import·저장·충돌·네트워크/Gemini·광고·화면전환)은 단계별로 `os.Logger`(subsystem `kr.zerolive.golf.roundon`, category별)로 진입/결과/실패를 기록. 새 기능엔 단계 로그 + 네트워크엔 소요시간(ms) 로그 필수 — 런타임 UI/비동기 버그 추적성 확보
 
 ---
 

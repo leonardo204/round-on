@@ -1,6 +1,9 @@
 import SwiftUI
 import SwiftData
 import Shared
+import os.log
+
+private let reviewLogger = Logger(subsystem: "kr.zerolive.golf.roundon", category: "Import")
 
 // MARK: - ImportReviewView
 // 검토·편집 화면 — mockup §② 충실 구현.
@@ -59,6 +62,7 @@ struct ImportReviewView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("저장") {
+                    reviewLogger.info("[Import] ImportReviewView '저장' 탭 → 검증 요약 시트 표시")
                     showSummary = true
                 }
                 .fontWeight(.semibold)
@@ -555,6 +559,7 @@ struct ImportReviewView: View {
             .clipShape(RoundedRectangle(cornerRadius: 14))
 
             Button("저장") {
+                reviewLogger.info("[Import] ImportReviewView 액션바 '저장' 탭 → 검증 요약 시트 표시")
                 showSummary = true
             }
             .font(.system(size: 16, weight: .semibold))

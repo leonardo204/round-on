@@ -2,6 +2,7 @@ import Foundation
 import CoreGraphics
 import ImageIO
 import UIKit
+import os.log
 
 // MARK: - GeminiScorecardExtractor
 // Gemini Vision API를 호출해 스코어카드 이미지를 구조화 JSON으로 추출한다.
@@ -13,6 +14,8 @@ import UIKit
 // - 검증: ScorecardValidator.check 통과해야 반환
 // - 타임아웃: 단일 호출 60초
 // - 네트워크 패턴: CourseRepository와 동일한 URLSession async/await
+
+private let geminiLogger = Logger(subsystem: "kr.zerolive.golf.roundon", category: "GeminiOCR")
 
 public final class GeminiScorecardExtractor: Sendable {
 
@@ -61,7 +64,7 @@ public final class GeminiScorecardExtractor: Sendable {
         holeCount: Int = 18,
         maxRetries: Int = 2
     ) async throws -> GeminiScorecard {
-        // 이미지 다운스케일
+        // 이미지 다운스케일 (크기 로깅 포함)
         let scaledData = downscale(imageData: imageData, mime: mime) ?? imageData
         let b64 = scaledData.base64EncodedString()
 
@@ -71,17 +74,20 @@ public final class GeminiScorecardExtractor: Sendable {
             if Task.isCancelled { throw OCRError.cancelled }
 
             let temperature = attempt == 0 ? 0.0 : 0.2
+            geminiLogger.info("[GeminiOCR] 시도 #\(attempt + 1) 시작 — temperature: \(temperature), payload: \(b64.count / 1024)KB (b64)")
             do {
-                let card = try await callOnce(b64: b64, mime: mime, temperature: temperature)
+                let card = try await callOnce(b64: b64, mime: mime, temperature: temperature, attempt: attempt + 1)
                 // 검증
                 try ScorecardValidator.check(card, holeCount: holeCount)
                 // 실제 응답 키 확인용 디버그 로그 (1회)
                 if attempt == 0 {
                     logResponseKeys(card)
                 }
+                geminiLogger.info("[GeminiOCR] 추출 성공 — attempt \(attempt + 1)")
                 return card
             } catch let error as OCRError {
                 lastError = error
+                geminiLogger.warning("[GeminiOCR] 시도 #\(attempt + 1) 실패: \(error.localizedDescription)")
                 // API 키 오류는 재시도 무의미
                 switch error {
                 case .apiKeyMissing, .apiKeyNotConfigured, .httpError, .cancelled:
@@ -91,14 +97,16 @@ public final class GeminiScorecardExtractor: Sendable {
                 }
             } catch {
                 lastError = error
+                geminiLogger.warning("[GeminiOCR] 시도 #\(attempt + 1) 예외: \(error.localizedDescription)")
             }
         }
+        geminiLogger.error("[GeminiOCR] 모든 시도 소진 — lastError: \(lastError.localizedDescription)")
         throw lastError
     }
 
     // MARK: - Private
 
-    private func callOnce(b64: String, mime: String, temperature: Double) async throws -> GeminiScorecard {
+    private func callOnce(b64: String, mime: String, temperature: Double, attempt: Int) async throws -> GeminiScorecard {
         // API 키는 헤더로 전달 (URL 쿼리에 포함 시 NSURLCache/프록시 평문 노출 위험)
         let urlString = "\(endpoint)/\(model):generateContent"
         guard let url = URL(string: urlString) else {
@@ -114,7 +122,12 @@ public final class GeminiScorecardExtractor: Sendable {
         request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
         request.httpBody = bodyData
 
+        // 네트워크 요청 타이밍 측정
+        let requestStart = Date()
+        geminiLogger.info("[GeminiOCR] 네트워크 요청 전송 (attempt \(attempt))")
         let (data, response) = try await session.data(for: request)
+        let elapsedMs = Int(Date().timeIntervalSince(requestStart) * 1000)
+        geminiLogger.info("[GeminiOCR] 요청 완료: \(elapsedMs)ms (attempt \(attempt))")
 
         guard let http = response as? HTTPURLResponse else {
             throw OCRError.invalidResponse
@@ -126,6 +139,7 @@ public final class GeminiScorecardExtractor: Sendable {
             let truncated = rawBody.count > 200
                 ? String(rawBody.prefix(200)) + "…(truncated)"
                 : rawBody
+            geminiLogger.error("[GeminiOCR] HTTP \(http.statusCode) 오류 (attempt \(attempt)): \(truncated)")
             #if DEBUG
             print("[GeminiOCR] HTTP \(http.statusCode) 응답 본문: \(truncated)")
             #endif
@@ -214,10 +228,14 @@ public final class GeminiScorecardExtractor: Sendable {
         guard let image = UIImage(data: imageData) else { return nil }
         let size = image.size
         let longEdge = max(size.width, size.height)
-        guard longEdge > maxLongEdge else { return nil }  // 리사이즈 불필요
+        guard longEdge > maxLongEdge else {
+            geminiLogger.info("[GeminiOCR] 다운스케일 스킵 — 긴 변 \(Int(longEdge))px ≤ \(Int(self.maxLongEdge))px")
+            return nil  // 리사이즈 불필요
+        }
 
         let scale = maxLongEdge / longEdge
         let newSize = CGSize(width: size.width * scale, height: size.height * scale)
+        geminiLogger.info("[GeminiOCR] 다운스케일 적용 — \(Int(size.width))x\(Int(size.height)) → \(Int(newSize.width))x\(Int(newSize.height))")
 
         let renderer = UIGraphicsImageRenderer(size: newSize)
         let resized = renderer.image { _ in
@@ -245,5 +263,6 @@ public final class GeminiScorecardExtractor: Sendable {
             + "첫 player values: \(firstPlayerValues), "
             + "inScore 키 정상 수신: \(card.players.first.map { "\($0.inScore)" } ?? "없음")")
         #endif
+        geminiLogger.info("[GeminiOCR] 응답 키 확인 — courseName: \(card.courseName), date: \(card.date), players: \(card.players.count)명, parRow: \(card.parRow != nil)")
     }
 }
