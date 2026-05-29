@@ -96,7 +96,7 @@ footer a:hover{color:var(--dark)}
 
   <div class="page-header">
     <h1>개인정보 처리방침</h1>
-    <p class="meta">앱: <strong>라운드온 (Round-On)</strong> &nbsp;|&nbsp; 시행일: <strong>2026-05-29</strong></p>
+    <p class="meta">앱: <strong>라운드온 (Round-On)</strong> &nbsp;|&nbsp; 시행일: <strong>2026-05-29 (광고 도입 반영)</strong></p>
   </div>
 
   <div class="section">
@@ -165,6 +165,12 @@ footer a:hover{color:var(--dark)}
             <td>스코어카드 사진 1장, 촬영일(EXIF)</td>
             <td>사용자 명시 동의 시에만</td>
           </tr>
+          <tr>
+            <td>Google LLC<br>(AdMob)</td>
+            <td>광고 제공</td>
+            <td>광고 식별자(IDFA)·기기 정보·광고 상호작용</td>
+            <td>ATT 동의 기반</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -172,7 +178,17 @@ footer a:hover{color:var(--dark)}
   </div>
 
   <div class="section">
-    <h2>5. 이용자 권리</h2>
+    <h2>5. 광고(AdMob)</h2>
+    <p>
+      앱은 무료 제공을 위해 Google AdMob 광고를 표시합니다.
+      광고 제공 과정에서 <strong>광고 식별자(IDFA)·기기 정보·광고 상호작용</strong> 정보가 사용될 수 있으며,
+      iOS의 <strong>추적 투명성(ATT) 동의</strong>에 따라 맞춤/비맞춤 광고로 제공됩니다.
+    </p>
+    <p>사용자는 기기 설정 또는 ATT 권한에서 추적을 거부할 수 있습니다.</p>
+  </div>
+
+  <div class="section">
+    <h2>6. 이용자 권리</h2>
     <ul>
       <li>앱 설정에서 스코어카드 AI 분석 동의를 언제든 철회할 수 있습니다. 철회 즉시 이후 전송이 중단되고 기기 내 처리 방식으로 전환됩니다.</li>
       <li>기기 내 라운드 데이터는 앱에서 직접 삭제할 수 있습니다.</li>
@@ -181,7 +197,7 @@ footer a:hover{color:var(--dark)}
   </div>
 
   <div class="section">
-    <h2>6. 보안</h2>
+    <h2>7. 보안</h2>
     <ul>
       <li>외부 서버와의 모든 통신은 HTTPS(TLS)로 암호화됩니다.</li>
       <li>최소 수집 원칙에 따라 서비스 제공에 꼭 필요한 정보만 처리합니다.</li>
@@ -190,7 +206,7 @@ footer a:hover{color:var(--dark)}
   </div>
 
   <div class="section">
-    <h2>7. 문의</h2>
+    <h2>8. 문의</h2>
     <p>개인정보 처리방침에 관한 문의는 아래 이메일로 연락해 주세요.</p>
     <p>
       이메일: <a href="mailto:support@zerolive.co.kr">support@zerolive.co.kr</a>
