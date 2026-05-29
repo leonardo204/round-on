@@ -83,7 +83,7 @@ struct SettingsView: View {
             Section {
                 aiAnalysisRow
             } header: {
-                Text("AI 분석")
+                Text("AI 사용 설정")
             } footer: {
                 Text("스코어카드 자동 인식 무료 횟수 관리 및 개인정보 전송 동의 설정")
             }
@@ -298,16 +298,16 @@ struct SettingsView: View {
             showImportLanding = true
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "square.and.arrow.down")
+                Image(systemName: "sparkles")
                     .font(.system(size: 17))
                     .foregroundStyle(.tint)
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("스코어보드 가져오기")
+                    Text("AI 스코어보드 가져오기")
                         .font(.body)
                         .foregroundStyle(.primary)
-                    Text("사진의 스코어카드를 라운드로 변환")
+                    Text("AI가 사진 속 스코어카드를 읽어 라운드로 변환")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -403,7 +403,7 @@ struct SettingsView: View {
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("AI 분석")
+                    Text("AI 사용 설정")
                         .font(.body)
                         .foregroundStyle(.primary)
                     Text("무료 횟수 \(RewardedAdManager.shared.remaining)/3 · 개인정보 동의 관리")

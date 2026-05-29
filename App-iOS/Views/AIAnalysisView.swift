@@ -29,7 +29,7 @@ struct AIAnalysisView: View {
                 privacySection
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("AI 분석")
+            .navigationTitle("AI 사용 설정")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
