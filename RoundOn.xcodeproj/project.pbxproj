@@ -145,6 +145,7 @@
 		A9A721A70104E499F5C81549 /* KakaoVerificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477CCAE0392D2D63F49A7977 /* KakaoVerificationServiceTests.swift */; };
 		AD4D972717BD302325C9372E /* AdConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA60C22B751C52BD75E93D41 /* AdConfig.swift */; };
 		AF8C8EFFAFA4F6910196821F /* ConsentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCDF283C748FB3B03F620BD /* ConsentManager.swift */; };
+		B0BAF7C726FE82BE27846A5F /* ConflictResolutionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCBD4C46ABA3D1B47ADA53AB /* ConflictResolutionSheet.swift */; };
 		B56EF2615254363E9B9234DC /* PenaltyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139D8E2C353187EFFD42A389 /* PenaltyButton.swift */; };
 		B59D4E9003F16822FA406964 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E8A5E681364FBC39BBD432D /* SharedAssets.xcassets */; };
 		B7E408C6C0E8DA357994ECBB /* StatsShareViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13F435331509C6F4BD10E2 /* StatsShareViewModelTests.swift */; };
@@ -436,6 +437,7 @@
 		B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
 		BBD5157E22A6C2C2F37F5537 /* ScoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCell.swift; sourceTree = "<group>"; };
 		BC9260634C62EF555A042DA7 /* ScorecardMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScorecardMapperTests.swift; sourceTree = "<group>"; };
+		BCBD4C46ABA3D1B47ADA53AB /* ConflictResolutionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConflictResolutionSheet.swift; sourceTree = "<group>"; };
 		BDDFDC0E19F586106E9A178B /* Color+WatchColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+WatchColors.swift"; sourceTree = "<group>"; };
 		BF006E866BFD030D2C951470 /* Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		C13733A6BDF921FE7EACE6A5 /* StatsSharePayloadBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSharePayloadBuilder.swift; sourceTree = "<group>"; };
@@ -472,7 +474,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_1F692667-01B3-4183-9BD4-553CE6F12CD9" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -620,6 +622,7 @@
 			isa = PBXGroup;
 			children = (
 				4B92987A32003212AAF8FD9C /* CompanionMatchSheet.swift */,
+				BCBD4C46ABA3D1B47ADA53AB /* ConflictResolutionSheet.swift */,
 				06047C27FDB919BF11CE46B7 /* ImportLandingView.swift */,
 				C3BE40FB73FE0E57DB043517 /* ImportReviewView.swift */,
 				FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */,
@@ -1024,10 +1027,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_40F141F2-549C-4360-9D96-818EBFCA5D89" /* golfCounter */ = {
+		"TEMP_F597DD57-E81B-4B73-B408-9F4EAFD8137B" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_1F692667-01B3-4183-9BD4-553CE6F12CD9" /* Secrets.xcconfig */,
+				"TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1437,6 +1440,7 @@
 				AD4D972717BD302325C9372E /* AdConfig.swift in Sources */,
 				9F01CAE00F8692F31BE53447 /* AllRoundsView.swift in Sources */,
 				BF68CEEFDFA2385109515D9A /* CompanionMatchSheet.swift in Sources */,
+				B0BAF7C726FE82BE27846A5F /* ConflictResolutionSheet.swift in Sources */,
 				AF8C8EFFAFA4F6910196821F /* ConsentManager.swift in Sources */,
 				FFAD3DDC5CA2B717FE295249 /* ContentView.swift in Sources */,
 				4FDA85BC4A8979749CA27362 /* CourseAddressResolver.swift in Sources */,
@@ -1600,7 +1604,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_1F692667-01B3-4183-9BD4-553CE6F12CD9" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1625,7 +1629,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_1F692667-01B3-4183-9BD4-553CE6F12CD9" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1648,7 +1652,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_1F692667-01B3-4183-9BD4-553CE6F12CD9" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1671,7 +1675,7 @@
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_1F692667-01B3-4183-9BD4-553CE6F12CD9" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;

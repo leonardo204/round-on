@@ -178,7 +178,9 @@ final class CourseNameMatcherTests: XCTestCase {
     }
 
     @MainActor
-    func test_findConflictingRound_sameDayDifferentCourse_returnsNil() throws {
+    func test_findConflictingRound_sameDayDifferentCourse_returnsRound() throws {
+        // date-only 정책: 같은 날이면 코스명이 달라도(영문/한글 표기차 포함) 후보로 반환한다.
+        // 최종 대체/새기록 판단은 사용자 확인 팝업이 담당.
         let container = try makeContainer()
         let ctx = container.mainContext
 
@@ -191,13 +193,14 @@ final class CourseNameMatcherTests: XCTestCase {
         ctx.insert(existing)
         try ctx.save()
 
-        // 같은 날 + 다른 코스명 → nil
+        // 같은 날 + 다른 코스명(또는 영문/한글 표기차) → 후보 반환
         let result = CourseNameMatcher.findConflictingRound(
             date: day,
             courseName: "부산 GC",
             context: ctx
         )
-        XCTAssertNil(result)
+        XCTAssertNotNil(result, "date-only: 같은 날이면 코스 달라도 충돌 후보로 반환되어야 함")
+        XCTAssertEqual(result?.courseName, "서울 CC")
     }
 
     @MainActor

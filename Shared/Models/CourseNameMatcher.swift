@@ -87,11 +87,11 @@ public enum CourseNameMatcher {
 
     /// SwiftData ModelContext에서 충돌 라운드를 찾는다.
     ///
-    /// 충돌 기준:
-    ///   1. ymd(KST) 동일 — 시간 무시
-    ///   2. courseName 유사도 true
+    /// 충돌 기준: ymd(KST) 동일 (date-only). 시간·코스명 표기차(영문/한글) 무시.
+    ///   코스명 유사도는 같은 날 여러 라운드 중 '우선 제시' 정렬에만 사용한다.
+    ///   같은 날이면 코스가 달라도 후보로 반환하며, 최종 판단(대체/새기록/취소)은 사용자 팝업이 한다.
     ///
-    /// 충돌이 여러 개이면 lastActiveAt desc로 가장 최근 1개를 반환한다.
+    /// 충돌이 여러 개이면 코스 유사 우선 → lastActiveAt desc로 1개를 반환한다.
     ///
     /// - Parameters:
     ///   - date: OCR 드래프트의 날짜
@@ -134,13 +134,16 @@ public enum CourseNameMatcher {
             round.date >= dayStart && round.date < dayEnd
         }
 
-        // 2. 코스명 유사도 필터
-        let conflicts = dayRounds.filter { round in
-            areSimilar(round.courseName, courseName)
-        }
+        // 2. 충돌 후보 = 같은 날(KST) 전체. 코스명 영문/한글 표기차로 충돌을 놓치지 않도록
+        //    코스명 유사도는 '필터'가 아니라 '후보 정렬 선호값'으로만 사용한다 (date-only 감지).
+        //    같은 날 여러 라운드면 코스 유사한 것을 우선 제시하고, 최종 확인은 사용자 팝업이 한다.
+        let conflicts = dayRounds
 
-        // 3. lastActiveAt desc 인메모리 재정렬 — nil은 startedAt으로 폴백
+        // 3. 정렬: 코스명 유사 우선 → 최근 활동(lastActiveAt, nil은 startedAt) desc
         let sorted = conflicts.sorted { a, b in
+            let aSim = areSimilar(a.courseName, courseName)
+            let bSim = areSimilar(b.courseName, courseName)
+            if aSim != bSim { return aSim }
             let ta = a.lastActiveAt ?? a.startedAt
             let tb = b.lastActiveAt ?? b.startedAt
             return ta > tb

@@ -1,11 +1,18 @@
 import SwiftUI
 import SwiftData
 import Shared
+import os.log
 
 // MARK: - ImportSummaryView
 // 저장 직전 검증 요약 화면 — mockup §⑤
 // 미입력 셀 경고 표시 (차단 없음)
-// 충돌 감지: 같은 날짜 + 유사 코스명 기존 라운드가 있으면 통합 확인 Alert 표시
+// 충돌 감지: 같은 날짜 + 유사 코스명 기존 라운드가 있으면 통합 확인 오버레이 표시
+//
+// [수정 2026-05-29] 중첩 .sheet(ConflictResolutionSheet) → ZStack 오버레이로 교체.
+// fullScreenCover → sheet → sheet 3중 중첩이 시트 타이밍 버그(빈화면)를 유발했으므로
+// 같은 뷰 트리 내 오버레이로 대체해 안정적 렌더링 보장.
+
+private let logger = Logger(subsystem: "kr.zerolive.golf.roundon", category: "Import")
 
 struct ImportSummaryView: View {
     @Environment(\.modelContext) private var modelContext
@@ -14,7 +21,7 @@ struct ImportSummaryView: View {
     let onSave: () -> Void
     let onBack: () -> Void
 
-    // MARK: - 충돌 Alert 상태
+    // MARK: - 충돌 오버레이 상태
 
     @State private var conflictRound: Round? = nil
     @State private var showConflictAlert = false
@@ -22,6 +29,7 @@ struct ImportSummaryView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
+                // 메인 콘텐츠 스크롤
                 ScrollView {
                     VStack(spacing: 12) {
                         // 저장 요약 카드
@@ -71,54 +79,116 @@ struct ImportSummaryView: View {
                 .padding(.vertical, 12)
                 .padding(.bottom, 16)
                 .background(.ultraThinMaterial)
+
+                // MARK: - 충돌 오버레이 (ZStack 내부 — 중첩 시트 대체)
+                // fullScreenCover → sheet(Summary) → sheet(Conflict) 3중 중첩 대신
+                // 같은 뷰 트리의 최상위 레이어로 표시해 빈화면 버그 원천 차단.
+                if showConflictAlert, let existing = conflictRound {
+                    // 딤 배경 (탭 시 취소)
+                    Color.black.opacity(0.45)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            logger.info("[Import] 충돌 오버레이: 배경 탭 → 취소")
+                            withAnimation(.easeOut(duration: 0.2)) {
+                                showConflictAlert = false
+                                conflictRound = nil
+                            }
+                        }
+                        .transition(.opacity)
+                        .zIndex(10)
+
+                    // ConflictResolutionSheet 카드 (오버레이 카드 스타일)
+                    conflictCard(existing: existing)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .zIndex(11)
+                }
             }
             .navigationTitle("검증 결과")
             .navigationBarTitleDisplayMode(.inline)
         }
         .presentationDetents([.large])
-        .alert(conflictAlertTitle, isPresented: $showConflictAlert) {
-            Button("통합", role: .destructive) {
-                if let existing = conflictRound {
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: showConflictAlert)
+    }
+
+    // MARK: - 충돌 카드 (오버레이 래퍼)
+    // ConflictResolutionSheet를 카드 형태로 감싸 좌우 패딩 + 라운드 모서리 + 그림자 적용.
+    // 핸들바 등 시트 전용 요소를 제거하고 카드 스타일로 교체.
+
+    @ViewBuilder
+    private func conflictCard(existing: Round) -> some View {
+        VStack(spacing: 0) {
+            // 상단 드래그 핸들 제거 → 카드 상단 라운드 처리만 유지
+
+            ConflictResolutionSheet(
+                existingRound: existing,
+                draft: draft,
+                onReplace: {
+                    let name = existing.courseName
+                    let date = existing.date.formatted(.iso8601.year().month().day())
+                    let isImported = existing.isImported
+                    logger.info("[Import] 충돌 액션: 대체 선택 — 기존 라운드 '\(name)' \(date) isImported=\(isImported)")
                     modelContext.delete(existing)
                     try? modelContext.save()
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showConflictAlert = false
+                    }
+                    onSave()
+                },
+                onSaveAsNew: {
+                    let name = existing.courseName
+                    let date = existing.date.formatted(.iso8601.year().month().day())
+                    logger.info("[Import] 충돌 액션: 새 기록으로 저장 — 기존 라운드 '\(name)' \(date) 유지")
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showConflictAlert = false
+                    }
+                    onSave()
+                },
+                onCancel: {
+                    logger.info("[Import] 충돌 액션: 취소 → conflictRound 초기화")
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showConflictAlert = false
+                        conflictRound = nil
+                    }
                 }
-                onSave()
-            }
-            Button("취소", role: .cancel) {
-                conflictRound = nil
-            }
-        } message: {
-            Text(conflictAlertMessage)
+            )
+            // 카드 배경 + 라운드 + 그림자 (시트 전용 presentationDetents 제거됨)
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(.regularMaterial)
+                    .shadow(color: .black.opacity(0.18), radius: 24, x: 0, y: -4)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 24))
         }
+        .padding(.horizontal, 12)
+        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity, alignment: .bottom)
+        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 
     // MARK: - 충돌 감지 후 저장 흐름
 
     private func attemptSave() {
         let courseName = draft.clubName ?? ""
+        logger.info("[Import] attemptSave 진입 — 코스: '\(courseName)', 날짜: \(draft.resolvedDate.formatted(.iso8601.year().month().day()))")
+
         let conflict = CourseNameMatcher.findConflictingRound(
             date: draft.resolvedDate,
             courseName: courseName,
             context: modelContext
         )
         if let conflict {
+            let existingName = conflict.courseName
+            let existingDate = conflict.date.formatted(.iso8601.year().month().day())
+            let isImported = conflict.isImported
+            logger.info("[Import] 충돌 감지: 기존 라운드 '\(existingName)' \(existingDate) isImported=\(isImported) → 오버레이 표시")
             conflictRound = conflict
-            showConflictAlert = true
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                showConflictAlert = true
+            }
         } else {
+            logger.info("[Import] 충돌 없음 → 바로 저장")
             onSave()
         }
-    }
-
-    // MARK: - Alert 문자열
-
-    private var conflictAlertTitle: String {
-        "같은 날짜에 라운드가 있어요"
-    }
-
-    private var conflictAlertMessage: String {
-        let dateStr = formattedDateShort(conflictRound?.date ?? draft.resolvedDate)
-        let name = conflictRound?.courseName ?? (draft.clubName ?? "알 수 없음")
-        return "\(dateStr) '\(name)' 라운드가 이미 있습니다.\n가져온 스코어카드가 기준이 되며, 이전 기록은 삭제됩니다.\n\n통합하시겠어요?"
     }
 
     // MARK: - Summary Card
@@ -262,10 +332,4 @@ struct ImportSummaryView: View {
         return f.string(from: date)
     }
 
-    private func formattedDateShort(_ date: Date) -> String {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        f.locale = Locale(identifier: "ko_KR")
-        return f.string(from: date)
-    }
 }
