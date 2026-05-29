@@ -306,10 +306,11 @@ public enum ScorecardMapper {
 
     private static func parseDate(_ dateText: String?) -> Date {
         guard let text = dateText else { return .now }
-        // "2026/04/30" 형태 파싱
+        // "2026/04/30" 형태 파싱 (KST 기준 — GeminiScorecardAdapter.resolveDateText와 타임존 통일)
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")!
         return formatter.date(from: text) ?? .now
     }
 }

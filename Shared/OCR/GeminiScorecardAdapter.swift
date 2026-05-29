@@ -189,22 +189,32 @@ public enum GeminiScorecardAdapter {
     /// Gemini date 정규화: . / → - 치환 후 YYYY-MM-DD 파싱.
     /// 실패 시 이미지 EXIF DateTimeOriginal 폴백.
     /// Returns: "yyyy/MM/dd" 형식 문자열 (ScorecardMapper.parseDate 호환)
+    ///
+    /// ★ 타임존 정책: 모든 DateFormatter에 Asia/Seoul(KST) 명시.
+    ///   이유: Gemini가 준 "2025-08-31"은 KST 기준 날짜이며,
+    ///   findConflictingRound도 KST 캘린더로 ymd를 분해한다.
+    ///   타임존 미지정 시 기기 TZ가 UTC인 환경에서 midnight UTC = KST 다음날이 되어
+    ///   "2025-08-31" → Date → "2025/08/30" off-by-one 발생.
     public static func resolveDateText(_ geminiDate: String, imageData: Data?) -> String? {
         // . 또는 / → - 로 정규화
         let normalized = geminiDate
             .replacingOccurrences(of: ".", with: "-")
             .replacingOccurrences(of: "/", with: "-")
 
-        // YYYY-MM-DD 파싱 시도
+        let kst = TimeZone(identifier: "Asia/Seoul")!
+
+        // YYYY-MM-DD 파싱 시도 (KST 기준)
         let iso = DateFormatter()
         iso.dateFormat = "yyyy-MM-dd"
         iso.locale = Locale(identifier: "en_US_POSIX")
+        iso.timeZone = kst
 
         if let date = iso.date(from: normalized) {
-            // ScorecardMapper.parseDate 가 "yyyy/MM/dd" 를 기대하므로 변환
+            // ScorecardMapper.parseDate 가 "yyyy/MM/dd" 를 기대하므로 변환 (KST 기준)
             let out = DateFormatter()
             out.dateFormat = "yyyy/MM/dd"
             out.locale = Locale(identifier: "en_US_POSIX")
+            out.timeZone = kst
             return out.string(from: date)
         }
 
@@ -213,6 +223,7 @@ public enum GeminiScorecardAdapter {
             let out = DateFormatter()
             out.dateFormat = "yyyy/MM/dd"
             out.locale = Locale(identifier: "en_US_POSIX")
+            out.timeZone = kst
             return out.string(from: exifDate)
         }
 
@@ -231,6 +242,7 @@ public enum GeminiScorecardAdapter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")!
         return formatter.date(from: dateStr)
     }
 }

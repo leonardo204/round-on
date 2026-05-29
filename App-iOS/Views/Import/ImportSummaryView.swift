@@ -169,7 +169,7 @@ struct ImportSummaryView: View {
 
     private func attemptSave() {
         let courseName = draft.clubName ?? ""
-        logger.info("[Import] attemptSave 진입 — 코스: '\(courseName)', 날짜: \(draft.resolvedDate.formatted(.iso8601.year().month().day()))")
+        logger.info("[Import] attemptSave 진입 — 코스: '\(courseName)', 날짜: \(formattedDate(draft.resolvedDate))")
 
         let conflict = CourseNameMatcher.findConflictingRound(
             date: draft.resolvedDate,
@@ -329,6 +329,7 @@ struct ImportSummaryView: View {
         let f = DateFormatter()
         f.dateFormat = "yyyy/MM/dd HH:mm"
         f.locale = Locale(identifier: "ko_KR")
+        f.timeZone = TimeZone(identifier: "Asia/Seoul")
         return f.string(from: date)
     }
 

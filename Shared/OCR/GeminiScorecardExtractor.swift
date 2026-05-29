@@ -24,7 +24,11 @@ public final class GeminiScorecardExtractor: Sendable {
     private let model = "gemini-2.5-flash"
     private let endpoint = "https://generativelanguage.googleapis.com/v1beta/models"
     private let maxLongEdge: CGFloat = 1600
-    private let timeoutSeconds: TimeInterval = 60
+    // ★ URLRequest.timeoutInterval = 무활동(inactivity) 타임아웃.
+    //   JPEG로 업로드가 빨라지면 이후 Gemini 추론(~50-90s) 동안 연결이 idle 상태가 되는데,
+    //   이 idle 구간이 타임아웃을 넘기면 안 된다. 추론 시간 + 여유를 위해 120s.
+    //   (이전 60s는 추론 대기 중 터져 3회 모두 timeout → Vision 폴백되던 원인)
+    private let timeoutSeconds: TimeInterval = 120
 
     private let apiKey: String
     private let session: URLSession
@@ -65,8 +69,11 @@ public final class GeminiScorecardExtractor: Sendable {
         maxRetries: Int = 2
     ) async throws -> GeminiScorecard {
         // 이미지 다운스케일 (크기 로깅 포함)
-        let scaledData = downscale(imageData: imageData, mime: mime) ?? imageData
-        let b64 = scaledData.base64EncodedString()
+        // 다운스케일 시: JPEG로 재인코딩 → mime도 image/jpeg로 교체
+        // 다운스케일 없음: 원본 데이터 + 원본 mime 그대로 유지
+        let scaledData = downscale(imageData: imageData, mime: mime)
+        let (sendData, sendMime): (Data, String) = scaledData.map { ($0, "image/jpeg") } ?? (imageData, mime)
+        let b64 = sendData.base64EncodedString()
 
         var lastError: Error = OCRError.exhausted
         for attempt in 0...maxRetries {
@@ -74,9 +81,9 @@ public final class GeminiScorecardExtractor: Sendable {
             if Task.isCancelled { throw OCRError.cancelled }
 
             let temperature = attempt == 0 ? 0.0 : 0.2
-            geminiLogger.info("[GeminiOCR] 시도 #\(attempt + 1) 시작 — temperature: \(temperature), payload: \(b64.count / 1024)KB (b64)")
+            geminiLogger.info("[GeminiOCR] 시도 #\(attempt + 1) 시작 — temperature: \(temperature), mime: \(sendMime), payload: \(b64.count / 1024)KB (b64)")
             do {
-                let card = try await callOnce(b64: b64, mime: mime, temperature: temperature, attempt: attempt + 1)
+                let card = try await callOnce(b64: b64, mime: sendMime, temperature: temperature, attempt: attempt + 1)
                 // 검증
                 try ScorecardValidator.check(card, holeCount: holeCount)
                 // 실제 응답 키 확인용 디버그 로그 (1회)
@@ -222,32 +229,33 @@ public final class GeminiScorecardExtractor: Sendable {
 
     // MARK: - 이미지 다운스케일
 
-    /// 긴 변이 maxLongEdge를 초과하면 리사이즈 후 JPEG 데이터 반환.
+    /// 긴 변이 maxLongEdge를 초과하면 리사이즈 후 JPEG(0.8) 데이터 반환.
     /// 실패하거나 리사이즈 불필요 시 nil 반환 (원본 사용).
+    /// ★ 다운스케일 시 포맷에 무관하게 항상 JPEG 0.8로 인코딩 — PNG 재인코딩으로 인한 폭증 방지.
     private func downscale(imageData: Data, mime: String) -> Data? {
         guard let image = UIImage(data: imageData) else { return nil }
         let size = image.size
         let longEdge = max(size.width, size.height)
         guard longEdge > maxLongEdge else {
-            geminiLogger.info("[GeminiOCR] 다운스케일 스킵 — 긴 변 \(Int(longEdge))px ≤ \(Int(self.maxLongEdge))px")
-            return nil  // 리사이즈 불필요
+            geminiLogger.info("[GeminiOCR] 다운스케일 스킵 — 긴 변 \(Int(longEdge))px ≤ \(Int(self.maxLongEdge))px (원본 전송)")
+            return nil  // 리사이즈 불필요 → 원본 데이터 그대로 사용
         }
 
         let scale = maxLongEdge / longEdge
         let newSize = CGSize(width: size.width * scale, height: size.height * scale)
-        geminiLogger.info("[GeminiOCR] 다운스케일 적용 — \(Int(size.width))x\(Int(size.height)) → \(Int(newSize.width))x\(Int(newSize.height))")
 
         let renderer = UIGraphicsImageRenderer(size: newSize)
         let resized = renderer.image { _ in
             image.draw(in: CGRect(origin: .zero, size: newSize))
         }
 
-        // PNG면 PNG로, JPEG이면 JPEG(0.85 품질)로 반환
-        if mime == "image/png" {
-            return resized.pngData()
-        } else {
-            return resized.jpegData(compressionQuality: 0.85)
+        // 다운스케일 시: 포맷에 무관하게 JPEG 0.8 인코딩 (PNG 재인코딩 금지 — payload 폭증 방지)
+        guard let jpegData = resized.jpegData(compressionQuality: 0.8) else {
+            geminiLogger.warning("[GeminiOCR] JPEG 인코딩 실패 — 다운스케일 스킵, 원본 전송")
+            return nil
         }
+        geminiLogger.info("[GeminiOCR] 다운스케일 적용 — \(Int(size.width))x\(Int(size.height)) → \(Int(newSize.width))x\(Int(newSize.height)), 인코딩: jpeg, payload: \(jpegData.count / 1024)KB (\(jpegData.base64EncodedString().count / 1024)KB b64)")
+        return jpegData
     }
 
     // MARK: - 디버그 로그

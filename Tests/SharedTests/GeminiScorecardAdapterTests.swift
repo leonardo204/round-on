@@ -226,6 +226,51 @@ final class GeminiScorecardAdapterTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    // MARK: - B12. 날짜 off-by-one 회귀 테스트 (KST 타임존 통일 검증)
+    // 실측 버그: Gemini "2025-08-31" → ScorecardMapper.parseDate → Date가 UTC 기준 해석되면
+    // KST 캘린더로 ymd 분해 시 2025-08-30으로 하루 밀림.
+    // 수정 후: resolveDateText + parseDate 모두 KST → ymd가 2025-08-31이어야 함.
+
+    func test_resolveDateText_kstTimezone_noOffByOne() {
+        // "2025-08-31" → "2025/08/31" 문자열 반환
+        let resolved = GeminiScorecardAdapter.resolveDateText("2025-08-31", imageData: nil)
+        XCTAssertEqual(resolved, "2025/08/31", "KST 기준 날짜 문자열이 2025/08/31이어야 함")
+
+        // "2025/08/31" 문자열을 KST DateFormatter로 파싱하면 KST 기준 자정
+        let kst = TimeZone(identifier: "Asia/Seoul")!
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = kst
+
+        guard let date = formatter.date(from: resolved!) else {
+            XCTFail("resolveDateText 결과를 날짜로 파싱 실패")
+            return
+        }
+
+        // KST 캘린더로 ymd 분해 → 2025-08-31이어야 함 (하루 밀리면 안 됨)
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = kst
+        let components = cal.dateComponents([.year, .month, .day], from: date)
+        XCTAssertEqual(components.year, 2025, "연도가 2025여야 함")
+        XCTAssertEqual(components.month, 8, "월이 8이어야 함")
+        XCTAssertEqual(components.day, 31, "일이 31이어야 함 (off-by-one 버그: 30으로 밀리면 실패)")
+    }
+
+    // MARK: - B12b. 경계값: 월말 날짜들도 off-by-one 없는지 검증
+
+    func test_resolveDateText_monthEndDates_noOffByOne() {
+        let cases: [(input: String, expected: String)] = [
+            ("2025-12-31", "2025/12/31"),
+            ("2026-01-01", "2026/01/01"),
+            ("2026-02-28", "2026/02/28"),
+        ]
+        for tc in cases {
+            let result = GeminiScorecardAdapter.resolveDateText(tc.input, imageData: nil)
+            XCTAssertEqual(result, tc.expected, "\(tc.input) → \(tc.expected) 기대, 실제: \(result ?? "nil")")
+        }
+    }
+
     // MARK: - B11. 후반 소계가 inScore로 올바르게 설정
 
     func test_adapt_backSection_subtotalEqualsInScore() {
