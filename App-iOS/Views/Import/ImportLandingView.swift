@@ -52,6 +52,19 @@ struct ImportLandingView: View {
                 )
             }
         }
+        .alert(
+            "스코어카드 분석 데이터 전송 안내",
+            isPresented: $viewModel.showConsentAlert
+        ) {
+            Button("동의하고 분석") {
+                viewModel.acceptConsentAndContinue()
+            }
+            Button("취소", role: .cancel) {
+                viewModel.rejectConsentAndFallback()
+            }
+        } message: {
+            Text("스코어카드 자동 인식을 위해 선택하신 사진이 외부 AI 서버(Google)로 전송됩니다. 사진에 적힌 동반자 이름 등도 함께 전송될 수 있습니다. 전송된 사진은 분석에만 사용되며 별도 저장되지 않습니다.")
+        }
         .onChange(of: viewModel.phase) { _, newPhase in
             switch newPhase {
             case .review:

@@ -1,0 +1,249 @@
+import Foundation
+import CoreGraphics
+import ImageIO
+import UIKit
+
+// MARK: - GeminiScorecardExtractor
+// Gemini Vision API를 호출해 스코어카드 이미지를 구조화 JSON으로 추출한다.
+//
+// - API 키: Info.plist "GEMINI_API_KEY" (xcconfig 주입)
+// - 모델: gemini-2.5-flash
+// - 이미지: 긴 변 >1600px 시 리사이즈 후 base64 전송
+// - 재시도: 1차 temp=0, 재시도 시 temp=0.2
+// - 검증: ScorecardValidator.check 통과해야 반환
+// - 타임아웃: 단일 호출 60초
+// - 네트워크 패턴: CourseRepository와 동일한 URLSession async/await
+
+public final class GeminiScorecardExtractor: Sendable {
+
+    // MARK: - 상수
+
+    private let model = "gemini-2.5-flash"
+    private let endpoint = "https://generativelanguage.googleapis.com/v1beta/models"
+    private let maxLongEdge: CGFloat = 1600
+    private let timeoutSeconds: TimeInterval = 60
+
+    private let apiKey: String
+    private let session: URLSession
+
+    // MARK: - Init
+
+    /// apiKey를 직접 전달하는 초기화 (테스트용)
+    public init(apiKey: String, session: URLSession = .shared) {
+        self.apiKey = apiKey
+        self.session = session
+    }
+
+    /// Info.plist에서 GEMINI_API_KEY를 읽어 초기화 (앱 사용)
+    public static func fromInfoPlist(session: URLSession = .shared) throws -> GeminiScorecardExtractor {
+        guard let key = Bundle.main.object(forInfoDictionaryKey: "GEMINI_API_KEY") as? String,
+              !key.isEmpty else {
+            throw OCRError.apiKeyMissing
+        }
+        guard key != "$(GEMINI_API_KEY)" else {
+            throw OCRError.apiKeyNotConfigured
+        }
+        return GeminiScorecardExtractor(apiKey: key, session: session)
+    }
+
+    // MARK: - 공개 API
+
+    /// 이미지 데이터 → 검증 통과한 GeminiScorecard.
+    /// 검증 실패 시 maxRetries회 재시도 (온도 0.2로 상승).
+    /// - Parameters:
+    ///   - imageData: 원본 이미지 Data (JPEG/PNG)
+    ///   - mime: "image/jpeg" 또는 "image/png"
+    ///   - holeCount: 예상 홀 수 (18 또는 9). Validator가 추론으로 보정.
+    ///   - maxRetries: 최대 재시도 횟수 (기본 2)
+    public func extract(
+        imageData: Data,
+        mime: String,
+        holeCount: Int = 18,
+        maxRetries: Int = 2
+    ) async throws -> GeminiScorecard {
+        // 이미지 다운스케일
+        let scaledData = downscale(imageData: imageData, mime: mime) ?? imageData
+        let b64 = scaledData.base64EncodedString()
+
+        var lastError: Error = OCRError.exhausted
+        for attempt in 0...maxRetries {
+            // Task 취소 체크
+            if Task.isCancelled { throw OCRError.cancelled }
+
+            let temperature = attempt == 0 ? 0.0 : 0.2
+            do {
+                let card = try await callOnce(b64: b64, mime: mime, temperature: temperature)
+                // 검증
+                try ScorecardValidator.check(card, holeCount: holeCount)
+                // 실제 응답 키 확인용 디버그 로그 (1회)
+                if attempt == 0 {
+                    logResponseKeys(card)
+                }
+                return card
+            } catch let error as OCRError {
+                lastError = error
+                // API 키 오류는 재시도 무의미
+                switch error {
+                case .apiKeyMissing, .apiKeyNotConfigured, .httpError, .cancelled:
+                    throw error
+                default:
+                    break
+                }
+            } catch {
+                lastError = error
+            }
+        }
+        throw lastError
+    }
+
+    // MARK: - Private
+
+    private func callOnce(b64: String, mime: String, temperature: Double) async throws -> GeminiScorecard {
+        // API 키는 헤더로 전달 (URL 쿼리에 포함 시 NSURLCache/프록시 평문 노출 위험)
+        let urlString = "\(endpoint)/\(model):generateContent"
+        guard let url = URL(string: urlString) else {
+            throw OCRError.invalidResponse
+        }
+
+        let body = makeRequestBody(b64: b64, mime: mime, temperature: temperature)
+        let bodyData = try JSONSerialization.data(withJSONObject: body)
+
+        var request = URLRequest(url: url, timeoutInterval: timeoutSeconds)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
+        request.httpBody = bodyData
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let http = response as? HTTPURLResponse else {
+            throw OCRError.invalidResponse
+        }
+
+        // 4xx / 5xx 오류 처리 — 응답 본문은 내부 로그용으로만 200자 truncate 후 보관
+        guard (200...299).contains(http.statusCode) else {
+            let rawBody = String(data: data, encoding: .utf8) ?? ""
+            let truncated = rawBody.count > 200
+                ? String(rawBody.prefix(200)) + "…(truncated)"
+                : rawBody
+            #if DEBUG
+            print("[GeminiOCR] HTTP \(http.statusCode) 응답 본문: \(truncated)")
+            #endif
+            throw OCRError.httpError(http.statusCode, truncated)
+        }
+
+        // candidates[0].content.parts[0].text → JSON 파싱
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let candidates = json["candidates"] as? [[String: Any]],
+              let first = candidates.first,
+              let content = first["content"] as? [String: Any],
+              let parts = content["parts"] as? [[String: Any]],
+              let text = parts.first?["text"] as? String,
+              let textData = text.data(using: .utf8) else {
+            throw OCRError.invalidResponse
+        }
+
+        let decoder = JSONDecoder()
+        let card = try decoder.decode(GeminiScorecard.self, from: textData)
+        return card
+    }
+
+    // MARK: - 요청 Body 구성
+
+    private func makeRequestBody(b64: String, mime: String, temperature: Double) -> [String: Any] {
+        let schema: [String: Any] = [
+            "type": "object",
+            "properties": [
+                "courseName": ["type": "string"],
+                "date": ["type": "string"],
+                "rows": [
+                    "type": "array",
+                    "items": [
+                        "type": "object",
+                        "properties": [
+                            "label":   ["type": "string"],
+                            "kind":    ["type": "string", "enum": ["par", "player"]],
+                            "isOwner": ["type": "boolean"],
+                            "values":  ["type": "array", "items": ["type": "integer"]],
+                            "out":     ["type": "integer"],
+                            "inScore": ["type": "integer"],
+                            "total":   ["type": "integer"]
+                        ],
+                        "required": ["label", "kind", "values", "out", "inScore", "total"]
+                    ]
+                ]
+            ],
+            "required": ["courseName", "date", "rows"]
+        ]
+
+        let prompt = """
+이 이미지는 한국 골프 스코어카드(스마트스코어)입니다. 가로 표 형식이거나, 배경 사진 위에 본인 점수 2줄만 있는 앱 공유 카드일 수 있습니다.
+
+규칙:
+1. 표의 각 점수 셀에는 PAR 대비 차이값(over-par delta)이 인쇄되어 있습니다. 파4홀에서 5타=+1, 4타=0, 3타=-1(버디). 셀 안의 정수만 읽으세요.
+2. 숫자 위/아래의 점(dot)·막대(bar) 같은 작은 마크는 over/under 시각표시이니 무시하세요. 단 음수(버디·이글)는 반드시 음수로 표기.
+3. PAR 행이 보이면 kind="par", values=각 홀 실제 par 값(3/4/5).
+4. 플레이어 행은 kind="player". values=홀별 over-par 정수(전반9 + 후반9 = 18개, 9홀 카드면 9개). out=전반 실제 타수, inScore=후반 실제 타수, total=18홀 실제 합계.
+5. 본인(최상단·가장 진한 글씨·이름 전체표기, 보통 PAR 바로 아래)은 isOwner=true.
+6. courseName=골프장 한글명(괄호 안 구 명칭 제외), date=YYYY-MM-DD.
+정확도가 가장 중요합니다. 합계가 맞는지 스스로 검산하세요.
+"""
+
+        return [
+            "contents": [
+                [
+                    "parts": [
+                        ["text": prompt],
+                        ["inline_data": ["mime_type": mime, "data": b64]]
+                    ]
+                ]
+            ],
+            "generationConfig": [
+                "responseMimeType": "application/json",
+                "responseSchema": schema,
+                "temperature": temperature
+            ]
+        ]
+    }
+
+    // MARK: - 이미지 다운스케일
+
+    /// 긴 변이 maxLongEdge를 초과하면 리사이즈 후 JPEG 데이터 반환.
+    /// 실패하거나 리사이즈 불필요 시 nil 반환 (원본 사용).
+    private func downscale(imageData: Data, mime: String) -> Data? {
+        guard let image = UIImage(data: imageData) else { return nil }
+        let size = image.size
+        let longEdge = max(size.width, size.height)
+        guard longEdge > maxLongEdge else { return nil }  // 리사이즈 불필요
+
+        let scale = maxLongEdge / longEdge
+        let newSize = CGSize(width: size.width * scale, height: size.height * scale)
+
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        let resized = renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+
+        // PNG면 PNG로, JPEG이면 JPEG(0.85 품질)로 반환
+        if mime == "image/png" {
+            return resized.pngData()
+        } else {
+            return resized.jpegData(compressionQuality: 0.85)
+        }
+    }
+
+    // MARK: - 디버그 로그
+
+    /// 실제 Gemini 응답 키 확인용 (1회 호출 후 로그 출력)
+    private func logResponseKeys(_ card: GeminiScorecard) {
+        #if DEBUG
+        let playerCount = card.players.count
+        let hasParRow = card.parRow != nil
+        let firstPlayerValues = card.players.first.map { "\($0.values.count)개" } ?? "없음"
+        print("[GeminiOCR] 응답 확인 — courseName: \(card.courseName), date: \(card.date), "
+            + "players: \(playerCount)명, parRow: \(hasParRow), "
+            + "첫 player values: \(firstPlayerValues), "
+            + "inScore 키 정상 수신: \(card.players.first.map { "\($0.inScore)" } ?? "없음")")
+        #endif
+    }
+}

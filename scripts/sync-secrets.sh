@@ -20,6 +20,7 @@ if [[ -z "$KEY" ]]; then
 fi
 
 BEARER=$(grep "^ROUNDON_API_BEARER=" "$LOCAL" | cut -d'=' -f2- || true)
+GEMINI=$(grep "^GEMINI_API_KEY=" "$LOCAL" | cut -d'=' -f2- || true)
 
 cat > "$XCCONFIG" <<XCCONF
 // Secrets.xcconfig — 로컬 전용, .gitignore에 포함됨. 절대 커밋 금지.
@@ -28,6 +29,7 @@ cat > "$XCCONFIG" <<XCCONF
 
 KAKAO_REST_API_KEY = $KEY
 ROUNDON_API_BEARER = $BEARER
+GEMINI_API_KEY = $GEMINI
 XCCONF
 
-echo "Secrets.xcconfig 동기화 완료 (KAKAO ${#KEY}자, ROUNDON ${#BEARER}자)"
+echo "Secrets.xcconfig 동기화 완료 (KAKAO ${#KEY}자, ROUNDON ${#BEARER}자, GEMINI ${#GEMINI}자)"
