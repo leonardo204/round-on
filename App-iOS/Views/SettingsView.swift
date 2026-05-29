@@ -19,6 +19,7 @@ struct SettingsView: View {
 
     // DB 업데이트 상태
     @State private var dbUpdateState: DBUpdateState = .idle
+    @State private var dbLastSuccessAt: Date? = nil
     private enum DBUpdateState: Equatable {
         case idle
         case loading
@@ -118,11 +119,13 @@ struct SettingsView: View {
         .task {
             refreshLocationStatus()
             refreshICloudStatus()
+            loadDBLastSuccessAt()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 refreshLocationStatus()
                 refreshICloudStatus()
+                loadDBLastSuccessAt()
             }
         }
     }
@@ -367,19 +370,44 @@ struct SettingsView: View {
 
     private var dbUpdateSubtitle: String {
         switch dbUpdateState {
-        case .idle: return "최근 갱신 일시 확인 불가"
+        case .idle:
+            if let date = dbLastSuccessAt, date > Date.distantPast {
+                return "마지막 동기화: \(kstDateString(date))"
+            }
+            return "동기화 기록 없음"
         case .loading: return "서버에서 확인 중..."
         case .success(let msg): return msg
         case .failure: return "업데이트 실패 — 잠시 후 다시 시도해 주세요"
         }
     }
 
+    /// CoursesSyncMeta에서 마지막 성공 시각 로드 (courses 기준).
+    private func loadDBLastSuccessAt() {
+        var descriptor = FetchDescriptor<CoursesSyncMeta>(
+            predicate: #Predicate { $0.endpoint == "courses" }
+        )
+        descriptor.fetchLimit = 1
+        if let meta = (try? modelContext.fetch(descriptor))?.first,
+           meta.lastSuccessAt > Date.distantPast {
+            dbLastSuccessAt = meta.lastSuccessAt
+        }
+    }
+
+    /// KST yyyy.MM.dd HH:mm 포맷 날짜 문자열.
+    private func kstDateString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd HH:mm"
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul") ?? .current
+        return formatter.string(from: date)
+    }
+
     private func triggerDBUpdate() {
         guard dbUpdateState != .loading else { return }
         dbUpdateState = .loading
         Task {
-            let (coursesUpdated, _) = await CourseRepository.shared.fetchRemoteForce(context: modelContext)
-            if coursesUpdated {
+            let (coursesUpdated, parsUpdated) = await CourseRepository.shared.fetchRemoteForce(context: modelContext)
+            loadDBLastSuccessAt()
+            if coursesUpdated || parsUpdated {
                 dbUpdateState = .success("업데이트 완료")
             } else {
                 dbUpdateState = .success("최신 데이터입니다")
