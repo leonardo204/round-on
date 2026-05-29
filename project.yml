@@ -6,6 +6,11 @@ options:
   bundleIdPrefix: kr.zerolive.golf
   createIntermediateGroups: true
 
+packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    version: 11.13.0
+
 settings:
   base:
     DEVELOPMENT_TEAM: XU8HS9JUTS  # Apple Developer Team ID (Xcode UI에서 설정한 값, project.yml에 영구 명시)
@@ -79,6 +84,7 @@ targets:
         embed: true
       - sdk: PhotosUI.framework
         weak: false
+      - package: GoogleMobileAds
     configFiles:
       Debug: Secrets.xcconfig
       Release: Secrets.xcconfig

@@ -1,12 +1,20 @@
 import SwiftUI
 import SwiftData
 import Shared
+import GoogleMobileAds
+import AppTrackingTransparency
 
 @main
 struct RoundOnApp: App {
     let modelContainer: ModelContainer
 
     init() {
+        // AdMob SDK 초기화 (앱 시작 즉시, 광고 요청 전 필수)
+        GADMobileAds.sharedInstance().start { status in
+            let count = status.adapterStatusesByClassName.count
+            AppLogger.app.info("AdMob SDK 초기화 완료: \(count)개 어댑터")
+        }
+
         // CloudKit 초기화 실패 시 로컬 전용으로 fallback — fatal 없이 앱 계속 실행
         if let container = Self.makeModelContainerWithFallback() {
             self.modelContainer = container
@@ -90,7 +98,40 @@ struct RoundOnApp: App {
                     Task {
                         await CourseRepository.shared.fetchRemoteIfStale(context: context)
                     }
+                    // ATT 권한 요청 — 앱 시작 후 2초 딜레이로 UI 안정화 후 표시
+                    Task {
+                        try? await Task.sleep(nanoseconds: 2_000_000_000)
+                        await requestTrackingPermission()
+                    }
                 }
+        }
+    }
+
+    // MARK: - ATT (App Tracking Transparency)
+
+    /// ATT 추적 권한 요청 (1회만 표시, 이후 저장된 상태 반환)
+    /// - 허용: 맞춤 광고 → eCPM 높음
+    /// - 거부: 비맞춤 광고 (기능 차이 없음, 수익만 감소)
+    @MainActor
+    private func requestTrackingPermission() async {
+        let status = ATTrackingManager.trackingAuthorizationStatus
+        guard status == .notDetermined else {
+            AppLogger.app.info("ATT 이미 결정됨: \(status.rawValue)")
+            return
+        }
+
+        let newStatus = await ATTrackingManager.requestTrackingAuthorization()
+        switch newStatus {
+        case .authorized:
+            AppLogger.app.info("ATT 추적 허용")
+        case .denied:
+            AppLogger.app.info("ATT 추적 거부 — 비맞춤 광고 진행")
+        case .restricted:
+            AppLogger.app.info("ATT 추적 제한됨")
+        case .notDetermined:
+            AppLogger.app.info("ATT 미결정")
+        @unknown default:
+            AppLogger.app.info("ATT 알 수 없는 상태")
         }
     }
 }

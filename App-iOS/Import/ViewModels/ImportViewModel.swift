@@ -46,6 +46,9 @@ public final class ImportViewModel {
     /// Gemini 동의 팝업 표시 여부 (동의 미확인 상태에서 import 시도 시 true)
     public var showConsentAlert: Bool = false
 
+    /// 할당량 소진 팝업 표시 여부 (remaining == 0 시 true → ImportLandingView에서 AIAnalysisView 진입)
+    public var showQuotaExhausted: Bool = false
+
     // MARK: Private
 
     private var cgImageForOCR: CGImage?
@@ -62,12 +65,18 @@ public final class ImportViewModel {
 
     /// PhotosPickerItem에서 이미지 로드 → OCR 실행 → 드래프트 생성
     /// 동의 미수락 시 동의 팝업 요청 후 대기.
+    /// 할당량 소진 시 showQuotaExhausted = true로 AIAnalysisView 진입 유도.
     public func run(item: PhotosPickerItem, ownerName: String? = nil) async {
         // 동의 미수락이면 팝업 표시 후 대기 (acceptConsentAndContinue가 Task를 생성)
         if !ConsentManager.shared.isAccepted {
             pendingItem = item
             pendingOwnerName = ownerName
             showConsentAlert = true
+            return
+        }
+        // 할당량 소진 확인
+        if !RewardedAdManager.shared.canAnalyze {
+            showQuotaExhausted = true
             return
         }
         // 이전 Task가 있으면 취소
@@ -87,6 +96,11 @@ public final class ImportViewModel {
         let ownerName = pendingOwnerName
         pendingItem = nil
         pendingOwnerName = nil
+        // 동의 수락 후에도 할당량 재확인
+        if !RewardedAdManager.shared.canAnalyze {
+            showQuotaExhausted = true
+            return
+        }
         let task = Task {
             await performOCR(item: item, ownerName: ownerName)
         }
@@ -172,6 +186,10 @@ public final class ImportViewModel {
 
                 warnings = scorecard.warnings
                 draft = try ScorecardMapper.makeDraft(from: scorecard, ownerName: ownerName)
+
+                // Gemini 분석 성공 → 할당량 1 소비 (보상형 광고는 AIAnalysisView에서만 시청)
+                RewardedAdManager.shared.consume()
+
                 phase = .review
             } catch {
                 // Gemini 실패 → Vision 폴백

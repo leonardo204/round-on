@@ -26,11 +26,8 @@ struct SettingsView: View {
         case failure
     }
 
-    // 개인정보 및 데이터 전송 섹션
-    private let privacyURLString = "https://golf.zerolive.co.kr/privacy"
-    @State private var showPrivacySafari = false
-    @State private var showRevokeAlert = false
-    @State private var consentRefreshTick = false  // 동의 철회 후 UI 갱신 트리거
+    // AI 분석 팝업
+    @State private var showAIAnalysis = false
 
     // 벌타 기본값 (PenaltySettings.Key와 일치)
     @AppStorage(PenaltySettings.Key.obDelta) private var obDelta: Int = PenaltySettings.Default.obDelta
@@ -78,79 +75,13 @@ struct SettingsView: View {
                 Text("사진 보관함의 스코어카드를 인식해 라운드로 저장합니다. 원본 이미지는 저장되지 않습니다.")
             }
 
-            // ★ 개인정보 및 데이터 전송 섹션
+            // ★ AI 분석 섹션 (할당량 + 개인정보 통합)
             Section {
-                // 1. 동의 상태 행
-                privacyInfoRow(
-                    title: "동의 상태",
-                    detail: consentStatusText
-                )
-
-                // 2. 전송 데이터 행
-                privacyInfoRow(
-                    title: "전송 데이터",
-                    detail: "스코어카드 사진(분석 시), 촬영일"
-                )
-
-                // 3. 수신자 행
-                privacyInfoRow(
-                    title: "수신자",
-                    detail: "Google LLC (Gemini API)"
-                )
-
-                // 4. 목적 행
-                privacyInfoRow(
-                    title: "목적",
-                    detail: "스코어카드 자동 인식 · 분석 후 별도 저장 안 함"
-                )
-
-                // 5. 동의 시점 안내 행
-                privacyInfoRow(
-                    title: "동의 시점",
-                    detail: "스코어카드 최초 분석 시 명시 동의, 동의 전에는 전송하지 않음"
-                )
-
-                // 6. 개인정보 처리방침 보기
-                Button {
-                    showPrivacySafari = true
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "doc.text")
-                            .font(.system(size: 15))
-                            .foregroundStyle(.tint)
-                            .frame(width: 24)
-                        Text("개인정보 처리방침 보기")
-                            .font(.body)
-                            .foregroundStyle(.tint)
-                        Spacer()
-                        Image(systemName: "safari")
-                            .font(.system(size: 13))
-                            .foregroundStyle(Color(.tertiaryLabel))
-                    }
-                    .padding(.vertical, 4)
-                }
-
-                // 7. 동의 철회 버튼 (동의 상태일 때만 노출)
-                if ConsentManager.shared.isAccepted || consentRefreshTick {
-                    if ConsentManager.shared.isAccepted {
-                        Button(role: .destructive) {
-                            showRevokeAlert = true
-                        } label: {
-                            HStack(spacing: 10) {
-                                Image(systemName: "hand.raised")
-                                    .font(.system(size: 15))
-                                    .frame(width: 24)
-                                Text("데이터 전송 동의 철회")
-                                    .font(.body)
-                            }
-                            .padding(.vertical, 4)
-                        }
-                    }
-                }
+                aiAnalysisRow
             } header: {
-                Text("개인정보 및 데이터 전송")
+                Text("AI 분석")
             } footer: {
-                Text("Gemini AI를 이용한 스코어카드 분석 기능에만 적용됩니다. 동의 철회 시 이후 사진은 기기 내 인식으로만 처리됩니다.")
+                Text("스코어카드 자동 인식 무료 횟수 관리 및 개인정보 전송 동의 설정")
             }
 
             Section("정보") {
@@ -162,20 +93,8 @@ struct SettingsView: View {
         .fullScreenCover(isPresented: $showImportLanding) {
             ImportLandingView()
         }
-        .sheet(isPresented: $showPrivacySafari) {
-            if let url = URL(string: privacyURLString) {
-                SafariView(url: url)
-                    .ignoresSafeArea()
-            }
-        }
-        .alert("동의를 철회하시겠습니까?", isPresented: $showRevokeAlert) {
-            Button("철회", role: .destructive) {
-                ConsentManager.shared.revoke()
-                consentRefreshTick.toggle()
-            }
-            Button("취소", role: .cancel) {}
-        } message: {
-            Text("철회하면 이후 사진 전송이 중단되고 기기 내 인식으로 처리됩니다.")
+        .sheet(isPresented: $showAIAnalysis) {
+            AIAnalysisView()
         }
         .task {
             refreshLocationStatus()
@@ -452,32 +371,35 @@ struct SettingsView: View {
         }
     }
 
-    // MARK: - Privacy section helpers
+    // MARK: - AI Analysis row
 
-    private var consentStatusText: String {
-        _ = consentRefreshTick  // 트리거 의존
-        if ConsentManager.shared.isAccepted {
-            if let date = ConsentManager.shared.acceptedDate {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy.MM.dd"
-                return "동의함 ✓ (\(formatter.string(from: date)))"
+    private var aiAnalysisRow: some View {
+        Button {
+            showAIAnalysis = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 17))
+                    .foregroundStyle(.tint)
+                    .frame(width: 24)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("AI 분석")
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                    Text("무료 횟수 \(RewardedAdManager.shared.remaining)/3 · 개인정보 동의 관리")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Color(.tertiaryLabel))
             }
-            return "동의함 ✓"
+            .padding(.vertical, 4)
         }
-        return "미동의"
-    }
-
-    @ViewBuilder
-    private func privacyInfoRow(title: String, detail: String) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(title)
-                .font(.subheadline)
-                .foregroundStyle(.primary)
-            Text(detail)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .padding(.vertical, 2)
     }
 
     // MARK: - App version

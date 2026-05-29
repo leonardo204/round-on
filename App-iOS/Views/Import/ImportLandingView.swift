@@ -16,6 +16,7 @@ struct ImportLandingView: View {
     @State private var viewModel = ImportViewModel()
     @State private var pickerItem: PhotosPickerItem?
     @State private var showReview = false
+    @State private var showAIAnalysis = false
 
     // 본인 이름 (OCR 결과에서 owner 행 자동 매칭용)
     @AppStorage("ownerName") private var ownerName: String = ""
@@ -75,6 +76,15 @@ struct ImportLandingView: View {
             default:
                 break
             }
+        }
+        .onChange(of: viewModel.showQuotaExhausted) { _, exhausted in
+            if exhausted {
+                showAIAnalysis = true
+                viewModel.showQuotaExhausted = false
+            }
+        }
+        .sheet(isPresented: $showAIAnalysis) {
+            AIAnalysisView()
         }
     }
 
@@ -153,10 +163,10 @@ struct ImportLandingView: View {
             }
 
             VStack(spacing: 8) {
-                Text("스코어카드를 분석하고 있어요")
+                Text("AI가 스코어카드를 분석하고 있어요")
                     .font(.system(size: 17, weight: .semibold))
 
-                Text("파란 헤더 영역 검출 → 점수 영역 크롭 → OCR → 표 재구성\n평균 1~3초 소요됩니다.")
+                Text("점수·코스·날짜를 정밀하게 읽는 중이에요.\n최대 20초쯤 걸릴 수 있어요. 잠시만요!")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
