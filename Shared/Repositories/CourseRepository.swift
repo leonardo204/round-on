@@ -113,7 +113,7 @@ public actor CourseRepository {
             }
 
             if http.statusCode == 304 {
-                // B. 304 — 캐시 그대로
+                // B. 304 — 캐시 그대로 (성공으로 간주)
                 AppLogger.persistence.info("CourseRepository [\(endpoint)]: 304 Not Modified — 캐시 유효")
                 meta.lastSuccessAt = Date()
                 try? context.save()
@@ -121,19 +121,29 @@ public actor CourseRepository {
             }
 
             if (200...299).contains(http.statusCode) {
-                // A. 200 — 새 데이터
+                // A. 200 — 새 데이터. 디스크에 기록 후 디코드+머지 성공 시에만 lastSuccessAt 기록.
                 let newEtag = http.value(forHTTPHeaderField: "ETag") ?? ""
                 meta.etag = newEtag
-                meta.lastSuccessAt = Date()
+                // ★ lastSuccessAt은 디코드+머지 성공 후에만 기록 (아래 updateCacheXxx 내부)
                 try? context.save()
 
                 // 디스크 캐시 기록 (endpoint별)
                 writeDiskCache(data: data, endpoint: endpoint)
 
-                // courses 엔드포인트면 인메모리 캐시 갱신
                 if endpoint == "courses" {
-                    await updateCourseCache(data: data, source: "remote")
-                    return true
+                    let ok = await updateCourseListCache(data: data, source: "remote")
+                    if ok {
+                        meta.lastSuccessAt = Date()
+                        try? context.save()
+                    }
+                    return ok
+                } else if endpoint == "course-pars" {
+                    let merged = await mergeCourseParCache(data: data, source: "remote")
+                    if merged >= 0 {
+                        meta.lastSuccessAt = Date()
+                        try? context.save()
+                    }
+                    return merged > 0
                 }
                 return true
             }
@@ -149,11 +159,15 @@ public actor CourseRepository {
 
     /// B/C: 디스크 캐시 → 번들 순서 fallback. 캐시 7일 stale 여부와 무관하게 디스크 우선.
     private func fallbackToCache(endpoint: String) async -> Bool {
-        // B. 디스크 캐시
-        if endpoint == "courses", let cacheURL = diskCacheURL(endpoint: endpoint),
+        // B. 디스크 캐시 (course-pars도 별도 캐시에서 복원 시도)
+        if let cacheURL = diskCacheURL(endpoint: endpoint),
            let data = try? Data(contentsOf: cacheURL) {
             AppLogger.persistence.info("CourseRepository [\(endpoint)]: 디스크 캐시 사용")
-            await updateCourseCache(data: data, source: "disk-cache")
+            if endpoint == "courses" {
+                await updateCourseListCache(data: data, source: "disk-cache")
+            } else if endpoint == "course-pars" {
+                await mergeCourseParCache(data: data, source: "disk-cache")
+            }
             return false
         }
 
@@ -163,15 +177,116 @@ public actor CourseRepository {
         return false
     }
 
-    /// 새 JSON 데이터로 인메모리 courses 캐시 업데이트.
-    private func updateCourseCache(data: Data, source: String) async {
+    /// /v1/courses 응답 처리 — 관대한 minimal DTO로 디코드 (id+name만 확인).
+    /// 번들 캐시를 교체하지 않고 코스 존재 여부 로깅만 수행.
+    /// - Returns: 디코드 성공 여부
+    @discardableResult
+    private func updateCourseListCache(data: Data, source: String) async -> Bool {
         do {
-            let dto = try JSONDecoder().decode(CourseDatasetDTO.self, from: data)
-            self.cache = dto.courses
-            AppLogger.persistence.info("CourseRepository: 캐시 갱신 (\(source)) — \(dto.courses.count)개 골프장")
+            let dto = try JSONDecoder().decode(RemoteCoursesDTO.self, from: data)
+            AppLogger.persistence.info("CourseRepository: /v1/courses 디코드 성공 (\(source)) — \(dto.courses.count)개 메타 확인 (번들 캐시 유지)")
+            // ★ 번들 캐시 교체 금지 — id+name 메타만 확인하고 끝
+            return true
         } catch {
-            AppLogger.persistence.error("CourseRepository: JSON 파싱 실패 (\(source)) — \(error.localizedDescription)")
+            AppLogger.persistence.error("CourseRepository: /v1/courses 파싱 실패 (\(source)) — \(error.localizedDescription)")
+            return false
         }
+    }
+
+    /// /v1/course-pars 응답을 번들 인메모리 캐시에 머지(보강).
+    /// id 우선 매칭 → 이름 유사도 폴백. 매칭된 코스의 subCourses.holes에 par 채우고 dataQuality 승격.
+    /// - Returns: 머지된 코스 수 (실패 시 -1)
+    @discardableResult
+    private func mergeCourseParCache(data: Data, source: String) async -> Int {
+        do {
+            let dto = try JSONDecoder().decode(RemoteCourseParsDTO.self, from: data)
+            AppLogger.persistence.info("CourseRepository: /v1/course-pars 디코드 성공 (\(source)) — \(dto.coursePars.count)개")
+
+            // 번들 캐시 로드 (없으면 번들에서 로드)
+            let baseCourses: [GolfCourse]
+            if let cached = self.cache {
+                baseCourses = cached
+            } else {
+                baseCourses = (try? await loadAll()) ?? []
+            }
+
+            var courseById = Dictionary(uniqueKeysWithValues: baseCourses.map { ($0.id, $0) })
+            var mergedCount = 0
+            var skipCount = 0
+
+            for parEntry in dto.coursePars {
+                // 1순위: id 직접 매칭
+                if courseById[parEntry.courseId] != nil {
+                    let enriched = applyParsToGolfCourse(courseById[parEntry.courseId]!, parEntry: parEntry)
+                    courseById[parEntry.courseId] = enriched
+                    mergedCount += 1
+                } else {
+                    // 2순위: 이름 유사도 매칭 (id 불일치 폴백)
+                    var nameMatched = false
+                    for (bid, bc) in courseById {
+                        if CourseNameMatcher.areSimilar(bc.name, parEntry.courseName) {
+                            let enriched = applyParsToGolfCourse(bc, parEntry: parEntry)
+                            courseById[bid] = enriched
+                            mergedCount += 1
+                            nameMatched = true
+                            AppLogger.persistence.debug("CourseRepository: 이름 매칭 — '\(parEntry.courseName)' → '\(bc.name)'")
+                            break
+                        }
+                    }
+                    if !nameMatched {
+                        skipCount += 1
+                        AppLogger.persistence.debug("CourseRepository: 매칭 실패 스킵 — '\(parEntry.courseId)' (\(parEntry.courseName))")
+                    }
+                }
+            }
+
+            // 머지된 결과를 인메모리 캐시에 반영
+            let mergedList = baseCourses.map { courseById[$0.id] ?? $0 }
+            self.cache = mergedList
+            AppLogger.persistence.info("CourseRepository: par 머지 완료 — \(mergedCount)개 보강, \(skipCount)개 스킵 (총 \(mergedList.count)개)")
+            return mergedCount
+
+        } catch {
+            AppLogger.persistence.error("CourseRepository: /v1/course-pars 파싱 실패 (\(source)) — \(error.localizedDescription)")
+            return -1
+        }
+    }
+
+    /// API coursePar 항목을 기존 GolfCourse에 보강하여 새 인스턴스 반환.
+    /// subCourses를 API 데이터 기반으로 교체 (par가 신뢰원천: 골프존 > 번들).
+    /// dataQuality를 .verified로 승격.
+    private func applyParsToGolfCourse(_ course: GolfCourse, parEntry: RemoteCourseParsDTO.CoursePar) -> GolfCourse {
+        CourseRepository.applyPars(course, parEntry: parEntry)
+    }
+
+    /// 테스트 및 외부 접근용 static helper (actor 격리 없이 호출 가능).
+    /// applyParsToGolfCourse의 순수 함수 구현체. actor isolation과 무관.
+    internal static func applyPars(_ course: GolfCourse, parEntry: RemoteCourseParsDTO.CoursePar) -> GolfCourse {
+        // API subCourses → [SubCourse] with holes filled from pars
+        let newSubCourses: [SubCourse] = parEntry.subCourses.map { apiSub in
+            let holes = apiSub.pars.enumerated().map { idx, par in
+                HoleInfo(number: idx + 1, par: par)
+            }
+            return SubCourse(name: apiSub.name, holes: holes)
+        }
+
+        return GolfCourse(
+            id: course.id,
+            name: course.name,
+            subName: course.subName,
+            region: course.region,
+            address: course.address,
+            phone: course.phone,
+            clubhouse: course.clubhouse,
+            holesCount: course.holesCount,
+            courseType: course.courseType,
+            kakaoPlaceUrl: course.kakaoPlaceUrl,
+            subCourses: newSubCourses,
+            holes: course.holes,   // 기존 홀 좌표 데이터 보존
+            dataQuality: .verified,
+            sources: course.sources,
+            aliases: course.aliases
+        )
     }
 
     /// Bearer 토큰 로딩.
@@ -458,11 +573,50 @@ public enum CourseRepositoryError: Error, Sendable {
 
 // MARK: - Private DTO
 
-/// JSON 최상위 래퍼. 외부에는 [GolfCourse]만 노출.
+/// 번들 JSON 최상위 래퍼. loadAll() 전용 (full GolfCourse 디코드). 외부에는 [GolfCourse]만 노출.
 private struct CourseDatasetDTO: Codable {
     let version: String
     let totalCourses: Int
     let courses: [GolfCourse]
+}
+
+// MARK: - 원격 전용 관대한 DTO
+
+/// GET /v1/courses 응답용 minimal DTO.
+/// 실제 페이로드: { version?, updatedAt?, schema?, count?, courses:[{id, name}] }
+/// 필드 누락 시 디코드 실패 없도록 전부 Optional 처리.
+struct RemoteCoursesDTO: Codable {
+    let version: String?
+    let updatedAt: String?
+    let schema: Int?
+    let count: Int?
+    let courses: [RemoteCourseItem]
+
+    struct RemoteCourseItem: Codable {
+        let id: String
+        let name: String
+    }
+}
+
+/// GET /v1/course-pars 응답용 DTO.
+/// 실제 페이로드: { version?, updatedAt?, schema?, count?, coursePars:[{courseId, courseName, subCourses:[{name, pars:[Int]}]}] }
+struct RemoteCourseParsDTO: Codable {
+    let version: String?
+    let updatedAt: String?
+    let schema: Int?
+    let count: Int?
+    let coursePars: [CoursePar]
+
+    struct CoursePar: Codable {
+        let courseId: String
+        let courseName: String
+        let subCourses: [SubCoursePar]
+    }
+
+    struct SubCoursePar: Codable {
+        let name: String
+        let pars: [Int]
+    }
 }
 
 /// framework 번들 탐색용 토큰 클래스.

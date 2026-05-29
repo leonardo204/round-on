@@ -83,6 +83,7 @@
 		65AE8B58C627366B1E91226E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 722D42D03ACC92F83421B906 /* Assets.xcassets */; };
 		65F0162231D037DA2D11281C /* GeminiScorecardAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2C4EE1BF3C37DF8666EF9A /* GeminiScorecardAdapterTests.swift */; };
 		67D273B60F3712221B4FCC03 /* ScorecardMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91AFAD38C3053CD7C5748E9 /* ScorecardMapper.swift */; };
+		68257BD7B1F872EA1A1EDEF6 /* CourseRepositorySyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A7BE6451773914063666A3 /* CourseRepositorySyncTests.swift */; };
 		68B2C646268D174B6AF9790C /* RoundCourseLabelingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C804B88B54718B4E99D9DDD /* RoundCourseLabelingTests.swift */; };
 		69874D74B436F43650610B0F /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF006E866BFD030D2C951470 /* Round.swift */; };
 		6A7AD1A5DA72F274092E660F /* RoundOn-Watch-Complication.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6E8A9FACACC0659C43E2F97E /* RoundOn-Watch-Complication.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -409,6 +410,7 @@
 		8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserParOverride.swift; sourceTree = "<group>"; };
 		8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOptions.swift; sourceTree = "<group>"; };
 		8F1A81D0E2C996A70A7B6243 /* SeasonGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonGradient.swift; sourceTree = "<group>"; };
+		90A7BE6451773914063666A3 /* CourseRepositorySyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepositorySyncTests.swift; sourceTree = "<group>"; };
 		91F6ABA41B47BEB7F15EE68F /* RoundOnWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOnWatch.entitlements; sourceTree = "<group>"; };
 		924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreTests.swift; sourceTree = "<group>"; };
 		92721D7C200DC1BC4B5B5FFF /* WorkoutCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCoordinator.swift; sourceTree = "<group>"; };
@@ -474,7 +476,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_3622732F-3936-4D1A-B2F4-584A929D98DB" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -919,6 +921,7 @@
 				37A6A69883F3B79AE1144E1D /* CourseNameMatcherTests.swift */,
 				D29DE1880EE95068A319023D /* CourseRepositoryAdaptiveTests.swift */,
 				98595BAEB16BB3DA62B9907F /* CourseRepositoryNearestTests.swift */,
+				90A7BE6451773914063666A3 /* CourseRepositorySyncTests.swift */,
 				64E86F60C31B5986EC23E249 /* CourseRepositoryTests.swift */,
 				3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */,
 				0482CC3C18BC72640EF365A7 /* GeminiRegressionTests.swift */,
@@ -1027,10 +1030,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_F597DD57-E81B-4B73-B408-9F4EAFD8137B" /* golfCounter */ = {
+		"TEMP_F800B415-1CBE-4E36-B6F5-B93C77869E86" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */,
+				"TEMP_3622732F-3936-4D1A-B2F4-584A929D98DB" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1383,6 +1386,7 @@
 				92E07F63FCEA175C07EF6B12 /* CourseNameMatcherTests.swift in Sources */,
 				1D0682D67DADBC173CE8D4E5 /* CourseRepositoryAdaptiveTests.swift in Sources */,
 				C18EDB101F96D8BE7DFB2C8A /* CourseRepositoryNearestTests.swift in Sources */,
+				68257BD7B1F872EA1A1EDEF6 /* CourseRepositorySyncTests.swift in Sources */,
 				F841812ADA0B238A64456F98 /* CourseRepositoryTests.swift in Sources */,
 				0B23849AEA0720EE81DE5498 /* DiscoveredCourseTests.swift in Sources */,
 				9F2318FA00A3D50E7303948F /* GeminiRegressionTests.swift in Sources */,
@@ -1604,7 +1608,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_3622732F-3936-4D1A-B2F4-584A929D98DB" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1629,7 +1633,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_3622732F-3936-4D1A-B2F4-584A929D98DB" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1652,7 +1656,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_3622732F-3936-4D1A-B2F4-584A929D98DB" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "App-iOS/RoundOn.entitlements";
@@ -1675,7 +1679,7 @@
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_B102050C-35F6-4CE2-AB41-86F4F9687871" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_3622732F-3936-4D1A-B2F4-584A929D98DB" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
