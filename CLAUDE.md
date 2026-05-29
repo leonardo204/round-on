@@ -27,6 +27,7 @@
 - **F4 카운터**: par에서 시작 X — **0에서 시작, 샷마다 +1** (OB +2, 해저드 +1, OK +1)
 - **F3 GPS**: 골프장 + 서브코스 단위만 자동 감지 — **홀 단위 자동 감지는 미제공, 항상 수동 진행**
 - **DB**: 한국 골프장 DB v3 965곳 기준. 941곳 `low`. dataQuality 기반 분기 처리 필수
+- **DB 동기화**: 번들 979(다중소스 base) + 원격 골프존 216(보강 피드, 전체 아님). 원격=`/v1/courses`(id+name 메타)+`/v1/course-pars`(실 par). **번들 교체 금지 — id/이름 매칭 par 머지**. 관대한 전용 DTO 사용(full GolfCourse 디코드 금지). 상세: [Ref-docs/golf-db-pack/42-COURSE_DB_SYNC.md](Ref-docs/golf-db-pack/42-COURSE_DB_SYNC.md)
 - **개인정보**: 위치 외부 전송 금지. 동반자 별명 + 스코어만 viewer 공유. **사진 기능 폐기됨(2026-05-18)** — 사진 관련 코드/spec 모두 무효. Viewer 7일 후 KV 자동 삭제
 - **OSM ODbL**: 앱 내 설정 → 정보에 `© OpenStreetMap contributors, ODbL 1.0` 표기 필수
 - **xcodebuild destination**: iPhone 16 Pro는 OS 버전을 명시해야 모호성 회피 (메모리 참조)
