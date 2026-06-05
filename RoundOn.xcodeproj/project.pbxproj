@@ -476,7 +476,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_30A5AE1E-6E7A-4A12-97A5-0888884E8DED" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1030,10 +1030,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_193919CD-9241-465F-818C-4A5919957A3A" /* golfCounter */ = {
+		"TEMP_D4B32016-3419-44EC-8494-42DC25508CC6" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_30A5AE1E-6E7A-4A12-97A5-0888884E8DED" /* Secrets.xcconfig */,
+				"TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1608,7 +1608,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_30A5AE1E-6E7A-4A12-97A5-0888884E8DED" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1633,7 +1633,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_30A5AE1E-6E7A-4A12-97A5-0888884E8DED" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1651,13 +1651,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon;
 				ROUNDON_API_BEARER = "$(ROUNDON_API_BEARER)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_30A5AE1E-6E7A-4A12-97A5-0888884E8DED" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1675,13 +1675,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon;
 				ROUNDON_API_BEARER = "$(ROUNDON_API_BEARER)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_30A5AE1E-6E7A-4A12-97A5-0888884E8DED" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1792,7 +1792,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.watchkitapp.complication;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.watchkitapp.complications;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -1870,7 +1870,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.watchkitapp.complication;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.zerolive.golf.roundon.watchkitapp.complications;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;

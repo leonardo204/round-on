@@ -96,6 +96,7 @@ targets:
         ENABLE_PREVIEWS: YES
         GENERATE_INFOPLIST_FILE: NO
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"  # iPhone 전용 (iPad 멀티태스킹 orientation 요건 면제)
         # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
         # CI/CD 또는 Xcode Cloud 배포 시 시크릿 환경변수로 대체
         KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
@@ -117,7 +118,7 @@ targets:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.watchkitapp.complication
+        PRODUCT_BUNDLE_IDENTIFIER: kr.zerolive.golf.roundon.watchkitapp.complications
         CODE_SIGN_STYLE: Automatic
         SDKROOT: watchos
         INFOPLIST_FILE: App-Watch-Complication/Info.plist
