@@ -26,10 +26,8 @@
 	<string>$(ROUNDON_API_BEARER)</string>
 	<key>GEMINI_API_KEY</key>
 	<string>$(GEMINI_API_KEY)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>라운드 사진을 첨부하여 공유 viewer에 포함할 수 있습니다.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>공유 viewer 사진을 사진 앱에 저장할 수 있습니다.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>골프 라운드 운동 기록을 건강 앱에 저장합니다.</string>
 	<key>NSHealthUpdateUsageDescription</key>

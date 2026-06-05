@@ -88,9 +88,8 @@ public struct PinInputField: View {
 
 #if DEBUG
 #Preview {
-    @Previewable @State var pin = "12"
     VStack(spacing: 20) {
-        PinInputField(pin: $pin, isError: false)
+        PinInputField(pin: .constant("12"), isError: false)
         PinInputField(pin: .constant("1234"), isError: false)
         PinInputField(pin: .constant("12"), isError: true)
     }

@@ -89,8 +89,20 @@ struct SettingsView: View {
                 Text("스코어카드 자동 인식 무료 횟수 관리 및 개인정보 전송 동의 설정")
             }
 
-            Section("정보") {
+            Section {
                 LabeledContent("앱 버전", value: appVersionText)
+                Link(destination: URL(string: "https://www.openstreetmap.org/copyright")!) {
+                    HStack {
+                        Text("지도 데이터 출처")
+                        Spacer()
+                        Image(systemName: "arrow.up.right.square")
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
+            } header: {
+                Text("정보")
+            } footer: {
+                Text("© OpenStreetMap contributors, ODbL 1.0")
             }
 
             #if DEBUG

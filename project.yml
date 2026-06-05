@@ -1,7 +1,7 @@
 name: RoundOn
 options:
   deploymentTarget:
-    iOS: "18.0"
+    iOS: "17.0"
     watchOS: "10.0"
   bundleIdPrefix: kr.zerolive.golf
   createIntermediateGroups: true
@@ -19,7 +19,7 @@ targets:
   Shared:
     type: framework
     platform: iOS
-    deploymentTarget: "18.0"
+    deploymentTarget: "17.0"
     sources:
       - path: Shared
         excludes:
@@ -72,7 +72,7 @@ targets:
   RoundOn:
     type: application
     platform: iOS
-    deploymentTarget: "18.0"
+    deploymentTarget: "17.0"
     sources:
       - path: App-iOS
     resources:
@@ -95,6 +95,7 @@ targets:
         INFOPLIST_FILE: App-iOS/Info.plist
         ENABLE_PREVIEWS: YES
         GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         # 카카오 REST API 키 — Secrets.xcconfig에서 주입 (로컬 전용)
         # CI/CD 또는 Xcode Cloud 배포 시 시크릿 환경변수로 대체
         KAKAO_REST_API_KEY: $(KAKAO_REST_API_KEY)
@@ -111,6 +112,7 @@ targets:
       path: App-Watch-Complication/Info.plist
       properties:
         CFBundleDisplayName: RoundOn Complication
+        ITSAppUsesNonExemptEncryption: false
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -155,11 +157,12 @@ targets:
         WKWatchOnly: false
         WKCompanionAppBundleIdentifier: kr.zerolive.golf.roundon
         WKApplication: true
+        ITSAppUsesNonExemptEncryption: false
 
   SharedTests:
     type: bundle.unit-test
     platform: iOS
-    deploymentTarget: "18.0"
+    deploymentTarget: "17.0"
     sources:
       - path: Tests/SharedTests
       # KakaoVerificationService / CourseDiscoveryService 직접 테스트를 위해 소스 포함
