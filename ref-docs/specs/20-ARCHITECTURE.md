@@ -254,7 +254,7 @@ App-iOS ◄──/──► App-Watch  (직접 의존 없음 — WatchConnectivi
 
 | # | 근거 | 출처 |
 |---|------|------|
-| 1 | `courses.json` 약 727KB — 앱 시작 시 1회 디코딩 후 메모리 배열로 충분, 쿼리 성능 문제 없음 (한국 골프장 DB v3 965곳) | Ref-docs/golf-db-pack/ |
+| 1 | `courses.json` 약 727KB — 앱 시작 시 1회 디코딩 후 메모리 배열로 충분, 쿼리 성능 문제 없음 (한국 골프장 DB v3 965곳) | ref-docs/golf-db-pack/ |
 | 2 | 골프장 데이터는 앱 업데이트로만 갱신 — 사용자 생성/수정 데이터 없음, SwiftData 쓰기 불필요 | golf-db-pack/README.md |
 | 3 | 01-SPEC.md:112 "CloudKit으로 라운드 기록 자동 동기화" — CloudKit 동기화 대상은 사용자 라운드 기록만, Course는 sync 대상 아님 | 01-SPEC.md:112 |
 | 4 | Haversine 반경 3km 매칭(F1)은 965개 × O(1) 거리 계산으로 단일 호출당 1ms 미만 — 메모리 배열 선형 탐색 충분 | 01-SPEC.md:58-61 |

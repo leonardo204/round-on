@@ -32,13 +32,13 @@
 **범위 외**
 
 - 실제 SwiftUI 구현 코드 — 구현 단계 (01-SPEC.md §10.2 Step 5 이후)
-- 화면 시각 목업 자체 — Stitch 시안 (`Ref-docs/design-stitch/`) 원본 참조
+- 화면 시각 목업 자체 — Stitch 시안 (`ref-docs/design-stitch/`) 원본 참조
 - 컴포넌트 props / 상태 / 변형 정의 — `11-COMPONENTS.md`
 - VoiceOver 레이블 상세 — `14-ACCESSIBILITY.md` (작성 예정)
 
 ### Stitch 시안 개요
 
-Google Stitch가 생성한 22화면 시안은 `Ref-docs/design-stitch/screens/` 아래 세 디렉토리에 분류된다.
+Google Stitch가 생성한 22화면 시안은 `ref-docs/design-stitch/screens/` 아래 세 디렉토리에 분류된다.
 
 | 디렉토리 | 화면 수 | 플랫폼 | 공유 DESIGN.md |
 |----------|--------|--------|---------------|
@@ -409,7 +409,7 @@ Watch 화면 전체는 Winter 팔레트(다크 디폴트)를 기반으로 렌더
 | `30-API_SPEC.md` | Cloudflare Worker API 엔드포인트 — iphone-2.7 공유 생성/web-4.5 오류 코드 매핑 |
 | `31-VIEWER_HTML.md` | Viewer HTML 마크업 / DOM 컴포넌트 — web-4.1~4.5 구현 계약 |
 | `33-SECURITY.md` | PIN 검증 엔드포인트 `POST /{shortId}/verify-pin` — web-4.2 PIN 잠금 화면과 정합 |
-| **Stitch 시안 (`Ref-docs/design-stitch/`)** | 시각 목업 PNG + DESIGN.md (브랜드/스타일 텍스트) — 본 문서가 참조하는 입력 원천 |
+| **Stitch 시안 (`ref-docs/design-stitch/`)** | 시각 목업 PNG + DESIGN.md (브랜드/스타일 텍스트) — 본 문서가 참조하는 입력 원천 |
 | **구현 단계** | 실제 SwiftUI 코드, 색상/폰트 토큰 적용, Stitch HTML CSS 변수 교체 스크립트 |
 | `14-ACCESSIBILITY.md` (작성 예정) | VoiceOver 레이블, Dynamic Type — 화면별 접근성 상세 |
 

@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Haversine 거리 계산
-// F3 GPS 자동 감지 — 골프장 단위 매칭에 사용 (Ref-docs/specs/01-SPEC.md §F3)
+// F3 GPS 자동 감지 — 골프장 단위 매칭에 사용 (ref-docs/specs/01-SPEC.md §F3)
 // haversine 공식: 구면삼각법 기반 위도/경도 → km 거리
 
 /// 두 좌표 간 haversine 거리(km)를 반환하는 순수 함수.

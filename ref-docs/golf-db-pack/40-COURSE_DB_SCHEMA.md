@@ -508,7 +508,7 @@ v3 이후 별도 필터로 노출 검토 가능.
 - `GolfCourse.searchableKeys()` → `CourseNameMatcher.matches(course:query:)` 연계
 
 ### 생성 방법
-- 스크립트: `Ref-docs/golf-db-pack/build_aliases.py` (idempotent)
+- 스크립트: `ref-docs/golf-db-pack/build_aliases.py` (idempotent)
 - 한글 토큰 → 영문 사전 (도메인 특화) + 한글 자모 RR 음차 결합
 
 ### 마이그레이션

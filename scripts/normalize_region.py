@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-DB_DIR = ROOT / "Ref-docs" / "golf-db-pack"
+DB_DIR = ROOT / "ref-docs" / "golf-db-pack"
 INPUT_PATH = DB_DIR / "courses_seed_v3.json"
 OUTPUT_PATH = DB_DIR / "courses_seed_v3.json"
 REPORT_PATH = DB_DIR / "courses_seed_v3_region_report.json"

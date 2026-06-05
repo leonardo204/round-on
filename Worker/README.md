@@ -138,7 +138,7 @@ bash scripts/smoke-test.sh
 
 ## 참조 문서
 
-- `Ref-docs/specs/30-API_SPEC.md` — HTTP 엔드포인트 명세
-- `Ref-docs/specs/31-VIEWER_HTML.md` — viewer HTML 구조
-- `Ref-docs/specs/32-CLOUDFLARE_SETUP.md` — 인프라 셋업 상세
-- `Ref-docs/specs/33-SECURITY.md` — 보안 정책
+- `ref-docs/specs/30-API_SPEC.md` — HTTP 엔드포인트 명세
+- `ref-docs/specs/31-VIEWER_HTML.md` — viewer HTML 구조
+- `ref-docs/specs/32-CLOUDFLARE_SETUP.md` — 인프라 셋업 상세
+- `ref-docs/specs/33-SECURITY.md` — 보안 정책

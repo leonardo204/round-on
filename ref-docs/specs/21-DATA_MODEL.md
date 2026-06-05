@@ -197,7 +197,7 @@ struct SubCourse: Codable {
 
 ### 번들 JSON 방식
 
-`Ref-docs/golf-db-pack/` 에 정의된 번들 JSON (`courses.json`) 은 한국 골프장 DB v3 (965곳, 2026-05-12 빌드) 데이터를 앱 번들에 포함하는 방식이다. 스키마 상세는 [40-COURSE_DB_SCHEMA.md](../golf-db-pack/40-COURSE_DB_SCHEMA.md) 참조. 데이터 소스는 OpenStreetMap (ODbL 1.0) + 공공데이터 + 카카오 enrichment이며, 앱 내 설정 → 정보에 라이선스 표기 필수 (CLAUDE.md §PROJECT).
+`ref-docs/golf-db-pack/` 에 정의된 번들 JSON (`courses.json`) 은 한국 골프장 DB v3 (965곳, 2026-05-12 빌드) 데이터를 앱 번들에 포함하는 방식이다. 스키마 상세는 [40-COURSE_DB_SCHEMA.md](../golf-db-pack/40-COURSE_DB_SCHEMA.md) 참조. 데이터 소스는 OpenStreetMap (ODbL 1.0) + 공공데이터 + 카카오 enrichment이며, 앱 내 설정 → 정보에 라이선스 표기 필수 (CLAUDE.md §PROJECT).
 
 - 965곳 중 941곳은 `dataQuality: low` (클럽하우스 좌표만 보유)
 - complete 3곳 (전체의 0.31%) / partial 12곳 / minimal 9곳

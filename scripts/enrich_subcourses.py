@@ -7,7 +7,7 @@
     1순위: manual_subcourses.json 수동 매핑 (정확도 최우선)
     2순위: 네이버 검색 '{골프장명} 코스' HTML 패턴 추출 (v2 기존 방식)
     3순위: 카카오 장소 HTML 시도 (네이버 실패 시 — SPA라 성공률 낮음)
-- 캐시: Ref-docs/golf-db-pack/.naver_html_cache/ (재실행 시 재크롤 없음)
+- 캐시: ref-docs/golf-db-pack/.naver_html_cache/ (재실행 시 재크롤 없음)
 - 출력: courses_seed_v3.json in-place 갱신 + 리포트 JSON
 - Rate limit: 0.4초 간격
 - 외부 라이브러리 금지 (urllib + re + json만)
@@ -25,7 +25,7 @@ from pathlib import Path
 
 # ── 경로 설정 ─────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent.parent
-DB_DIR = ROOT / "Ref-docs" / "golf-db-pack"
+DB_DIR = ROOT / "ref-docs" / "golf-db-pack"
 INPUT_PATH = DB_DIR / "courses_seed_v3.json"
 OUTPUT_PATH = DB_DIR / "courses_seed_v3.json"
 REPORT_PATH = DB_DIR / "courses_seed_v3_subcourse_report.json"

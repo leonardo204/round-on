@@ -391,9 +391,9 @@ SDK 단위 Privacy Manifest (서드파티 SDK 포함 목록)는 [SPEC-UNDEFINED]
 
 | 항목 | 내용 |
 |------|------|
-| 문서 식별 | `Ref-docs/specs/50-PRIVACY_POLICY.md` — 라운드온 개인정보 처리방침 정책 본문 |
+| 문서 식별 | `ref-docs/specs/50-PRIVACY_POLICY.md` — 라운드온 개인정보 처리방침 정책 본문 |
 | 법적 검토 | App Store 제출 전 변호사 검토 권장. 본 문서는 정책 방향 및 placeholder 제공이며 법적 효력의 보증이 아님 |
-| 변경 이력 | `git log Ref-docs/specs/50-PRIVACY_POLICY.md` 참조 |
+| 변경 이력 | `git log ref-docs/specs/50-PRIVACY_POLICY.md` 참조 |
 | 준거법 | `{관할법}` (예: 대한민국법) — 한국법 단일 가정. 영어권 출시 시 GDPR(유럽)/CCPA(미국 캘리포니아) 추가 검토 필요 (CLAUDE.md §PROJECT) |
 | 영어판 | 글로벌 출시 시 별도 작성. 앱 이름 "Round-On"의 영어권 부정 함의 해소 후 병행 작성 (CLAUDE.md §PROJECT) |
 | 관련 문서 | `33-SECURITY.md` (기술 보안), `53-PERMISSIONS.md` (iOS 권한), `21-DATA_MODEL.md` (데이터 모델), `30-API_SPEC.md` (API 명세) |

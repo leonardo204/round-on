@@ -34,7 +34,7 @@ def haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     return 2 * R * math.asin(math.sqrt(a))
 
 ROOT = Path(__file__).parent.parent
-DB_DIR = ROOT / "Ref-docs" / "golf-db-pack"
+DB_DIR = ROOT / "ref-docs" / "golf-db-pack"
 INPUT_PATH = DB_DIR / "courses_seed_v2.json"
 OUTPUT_PATH = DB_DIR / "courses_seed_v3.json"
 REPORT_PATH = DB_DIR / "courses_seed_v3_report.json"

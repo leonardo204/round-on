@@ -4,7 +4,7 @@ import CoreLocation
 import Shared
 
 // MARK: - HomeView
-// iphone-2.1: 홈. 시안 = Ref-docs/design-mockup/2026-05-16_home_redesign.html
+// iphone-2.1: 홈. 시안 = ref-docs/design-mockup/2026-05-16_home_redesign.html
 // 구성: Hero CTA 카드 + 이번 달 메트릭 2개 + 최근 라운드 insetGrouped 리스트
 // Apple HIG 2024-2026 + 시스템 적응형 (라이트/다크 자동)
 // 02-USER_FLOWS F-A

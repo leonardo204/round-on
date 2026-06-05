@@ -98,7 +98,7 @@ golfCounter/
 ├── Tests/             — XCTest 단위·통합 테스트
 ├── Worker/            — Cloudflare Worker 백엔드 (TypeScript)
 ├── scripts/           — 한국 골프장 DB 빌드 파이프라인 (Python)
-├── Ref-docs/          — 명세·디자인·정책 문서 (모든 설계 결정의 근거)
+├── ref-docs/          — 명세·디자인·정책 문서 (모든 설계 결정의 근거)
 │   ├── specs/         — 기능명세 + 설계 문서 18종
 │   ├── golf-db-pack/  — 골프장 DB 스키마·파이프라인
 │   ├── design-stitch/ — UI 시안 PNG + HTML (Stitch 생성)
@@ -113,13 +113,13 @@ golfCounter/
 
 | 문서 | 설명 |
 |------|------|
-| [Ref-docs/README.md](Ref-docs/README.md) | 모든 명세·설계 문서 인덱스 |
-| [Ref-docs/specs/01-SPEC.md](Ref-docs/specs/01-SPEC.md) | 기능 명세서 v4 (F1~F14 전체) |
-| [Ref-docs/specs/00-OVERVIEW.md](Ref-docs/specs/00-OVERVIEW.md) | 제품 개요·가치 제안·Non-Goals |
-| [Ref-docs/specs/20-ARCHITECTURE.md](Ref-docs/specs/20-ARCHITECTURE.md) | 전체 아키텍처·모듈 구조 |
-| [Ref-docs/specs/21-DATA_MODEL.md](Ref-docs/specs/21-DATA_MODEL.md) | SwiftData 모델 스키마 |
-| [Ref-docs/specs/30-API_SPEC.md](Ref-docs/specs/30-API_SPEC.md) | Cloudflare Worker API 7개 엔드포인트 |
-| [Ref-docs/golf-db-pack/README.md](Ref-docs/golf-db-pack/README.md) | 한국 골프장 DB v3 패키지 |
+| [ref-docs/README.md](ref-docs/README.md) | 모든 명세·설계 문서 인덱스 |
+| [ref-docs/specs/01-SPEC.md](ref-docs/specs/01-SPEC.md) | 기능 명세서 v4 (F1~F14 전체) |
+| [ref-docs/specs/00-OVERVIEW.md](ref-docs/specs/00-OVERVIEW.md) | 제품 개요·가치 제안·Non-Goals |
+| [ref-docs/specs/20-ARCHITECTURE.md](ref-docs/specs/20-ARCHITECTURE.md) | 전체 아키텍처·모듈 구조 |
+| [ref-docs/specs/21-DATA_MODEL.md](ref-docs/specs/21-DATA_MODEL.md) | SwiftData 모델 스키마 |
+| [ref-docs/specs/30-API_SPEC.md](ref-docs/specs/30-API_SPEC.md) | Cloudflare Worker API 7개 엔드포인트 |
+| [ref-docs/golf-db-pack/README.md](ref-docs/golf-db-pack/README.md) | 한국 골프장 DB v3 패키지 |
 | [Worker/README.md](Worker/README.md) | Worker 배포 가이드 |
 
 ---

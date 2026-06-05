@@ -5,7 +5,7 @@
 - EPSG:5174 (TM 중부원점) → WGS84 좌표 변환 (pyproj)
 - 1차: 정규화 이름 매칭
 - 2차: 좌표 기반 매칭 (1.2km 이내) — 이름 표기 차이로 누락된 중복 제거
-- 출력: Ref-docs/golf-db-pack/courses_seed_v2.json (새 시나리오)
+- 출력: ref-docs/golf-db-pack/courses_seed_v2.json (새 시나리오)
 """
 from __future__ import annotations
 import csv
@@ -18,8 +18,8 @@ from typing import Optional
 from pyproj import Transformer
 
 ROOT = Path(__file__).parent.parent
-DATA_DIR = ROOT / "Ref-docs" / "data"
-DB_DIR = ROOT / "Ref-docs" / "golf-db-pack"
+DATA_DIR = ROOT / "ref-docs" / "data"
+DB_DIR = ROOT / "ref-docs" / "golf-db-pack"
 OUT_PATH = DB_DIR / "courses_seed_v2.json"
 REPORT_PATH = DB_DIR / "courses_seed_v2_report.json"
 

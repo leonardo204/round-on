@@ -3,9 +3,9 @@
 
 입력: Shared/Resources/courses.json
 출력:
-  - Ref-docs/golf-db-pack/aliases_v1.json (id → [alias...] 매핑)
+  - ref-docs/golf-db-pack/aliases_v1.json (id → [alias...] 매핑)
   - Shared/Resources/courses.json (aliases 필드 머지, in-place)
-  - Ref-docs/golf-db-pack/courses.json (동일하게 머지)
+  - ref-docs/golf-db-pack/courses.json (동일하게 머지)
 
 전략:
   1. 한글 토큰 → 영문 사전 (도메인 특화, 골프장명 빈도 분석 기반)
@@ -571,8 +571,8 @@ def build_aliases(name: str) -> list[str]:
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SHARED_COURSES = PROJECT_ROOT / "Shared" / "Resources" / "courses.json"
-DBPACK_COURSES = PROJECT_ROOT / "Ref-docs" / "golf-db-pack" / "courses.json"
-ALIASES_OUTPUT = PROJECT_ROOT / "Ref-docs" / "golf-db-pack" / "aliases_v1.json"
+DBPACK_COURSES = PROJECT_ROOT / "ref-docs" / "golf-db-pack" / "courses.json"
+ALIASES_OUTPUT = PROJECT_ROOT / "ref-docs" / "golf-db-pack" / "aliases_v1.json"
 
 
 def main():

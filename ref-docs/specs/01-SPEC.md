@@ -224,8 +224,8 @@ viewer 페이로드에 포함 **금지** 필드:
 | 공유 시트 | iOS `StatsShareSheetView.swift` |
 | Worker 생성 | `Worker/src/handlers/createStatsShare.ts` |
 | Worker viewer | `Worker/src/handlers/getStatsViewer.ts` + `views/statsViewer.ts` |
-| Worker API 명세 | `Ref-docs/specs/30-API_SPEC.md §TC-1~TC-7` |
-| viewer HTML 명세 | `Ref-docs/specs/31-VIEWER_HTML.md §10` |
+| Worker API 명세 | `ref-docs/specs/30-API_SPEC.md §TC-1~TC-7` |
+| viewer HTML 명세 | `ref-docs/specs/31-VIEWER_HTML.md §10` |
 
 ### F10. Viewer 모바일 최적화 + 사진앱 저장 ⭐ (v4 신규)
 

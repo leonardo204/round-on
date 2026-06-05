@@ -32,8 +32,8 @@
    - **Web 프로젝트** → Viewer 5화면
 3. Export: **"AI Studio" 옵션 선택** → HTML + 이미지 파일이 자동 다운로드됨
 4. 다운로드된 산출물을 본 폴더에 저장:
-   - PNG 이미지 → `Ref-docs/design-stitch/screens/`
-   - HTML 파일 → `Ref-docs/design-stitch/html/`
+   - PNG 이미지 → `ref-docs/design-stitch/screens/`
+   - HTML 파일 → `ref-docs/design-stitch/html/`
 5. 완료 후 Claude Code에게 "12-SCREENS.md 작성해줘" 요청 — PNG + HTML + specs/ 조합으로 자동 처리
 
 > **도구 정책 (디자이너 없는 1인 개발 환경)**
@@ -903,8 +903,8 @@ viewer-4.1-main.html
 ## 7. 작업 완료 후 Claude Code 인계 체크리스트
 
 **필수**:
-- [ ] 모든 화면 PNG 저장 (`Ref-docs/design-stitch/screens/`)
-- [ ] AI Studio export HTML 저장 (`Ref-docs/design-stitch/html/`)
+- [ ] 모든 화면 PNG 저장 (`ref-docs/design-stitch/screens/`)
+- [ ] AI Studio export HTML 저장 (`ref-docs/design-stitch/html/`)
 - [ ] 파일명 규약 준수 (`{카테고리}-{화면번호}-{이름}.{png,html}`)
 
 **선택**:
@@ -922,7 +922,7 @@ viewer-4.1-main.html
 ## 8. 작업 산출물 보관 디렉토리 구조 (권장)
 
 ```
-Ref-docs/design-stitch/
+ref-docs/design-stitch/
 ├── stitch-prompt.md        # 본 파일 (Stitch 프롬프트 모음)
 ├── screens/                # Stitch AI Studio export PNG
 │   ├── design-system-1.png

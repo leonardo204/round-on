@@ -57,7 +57,7 @@ lng, lat = transformer.transform(x, y)
 - OSM에만 있는 골프장 + 공공데이터에만 있는 골프장 모두 유지 (union)
 
 ### Step 4: 카카오맵 API 보강
-- API 키: `Ref-docs/data/../.api-keys.local` (gitignore됨)
+- API 키: `ref-docs/data/../.api-keys.local` (gitignore됨)
 - 빈 도로명주소 채우기
 - 골프장 홈페이지 URL 검색 (선택)
 

@@ -4,7 +4,7 @@
 - 입력: courses_seed_v3.json (965곳)
 - 대상: holesCount가 None이고 clubhouse 좌표가 있는 코스
 - 방법: 네이버 검색 '{골프장명} 홀' HTML에서 홀 수 정규식 추출
-- 캐시: Ref-docs/golf-db-pack/.naver_holes_cache/ (재실행 무비용)
+- 캐시: ref-docs/golf-db-pack/.naver_holes_cache/ (재실행 무비용)
 - 출력: courses_seed_v3.json in-place 갱신 + 리포트 JSON
 - Rate limit: 0.4초/요청 (캐시 미스 시만)
 - 외부 라이브러리 금지 (urllib + re + json만)
@@ -20,7 +20,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-DB_DIR = ROOT / "Ref-docs" / "golf-db-pack"
+DB_DIR = ROOT / "ref-docs" / "golf-db-pack"
 INPUT_PATH = DB_DIR / "courses_seed_v3.json"
 OUTPUT_PATH = DB_DIR / "courses_seed_v3.json"
 REPORT_PATH = DB_DIR / "courses_seed_v3_holes_report.json"
