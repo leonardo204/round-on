@@ -87,7 +87,12 @@ struct ContentView: View {
             // Splash 자동 dismiss (cold start 1.5초)
             await dismissSplashAfterDelay()
 
-            // F1: 위치 권한 부트스트랩 (splash dismiss 이후에 alert 표시되도록)
+            // ⚠️ 권한 alert 경합 방지: ATT 프롬프트(요청+응답)가 끝난 뒤에 위치 권한을 요청한다.
+            //    (ATT 호출 중 위치 alert이 뜨면 앱이 inactive가 되어 ATT가 무시됨 — App Store 리젝 원인)
+            AppLogger.app.info("위치 부트스트랩 대기 — ATT 플로우 완료 신호 대기 중")
+            await TrackingCoordinator.shared.waitUntilCompleted()
+
+            // F1: 위치 권한 부트스트랩 (ATT 응답 완료 이후에 alert 표시)
             await bootstrapLocationPermission()
         }
         .alert("위치 권한이 필요해요", isPresented: $showLocationDeniedAlert) {
@@ -161,6 +166,7 @@ struct ContentView: View {
     /// - .denied/.restricted → 설정 이동 안내 alert
     private func bootstrapLocationPermission() async {
         let status = LocationService.shared.authorizationStatus
+        AppLogger.location.info("위치 권한 부트스트랩 진입 (ATT 완료 후) — 현재 상태 \(status.rawValue)")
         switch status {
         case .notDetermined:
             _ = await LocationService.shared.requestAuthorization()

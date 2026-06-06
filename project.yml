@@ -114,6 +114,8 @@ targets:
       properties:
         CFBundleDisplayName: RoundOn Complication
         ITSAppUsesNonExemptEncryption: false
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "2"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -159,6 +161,8 @@ targets:
         WKCompanionAppBundleIdentifier: kr.zerolive.golf.roundon
         WKApplication: true
         ITSAppUsesNonExemptEncryption: false
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "2"
 
   SharedTests:
     type: bundle.unit-test

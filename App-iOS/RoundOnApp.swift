@@ -8,12 +8,13 @@ import AppTrackingTransparency
 struct RoundOnApp: App {
     let modelContainer: ModelContainer
 
+    /// scene이 .active가 된 시점에 ATT 플로우를 1회만 트리거하기 위한 환경/상태.
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var didStartTrackingFlow = false
+
     init() {
-        // AdMob SDK 초기화 (앱 시작 즉시, 광고 요청 전 필수)
-        GADMobileAds.sharedInstance().start { status in
-            let count = status.adapterStatusesByClassName.count
-            AppLogger.app.info("AdMob SDK 초기화 완료: \(count)개 어댑터")
-        }
+        // ⚠️ AdMob SDK 초기화는 ATT 동의 응답 이후로 이동 (startTrackingThenAds).
+        //    정책상 IDFA 기반 SDK는 ATT 응답 후 초기화가 옳다 (App Store Guideline 2.1).
 
         // CloudKit 초기화 실패 시 로컬 전용으로 fallback — fatal 없이 앱 계속 실행
         if let container = Self.makeModelContainerWithFallback() {
@@ -98,16 +99,40 @@ struct RoundOnApp: App {
                     Task {
                         await CourseRepository.shared.fetchRemoteIfStale(context: context)
                     }
-                    // ATT 권한 요청 — 앱 시작 후 2초 딜레이로 UI 안정화 후 표시
-                    Task {
-                        try? await Task.sleep(nanoseconds: 2_000_000_000)
-                        await requestTrackingPermission()
+                }
+                // ATT는 scene이 .active가 된 시점에만 트리거 (1회).
+                // requestTrackingAuthorization()은 앱이 .active일 때만 프롬프트를 띄우므로,
+                // onAppear+sleep 대신 .active 시점을 명시적으로 잡아 프롬프트 표시를 보장한다.
+                .onChange(of: scenePhase) { _, newPhase in
+                    if newPhase == .active && !didStartTrackingFlow {
+                        didStartTrackingFlow = true
+                        Task { await startTrackingThenAds() }
                     }
                 }
         }
     }
 
-    // MARK: - ATT (App Tracking Transparency)
+    // MARK: - ATT (App Tracking Transparency) → AdMob 초기화 순서 보장
+
+    /// scene .active 진입 직후 실행되는 권한/광고 부트스트랩.
+    /// 순서: ① ATT 요청(응답 대기) → ② AdMob 초기화 → ③ ContentView에 ATT 완료 통지(위치 부트스트랩 해제).
+    @MainActor
+    private func startTrackingThenAds() async {
+        // active 직후 UI 안정화를 위한 짧은 한 번의 지연 (긴 sleep 금지).
+        try? await Task.sleep(nanoseconds: 400_000_000)
+
+        // ① ATT 요청 — scene이 .active이므로 .notDetermined면 프롬프트가 확실히 뜬다.
+        await requestTrackingPermission()
+
+        // ② AdMob SDK 초기화 — ATT 응답(허용/거부 무관) 이후에 시작.
+        GADMobileAds.sharedInstance().start { status in
+            let count = status.adapterStatusesByClassName.count
+            AppLogger.app.info("AdMob SDK 초기화 완료: \(count)개 어댑터 (ATT 응답 후)")
+        }
+
+        // ③ ATT 플로우 완료 통지 → ContentView의 위치 권한 부트스트랩 해제.
+        TrackingCoordinator.shared.markCompleted()
+    }
 
     /// ATT 추적 권한 요청 (1회만 표시, 이후 저장된 상태 반환)
     /// - 허용: 맞춤 광고 → eCPM 높음
@@ -116,10 +141,11 @@ struct RoundOnApp: App {
     private func requestTrackingPermission() async {
         let status = ATTrackingManager.trackingAuthorizationStatus
         guard status == .notDetermined else {
-            AppLogger.app.info("ATT 이미 결정됨: \(status.rawValue)")
+            AppLogger.app.info("ATT 이미 결정됨: \(status.rawValue) — 프롬프트 생략")
             return
         }
 
+        AppLogger.app.info("ATT 요청 진입 — scene active, 프롬프트 표시 시도")
         let newStatus = await ATTrackingManager.requestTrackingAuthorization()
         switch newStatus {
         case .authorized:

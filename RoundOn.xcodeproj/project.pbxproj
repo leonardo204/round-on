@@ -193,6 +193,7 @@
 		EA02C81C17579EF983A31710 /* ScoreGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7BB1C73200AB7320CD80CB9 /* ScoreGridView.swift */; };
 		ED24CBA1600829A84BDD1A8F /* GeminiScorecard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA24B6546FA280F41261D4F /* GeminiScorecard.swift */; };
 		ED3E915A5EADB53757163C68 /* ScorecardValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E02EDB8E7A58505E489CDE /* ScorecardValidator.swift */; };
+		F1ACC21451403317ED651735 /* TrackingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD4154648066932CB842FE0 /* TrackingCoordinator.swift */; };
 		F3B031F38ED20E9AB6BB3238 /* CourseDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */; };
 		F610C5FD790A8DD07B15CC83 /* WCBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB288B76FE366FF249081E /* WCBroker.swift */; };
 		F6BC069E673C88B3FF76DD07 /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F8C7C724E980752FC0A307 /* ShareViewModel.swift */; };
@@ -397,6 +398,7 @@
 		7B0F00E9706332B03145C9C3 /* RoundDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundDetailView.swift; sourceTree = "<group>"; };
 		7D01C4795589B09DD45D75E5 /* WCRoundBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCRoundBridge.swift; sourceTree = "<group>"; };
 		7F67EA48905AC8FF6B3FA38C /* RegionCentroidLUT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCentroidLUT.swift; sourceTree = "<group>"; };
+		7FD4154648066932CB842FE0 /* TrackingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingCoordinator.swift; sourceTree = "<group>"; };
 		8252CDB85171329812400D1D /* PlayerChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerChip.swift; sourceTree = "<group>"; };
 		83E925BE2A09BE9EA90130C5 /* RoundOnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundOnApp.swift; sourceTree = "<group>"; };
 		844A27C4539D76B7F1CF3892 /* SeasonalColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalColorTests.swift; sourceTree = "<group>"; };
@@ -476,7 +478,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1005,6 +1007,7 @@
 			children = (
 				CA60C22B751C52BD75E93D41 /* AdConfig.swift */,
 				0F2042AFC000627C05A1975E /* RewardedAdManager.swift */,
+				7FD4154648066932CB842FE0 /* TrackingCoordinator.swift */,
 			);
 			path = Ad;
 			sourceTree = "<group>";
@@ -1030,10 +1033,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_D4B32016-3419-44EC-8494-42DC25508CC6" /* golfCounter */ = {
+		"TEMP_531E0429-C05E-48C4-9474-6C6563C7A154" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */,
+				"TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1484,6 +1487,7 @@
 				18ED785506873BF79A781246 /* StatsShareSheetView.swift in Sources */,
 				C00B779C2661E4CD6E5C5738 /* StatsSignatureCardView.swift in Sources */,
 				3155AC7946E9D0C471CA9690 /* StatsView.swift in Sources */,
+				F1ACC21451403317ED651735 /* TrackingCoordinator.swift in Sources */,
 				CD08C3D8464080E761344FC9 /* WCBroker.swift in Sources */,
 				88947674CEB250FB0EC25C87 /* WCRoundBridge.swift in Sources */,
 				E38FA528C02032009D2E5477 /* WorkoutCoordinator.swift in Sources */,
@@ -1608,7 +1612,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1633,7 +1637,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1657,7 +1661,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1681,7 +1685,7 @@
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_2B33CEA6-5F9F-4A5A-A111-567A473F31FC" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
