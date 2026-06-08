@@ -672,6 +672,30 @@ export function renderViewer(opts: ViewerRenderOptions): string {
   .legend-chip.double { position: relative; color: var(--score-double-cell); background: transparent; border: 1px solid var(--score-double-cell); border-radius: 4px; }
   .legend-chip.double::before { content: ""; position: absolute; inset: -4px; border: 1px solid var(--score-double-cell); border-radius: 6px; pointer-events: none; }
 
+  /* ---------- CTA ---------- */
+  .viewer-cta {
+    margin-top: 34px;
+    background: linear-gradient(135deg, var(--green-700), var(--green-600));
+    color: #fff;
+    border-radius: 16px;
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(28,107,67,0.20);
+  }
+  .viewer-cta .ttl { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+  .viewer-cta .sub { font-size: 12.5px; opacity: 0.88; margin-bottom: 14px; }
+  .viewer-cta .btn {
+    display: inline-block;
+    background: #fff;
+    color: var(--green-700);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 26px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+
   /* ---------- Footer ---------- */
   footer {
     text-align: center;
@@ -782,6 +806,12 @@ export function renderViewer(opts: ViewerRenderOptions): string {
     <div class="legend-item">
       <span class="legend-chip double">6</span>더블보기 이상 (≥ +2)
     </div>
+  </div>
+
+  <div class="viewer-cta reveal d5">
+    <div class="ttl">나도 골프 기록 시작하기</div>
+    <div class="sub">라운드온으로 스코어를 기록하고 친구들과 공유해 보세요</div>
+    <a href="https://apps.apple.com/us/app/roundon/id6776994717" target="_blank" rel="noopener" class="btn">앱 다운로드</a>
   </div>
 
   <footer class="reveal d5">

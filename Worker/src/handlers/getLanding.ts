@@ -70,7 +70,7 @@ section{padding:96px 24px}
 .device-card .dev-num{font-size:40px;font-weight:800;color:var(--dark);margin:8px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-1px;display:flex;align-items:baseline;gap:6px}
 .device-card .dev-diff{font-size:18px;font-weight:700;color:var(--green);letter-spacing:-.3px}
 .device-card.b .dev-diff{color:var(--green-accent)}
-.appstore-badge{display:inline-block;line-height:0;transition:transform .2s,opacity .2s;cursor:default;opacity:.85}
+.appstore-badge{display:inline-block;line-height:0;transition:transform .2s,opacity .2s;cursor:pointer;opacity:1}
 .appstore-badge:hover{transform:translateY(-1px);opacity:1}
 .appstore-badge svg{display:block;border-radius:9px;box-shadow:var(--shadow-lg)}
 .device-card .dev-sub{font-size:12px;color:var(--mid)}
@@ -124,6 +124,9 @@ section{padding:96px 24px}
 .cta a{display:inline-flex;align-items:center;gap:10px;padding:14px 30px;border-radius:14px;background:#fff;color:#3D6B2C;text-decoration:none;font-weight:700;font-size:15px;transition:transform .2s,box-shadow .2s}
 .cta a:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.18)}
 .cta-note{margin-top:14px;font-size:13px;color:rgba(255,255,255,.75)}
+.cta .appstore-badge{display:block;width:fit-content;margin:0 auto;background:none;padding:0}
+.cta .appstore-badge:hover{transform:translateY(-1px);box-shadow:none}
+.cta-download{font-size:15.5px;font-weight:600;color:#fff;margin-bottom:18px}
 
 /* Footer */
 footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-size:13px;border-top:1px solid var(--border)}
@@ -176,7 +179,7 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
       복잡한 계산 없이 손목에서 한 번 탭하면 됩니다.
       OB·해저드·OK까지 한 번에 정리되어, 18홀 후 정확한 타수가 카드 한 장으로 남습니다.
     </p>
-    <a href="#" class="appstore-badge" aria-label="App Store에서 다운로드 (곧 출시)">
+    <a href="https://apps.apple.com/us/app/roundon/id6776994717" target="_blank" rel="noopener" class="appstore-badge" aria-label="App Store에서 라운드온 다운로드">
       <svg width="160" height="48" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
         <rect width="160" height="48" rx="9" fill="#000"/>
         <path d="M27.9 24.6c0-3.1 2.5-4.6 2.7-4.7-1.5-2.1-3.7-2.4-4.5-2.5-1.9-.2-3.8 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.1 0-4.1 1.2-5.1 3.1-2.2 3.8-.6 9.4 1.5 12.5 1.1 1.5 2.3 3.2 4 3.1 1.6-.1 2.2-1 4.2-1s2.5 1 4.2 1c1.7 0 2.9-1.5 4-3 1.3-1.7 1.8-3.4 1.8-3.5-.1 0-3.5-1.3-3.5-5.3zm-3.1-9.7c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.5 2.5-1.3 4 1.4.1 2.9-.7 3.8-1.8z" fill="#fff"/>
@@ -184,7 +187,7 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
         <text x="49" y="36" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17" font-weight="600" fill="#fff" letter-spacing="-.3">App Store</text>
       </svg>
     </a>
-    <div class="hero-meta">곧 만나요</div>
+    <div class="hero-meta">무료 · iPhone과 Apple Watch</div>
 
     <div class="devices">
       <div class="device-card">
@@ -237,6 +240,18 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
         <h3>라운드 카드 공유</h3>
         <p>라운드가 끝나면 한 장의 카드가 됩니다.
         링크 하나로 동반자에게 공유, PIN으로 보호할 수도 있어요.</p>
+      </div>
+      <div class="feature">
+        <div class="ic">🤖</div>
+        <h3>스코어카드 사진으로 가져오기</h3>
+        <p>종이 스코어카드나 화면을 한 장 찍으면 AI가 코스·동반자·점수를 읽어 자동으로 채워줍니다.
+        직접 옮겨 적을 필요가 없어요.</p>
+      </div>
+      <div class="feature">
+        <div class="ic">🎁</div>
+        <h3>무료로 제공</h3>
+        <p>회원가입도 로그인도 없습니다. 광고를 통해 무료로 제공됩니다.
+        켜고, 탭하고, 공유하면 됩니다.</p>
       </div>
     </div>
   </div>
@@ -308,9 +323,9 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
     <div class="pillars-grid">
       <div class="pillar">
         <div class="ic">🔒</div>
-        <h4>위치는 외부로 전송하지 않습니다</h4>
-        <p>GPS 좌표는 기기 안에서 골프장 매칭에만 사용됩니다.
-        외부 서버로 보내지 않습니다.</p>
+        <h4>위치는 기기 안에서 처리합니다</h4>
+        <p>GPS는 골프장 자동 매칭에 기기 안에서 사용됩니다.
+        직접 골프장을 검색할 때만, 결과 정렬을 위해 카카오 지도에 좌표가 전달됩니다.</p>
       </div>
       <div class="pillar">
         <div class="ic">⏳</div>
@@ -330,9 +345,10 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
 
 <section id="cta" class="cta">
   <div class="container">
-    <h2 class="section-title">곧 만나요</h2>
-    <p class="section-sub mx-auto">App Store에서 만나뵐 준비를 하고 있습니다.</p>
-    <a href="#" class="appstore-badge appstore-badge-cta" aria-label="App Store에서 다운로드 (곧 출시)">
+    <h2 class="section-title">지금 시작하세요</h2>
+    <p class="section-sub mx-auto">iPhone과 Apple Watch에서 무료로 라운드를 기록하세요.</p>
+    <p class="cta-download">지금 App Store에서 무료로 다운로드하세요</p>
+    <a href="https://apps.apple.com/us/app/roundon/id6776994717" target="_blank" rel="noopener" class="appstore-badge appstore-badge-cta" aria-label="App Store에서 라운드온 다운로드">
       <svg width="180" height="54" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
         <rect width="160" height="48" rx="9" fill="#000"/>
         <path d="M27.9 24.6c0-3.1 2.5-4.6 2.7-4.7-1.5-2.1-3.7-2.4-4.5-2.5-1.9-.2-3.8 1.1-4.7 1.1-1 0-2.5-1.1-4.1-1.1-2.1 0-4.1 1.2-5.1 3.1-2.2 3.8-.6 9.4 1.5 12.5 1.1 1.5 2.3 3.2 4 3.1 1.6-.1 2.2-1 4.2-1s2.5 1 4.2 1c1.7 0 2.9-1.5 4-3 1.3-1.7 1.8-3.4 1.8-3.5-.1 0-3.5-1.3-3.5-5.3zm-3.1-9.7c.9-1.1 1.5-2.6 1.3-4.2-1.3.1-2.9.9-3.8 2-.8 1-1.5 2.5-1.3 4 1.4.1 2.9-.7 3.8-1.8z" fill="#fff"/>
@@ -340,7 +356,7 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
         <text x="49" y="36" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17" font-weight="600" fill="#fff" letter-spacing="-.3">App Store</text>
       </svg>
     </a>
-    <div class="cta-note">출시 알림은 추후 이 자리에서 안내드립니다</div>
+    <div class="cta-note">iPhone과 Apple Watch에서 이용할 수 있습니다</div>
   </div>
 </section>
 
@@ -359,6 +375,7 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
     <div class="footer-meta">
       © 2026 zerolive.co.kr<br>
       <a href="mailto:zerolive7@gmail.com">zerolive7@gmail.com</a><br>
+      <a href="/privacy">개인정보처리방침</a><br>
       <span style="font-size:11px;color:var(--light)">© OpenStreetMap contributors, ODbL 1.0</span>
     </div>
   </div>

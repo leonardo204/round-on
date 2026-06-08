@@ -715,7 +715,7 @@ ${payload.trend.sigmaText ? `<div style="font-size:10px;color:#94a39b;margin-top
   .viewer-cta { background:linear-gradient(135deg,var(--house),var(--accent));color:white;border-radius:var(--radius-lg);padding:18px 16px;text-align:center;box-shadow:0 6px 18px rgba(28,107,67,0.20); }
   .viewer-cta .ttl { font-size:15px;font-weight:800;margin-bottom:4px; }
   .viewer-cta .sub { font-size:12px;opacity:0.85;margin-bottom:12px; }
-  .viewer-cta .btn { display:inline-block;background:white;color:var(--house);font-size:13px;font-weight:800;padding:9px 24px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,0.12); }
+  .viewer-cta .btn { display:inline-block;background:white;color:var(--house);font-size:13px;font-weight:800;padding:9px 24px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,0.12);text-decoration:none; }
 
   /* 푸터 */
   footer { text-align:center;font-size:11px;color:var(--ink-faint);line-height:1.8;padding-bottom:8px; }
@@ -816,7 +816,7 @@ ${payload.trend.sigmaText ? `<div style="font-size:10px;color:#94a39b;margin-top
   <div class="viewer-cta">
     <div class="ttl">나도 골프 기록 시작하기</div>
     <div class="sub">라운드온으로 스코어를 기록하고 통계를 확인해 보세요</div>
-    <span class="btn">앱 다운로드</span>
+    <a href="https://apps.apple.com/us/app/roundon/id6776994717" target="_blank" rel="noopener" class="btn">앱 다운로드</a>
   </div>
 
   <!-- 푸터 -->

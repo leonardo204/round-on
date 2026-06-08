@@ -185,7 +185,8 @@ export async function route(
   }
 
   // ── /app-ads.txt — AdMob 퍼블리셔 검증 (catch-all /:shortId 보다 반드시 앞) ─
-  if (pathname === "/app-ads.txt" && method === "GET") {
+  // GET + HEAD 모두 처리 (일부 검증 크롤러가 HEAD 선요청 — Workers가 HEAD body 자동 제거)
+  if (pathname === "/app-ads.txt" && (method === "GET" || method === "HEAD")) {
     return handleGetAppAdsTxt();
   }
 
