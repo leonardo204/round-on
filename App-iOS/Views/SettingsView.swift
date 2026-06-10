@@ -4,6 +4,10 @@ import UIKit
 import SwiftData
 import Shared
 import PhotosUI
+import CloudKit
+import os.log
+
+private let settingsLogger = Logger(subsystem: "kr.zerolive.golf.roundon", category: "Settings")
 
 // MARK: - SettingsView
 // 설정 화면: 위치 권한 상태 + 앱 버전 정보 (확장 예정)
@@ -13,6 +17,13 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @State private var iCloudLoggedIn: Bool = false
+
+    // 수동 iCloud 동기화
+    @State private var iCloudAccountAvailable: Bool = false
+    @State private var isSyncing: Bool = false
+    @State private var syncResultMessage: String? = nil
+
+    private let cloudContainerID = "iCloud.kr.zerolive.golf.roundon"
 
     // 가져오기 진입
     @State private var showImportLanding = false
@@ -47,10 +58,12 @@ struct SettingsView: View {
 
             Section {
                 iCloudRow
+                iCloudAccountStatusRow
+                manualSyncRow
             } header: {
                 Text("iCloud 동기화")
             } footer: {
-                Text("iPhone 「설정 → 사용자 이름(맨 위)」에 Apple 계정으로 로그인되어 있어야 동기화됩니다. 로그인되면 라운드 기록이 같은 Apple 계정의 다른 iPhone/iPad에도 자동 동기화됩니다.\n\nCloudKit private DB 사용 — 개인 데이터는 본인의 iCloud 안에만 저장되며 외부로 전송되지 않습니다.")
+                Text("라운드 기록은 iCloud로 자동 동기화됩니다. 즉시 반영이 필요할 때 「지금 동기화」를 사용하세요. (실제 반영은 네트워크·iCloud 상태에 따라 다를 수 있습니다.)\n\nCloudKit private DB 사용 — 개인 데이터는 본인의 iCloud 안에만 저장되며 외부로 전송되지 않습니다.")
             }
 
             Section {
@@ -191,6 +204,113 @@ struct SettingsView: View {
         // FileManager.default.ubiquityIdentityToken은 iCloud 계정 로그인 여부의 가장 간단한 지표
         // iCloud Drive 활성화 여부까지 정확히 알려면 CloudKit accountStatus 사용
         iCloudLoggedIn = (FileManager.default.ubiquityIdentityToken != nil)
+        Task {
+            iCloudAccountAvailable = await checkAccountAvailable()
+        }
+    }
+
+    // MARK: - iCloud 계정 상태 row
+
+    private var iCloudAccountStatusRow: some View {
+        LabeledContent("계정 상태") {
+            Text(iCloudAccountAvailable ? "연결됨" : "연결 안 됨 / 로그인 필요")
+                .foregroundStyle(iCloudAccountAvailable ? Color.accentGreen : Color.secondary)
+        }
+    }
+
+    // MARK: - 수동 동기화 row
+
+    private var manualSyncRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "arrow.clockwise.icloud")
+                .font(.system(size: 17))
+                .foregroundStyle(isSyncing ? Color.accentGreen : Color.secondary)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("지금 동기화")
+                    .font(.body)
+                if let msg = syncResultMessage {
+                    Text(msg)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                } else if isSyncing {
+                    Text("동기화 중...")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("로컬 변경을 iCloud로 즉시 푸시 요청합니다.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Spacer()
+
+            if isSyncing {
+                ProgressView()
+                    .controlSize(.small)
+            } else {
+                Button("동기화") {
+                    Task { await triggerManualSync() }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .tint(.accentGreen)
+            }
+        }
+        .padding(.vertical, 4)
+        .disabled(isSyncing)
+    }
+
+    /// CloudKit 계정 상태가 .available 인지 async 확인.
+    private func checkAccountAvailable() async -> Bool {
+        let container = CKContainer(identifier: cloudContainerID)
+        do {
+            let status = try await container.accountStatus()
+            return status == .available
+        } catch {
+            settingsLogger.warning("[Settings] accountStatus 조회 실패: \(error.localizedDescription)")
+            return false
+        }
+    }
+
+    /// 「지금 동기화」 탭 핸들러.
+    /// 1) iCloud 계정 상태 확인 → 미로그인이면 안내 후 종료
+    /// 2) modelContext.save() 강제 호출 → CloudKit 푸시 유도
+    /// 3) 짧은 대기 후 정직한 완료 안내
+    @MainActor
+    private func triggerManualSync() async {
+        guard !isSyncing else { return }
+        settingsLogger.info("[Settings] 수동 iCloud 동기화 시작")
+        isSyncing = true
+        syncResultMessage = nil
+        defer { isSyncing = false }
+
+        // 1) 계정 상태 확인
+        let available = await checkAccountAvailable()
+        iCloudAccountAvailable = available
+        settingsLogger.info("[Settings] iCloud 계정 상태: \(available ? "available" : "unavailable")")
+        guard available else {
+            syncResultMessage = "iCloud에 로그인되어 있지 않습니다. iPhone 설정에서 로그인해 주세요."
+            settingsLogger.warning("[Settings] 동기화 중단 — iCloud 계정 미로그인")
+            return
+        }
+
+        // 2) 로컬 변경 강제 저장 → CloudKit 푸시 유도
+        do {
+            try modelContext.save()
+            settingsLogger.info("[Settings] modelContext.save() 성공 — CloudKit 푸시 요청됨")
+        } catch {
+            syncResultMessage = "로컬 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+            settingsLogger.error("[Settings] modelContext.save() 실패: \(error.localizedDescription)")
+            return
+        }
+
+        // 3) 짧은 대기 후 정직한 완료 안내
+        try? await Task.sleep(nanoseconds: 1_800_000_000)
+        syncResultMessage = "동기화를 요청했어요. iCloud 상태에 따라 잠시 후 반영됩니다."
+        settingsLogger.info("[Settings] 수동 iCloud 동기화 요청 완료")
     }
 
     // MARK: - Penalty stepper row

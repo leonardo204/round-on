@@ -24,8 +24,6 @@ struct AIAnalysisView: View {
         NavigationStack {
             List {
                 quotaSection
-                Divider()
-                    .listRowInsets(.init())
                 privacySection
             }
             .listStyle(.insetGrouped)

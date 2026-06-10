@@ -71,6 +71,20 @@ final class RewardedAdManager: NSObject, ObservableObject {
     private var isLoadingAd = false
     private var rewardCompletion: ((Bool) -> Void)?
 
+    // MARK: Silent Retry (지수 백오프)
+    //
+    // 신규 앱은 광고 fill이 간헐적이라, 로드 실패 시 사용자에게 알리지 않고
+    // 백그라운드에서 지수 백오프로 재시도하여 광고 확보 확률을 높인다.
+    //   1차 실패 → 4초, 2차 → 8초, 3차 → 16초, 4차+ → 30초(상한)
+    //   상한 도달 후에도 안 잡히면 60초 간격으로 조용히 재시도 유지.
+    // 성공(isAdReady=true) 시 카운터/타이머 리셋.
+    private var retryTask: Task<Void, Never>?
+    private var retryCount = 0
+    /// 백오프 상한(초) — 초기 재시도 구간의 최대 대기
+    private let maxBackoffDelay: TimeInterval = 30
+    /// 상한 도달 후 유지 재시도 간격(초)
+    private let steadyRetryInterval: TimeInterval = 60
+
     // MARK: Init
 
     private override init() {
@@ -104,15 +118,65 @@ final class RewardedAdManager: NSObject, ObservableObject {
                 if let error {
                     logger.warning("[RewardedAd] 광고 로드 실패: \(error.localizedDescription)")
                     self.isAdReady = false
+                    // 조용히(silent) 지수 백오프 재시도 스케줄
+                    self.scheduleRetry()
                     return
                 }
 
                 self.rewardedAd = ad
                 self.rewardedAd?.fullScreenContentDelegate = self
                 self.isAdReady = true
+                // 성공 → 재시도 카운터/타이머 리셋
+                self.resetRetry()
                 logger.info("[RewardedAd] 광고 로드 완료")
             }
         }
+    }
+
+    // MARK: - Silent Retry
+
+    /// 로드 실패 시 지수 백오프로 다음 재시도를 스케줄한다(조용히, 알림 없음).
+    /// 중복 스케줄 방지를 위해 기존 retryTask는 cancel 후 새로 시작한다.
+    private func scheduleRetry() {
+        // 이미 로드됐거나 로딩 중이면 재시도 불필요
+        guard !isAdReady, !isLoadingAd else { return }
+
+        retryTask?.cancel()
+
+        let delay: TimeInterval
+        if retryCount < 4 {
+            // 4 → 8 → 16 → 30(상한) 순으로 증가
+            delay = min(maxBackoffDelay, pow(2.0, Double(retryCount + 2)))
+            retryCount += 1
+        } else {
+            // 상한 도달 후 — 일정 간격으로 조용히 유지 재시도
+            delay = steadyRetryInterval
+            retryCount += 1
+        }
+
+        logger.info("[RewardedAd] 재시도 스케줄: \(self.retryCount)차, \(delay, format: .fixed(precision: 0))초 후 (silent)")
+
+        retryTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+            guard let self, !Task.isCancelled else { return }
+            // sleep 동안 다른 경로로 로드됐을 수 있으니 guard로 한 번 더 차단
+            guard !self.isAdReady, !self.isLoadingAd else {
+                logger.info("[RewardedAd] 재시도 취소 — 이미 로드됨/로딩 중")
+                return
+            }
+            logger.info("[RewardedAd] 재시도 실행: \(self.retryCount)차")
+            self.loadAd()
+        }
+    }
+
+    /// 광고 로드 성공 시 재시도 상태를 초기화한다.
+    private func resetRetry() {
+        retryTask?.cancel()
+        retryTask = nil
+        if retryCount != 0 {
+            logger.info("[RewardedAd] 재시도 카운터 리셋 (이전 \(self.retryCount)차)")
+        }
+        retryCount = 0
     }
 
     // MARK: - Present
@@ -175,7 +239,8 @@ extension RewardedAdManager: GADFullScreenContentDelegate {
             // 보상 콜백이 아직 미처리된 경우(광고 일찍 닫음) → false 반환
             rewardCompletion?(false)
             rewardCompletion = nil
-            // 다음 광고 preload
+            // 광고를 정상 표시/닫은 새 사이클 — 백오프 카운터 초기화 후 다음 광고 preload
+            resetRetry()
             loadAd()
         }
     }

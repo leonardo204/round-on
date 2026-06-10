@@ -12,6 +12,11 @@ struct WatchContentView: View {
     @State private var roundVM: RoundViewModel?
     @State private var showEndMenu = false
 
+    /// 라운드 활성 여부 파생값 — always-on 운동 세션 start/end 훅의 단일 트리거
+    private var isRoundActive: Bool {
+        roundVM?.isRoundActive ?? false
+    }
+
     var body: some View {
         Group {
             if let roundVM = roundVM, roundVM.isRoundActive {
@@ -69,6 +74,23 @@ struct WatchContentView: View {
                 vm.resumeIfNeeded()
                 if vm.isRoundActive {
                     roundVM = vm
+                }
+            }
+
+            // 앱 시작 시 이미 라운드가 복원/활성 상태면(onChange 미발화 케이스)
+            // always-on 세션을 명시적으로 시작 — 매니저 isActive 가드로 중복 방지
+            if isRoundActive {
+                await WatchWorkoutManager.shared.startWorkout()
+            }
+        }
+        // 라운드 활성↔비활성 전이에 1:1로 always-on 운동 세션 start/end.
+        // 매니저 내부 isActive 가드가 중복 start/누락 방지를 보장한다.
+        .onChange(of: isRoundActive) { _, active in
+            Task { @MainActor in
+                if active {
+                    await WatchWorkoutManager.shared.startWorkout()
+                } else {
+                    await WatchWorkoutManager.shared.endWorkout()
                 }
             }
         }

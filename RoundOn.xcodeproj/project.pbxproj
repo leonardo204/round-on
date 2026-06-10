@@ -12,6 +12,7 @@
 		08CB751214F0061A850B3B38 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = DD9B49C964E96B313246580D /* GoogleMobileAds */; };
 		0A9205DED790694F0CB4FDD7 /* IMG_1335.PNG in Resources */ = {isa = PBXBuildFile; fileRef = A9BF07A344F7E7EE2AB9322C /* IMG_1335.PNG */; };
 		0B23849AEA0720EE81DE5498 /* DiscoveredCourseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91A62B21818148B793B822 /* DiscoveredCourseTests.swift */; };
+		0C61FD00F7DA9BF29E263EE6 /* WatchWorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9026569CCEC9F39AEFCD5CAC /* WatchWorkoutManager.swift */; };
 		0C808553B38ED6FA82AC838E /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61214ADF6DD0175BABD4FDA2 /* AppLogger.swift */; };
 		0F71C54E47D7D97D28A8AE2A /* NewRoundDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328B7409441442909D75CE09 /* NewRoundDraft.swift */; };
 		0F9FC3B94FFB5A39E07713DE /* ScoreCardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DCE3C4FF5B4BAA26AA628B /* ScoreCardViewModelTests.swift */; };
@@ -412,6 +413,7 @@
 		8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserParOverride.swift; sourceTree = "<group>"; };
 		8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareOptions.swift; sourceTree = "<group>"; };
 		8F1A81D0E2C996A70A7B6243 /* SeasonGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonGradient.swift; sourceTree = "<group>"; };
+		9026569CCEC9F39AEFCD5CAC /* WatchWorkoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWorkoutManager.swift; sourceTree = "<group>"; };
 		90A7BE6451773914063666A3 /* CourseRepositorySyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRepositorySyncTests.swift; sourceTree = "<group>"; };
 		91F6ABA41B47BEB7F15EE68F /* RoundOnWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOnWatch.entitlements; sourceTree = "<group>"; };
 		924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreTests.swift; sourceTree = "<group>"; };
@@ -478,7 +480,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_AC583423-B084-4B50-BEF9-2B5882C7E5E1" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -799,6 +801,7 @@
 				3E74FBB5C1B2201A2640A0CB /* RoundOnWatchApp.swift */,
 				B9E9A4C08E72057C5DBC6642 /* WatchContentView.swift */,
 				2A9D62332BB75BD983E7B822 /* Components */,
+				A62D07C810F3C24542A0499D /* HealthKit */,
 				3E9F89D66145A5EF9E4544B7 /* Screens */,
 				49057DD96C7B34A71A708471 /* Sync */,
 			);
@@ -851,6 +854,14 @@
 				2E8A5E681364FBC39BBD432D /* SharedAssets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		A62D07C810F3C24542A0499D /* HealthKit */ = {
+			isa = PBXGroup;
+			children = (
+				9026569CCEC9F39AEFCD5CAC /* WatchWorkoutManager.swift */,
+			);
+			path = HealthKit;
 			sourceTree = "<group>";
 		};
 		AB4F8B2BB9363999E567AE18 /* samples */ = {
@@ -1033,10 +1044,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_531E0429-C05E-48C4-9474-6C6563C7A154" /* golfCounter */ = {
+		"TEMP_0D975DBC-DD16-4C3B-B0BB-7E01BD70823B" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */,
+				"TEMP_AC583423-B084-4B50-BEF9-2B5882C7E5E1" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1435,6 +1446,7 @@
 				882B8BA0FD4D12351BB4B991 /* WatchPlayerOverlay.swift in Sources */,
 				6E20BAF6F3765EEB29092CB7 /* WatchRoundEndMenu.swift in Sources */,
 				D55A8B0770F6D58EC1F7D2F2 /* WatchScoreInputView.swift in Sources */,
+				0C61FD00F7DA9BF29E263EE6 /* WatchWorkoutManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1612,7 +1624,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_AC583423-B084-4B50-BEF9-2B5882C7E5E1" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1637,7 +1649,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_AC583423-B084-4B50-BEF9-2B5882C7E5E1" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1661,7 +1673,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_AC583423-B084-4B50-BEF9-2B5882C7E5E1" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1685,7 +1697,7 @@
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_7AB19253-D049-4D2F-886B-9ECF5278FA31" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_AC583423-B084-4B50-BEF9-2B5882C7E5E1" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;

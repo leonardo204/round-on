@@ -17,11 +17,19 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>라운드 진행 중 화면을 켜두고 운동 시간을 기록하기 위해 건강 데이터를 사용합니다.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>골프 라운드를 운동 기록으로 저장하기 위해 건강 데이터에 접근합니다.</string>
 	<key>WKApplication</key>
 	<true/>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>workout-processing</string>
+	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
 	<string>kr.zerolive.golf.roundon</string>
 	<key>WKWatchOnly</key>

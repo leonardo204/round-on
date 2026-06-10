@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-4410880415888380~3919343525</string>
 	<key>GEMINI_API_KEY</key>
