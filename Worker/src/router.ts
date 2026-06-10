@@ -26,6 +26,8 @@ import { handleRefreshPayload } from "./handlers/refreshPayload.js";
 import { handleGetLanding }     from "./handlers/getLanding.js";
 import { handleGetPrivacy }     from "./handlers/getPrivacy.js";
 import { handleGetAppAdsTxt }  from "./handlers/getAppAdsTxt.js";
+import { handleGetWatchShot }  from "./handlers/getWatchShot.js";
+import { handleGetPhoneShot }  from "./handlers/getPhoneShot.js";
 import { handleCreateStatsShare } from "./handlers/createStatsShare.js";
 import { handleGetStatsViewer }   from "./handlers/getStatsViewer.js";
 import { handleUpdateStatsShare } from "./handlers/updateStatsShare.js";
@@ -193,6 +195,18 @@ export async function route(
   // ── /privacy — 개인정보 처리방침 (catch-all /:shortId 보다 반드시 앞) ─
   if (pathname === "/privacy" && method === "GET") {
     return handleGetPrivacy();
+  }
+
+  // ── /watch/:name.png — Apple Watch 스크린샷 (랜딩 워치 섹션, catch-all 앞) ─
+  const watchShotMatch = pathname.match(/^\/watch\/([a-z]+)\.png$/);
+  if (watchShotMatch && (method === "GET" || method === "HEAD")) {
+    return handleGetWatchShot(watchShotMatch[1]);
+  }
+
+  // ── /phone/:name.png — iPhone 스크린샷 (랜딩 iPhone 섹션, catch-all 앞) ─
+  const phoneShotMatch = pathname.match(/^\/phone\/([a-z]+)\.png$/);
+  if (phoneShotMatch && (method === "GET" || method === "HEAD")) {
+    return handleGetPhoneShot(phoneShotMatch[1]);
   }
 
   // ── /:shortId ──────────────────────────────────────────────────────────

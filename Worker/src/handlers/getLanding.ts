@@ -89,6 +89,29 @@ section{padding:96px 24px}
 .feature h3{font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
 .feature p{font-size:14px;color:var(--mid);line-height:1.7}
 
+/* Watch showcase */
+.section.watch{background:linear-gradient(180deg,var(--white) 0%,var(--green-bg) 100%);overflow:hidden}
+.watch .section-badge{background:rgba(126,175,105,.14);color:#3D6B2C}
+.watch-grid{display:flex;justify-content:center;align-items:flex-end;gap:34px;margin-top:52px;flex-wrap:wrap}
+.watch-item{display:flex;flex-direction:column;align-items:center;gap:16px}
+.watch-frame{position:relative;width:188px;height:230px;background:#0b0b0d;border-radius:46px;padding:10px;box-shadow:0 18px 48px rgba(31,42,27,.28),0 0 0 6px #1c1c1f,0 0 0 8px #2c2c30;transition:transform .25s}
+.watch-item:hover .watch-frame{transform:translateY(-6px)}
+.watch-frame.featured{width:212px;height:260px}
+.watch-frame img{width:100%;height:100%;object-fit:cover;border-radius:36px;display:block}
+.watch-cap{font-size:14px;font-weight:600;color:var(--dark);text-align:center}
+.watch-cap span{display:block;font-size:12.5px;font-weight:400;color:var(--mid);margin-top:3px}
+
+/* Phone showcase */
+.section.phone{background:var(--surface)}
+.phone .section-badge{background:rgba(126,175,105,.14);color:#3D6B2C}
+.phone-grid{display:flex;justify-content:center;align-items:flex-end;gap:26px;margin-top:52px;flex-wrap:wrap}
+.phone-item{display:flex;flex-direction:column;align-items:center;gap:18px;width:208px}
+.phone-frame{position:relative;width:208px;aspect-ratio:1242/2688;background:#0b0b0d;border-radius:36px;padding:4px;box-shadow:0 20px 50px rgba(31,42,27,.22);transition:transform .25s}
+.phone-item:hover .phone-frame{transform:translateY(-6px)}
+.phone-frame img{width:100%;height:100%;object-fit:cover;border-radius:32px;display:block}
+.phone-cap{font-size:14.5px;font-weight:600;color:var(--dark);text-align:center}
+.phone-cap span{display:block;font-size:12.5px;font-weight:400;color:var(--mid);margin-top:3px}
+
 /* How it works */
 .flow{margin-top:44px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .flow-step{position:relative;padding:22px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius)}
@@ -162,8 +185,9 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
     </a>
     <div class="nav-links">
       <a href="#features">기능</a>
+      <a href="#screens">화면</a>
+      <a href="#watch">워치</a>
       <a href="#flow">사용법</a>
-      <a href="#viewer">공유</a>
       <a href="#privacy">개인정보</a>
     </div>
   </div>
@@ -252,6 +276,72 @@ footer{padding:48px 24px 60px;background:var(--surface);color:var(--mid);font-si
         <h3>무료로 제공</h3>
         <p>회원가입도 로그인도 없습니다. 광고를 통해 무료로 제공됩니다.
         켜고, 탭하고, 공유하면 됩니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="watch" class="section watch">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-badge">on your wrist</div>
+      <h2 class="section-title">손목에서 끝나는 라운드</h2>
+      <p class="section-sub mx-auto">폰을 꺼낼 필요 없이, Apple Watch에서 한 손으로 점수를 기록합니다.</p>
+    </div>
+    <div class="watch-grid">
+      <div class="watch-item">
+        <div class="watch-frame">
+          <img src="/watch/start.png" alt="라운드온 워치 시작 화면" width="410" height="502" loading="lazy">
+        </div>
+        <div class="watch-cap">라운드 시작<span>iPhone과 자동 연동</span></div>
+      </div>
+      <div class="watch-item">
+        <div class="watch-frame featured">
+          <img src="/watch/counter.png" alt="워치 점수 카운터 — OB·해저드·OK" width="410" height="502" loading="lazy">
+        </div>
+        <div class="watch-cap">한 손 스코어 카운터<span>탭으로 +1, OB·해저드·OK까지</span></div>
+      </div>
+      <div class="watch-item">
+        <div class="watch-frame">
+          <img src="/watch/face.png" alt="워치 페이스 컴플리케이션" width="410" height="502" loading="lazy">
+        </div>
+        <div class="watch-cap">워치 페이스에서 바로<span>컴플리케이션으로 빠른 실행</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" class="section phone">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-badge">on iphone</div>
+      <h2 class="section-title">iPhone에서 한눈에</h2>
+      <p class="section-sub mx-auto">GPS 자동 매칭부터 탭 스코어, 그리고 링크 공유까지 — 라운드의 흐름 그대로.</p>
+    </div>
+    <div class="phone-grid">
+      <div class="phone-item">
+        <div class="phone-frame">
+          <img src="/phone/home.png" alt="홈 — 라운드 시작과 통계 요약" width="1242" height="2688" loading="lazy">
+        </div>
+        <div class="phone-cap">한눈에 보는 홈<span>바로 시작 · 통계 · 최근 라운드</span></div>
+      </div>
+      <div class="phone-item">
+        <div class="phone-frame">
+          <img src="/phone/gps.png" alt="GPS 골프장 자동 발견" width="1242" height="2688" loading="lazy">
+        </div>
+        <div class="phone-cap">GPS 골프장 자동 발견<span>도착하면 근처 골프장을 찾아줘요</span></div>
+      </div>
+      <div class="phone-item">
+        <div class="phone-frame">
+          <img src="/phone/counter.png" alt="탭 스코어 카운터" width="1242" height="2688" loading="lazy">
+        </div>
+        <div class="phone-cap">탭으로 세는 스코어<span>0에서 시작, OB·해저드·OK까지</span></div>
+      </div>
+      <div class="phone-item">
+        <div class="phone-frame">
+          <img src="/phone/share.png" alt="라운드 카드 링크 공유" width="1242" height="2688" loading="lazy">
+        </div>
+        <div class="phone-cap">링크 하나로 공유<span>앱 없이도 열리는 라운드 카드</span></div>
       </div>
     </div>
   </div>
