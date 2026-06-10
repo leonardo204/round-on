@@ -480,7 +480,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_9C579CFD-E5EB-475D-BAE8-0472EB38EF77" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_FBCEC537-E839-4779-843B-2D579426FFBD" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1044,10 +1044,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_29F5C68A-3D61-4C6F-A321-A87E629A0EA7" /* golfCounter */ = {
+		"TEMP_CBAE9482-DA28-4ECA-B10C-14DB535892B4" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_9C579CFD-E5EB-475D-BAE8-0472EB38EF77" /* Secrets.xcconfig */,
+				"TEMP_FBCEC537-E839-4779-843B-2D579426FFBD" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1624,7 +1624,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_9C579CFD-E5EB-475D-BAE8-0472EB38EF77" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_FBCEC537-E839-4779-843B-2D579426FFBD" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1649,7 +1649,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_9C579CFD-E5EB-475D-BAE8-0472EB38EF77" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_FBCEC537-E839-4779-843B-2D579426FFBD" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1673,7 +1673,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_9C579CFD-E5EB-475D-BAE8-0472EB38EF77" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_FBCEC537-E839-4779-843B-2D579426FFBD" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1697,7 +1697,7 @@
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_9C579CFD-E5EB-475D-BAE8-0472EB38EF77" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_FBCEC537-E839-4779-843B-2D579426FFBD" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
