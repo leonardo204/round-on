@@ -20,23 +20,29 @@ struct WatchContentView: View {
     var body: some View {
         Group {
             if let roundVM = roundVM, roundVM.isRoundActive {
-                // 라운드 진행 중: 홀 스와이프 컨테이너 + 우하단 종료 버튼만
+                // 라운드 진행 중: 홀 스와이프 컨테이너 + 상단 툴바 종료 버튼(watchOS 표준).
                 // (Watch는 '나' 전용 입력 — 플레이어 전환 버튼 제거)
-                ZStack(alignment: .bottomTrailing) {
+                // 홀 스와이프 컨테이너가 TabView(.page) 좌우 스와이프를 점유하므로
+                // 종료는 상단 툴바 버튼으로 일원화(발견성 ↑, 스와이프 충돌 없음).
+                NavigationStack {
                     WatchHoleSwipeContainer(roundVM: roundVM)
-
-                    Button {
-                        showEndMenu = true
-                    } label: {
-                        Image(systemName: "flag.checkered")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.red)
-                    }
-                    .frame(width: 28, height: 28)
-                    .buttonStyle(.plain)
-                    .padding(.trailing, 6)
-                    .padding(.bottom, 2)
-                    .accessibilityLabel("라운드 종료 메뉴")
+                        // 내비바 영역 최소화 — 빈 타이틀 + inline로 카운터 레이아웃 보존
+                        .navigationTitle("")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            // .topBarTrailing은 시계(time) 영역과 겹치므로 .primaryAction 사용.
+                            // .primaryAction은 watchOS에서 내비바 우측에 안정적으로 렌더되고
+                            // always-on(dimmed) 상태에서도 표시·동작한다.
+                            ToolbarItem(placement: .primaryAction) {
+                                Button {
+                                    showEndMenu = true
+                                } label: {
+                                    Image(systemName: "flag.checkered")
+                                        .foregroundStyle(.red)
+                                }
+                                .accessibilityLabel("라운드 종료 메뉴")
+                            }
+                        }
                 }
                 .sheet(isPresented: $showEndMenu) {
                     WatchRoundEndMenu(roundVM: roundVM)
@@ -81,6 +87,10 @@ struct WatchContentView: View {
             // always-on 세션을 명시적으로 시작 — 매니저 isActive 가드로 중복 방지
             if isRoundActive {
                 await WatchWorkoutManager.shared.startWorkout()
+            } else {
+                // 방어 2: 앱을 재시작했는데 라운드는 없고 운동 세션만 살아있음
+                // → 좀비 세션. 명시적으로 정리하여 always-on/배터리 소모 차단.
+                await WatchWorkoutManager.shared.cleanupIfZombie(reason: "app launch — round inactive")
             }
         }
         // 라운드 활성↔비활성 전이에 1:1로 always-on 운동 세션 start/end.
@@ -112,6 +122,13 @@ struct WatchContentView: View {
                     if vm.isRoundActive {
                         roundVM = vm
                     }
+                }
+
+                // 방어 1: resume 처리 이후 시점에 불일치 검사.
+                // 라운드는 비활성인데 운동 세션만 살아있으면(WC 신호 유실/백그라운드
+                // 중 종료 등으로 onChange 미발화) 좀비 세션 → 명시적으로 정리.
+                if !isRoundActive {
+                    await WatchWorkoutManager.shared.cleanupIfZombie(reason: "scenePhase .active — round inactive")
                 }
             }
         }

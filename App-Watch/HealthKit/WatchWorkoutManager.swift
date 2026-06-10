@@ -122,6 +122,15 @@ public final class WatchWorkoutManager: NSObject {
 
     // MARK: 세션 종료 (라운드 종료 시)
 
+    /// always-on이 라운드 비활성 상태에서 살아있는 "좀비 세션"인지 검사하고,
+    /// 그렇다면 정리한다. 호출부(scenePhase/.task 등)에서 불일치 감지 시 사용.
+    /// 좀비가 아니면(세션 없음) no-op.
+    public func cleanupIfZombie(reason: String) async {
+        guard isActive else { return }
+        Self.log.notice("zombie workout session detected — cleaning up (reason: \(reason, privacy: .public))")
+        await endWorkout()
+    }
+
     /// 운동 세션을 종료하고 HealthKit에 저장한다. 비활성이면 no-op.
     public func endWorkout() async {
         guard isActive, let session = session, let builder = builder else {

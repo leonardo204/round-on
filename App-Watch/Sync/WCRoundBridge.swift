@@ -67,6 +67,12 @@ public final class WCRoundBridge: NSObject, SyncCoordinatorDelegate, @unchecked 
         await MainActor.run { [weak self] in
             self?.roundVM?.applyRemoteRoundEnd(end)
         }
+        // 좀비 즉시 종료 방어 4: iPhone 종료 신호 수신 시 onChange/foreground 복귀를
+        // 기다리지 않고 always-on 운동 세션을 즉시 종료. WC 메시지는 백그라운드에서도
+        // 수신되므로 Watch가 백그라운드여도 동작. endWorkout()의 isActive 가드가
+        // 중복 호출을 no-op으로 흡수하므로 기존 방어 로직과 충돌 없이 안전.
+        AppLogger.round.info("WCRoundBridge didReceiveRoundEnd — endWorkout 직접 호출 (즉시 종료)")
+        await WatchWorkoutManager.shared.endWorkout()
     }
 
     public func didReceiveRoundSnapshot(_ snapshot: RoundSnapshot) async {
