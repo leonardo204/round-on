@@ -2,54 +2,93 @@ import SwiftUI
 import Shared
 
 // MARK: - WatchHoleSwipeContainer
-// Watch 메인: 좌우 swipe로 홀 이동 + 각 페이지는 '나'(owner) 전용 입력 UI
-// 동반자 입력은 iPhone에서만 가능 (verticalPage 폐기)
-// 12-SCREENS watch-3.2 (단순화)
+// Watch 메인: 세로 2페이지(위=홀 입력, 아래=컨트롤) — watchOS 10 운동 앱 구조.
+//  · 위 페이지(verticalPage 0): 좌우 swipe로 홀 이동 + 각 페이지는 '나'(owner) 전용 입력 UI
+//  · 아래 페이지(verticalPage 1): 라운드 종료 + 워크아웃 멈춤/재개 컨트롤
+// 어느 홀에서든 아래로 스와이프하면 컨트롤 즉시 도달 (좌측 단일 컨트롤 페이지 폐기).
+// 동반자 입력은 iPhone에서만 가능.
+// 12-SCREENS watch-3.2 (세로 페이징)
 
 struct WatchHoleSwipeContainer: View {
 
     @Bindable var roundVM: RoundViewModel
     @State private var holeMessageVisible: Bool = false
 
+    /// 세로 외곽 TabView 선택 상태. 0 = 홀 입력(위), 1 = 컨트롤(아래).
+    @State private var verticalPage: Int = 0
+
     var body: some View {
         guard let holeVM = roundVM.holeViewModel else {
             return AnyView(Text("라운드 없음").foregroundStyle(.secondary))
         }
 
-        return AnyView(
-            ZStack(alignment: .top) {
-                TabView(selection: Binding(
-                    get: { holeVM.currentHoleIndex },
-                    set: { idx in
-                        let prev = holeVM.currentHoleIndex
-                        holeVM.goToHole(index: idx)
-                        if idx != prev {
-                            Task { await HapticEngine.shared.play(.holeManualChange) }
-                        }
-                    }
-                )) {
-                    ForEach(0..<holeVM.totalHoles, id: \.self) { holeIdx in
-                        holePage(holeNumber: holeIdx + 1, holeVM: holeVM)
-                            .tag(holeIdx)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .automatic))
-
-                // 홀 결과 멘트 — 3초 자동 사라짐
-                if holeMessageVisible, let msg = roundVM.lastHoleMessage {
-                    Text(msg)
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 6)
-                        .background(Color.black.opacity(0.72), in: RoundedRectangle(cornerRadius: 10))
-                        .padding(.top, 4)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                        .zIndex(1)
+        // 가로(홀) selection 바인딩 — currentHoleIndex가 private(set)이므로
+        // get은 현재 홀, set은 goToHole + 햅틱으로 복원(직전 작업 이전 패턴).
+        // iPhone 원격 홀 변경은 get이 currentHoleIndex를 반영하므로 자연 동기화.
+        let holeSelection = Binding<Int>(
+            get: { holeVM.currentHoleIndex },
+            set: { newIndex in
+                let prevHole = holeVM.currentHoleIndex
+                holeVM.goToHole(index: newIndex)
+                if newIndex != prevHole {
+                    Task { await HapticEngine.shared.play(.holeManualChange) }
                 }
             }
+        )
+
+        return AnyView(
+            TabView(selection: $verticalPage) {
+                // 위 페이지(tag 0): 기존 가로 홀 스와이프 + 홀 결과 멘트 오버레이
+                ZStack(alignment: .top) {
+                    TabView(selection: holeSelection) {
+                        ForEach(0..<holeVM.totalHoles, id: \.self) { holeIdx in
+                            holePage(holeNumber: holeIdx + 1, holeVM: holeVM)
+                                .tag(holeIdx)
+                        }
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .automatic))
+
+                    // 하단 중앙 힌트 — 위 페이지(verticalPage 0)에서만 표시. "↓ 컨트롤" 미니멀.
+                    // 가로 페이지 dot과 겹치지 않도록 dot 위쪽에 배치(비대화형).
+                    if verticalPage == 0 {
+                        VStack {
+                            Spacer()
+                            HStack(spacing: 2) {
+                                Image(systemName: "chevron.compact.down")
+                                    .font(.system(size: 10, weight: .semibold))
+                                Text("컨트롤")
+                                    .font(.system(size: 9))
+                            }
+                            .foregroundStyle(.secondary)
+                            .padding(.bottom, 12)
+                        }
+                        .allowsHitTesting(false)
+                        .transition(.opacity)
+                        .zIndex(2)
+                    }
+
+                    // 홀 결과 멘트 — 3초 자동 사라짐
+                    if holeMessageVisible, let msg = roundVM.lastHoleMessage {
+                        Text(msg)
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 6)
+                            .background(Color.black.opacity(0.72), in: RoundedRectangle(cornerRadius: 10))
+                            .padding(.top, 4)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                            .zIndex(1)
+                    }
+                }
+                .tag(0)
+
+                // 아래 페이지(tag 1): 컨트롤 (종료 + 워크아웃 멈춤/재개)
+                WatchRoundControlPage(roundVM: roundVM)
+                    .tag(1)
+            }
+            .tabViewStyle(.verticalPage)
             .onChange(of: roundVM.lastHoleMessage) { _, newMsg in
                 if newMsg != nil {
                     withAnimation(.easeIn(duration: 0.2)) { holeMessageVisible = true }
@@ -293,6 +332,98 @@ private struct OwnerHoleContentView: View {
         if diff == 0 { return "Par \(par) · E" }
         if diff > 0 { return "Par \(par) · +\(diff)" }
         return "Par \(par) · \(diff)"
+    }
+}
+
+// MARK: - WatchRoundControlPage (운동 앱 스타일 하단 컨트롤 페이지)
+// 어느 홀에서든 아래로 스와이프 시 노출. ① 라운드 종료 ② 워크아웃 멈춤/재개.
+
+private struct WatchRoundControlPage: View {
+
+    @Bindable var roundVM: RoundViewModel
+
+    /// 워크아웃 상태(isActive/isPaused) 관찰 → 멈춤↔재개 라벨 토글
+    @ObservedObject private var workout = WatchWorkoutManager.shared
+
+    @State private var showEndConfirm = false
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Text("컨트롤")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 18) {
+                // ① 라운드 종료
+                controlButton(
+                    icon: "flag.checkered",
+                    label: "종료",
+                    tint: .red
+                ) {
+                    showEndConfirm = true
+                }
+
+                // ② 워크아웃 멈춤/재개 — 세션 활성일 때만
+                if workout.isActive {
+                    if workout.isPaused {
+                        controlButton(
+                            icon: "play.fill",
+                            label: "재개",
+                            tint: .green
+                        ) {
+                            workout.resumeWorkout()
+                            Task { await HapticEngine.shared.play(.shotIncrement) }
+                        }
+                    } else {
+                        controlButton(
+                            icon: "pause.fill",
+                            label: "멈춤",
+                            tint: .yellow
+                        ) {
+                            workout.pauseWorkout()
+                            Task { await HapticEngine.shared.play(.shotDecrement) }
+                        }
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .confirmationDialog("라운드를 종료할까요?", isPresented: $showEndConfirm) {
+            Button("종료", role: .destructive) {
+                roundVM.finishRound()
+                // 방어 3 동일 패턴: onChange(isRoundActive)에만 의존하지 않고
+                // 명시적으로 always-on 세션 종료. endWorkout의 isActive 가드가 중복 흡수.
+                Task {
+                    await WatchWorkoutManager.shared.endWorkout()
+                    await HapticEngine.shared.play(.roundEnd)
+                }
+            }
+            Button("취소", role: .cancel) {}
+        }
+    }
+
+    /// 운동 앱 스타일: 큰 원형 아이콘 + 아래 작은 라벨. 터치 타깃 ≥ 44pt.
+    private func controlButton(
+        icon: String,
+        label: String,
+        tint: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        VStack(spacing: 4) {
+            Button(action: action) {
+                Image(systemName: icon)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(tint)
+                    .frame(width: 52, height: 52)
+                    .background(tint.opacity(0.18), in: Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(label)
+
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.primary)
+        }
     }
 }
 

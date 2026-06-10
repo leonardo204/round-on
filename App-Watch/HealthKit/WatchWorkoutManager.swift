@@ -1,6 +1,7 @@
 import Foundation
 import HealthKit
 import OSLog
+import Combine
 
 // MARK: - WatchWorkoutManager (watchOS 전용)
 // 라운드 진행 중 화면 always-on 유지를 위한 HKWorkoutSession 매니저.
@@ -15,7 +16,7 @@ import OSLog
 // no-op 처리하여 빌드/런타임 크래시를 방지한다. 라운드 진행은 절대 막지 않는다.
 
 @MainActor
-public final class WatchWorkoutManager: NSObject {
+public final class WatchWorkoutManager: NSObject, ObservableObject {
 
     // MARK: Singleton
 
@@ -30,8 +31,12 @@ public final class WatchWorkoutManager: NSObject {
     /// HealthKit 권한 승인 여부(요청 완료 후 true)
     private var isAuthorized = false
 
-    /// 세션 활성 여부 — 중복 start/end 방지 가드
-    public private(set) var isActive = false
+    /// 세션 활성 여부 — 중복 start/end 방지 가드.
+    /// 컨트롤 페이지 버튼 라벨/노출이 관찰하므로 @Published.
+    @Published public private(set) var isActive = false
+
+    /// 일시정지 여부 — 컨트롤 페이지 멈춤↔재개 라벨 토글이 관찰.
+    @Published public private(set) var isPaused = false
 
     // MARK: Private
 
@@ -120,6 +125,39 @@ public final class WatchWorkoutManager: NSObject {
         }
     }
 
+    // MARK: 일시정지 / 재개 (컨트롤 페이지)
+
+    /// 운동 세션을 일시정지한다 — always-on/측정을 잠시 멈춘다.
+    /// 세션 비활성이거나 이미 멈춤이면 no-op.
+    public func pauseWorkout() {
+        guard isActive else {
+            Self.log.notice("pauseWorkout skip — no active session")
+            return
+        }
+        guard !isPaused else {
+            Self.log.notice("pauseWorkout skip — already paused")
+            return
+        }
+        session?.pause()
+        isPaused = true
+        Self.log.info("pauseWorkout ok — session paused")
+    }
+
+    /// 일시정지된 운동 세션을 재개한다. 세션 비활성이거나 멈춤 상태가 아니면 no-op.
+    public func resumeWorkout() {
+        guard isActive else {
+            Self.log.notice("resumeWorkout skip — no active session")
+            return
+        }
+        guard isPaused else {
+            Self.log.notice("resumeWorkout skip — not paused")
+            return
+        }
+        session?.resume()
+        isPaused = false
+        Self.log.info("resumeWorkout ok — session resumed")
+    }
+
     // MARK: 세션 종료 (라운드 종료 시)
 
     /// always-on이 라운드 비활성 상태에서 살아있는 "좀비 세션"인지 검사하고,
@@ -153,6 +191,7 @@ public final class WatchWorkoutManager: NSObject {
         self.session = nil
         self.builder = nil
         isActive = false
+        isPaused = false
     }
 }
 
@@ -170,9 +209,18 @@ extension WatchWorkoutManager: HKWorkoutSessionDelegate {
         let from = fromState.rawValue
         Task { @MainActor in
             Self.log.info("session state: \(from, privacy: .public) -> \(to, privacy: .public)")
-            // 외부 요인으로 세션이 종료/중단된 경우 상태 가드 해제
-            if toState == .ended || toState == .stopped {
+            // delegate가 보고하는 실제 세션 상태와 isPaused를 일관 유지
+            switch toState {
+            case .paused:
+                self.isPaused = true
+            case .running:
+                self.isPaused = false
+            case .ended, .stopped:
+                // 외부 요인으로 세션이 종료/중단된 경우 상태 가드 해제
                 self.isActive = false
+                self.isPaused = false
+            default:
+                break
             }
         }
     }

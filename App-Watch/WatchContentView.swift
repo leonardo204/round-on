@@ -10,7 +10,6 @@ struct WatchContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
     @State private var roundVM: RoundViewModel?
-    @State private var showEndMenu = false
 
     /// 라운드 활성 여부 파생값 — always-on 운동 세션 start/end 훅의 단일 트리거
     private var isRoundActive: Bool {
@@ -20,33 +19,11 @@ struct WatchContentView: View {
     var body: some View {
         Group {
             if let roundVM = roundVM, roundVM.isRoundActive {
-                // 라운드 진행 중: 홀 스와이프 컨테이너 + 상단 툴바 종료 버튼(watchOS 표준).
+                // 라운드 진행 중: 홀 스와이프 컨테이너.
                 // (Watch는 '나' 전용 입력 — 플레이어 전환 버튼 제거)
-                // 홀 스와이프 컨테이너가 TabView(.page) 좌우 스와이프를 점유하므로
-                // 종료는 상단 툴바 버튼으로 일원화(발견성 ↑, 스와이프 충돌 없음).
-                NavigationStack {
-                    WatchHoleSwipeContainer(roundVM: roundVM)
-                        // 내비바 영역 최소화 — 빈 타이틀 + inline로 카운터 레이아웃 보존
-                        .navigationTitle("")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            // .topBarTrailing은 시계(time) 영역과 겹치므로 .primaryAction 사용.
-                            // .primaryAction은 watchOS에서 내비바 우측에 안정적으로 렌더되고
-                            // always-on(dimmed) 상태에서도 표시·동작한다.
-                            ToolbarItem(placement: .primaryAction) {
-                                Button {
-                                    showEndMenu = true
-                                } label: {
-                                    Image(systemName: "flag.checkered")
-                                        .foregroundStyle(.red)
-                                }
-                                .accessibilityLabel("라운드 종료 메뉴")
-                            }
-                        }
-                }
-                .sheet(isPresented: $showEndMenu) {
-                    WatchRoundEndMenu(roundVM: roundVM)
-                }
+                // 종료/워크아웃 멈춤·재개는 1번 홀 좌측 컨트롤 페이지(운동 앱 스타일)로 이동.
+                // 좌하단 "← 종료 스와이프" 힌트는 컨테이너 내부에서 1번 홀일 때만 표시.
+                WatchHoleSwipeContainer(roundVM: roundVM)
             } else {
                 // 진행 중 라운드 없음
                 VStack(spacing: 8) {
