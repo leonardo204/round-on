@@ -918,11 +918,14 @@ struct CourseSearchSheet: View {
 
     // MARK: - 결과 분류
 
-    /// 로컬 DB + 캐시 결과 (이름 필터링)
+    /// 로컬 DB + 캐시 결과 (이름 필터링 + alias 매칭)
     private var localFiltered: [GolfCourse] {
         let all = localCourses + persistedCourses
         if searchText.isEmpty { return all }
-        return all.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        return all.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText)
+                || CourseNameMatcher.matches(course: $0, query: searchText)
+        }
     }
 
     /// 카카오 결과에서 로컬과 중복 제거 (이름+200m 이내면 제거)

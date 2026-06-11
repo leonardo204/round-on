@@ -214,6 +214,7 @@ public final class ImportViewModel {
 
                 warnings = scorecard.warnings
                 draft = try ScorecardMapper.makeDraft(from: scorecard, ownerName: ownerName)
+                await autoMatchCourse()
                 logger.info("[Import] makeDraft 완료 — sections: \(self.draft?.sections.count ?? 0), players: \(self.draft?.players.count ?? 0)")
 
                 // Gemini 분석 성공 → 할당량 1 소비 (보상형 광고는 AIAnalysisView에서만 시청)
@@ -233,6 +234,41 @@ public final class ImportViewModel {
             logger.error("[Import] performOCR 예외: \(error.localizedDescription)")
             phase = .failed(error.localizedDescription)
         }
+    }
+
+    // MARK: - OCR 직후 골프장 자동 매칭
+
+    /// makeDraft 직후 호출. draft.courseId가 비어있고 clubName이 있으면 DB에서 confident match를 자동 채택한다.
+    /// 너무 공격적이지 않도록 findSimilarCourses 최상위가 CourseNameMatcher.matches(양방향 contains)로
+    /// confident할 때만 채택. 애매하면 비워둔 채 사용자 선택을 유도(ImportReviewView 경고 배지).
+    private func autoMatchCourse() async {
+        guard var d = draft else { return }
+        // 이미 courseId가 있으면(이전 단계 선택 등) 건드리지 않음
+        guard (d.courseId ?? "").isEmpty else { return }
+        let clubName = (d.clubName ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !clubName.isEmpty else {
+            logger.info("[Import] 자동매칭 스킵 — clubName 없음")
+            return
+        }
+
+        let courses = (try? await CourseRepository.shared.loadAll()) ?? []
+        guard !courses.isEmpty else {
+            logger.info("[Import] 자동매칭 스킵 — 골프장 DB 비어있음")
+            return
+        }
+
+        let candidates = CourseNameMatcher.findSimilarCourses(query: clubName, from: courses, limit: 1)
+        guard let top = candidates.first,
+              CourseNameMatcher.matches(course: top, query: clubName) else {
+            logger.info("[Import] 자동매칭 실패 — '\(clubName, privacy: .private)' confident match 없음 (사용자 선택 유도)")
+            return
+        }
+
+        d.courseId = top.id
+        d.clubName = top.name
+        d.clubSource = .autoMatched
+        draft = d
+        logger.info("[Import] 자동매칭 성공 — '\(clubName, privacy: .private)' → '\(top.name, privacy: .private)' (id=\(top.id, privacy: .public))")
     }
 
     /// Vision on-device OCR만 실행 (동의 거부 경로)
@@ -292,6 +328,7 @@ public final class ImportViewModel {
             }
             warnings = allWarnings
             draft = try ScorecardMapper.makeDraft(from: scorecard, ownerName: ownerName)
+            await autoMatchCourse()
             logger.info("[Import] Vision 폴백 완료 — sections: \(self.draft?.sections.count ?? 0), players: \(self.draft?.players.count ?? 0), warnings: \(allWarnings.count)건")
             logger.info("[Import] phase → .review (Vision 폴백 성공)")
             phase = .review

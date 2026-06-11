@@ -348,11 +348,15 @@ public actor CourseRepository {
     }
 
     /// 이름 prefix로 골프장 검색 (대소문자 무시, 한글 포함).
+    /// name contains 매칭에 더해 alias 정규화 매칭(CourseNameMatcher.matches)도 OR 조건으로 포함한다.
     /// - Parameter prefix: 검색어. 빈 문자열이면 전체 반환.
     public func search(byName prefix: String) async throws -> [GolfCourse] {
         let all = try await loadAll()
         guard !prefix.isEmpty else { return all }
-        return all.filter { $0.name.localizedCaseInsensitiveContains(prefix) }
+        return all.filter {
+            $0.name.localizedCaseInsensitiveContains(prefix)
+                || CourseNameMatcher.matches(course: $0, query: prefix)
+        }
     }
 
     /// 지역명으로 필터링.
@@ -540,6 +544,7 @@ public actor CourseRepository {
 
         let cachedResults = cachedDiscovered.filter {
             $0.name.localizedCaseInsensitiveContains(prefix)
+                || CourseNameMatcher.matches(course: $0, query: prefix)
         }
 
         return bundleResults + cachedResults

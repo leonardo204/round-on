@@ -50,6 +50,12 @@ struct StatsView: View {
     /// alias normalize 키 → GolfCourse (courseNameIndex 와 별개로 alias 인덱스 보유)
     @State private var aliasIndex: [String: GolfCourse] = [:]
 
+    /// 번들 DB 1회 로드 캐시 — discovered 변화 시 재병합에 재사용 (loadAll 재호출 방지)
+    @State private var bundleCourses: [GolfCourse] = []
+
+    /// 번들 DB 로드 완료 여부 — loadAll은 1회만 수행
+    @State private var didLoadBundle = false
+
     /// 지역별 라운드 지도 카메라 위치
     @State private var mapPosition: MapCameraPosition = .automatic
 
@@ -58,6 +64,9 @@ struct StatsView: View {
         sort: \Round.startedAt,
         order: .reverse
     ) private var finishedRounds: [Round]
+
+    /// 카카오로 발견·저장한 골프장 영구 캐시 — courseId가 `kakao:` 인 라운드 핀 표시용
+    @Query private var discoveredCourses: [PersistedDiscoveredCourse]
 
     /// 통계 대상 라운드 배열 — 가져온 라운드 포함 전체
     private var displayedRounds: [Round] {
@@ -172,33 +181,52 @@ struct StatsView: View {
                 .disabled(displayedRounds.isEmpty)
             }
         }
-        .task {
-            // CourseRepository 캐시 로드 (지역별 라운드 카드 lookup용)
-            if courseCache.isEmpty {
-                if let courses = try? await CourseRepository.shared.loadAll() {
-                    var cacheDict: [String: GolfCourse] = [:]
-                    var nameIndexDict: [String: GolfCourse] = [:]
-                    var aliasDict: [String: GolfCourse] = [:]
-                    for c in courses {
-                        cacheDict[c.id] = c
-                        let nameKey = CourseNameMatcher.normalize(c.name)
-                        if !nameKey.isEmpty && nameIndexDict[nameKey] == nil {
-                            // 첫 매칭 우선 (동일 정규화 키가 여러 골프장에 걸릴 경우 첫 번째 우선)
-                            nameIndexDict[nameKey] = c
-                        }
-                        for alias in c.aliases ?? [] {
-                            let ak = CourseNameMatcher.normalize(alias)
-                            if !ak.isEmpty && aliasDict[ak] == nil {
-                                aliasDict[ak] = c
-                            }
-                        }
-                    }
-                    courseCache = cacheDict
-                    courseNameIndex = nameIndexDict
-                    aliasIndex = aliasDict
+        // discoveredCourses 변화(카카오 구장으로 라운드 수정 등) 감지 시 캐시 재빌드 —
+        // 같은 세션에서 새 PersistedDiscoveredCourse 가 생겨도 핀이 즉시 반영되도록.
+        .task(id: discoveredCourses.count) {
+            await rebuildCourseCache()
+        }
+    }
+
+    // MARK: - CourseRepository 캐시 빌드
+
+    /// 번들 DB(1회 로드) + 카카오 발견 골프장(매번 재병합)으로 lookup 인덱스를 재구성한다.
+    /// 번들 DB는 최초 1회만 loadAll 하고, discovered 변화 시 번들 캐시를 재사용해 재병합한다.
+    private func rebuildCourseCache() async {
+        // 번들 DB 1회 로드 (이후 discovered 변화 시 재사용)
+        if !didLoadBundle {
+            if let courses = try? await CourseRepository.shared.loadAll() {
+                bundleCourses = courses
+                didLoadBundle = true
+            }
+        }
+
+        // 번들 DB + 카카오 발견 골프장(kakao:{id}) 병합 — 카카오 라운드도 핀 표시
+        let kakaoCourses = discoveredCourses.map { $0.toGolfCourse() }
+        let merged = bundleCourses + kakaoCourses
+        AppLogger.view.info("[Stats] courseCache 빌드 — 번들 \(bundleCourses.count) + 카카오 \(kakaoCourses.count)")
+
+        var cacheDict: [String: GolfCourse] = [:]
+        var nameIndexDict: [String: GolfCourse] = [:]
+        var aliasDict: [String: GolfCourse] = [:]
+        for c in merged {
+            // id 키는 toGolfCourse()의 "kakao:{kakaoPlaceId}" 형식 → Round.courseId와 1단 매칭
+            cacheDict[c.id] = c
+            let nameKey = CourseNameMatcher.normalize(c.name)
+            if !nameKey.isEmpty && nameIndexDict[nameKey] == nil {
+                // 첫 매칭 우선 (동일 정규화 키가 여러 골프장에 걸릴 경우 첫 번째 우선)
+                nameIndexDict[nameKey] = c
+            }
+            for alias in c.aliases ?? [] {
+                let ak = CourseNameMatcher.normalize(alias)
+                if !ak.isEmpty && aliasDict[ak] == nil {
+                    aliasDict[ak] = c
                 }
             }
         }
+        courseCache = cacheDict
+        courseNameIndex = nameIndexDict
+        aliasIndex = aliasDict
     }
 
     // MARK: - Empty State

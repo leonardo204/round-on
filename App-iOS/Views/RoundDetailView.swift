@@ -32,6 +32,9 @@ struct RoundDetailView: View {
     @State private var isEditMode = false
     @State private var editRoundVM: RoundViewModel?
 
+    // E: 구장 수정 (추천 → 직접 검색)
+    @State private var showCourseEdit = false
+
     private let apiClient = ShareAPIClient()
     private let keychainStore = KeychainStore.shared
 
@@ -105,6 +108,12 @@ struct RoundDetailView: View {
                         } label: {
                             Label("편집", systemImage: "pencil")
                         }
+                        Button {
+                            AppLogger.round.info("[RoundDetail] 구장 수정 진입 — round=\(round.courseName, privacy: .private) (id=\(round.id))")
+                            showCourseEdit = true
+                        } label: {
+                            Label("구장 수정", systemImage: "mappin.and.ellipse")
+                        }
                         Button(role: .destructive) {
                             showDeleteConfirm = true
                         } label: {
@@ -129,6 +138,21 @@ struct RoundDetailView: View {
             Button("취소", role: .cancel) { }
         } message: {
             Text("\(round.courseName) 라운드와 모든 스코어가 영구 삭제됩니다. 되돌릴 수 없습니다.")
+        }
+        .sheet(isPresented: $showCourseEdit) {
+            CourseEditSheet(
+                round: round,
+                modelContext: modelContext,
+                onSelectLocal: { course in
+                    applyCourseSelection(courseId: course.id, courseName: course.name, source: "local")
+                    showCourseEdit = false
+                },
+                onSelectDiscovered: { discovered in
+                    upsertDiscovered(discovered)
+                    applyCourseSelection(courseId: discovered.roundCourseId, courseName: discovered.name, source: "kakao")
+                    showCourseEdit = false
+                }
+            )
         }
         .sheet(isPresented: $showShare) {
             ShareSheetView(round: round, shareVM: shareVM, onShared: { url in
@@ -815,6 +839,55 @@ struct RoundDetailView: View {
         scoreVM.refresh(from: round)
     }
 
+    // MARK: - E: 구장 수정 선택 처리
+
+    /// 선택된 골프장으로 round.courseId/courseName 갱신 후 저장.
+    private func applyCourseSelection(courseId: String, courseName: String, source: String) {
+        round.courseId = courseId
+        round.courseName = courseName
+        do {
+            try modelContext.save()
+            AppLogger.round.info("[RoundDetail] 구장 수정 저장 완료 (\(source, privacy: .public)) — '\(courseName, privacy: .private)' (id=\(courseId, privacy: .public))")
+            bannerMessage = "구장을 '\(courseName)'(으)로 변경했어요."
+            bannerSeverity = .success
+            let snapshot = bannerMessage
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                if bannerMessage == snapshot {
+                    withAnimation { bannerMessage = nil }
+                }
+            }
+            Task { await HapticEngine.shared.play(.shareSuccess) }
+        } catch {
+            AppLogger.persistence.error("[RoundDetail] 구장 수정 저장 실패: \(error.localizedDescription)")
+            bannerMessage = "구장 변경 저장 중 오류가 발생했어요."
+            bannerSeverity = .error
+        }
+    }
+
+    /// 카카오 발견 골프장을 PersistedDiscoveredCourse로 upsert (NewRoundView 패턴).
+    private func upsertDiscovered(_ discovered: DiscoveredCourse) {
+        let kakaoId = discovered.kakaoPlaceId
+        let predicate = #Predicate<PersistedDiscoveredCourse> { $0.kakaoPlaceId == kakaoId }
+        let existing = (try? modelContext.fetch(FetchDescriptor(predicate: predicate))) ?? []
+        guard existing.isEmpty else {
+            AppLogger.round.info("[RoundDetail] 카카오 골프장 캐시 이미 존재 — id=\(kakaoId, privacy: .public)")
+            return
+        }
+        let persisted = PersistedDiscoveredCourse(
+            kakaoPlaceId: discovered.kakaoPlaceId,
+            name: discovered.name,
+            address: discovered.address,
+            phone: discovered.phone,
+            lat: discovered.lat,
+            lng: discovered.lng,
+            placeUrl: discovered.placeUrl,
+            firstUsedAt: .now
+        )
+        modelContext.insert(persisted)
+        try? modelContext.save()
+        AppLogger.round.info("[RoundDetail] 카카오 골프장 영구 캐시 저장 — '\(discovered.name, privacy: .private)' (id=\(kakaoId, privacy: .public))")
+    }
+
     // MARK: - 라운드 삭제
 
     private func deleteRound() {
@@ -876,6 +949,174 @@ struct RoundDetailView: View {
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return formatter.string(from: date)
+    }
+}
+
+// MARK: - CourseEditSheet (E: 유사 구장 추천 → 직접 검색)
+
+/// 라운드 구장 수정 시트.
+/// 흐름: ① findSimilarCourses 추천 카드 → ② 추천에 없으면 [직접 검색] = 기존 CourseSearchSheet (DB + 카카오맵).
+/// custom 직접입력 경로는 제공하지 않음 (DB/카카오만).
+private struct CourseEditSheet: View {
+    let round: Round
+    let modelContext: ModelContext
+    let onSelectLocal: (GolfCourse) -> Void
+    let onSelectDiscovered: (DiscoveredCourse) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var allCourses: [GolfCourse] = []
+    @State private var suggestions: [GolfCourse] = []
+    @State private var isLoading = true
+    @State private var showDirectSearch = false
+    @State private var searchText = ""
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.paleSageBg.ignoresSafeArea()
+
+                if isLoading {
+                    ProgressView()
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            // 현재 구장
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("현재 구장")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundStyle(Color.inkSoft)
+                                Text(round.courseName.isEmpty ? "미지정" : round.courseName)
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(Color.inkPrimary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(16)
+                            .background(Color.cardSurface)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .strokeBorder(Color.cardBorder, lineWidth: 1)
+                            )
+
+                            // 추천 구장
+                            if !suggestions.isEmpty {
+                                Text("추천 구장")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundStyle(Color.inkSoft)
+                                    .padding(.leading, 4)
+
+                                VStack(spacing: 0) {
+                                    ForEach(Array(suggestions.enumerated()), id: \.element.id) { idx, course in
+                                        if idx > 0 { Divider().padding(.leading, 16) }
+                                        Button {
+                                            AppLogger.round.info("[RoundDetail] 추천 구장 선택 — '\(course.name, privacy: .private)' (id=\(course.id, privacy: .public))")
+                                            onSelectLocal(course)
+                                        } label: {
+                                            suggestionRow(course: course)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .background(Color.cardSurface)
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .strokeBorder(Color.cardBorder, lineWidth: 1)
+                                )
+                            } else {
+                                Text("유사한 구장을 찾지 못했어요. 직접 검색해 주세요.")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(Color.inkSoft)
+                                    .padding(.leading, 4)
+                            }
+
+                            // 직접 검색 버튼
+                            Button {
+                                searchText = ""
+                                AppLogger.round.info("[RoundDetail] 구장 직접 검색 진입")
+                                showDirectSearch = true
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "magnifyingglass")
+                                    Text("직접 검색 (DB · 카카오맵)")
+                                        .font(.system(size: 15, weight: .semibold))
+                                }
+                                .foregroundStyle(Color.houseGreen)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                                .background(Color.accentGreen.opacity(0.10))
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                            .padding(.top, 4)
+
+                            Spacer(minLength: 20)
+                        }
+                        .padding(16)
+                    }
+                }
+            }
+            .navigationTitle("구장 수정")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("취소") { dismiss() }
+                }
+            }
+            .sheet(isPresented: $showDirectSearch) {
+                CourseSearchSheet(
+                    localCourses: allCourses,
+                    searchText: $searchText,
+                    userLocation: nil,
+                    modelContext: modelContext,
+                    onSelectLocal: { course in
+                        showDirectSearch = false
+                        onSelectLocal(course)
+                    },
+                    onSelectDiscovered: { discovered in
+                        showDirectSearch = false
+                        onSelectDiscovered(discovered)
+                    }
+                )
+            }
+            .task {
+                if allCourses.isEmpty {
+                    allCourses = (try? await CourseRepository.shared.loadAll()) ?? []
+                }
+                suggestions = CourseNameMatcher.findSimilarCourses(
+                    query: round.courseName,
+                    from: allCourses,
+                    limit: 5
+                )
+                AppLogger.round.info("[RoundDetail] 추천 구장 \(suggestions.count)개 생성 — query='\(round.courseName, privacy: .private)'")
+                isLoading = false
+            }
+        }
+    }
+
+    private func suggestionRow(course: GolfCourse) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "flag.fill")
+                .font(.system(size: 14))
+                .foregroundStyle(Color.accentGreen)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(course.name)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Color.inkPrimary)
+                if let region = course.region.nilIfEmpty {
+                    Text(region)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.inkSoft)
+                }
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Color.inkFaint)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .contentShape(Rectangle())
     }
 }
 

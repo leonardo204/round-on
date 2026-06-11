@@ -83,6 +83,63 @@ public enum CourseNameMatcher {
         return false
     }
 
+    // MARK: - findSimilarCourses
+
+    /// query(라운드 courseName)와 유사한 골프장 후보를 점수순 상위 limit개 반환.
+    ///
+    /// 점수 기준(높을수록 우선):
+    ///   3 — name/alias 정규화 키가 query와 exact 일치
+    ///   2 — 정규화 키가 query를 contains (또는 query가 키를 contains) — 부분 일치
+    /// 점수 0(매칭 없음)은 결과에서 제외한다.
+    /// 동점이면 코스명이 짧은 순(더 정확한 매칭 선호) → 이름 오름차순으로 안정 정렬.
+    ///
+    /// - Parameters:
+    ///   - query: 비교 기준 코스명 (라운드 courseName 등). 빈 query → [].
+    ///   - courses: 후보 골프장 목록
+    ///   - limit: 반환할 최대 개수 (기본 5)
+    /// - Returns: 점수순 상위 limit개 골프장
+    public static func findSimilarCourses(
+        query: String,
+        from courses: [GolfCourse],
+        limit: Int = 5
+    ) -> [GolfCourse] {
+        let nq = normalize(query)
+        guard !nq.isEmpty else { return [] }
+
+        // (course, score) 계산 후 score > 0만 유지
+        let scored: [(course: GolfCourse, score: Int)] = courses.compactMap { course in
+            let s = similarityScore(course: course, normalizedQuery: nq)
+            return s > 0 ? (course, s) : nil
+        }
+
+        let sorted = scored.sorted { a, b in
+            if a.score != b.score { return a.score > b.score }
+            if a.course.name.count != b.course.name.count {
+                return a.course.name.count < b.course.name.count
+            }
+            return a.course.name < b.course.name
+        }
+
+        return sorted.prefix(limit).map { $0.course }
+    }
+
+    /// findSimilarCourses 내부 점수 계산. 정규화된 query를 받는다.
+    /// 3=exact, 2=contains(양방향 부분 일치), 0=매칭 없음.
+    /// (areSimilar는 양방향 contains와 동일하므로 별도 등급을 두지 않는다.)
+    private static func similarityScore(course: GolfCourse, normalizedQuery nq: String) -> Int {
+        guard !nq.isEmpty else { return 0 }
+        var best = 0
+        for k in course.searchableKeys() {
+            if k == nq {
+                return 3 // exact는 최고점 — 즉시 반환
+            }
+            if k.contains(nq) || nq.contains(k) {
+                best = max(best, 2)
+            }
+        }
+        return best
+    }
+
     // MARK: - findConflictingRound
 
     /// SwiftData ModelContext에서 충돌 라운드를 찾는다.

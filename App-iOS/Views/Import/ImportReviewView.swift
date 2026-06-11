@@ -209,6 +209,34 @@ struct ImportReviewView: View {
                 .padding(.vertical, 10)
             }
 
+            // 골프장 미선택 경고 (courseId 비어있을 때) — 저장은 막지 않음
+            if isCourseUnmatched {
+                Button {
+                    courseSearchText = ""
+                    showClubNameEdit = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.orange)
+                        Text("골프장 미선택 — 지도에 표시되지 않아요")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Text("골프장 선택")
+                            .font(.system(size: 12, weight: .semibold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 3)
+                            .background(Color.orange.opacity(0.15))
+                            .foregroundStyle(.orange)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(Color.orange.opacity(0.06))
+                }
+            }
+
             Divider().padding(.horizontal, 14)
 
             // 날짜 (편집 가능)
@@ -263,11 +291,16 @@ struct ImportReviewView: View {
         .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 1)
     }
 
+    /// 골프장이 매칭되지 않았는지 (courseId 비어있음) — 경고 배지 노출 기준
+    private var isCourseUnmatched: Bool {
+        (draft.courseId ?? "").isEmpty
+    }
+
     @ViewBuilder
     private var clubSourceChip: some View {
         switch draft.clubSource {
         case .autoMatched:
-            if draft.clubName != nil {
+            if draft.clubName != nil && !isCourseUnmatched {
                 Text("DB 매칭")
                     .font(.system(size: 12, weight: .semibold))
                     .padding(.horizontal, 10)

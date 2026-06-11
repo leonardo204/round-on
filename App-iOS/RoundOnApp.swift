@@ -98,6 +98,8 @@ struct RoundOnApp: App {
                     let context = modelContainer.mainContext
                     Task {
                         await CourseRepository.shared.fetchRemoteIfStale(context: context)
+                        // F: 기존 courseId 미지정 라운드 backfill (confident match만, 앱 시작 1회)
+                        await Self.backfillRoundCourseIds(context: context)
                     }
                 }
                 // ATT는 scene이 .active가 된 시점에만 트리거 (1회).
@@ -110,6 +112,52 @@ struct RoundOnApp: App {
                     }
                 }
         }
+    }
+
+    // MARK: - F: 기존 라운드 courseId backfill (앱 시작 1회)
+
+    /// courseId == "" 인 finished Round에 대해 confident match가 있으면 courseId를 채워 저장한다.
+    /// 애매하면(매칭 없음/불확실) skip — 런타임 courseFor가 표시를 이미 처리하므로 안전이 최우선.
+    @MainActor
+    private static func backfillRoundCourseIds(context: ModelContext) async {
+        // 1회 가드 (UserDefaults)
+        let flagKey = "roundon.backfill.courseId.v1"
+        guard !UserDefaults.standard.bool(forKey: flagKey) else { return }
+
+        let courses = (try? await CourseRepository.shared.loadAll()) ?? []
+        guard !courses.isEmpty else {
+            AppLogger.round.info("[Backfill] 골프장 DB 비어있음 — backfill 보류")
+            return
+        }
+
+        var descriptor = FetchDescriptor<Round>()
+        descriptor.predicate = #Predicate { $0.isFinished == true && $0.courseId == "" }
+        let targets = (try? context.fetch(descriptor)) ?? []
+        guard !targets.isEmpty else {
+            UserDefaults.standard.set(true, forKey: flagKey)
+            AppLogger.round.info("[Backfill] 대상 라운드 없음 — 완료 처리")
+            return
+        }
+
+        var filled = 0
+        for round in targets {
+            let name = round.courseName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !name.isEmpty else { continue }
+            let candidates = CourseNameMatcher.findSimilarCourses(query: name, from: courses, limit: 1)
+            guard let top = candidates.first,
+                  CourseNameMatcher.matches(course: top, query: name) else {
+                continue // 애매하면 skip
+            }
+            round.courseId = top.id
+            round.courseName = top.name
+            filled += 1
+        }
+
+        if filled > 0 {
+            try? context.save()
+        }
+        UserDefaults.standard.set(true, forKey: flagKey)
+        AppLogger.round.info("[Backfill] courseId backfill 완료 — \(targets.count)개 중 \(filled)개 채움")
     }
 
     // MARK: - ATT (App Tracking Transparency) → AdMob 초기화 순서 보장
