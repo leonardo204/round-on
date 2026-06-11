@@ -33,6 +33,7 @@
 - **xcodebuild destination**: iPhone 16 Pro는 OS 버전을 명시해야 모호성 회피 (메모리 참조)
 - **iOS 코드 변경**: 단일 ralph에 위임 (두 ralph 동시 iOS 영역 작업 금지)
 - **로깅 필수**: 주요 흐름(import·저장·충돌·네트워크/Gemini·광고·화면전환)은 단계별로 `os.Logger`(subsystem `kr.zerolive.golf.roundon`, category별)로 진입/결과/실패를 기록. 새 기능엔 단계 로그 + 네트워크엔 소요시간(ms) 로그 필수 — 런타임 UI/비동기 버그 추적성 확보
+- **CloudKit 스키마 배포(출시 필수)**: 새 SwiftData `@Model`/필드 추가 시 **반드시 출시 전 CloudKit Console에서 Production 재배포**. 절차: ①해당 모델 레코드 1건 이상 생성하며 **실기기** 실행(시뮬은 CloudKit 비활성 — RoundOnApp.swift)으로 Development 스키마에 타입 materialize ②Development → `Deploy Schema Changes…` → Deploy to Production. **누락 시 App Store 빌드(Production 환경)의 iCloud 동기화가 전부 실패**(로컬 전용 fallback). 컨테이너 `iCloud.kr.zerolive.golf.roundon`. (2026-06-11 미배포로 출시 후 동기화 실패 발생 — 배포로 해결)
 
 ---
 
