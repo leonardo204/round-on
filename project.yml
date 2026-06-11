@@ -114,8 +114,8 @@ targets:
       properties:
         CFBundleDisplayName: RoundOn Complication
         ITSAppUsesNonExemptEncryption: false
-        CFBundleShortVersionString: "1.2"
-        CFBundleVersion: "4"
+        CFBundleShortVersionString: "1.3"
+        CFBundleVersion: "5"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -161,8 +161,8 @@ targets:
         WKCompanionAppBundleIdentifier: kr.zerolive.golf.roundon
         WKApplication: true
         ITSAppUsesNonExemptEncryption: false
-        CFBundleShortVersionString: "1.2"
-        CFBundleVersion: "4"
+        CFBundleShortVersionString: "1.3"
+        CFBundleVersion: "5"
         WKBackgroundModes: [workout-processing]
         NSHealthShareUsageDescription: "라운드 진행 중 화면을 켜두고 운동 시간을 기록하기 위해 건강 데이터를 사용합니다."
         NSHealthUpdateUsageDescription: "골프 라운드를 운동 기록으로 저장하기 위해 건강 데이터에 접근합니다."
