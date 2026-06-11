@@ -65,6 +65,34 @@ final class RewardedAdManager: NSObject, ObservableObject {
         logger.info("[RewardedAd] refill: remaining=\(self.remaining)")
     }
 
+    // MARK: Fallback Charge
+
+    /// 광고를 띄울 수 없을 때(403/no-fill/미로드) 사용자가 막히지 않도록 0회→1회만 폴백 충전.
+    /// 광고 서빙이 정상화되면 정상 refill(3회)이 우선된다.
+    func grantFallbackCharge() {
+        if remaining < 1 { remaining = 1 }   // setter가 로그+objectWillChange 처리
+        logger.info("[RewardedAd] 폴백 충전(광고 미가용): remaining=\(self.remaining)")
+    }
+
+    // MARK: Refill Entry Point
+
+    /// 충전 결과
+    enum RefillOutcome { case rewarded, fallback, dismissed }
+
+    /// 충전 단일 진입점.
+    /// - 광고 가용 → 보상형 광고 표시(보상 시 내부 refill()=3)
+    /// - 광고 미가용(403/no-fill/미로드) → 폴백 1회 충전 + 다음 광고 로드 재시도
+    func requestRefill(from rootVC: UIViewController) async -> RefillOutcome {
+        if isAdReady, rewardedAd != nil {
+            let rewarded = await presentAd(from: rootVC)   // 보상 시 내부에서 refill()=3
+            return rewarded ? .rewarded : .dismissed       // 보상 전 닫음 → 폴백 안 줌(사용자 선택)
+        }
+        logger.warning("[RewardedAd] 광고 미가용 → 폴백 충전 경로")
+        grantFallbackCharge()
+        loadAd()                                            // 다음을 위해 로드 재시도
+        return .fallback
+    }
+
     // MARK: Ad State
 
     private var rewardedAd: GADRewardedAd?

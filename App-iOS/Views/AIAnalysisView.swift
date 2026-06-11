@@ -1,11 +1,14 @@
 import SwiftUI
 import Shared
+import os.log
 
 // MARK: - AIAnalysisView
 // AI 분석 팝업 — 남은 무료 분석 횟수 + 보상형 광고 충전 + 개인정보 전송 정책 통합
 // SettingsView "AI 분석" 행 탭 또는 할당량 소진 시 노출
 
 struct AIAnalysisView: View {
+
+    private static let logger = Logger(subsystem: "kr.zerolive.golf.roundon", category: "view")
 
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var adManager = RewardedAdManager.shared
@@ -18,7 +21,7 @@ struct AIAnalysisView: View {
 
     // 광고 관련
     @State private var isLoadingAd = false
-    @State private var showAdNotReadyAlert = false
+    @State private var showFallbackGrantedAlert = false
 
     var body: some View {
         NavigationStack {
@@ -49,10 +52,10 @@ struct AIAnalysisView: View {
             } message: {
                 Text("철회하면 이후 사진 전송이 중단되고 기기 내 인식으로 처리됩니다.")
             }
-            .alert("광고를 불러오는 중입니다", isPresented: $showAdNotReadyAlert) {
+            .alert("1회 충전했어요", isPresented: $showFallbackGrantedAlert) {
                 Button("확인", role: .cancel) {}
             } message: {
-                Text("잠시 후 다시 시도해 주세요.")
+                Text("지금은 광고를 불러올 수 없어 1회만 충전했어요. 이 1회를 사용한 뒤 다시 시도하면 광고로 더 충전할 수 있어요.")
             }
         }
     }
@@ -97,7 +100,9 @@ struct AIAnalysisView: View {
                         } else {
                             Image(systemName: "play.rectangle.fill")
                         }
-                        Text(isLoadingAd ? "광고 불러오는 중..." : "광고 보고 3회 충전")
+                        Text(isLoadingAd
+                             ? "광고 불러오는 중..."
+                             : (adManager.isAdReady ? "광고 보고 3회 충전" : "1회 충전"))
                             .font(.system(size: 15, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -115,7 +120,7 @@ struct AIAnalysisView: View {
         } header: {
             Text("남은 무료 분석")
         } footer: {
-            Text("분석 1회 사용 시 남은 횟수가 줄어듭니다. 소진 후 광고(약 30초)를 시청하면 3회가 다시 충전됩니다.")
+            Text("분석 1회 사용 시 남은 횟수가 줄어듭니다. 소진 후 광고(약 30초)를 시청하면 3회가 다시 충전됩니다. 광고를 불러올 수 없을 때는 1회만 충전됩니다.")
         }
     }
 
@@ -185,17 +190,19 @@ struct AIAnalysisView: View {
     // MARK: - 광고 시청 + 충전
 
     private func watchAdAndRefill() async {
-        guard adManager.isAdReady else {
-            // 광고 미로드 → preload 요청 후 안내
-            adManager.loadAd()
-            showAdNotReadyAlert = true
-            return
-        }
-
+        guard let rootVC = RewardedAdManager.getRootViewController() else { return }
         isLoadingAd = true
         defer { isLoadingAd = false }
-        guard let rootVC = RewardedAdManager.getRootViewController() else { return }
-        let _ = await adManager.presentAd(from: rootVC)
+        let outcome = await adManager.requestRefill(from: rootVC)
+        switch outcome {
+        case .rewarded:
+            Self.logger.info("[AIAnalysis] 충전 결과: rewarded(광고 보상 3회)")
+        case .fallback:
+            Self.logger.info("[AIAnalysis] 충전 결과: fallback(광고 미가용 1회)")
+            showFallbackGrantedAlert = true
+        case .dismissed:
+            Self.logger.info("[AIAnalysis] 충전 결과: dismissed(보상 전 닫음)")
+        }
     }
 
     // MARK: - Helpers
