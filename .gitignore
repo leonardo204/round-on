@@ -33,8 +33,12 @@ xcuserdata/
 *.xcuserstate
 DerivedData/
 build/
+.build/
 *.dSYM
 .swiftpm/
+
+# 로컬 목업 자산 (커밋 노이즈 회피)
+.mockups/
 
 # Kakao API cache (재빌드 가능)
 ref-docs/golf-db-pack/.kakao_cache.json
