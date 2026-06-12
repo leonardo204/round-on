@@ -77,20 +77,62 @@ final class RewardedAdManager: NSObject, ObservableObject {
     // MARK: Refill Entry Point
 
     /// 충전 결과
-    enum RefillOutcome { case rewarded, fallback, dismissed }
+    /// - rewarded: 광고 보상 충전(refill=3)
+    /// - fallbackGranted: 광고 미가용 + 잔여 0 → 폴백 1회 충전됨
+    /// - adUnavailable: 광고 미가용 + 잔여 있음 → 폴백 미제공(안내만)
+    /// - dismissed: 보상 전 광고를 닫음
+    enum RefillOutcome { case rewarded, fallbackGranted, adUnavailable, dismissed }
+
+    /// 충전 요청 시 광고가 미준비면 로드를 트리거하고 최대 이 시간(초)까지 대기한다.
+    private let refillLoadTimeout: TimeInterval = 8
 
     /// 충전 단일 진입점.
-    /// - 광고 가용 → 보상형 광고 표시(보상 시 내부 refill()=3)
-    /// - 광고 미가용(403/no-fill/미로드) → 폴백 1회 충전 + 다음 광고 로드 재시도
+    /// 1) 광고 준비됨 → 즉시 보상형 광고 표시(보상 시 내부 refill()=3)
+    /// 2) 미준비 → loadAd() 트리거 후 짧게 대기. 대기 중 확보되면 표시
+    /// 3) 끝내 미가용(403/no-fill/타임아웃) → 잔여에 따라 분기
+    ///    - 잔여 0 → 폴백 1회 충전(fallbackGranted)
+    ///    - 잔여 있음 → 폴백 미제공, 안내만(adUnavailable)
     func requestRefill(from rootVC: UIViewController) async -> RefillOutcome {
+        // 1) 이미 준비됨 → 즉시 표시
         if isAdReady, rewardedAd != nil {
             let rewarded = await presentAd(from: rootVC)   // 보상 시 내부에서 refill()=3
             return rewarded ? .rewarded : .dismissed       // 보상 전 닫음 → 폴백 안 줌(사용자 선택)
         }
-        logger.warning("[RewardedAd] 광고 미가용 → 폴백 충전 경로")
-        grantFallbackCharge()
+
+        // 2) 미준비 → 로드를 시도하고 짧게 대기(즉시 폴백 금지)
+        logger.info("[RewardedAd] 충전 요청 시 광고 미준비 — 로드 시도/대기(최대 \(self.refillLoadTimeout, format: .fixed(precision: 0))초)")
+        loadAd()                                            // 미로드/백오프 대기 중이면 즉시 로드 트리거
+        let ready = await waitForAdReady(timeout: refillLoadTimeout)
+        if ready, rewardedAd != nil {
+            logger.info("[RewardedAd] 대기 중 광고 확보 → 표시")
+            let rewarded = await presentAd(from: rootVC)
+            return rewarded ? .rewarded : .dismissed
+        }
+
+        // 3) 끝내 미가용 → 잔여에 따라 분기
+        if remaining < 1 {
+            logger.warning("[RewardedAd] 광고 미가용 + 잔여 0 → 폴백 1회 충전")
+            grantFallbackCharge()
+            loadAd()                                        // 다음을 위해 로드 재시도
+            return .fallbackGranted
+        }
+        logger.warning("[RewardedAd] 광고 미가용 + 잔여 \(self.remaining)회 → 폴백 미제공(안내만)")
         loadAd()                                            // 다음을 위해 로드 재시도
-        return .fallback
+        return .adUnavailable
+    }
+
+    /// isAdReady가 true가 될 때까지 최대 timeout초 폴링 대기.
+    /// 로드 시도가 실패로 종료(isLoadingAd=false & 미준비)되면 즉시 false 반환하여 불필요한 대기를 피한다.
+    private func waitForAdReady(timeout: TimeInterval) async -> Bool {
+        let pollInterval: TimeInterval = 0.2
+        var waited: TimeInterval = 0
+        while waited < timeout {
+            if isAdReady, rewardedAd != nil { return true }
+            if !isLoadingAd { return false }   // 로드 시도 종료 + 미준비 = 이번 시도 실패 확정
+            try? await Task.sleep(nanoseconds: UInt64(pollInterval * 1_000_000_000))
+            waited += pollInterval
+        }
+        return isAdReady && rewardedAd != nil
     }
 
     // MARK: Ad State

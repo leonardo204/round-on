@@ -22,6 +22,7 @@ struct AIAnalysisView: View {
     // 광고 관련
     @State private var isLoadingAd = false
     @State private var showFallbackGrantedAlert = false
+    @State private var showAdUnavailableAlert = false
 
     var body: some View {
         NavigationStack {
@@ -56,6 +57,11 @@ struct AIAnalysisView: View {
                 Button("확인", role: .cancel) {}
             } message: {
                 Text("지금은 광고를 불러올 수 없어 1회만 충전했어요. 이 1회를 사용한 뒤 다시 시도하면 광고로 더 충전할 수 있어요.")
+            }
+            .alert("지금은 광고를 불러올 수 없어요", isPresented: $showAdUnavailableAlert) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("남은 무료 분석을 모두 사용한 뒤 다시 시도하면 광고로 충전할 수 있어요.")
             }
         }
     }
@@ -100,9 +106,7 @@ struct AIAnalysisView: View {
                         } else {
                             Image(systemName: "play.rectangle.fill")
                         }
-                        Text(isLoadingAd
-                             ? "광고 불러오는 중..."
-                             : (adManager.isAdReady ? "광고 보고 3회 충전" : "1회 충전"))
+                        Text(isLoadingAd ? "광고 불러오는 중..." : "광고 보고 3회 충전")
                             .font(.system(size: 15, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -197,9 +201,12 @@ struct AIAnalysisView: View {
         switch outcome {
         case .rewarded:
             Self.logger.info("[AIAnalysis] 충전 결과: rewarded(광고 보상 3회)")
-        case .fallback:
-            Self.logger.info("[AIAnalysis] 충전 결과: fallback(광고 미가용 1회)")
+        case .fallbackGranted:
+            Self.logger.info("[AIAnalysis] 충전 결과: fallbackGranted(광고 미가용 + 잔여 0 → 1회 폴백)")
             showFallbackGrantedAlert = true
+        case .adUnavailable:
+            Self.logger.info("[AIAnalysis] 충전 결과: adUnavailable(광고 미가용 + 잔여 있음 → 안내만)")
+            showAdUnavailableAlert = true
         case .dismissed:
             Self.logger.info("[AIAnalysis] 충전 결과: dismissed(보상 전 닫음)")
         }
