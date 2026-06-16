@@ -16,7 +16,7 @@ enum AdConfig {
         #if DEBUG
         return "ca-app-pub-3940256099942544/1712485313" // Google 테스트 보상형
         #else
-        return "ca-app-pub-4410880415888380/1020197539" // 라운드온 보상형 단위
+        return "ca-app-pub-4410880415888380/6845783987" // 라운드온 보상형(Rewarded) 단위 — 구 /1020197539는 형식이 "보상형 전면"이라 format mismatch 403, 2026-06-16 교체
         #endif
     }
 }
