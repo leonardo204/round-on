@@ -1,6 +1,6 @@
 {
   "version": "2026.05.12-v3",
-  "generatedAt": "2026-05-19T04:23:28.404Z",
+  "generatedAt": "2026-07-01T07:01:45.732Z",
   "sources": [
     "문화체육관광부 전국 골프장 현황 (data.go.kr/15118920, 2022-12-31)",
     "행정안전부 LOCALDATA 생활 골프장 (data.go.kr/15045080)",
@@ -8,7 +8,7 @@
     "Kakao Local API (kakaodevelopers.com)"
   ],
   "license": "Mixed (공공누리 제1유형 + ODbL 1.0)",
-  "totalCourses": 980,
+  "totalCourses": 979,
   "courses": [
     {
       "id": "123_경기",
@@ -17732,6 +17732,14 @@
       "aliases": [
         "AL PEU SEU DAE YEONG",
         "ALPEUSEUDAEYEONG"
+      ],
+      "subCourses": [
+        {
+          "name": "전반"
+        },
+        {
+          "name": "후반"
+        }
       ]
     },
     {
