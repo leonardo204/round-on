@@ -28,11 +28,18 @@ struct RoundOnApp: App {
                 UserParOverride.self, CoursesSyncMeta.self,
                 StatsShareRecord.self
             ])
-            // swiftlint:disable:next force_try
-            self.modelContainer = try! ModelContainer(
-                for: schema,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-            )
+            do {
+                self.modelContainer = try ModelContainer(
+                    for: schema,
+                    configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                )
+                AppLogger.persistence.warning("인메모리 ModelContainer로 실행 중 — 이번 실행의 라운드는 저장되지 않음")
+            } catch {
+                // 인메모리조차 실패 = 스키마 자체가 깨진 상태로 앱이 할 수 있는 복구가 없다.
+                // 크래시는 불가피하므로, 크래시 전에 원인을 디바이스 로그에 남겨 진단 가능하게 한다.
+                AppLogger.persistence.critical("인메모리 ModelContainer마저 실패 — 복구 경로 없음: \(error)")
+                fatalError("ModelContainer 초기화 완전 실패: \(error)")
+            }
         }
     }
 
@@ -154,7 +161,13 @@ struct RoundOnApp: App {
         }
 
         if filled > 0 {
-            try? context.save()
+            do {
+                try context.save()
+            } catch {
+                // 저장 실패 시 완료 플래그를 세우지 않고 다음 실행에 재시도한다 (backfill 영구 누락 방지).
+                AppLogger.round.error("[Backfill] courseId 저장 실패 — 완료 플래그 미설정, 다음 실행에 재시도: \(error.localizedDescription)")
+                return
+            }
         }
         UserDefaults.standard.set(true, forKey: flagKey)
         AppLogger.round.info("[Backfill] courseId backfill 완료 — \(targets.count)개 중 \(filled)개 채움")

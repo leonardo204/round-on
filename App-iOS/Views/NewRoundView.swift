@@ -818,7 +818,12 @@ struct NewRoundView: View {
                     firstUsedAt: .now
                 )
                 modelContext.insert(persisted)
-                try? modelContext.save()
+                do {
+                    try modelContext.save()
+                } catch {
+                    // 캐시 실패는 라운드 시작을 막지 않는다 — 다음 검색 시 재캐싱된다.
+                    AppLogger.round.error("[NewRound] 카카오 골프장 캐시 저장 실패 — id=\(kakaoId, privacy: .public): \(error.localizedDescription)")
+                }
             }
         }
 

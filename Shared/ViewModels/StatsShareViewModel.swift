@@ -48,6 +48,10 @@ public final class StatsShareViewModel {
     /// 로드 상태
     public var loadState: LoadState = .idle
 
+    /// editToken 저장 실패 여부. true면 생성된 공유를 회수·수정할 수 없다(7일 후 자동 만료만 가능).
+    /// 링크 생성은 이미 성공했으므로 흐름을 막지 않고 UI 경고로만 노출한다.
+    public private(set) var tokenPersistenceFailed = false
+
     // MARK: - Private
 
     private let keychain: InMemoryKeychainStore
@@ -103,7 +107,14 @@ public final class StatsShareViewModel {
             AppLogger.share.info("[StatsShareVM] createStatsShare 성공 — shortId=\(resp.shortId)")
 
             // Keychain 저장 (인메모리 — ViewModel 생명주기 동안 보유)
-            try? keychain.setStatsEditToken(resp.editToken, for: resp.shortId)
+            do {
+                try keychain.setStatsEditToken(resp.editToken, for: resp.shortId)
+            } catch {
+                // 토큰을 잃으면 이 공유를 회수할 수 없다. 다만 링크는 이미 생성됐고 7일 후 자동 만료되므로
+                // 링크 제공 자체는 계속한다 (실패 처리하면 사용자는 링크도 못 받고 서버 공유만 남는다).
+                AppLogger.share.error("[StatsShareVM] stats editToken 저장 실패 — 회수 불가 (shortId=\(resp.shortId)): \(error.localizedDescription)")
+                tokenPersistenceFailed = true
+            }
 
             if let url = URL(string: resp.url) {
                 loadState = .success(url: url, shortId: resp.shortId)
@@ -137,6 +148,12 @@ public final class StatsShareViewModel {
         loadState = .idle
         pin = ""
         usePin = false
+        tokenPersistenceFailed = false
+    }
+
+    /// 뷰 레이어(App-iOS)가 자체 Keychain 저장 결과를 VM 경고 상태에 반영할 때 사용.
+    public func markTokenPersistenceFailed() {
+        tokenPersistenceFailed = true
     }
 }
 

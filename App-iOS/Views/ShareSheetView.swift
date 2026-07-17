@@ -99,7 +99,11 @@ struct ShareSheetView: View {
             .task {
                 // C2: 앱 진입 시 기존 평문 editToken을 Keychain으로 마이그레이션
                 keychainStore.migrateIfNeeded(round: round)
-                try? modelContext.save()
+                do {
+                    try modelContext.save()
+                } catch {
+                    AppLogger.share.error("[ShareSheet] editToken 마이그레이션 저장 실패: \(error.localizedDescription)")
+                }
             }
         }
     }

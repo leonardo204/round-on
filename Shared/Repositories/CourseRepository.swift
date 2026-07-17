@@ -94,7 +94,7 @@ public actor CourseRepository {
         }
 
         meta.lastFetchedAt = Date()
-        try? context.save()
+        saveSyncMeta(context: context, step: "lastFetchedAt", endpoint: endpoint)
 
         // A. 원격 요청
         var request = URLRequest(url: url, timeoutInterval: 15)
@@ -116,7 +116,7 @@ public actor CourseRepository {
                 // B. 304 — 캐시 그대로 (성공으로 간주)
                 AppLogger.persistence.info("CourseRepository [\(endpoint)]: 304 Not Modified — 캐시 유효")
                 meta.lastSuccessAt = Date()
-                try? context.save()
+                saveSyncMeta(context: context, step: "304.lastSuccessAt", endpoint: endpoint)
                 return false
             }
 
@@ -125,7 +125,7 @@ public actor CourseRepository {
                 let newEtag = http.value(forHTTPHeaderField: "ETag") ?? ""
                 meta.etag = newEtag
                 // ★ lastSuccessAt은 디코드+머지 성공 후에만 기록 (아래 updateCacheXxx 내부)
-                try? context.save()
+                saveSyncMeta(context: context, step: "etag", endpoint: endpoint)
 
                 // 디스크 캐시 기록 (endpoint별)
                 writeDiskCache(data: data, endpoint: endpoint)
@@ -134,14 +134,14 @@ public actor CourseRepository {
                     let ok = await updateCourseListCache(data: data, source: "remote")
                     if ok {
                         meta.lastSuccessAt = Date()
-                        try? context.save()
+                        saveSyncMeta(context: context, step: "courses.lastSuccessAt", endpoint: endpoint)
                     }
                     return ok
                 } else if endpoint == "course-pars" {
                     let merged = await mergeCourseParCache(data: data, source: "remote")
                     if merged >= 0 {
                         meta.lastSuccessAt = Date()
-                        try? context.save()
+                        saveSyncMeta(context: context, step: "course-pars.lastSuccessAt", endpoint: endpoint)
                     }
                     return merged > 0
                 }
@@ -331,8 +331,19 @@ public actor CourseRepository {
         }
         let meta = CoursesSyncMeta(endpoint: endpoint)
         context.insert(meta)
-        try? context.save()
+        saveSyncMeta(context: context, step: "createSyncMeta", endpoint: endpoint)
         return meta
+    }
+
+    /// CoursesSyncMeta 저장 전용 통로. 실패해도 골프장 데이터 자체는 디스크 캐시/번들로 서빙되므로
+    /// 흐름을 중단하지 않지만, 실패가 누적되면 etag/stale 판정이 깨져 매 실행마다 재fetch(사용자 데이터 소모)가
+    /// 발생하므로 반드시 로그로 남긴다.
+    private func saveSyncMeta(context: ModelContext, step: String, endpoint: String) {
+        do {
+            try context.save()
+        } catch {
+            AppLogger.persistence.error("CourseRepository [\(endpoint)]: sync meta 저장 실패 (\(step)) — \(error.localizedDescription)")
+        }
     }
 
     private func writeDiskCache(data: Data, endpoint: String) {

@@ -1214,7 +1214,12 @@ struct StatsView: View {
                 // 토큰 없으면 로컬 레코드만 삭제
                 AppLogger.share.warning("[StatsView] editToken 없음 — 로컬 레코드만 삭제")
                 statsModelContext.delete(record)
-                try? statsModelContext.save()
+                do {
+                    try statsModelContext.save()
+                } catch {
+                    AppLogger.share.error("[StatsView] 로컬 레코드 삭제 저장 실패 — shortId=\(record.shortId): \(error.localizedDescription)")
+                    revokeError = "회수 실패 — 다시 시도해 주세요."
+                }
                 isRevoking = false
                 return
             }
@@ -1224,10 +1229,21 @@ struct StatsView: View {
             try await client.deleteStatsShare(shortId: record.shortId, editToken: token)
 
             // Keychain 정리 + SwiftData 삭제
-            try? KeychainStore.shared.removeStatsEditToken(for: record.shortId)
+            do {
+                try KeychainStore.shared.removeStatsEditToken(for: record.shortId)
+            } catch {
+                // 서버 공유는 이미 삭제됨 — 남은 Keychain 항목은 무해한 잔여물이므로 흐름을 막지 않는다.
+                AppLogger.share.warning("[StatsView] stats editToken Keychain 삭제 실패 (잔여 항목) — shortId=\(record.shortId): \(error.localizedDescription)")
+            }
             statsModelContext.delete(record)
-            try? statsModelContext.save()
-            AppLogger.share.info("[StatsView] 통계 공유 회수 완료 — shortId=\(record.shortId)")
+            do {
+                try statsModelContext.save()
+                AppLogger.share.info("[StatsView] 통계 공유 회수 완료 — shortId=\(record.shortId)")
+            } catch {
+                // 서버 회수는 성공했으나 로컬 레코드가 남음 → 카드가 계속 보이므로 사용자에게 알린다.
+                AppLogger.share.error("[StatsView] 회수 후 로컬 레코드 삭제 실패 — shortId=\(record.shortId): \(error.localizedDescription)")
+                revokeError = "공유는 회수됐지만 카드 정리에 실패했어요. 앱을 다시 시작해 주세요."
+            }
         } catch {
             AppLogger.share.error("[StatsView] 회수 실패: \(error.localizedDescription)")
             revokeError = "회수 실패 — \(error.localizedDescription)"

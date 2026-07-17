@@ -41,6 +41,8 @@ public final class KeychainStore: KeychainStoring, @unchecked Sendable {
         }
 
         // 기존 항목 삭제 후 재삽입 (덮어쓰기)
+        // 삭제 실패를 무시해도 안전: 항목이 남아 있으면 아래 SecItemAdd가 duplicate로 실패해 throw되므로
+        // 저장 실패가 조용히 묻히지 않는다.
         try? deleteItem(for: key)
 
         let query: [CFString: Any] = [
@@ -95,8 +97,14 @@ public final class KeychainStore: KeychainStoring, @unchecked Sendable {
               editToken(for: shortId) == nil  // Keychain에 아직 없을 때만
         else { return }
 
-        try? setEditToken(plainToken, for: shortId)
-        round.sharedEditToken = nil  // 평문 필드 비우기
+        do {
+            try setEditToken(plainToken, for: shortId)
+            round.sharedEditToken = nil  // Keychain 이관 성공 후에만 평문 제거
+        } catch {
+            // 평문을 지우지 않아야 다음 실행에서 재이관할 수 있다. 여기서 지우면 토큰이 영구 유실되어
+            // 사용자가 자기 공유 링크를 수정·삭제할 수 없게 된다.
+            AppLogger.share.error("[Keychain] editToken 이관 실패 — 평문 유지, 다음 실행에 재시도 (shortId=\(shortId)): \(error.localizedDescription)")
+        }
     }
 
     // MARK: Private Helpers
@@ -132,6 +140,7 @@ extension KeychainStore {
         guard let data = token.data(using: .utf8) else {
             throw KeychainError.encodingFailed
         }
+        // 삭제 실패 무시 안전 — 남아 있으면 아래 SecItemAdd가 duplicate로 throw된다 (setEditToken과 동일 계약)
         try? deleteStatsItem(for: key)
         let query: [CFString: Any] = [
             kSecClass:           kSecClassGenericPassword,
@@ -214,8 +223,12 @@ public final class InMemoryKeychainStore: KeychainStoring {
               editToken(for: shortId) == nil
         else { return }
 
-        try? setEditToken(plainToken, for: shortId)
-        round.sharedEditToken = nil
+        do {
+            try setEditToken(plainToken, for: shortId)
+            round.sharedEditToken = nil  // 이관 성공 후에만 평문 제거 (프로덕션 구현과 동일 계약)
+        } catch {
+            AppLogger.share.error("[InMemoryKeychain] editToken 이관 실패 — 평문 유지: \(error.localizedDescription)")
+        }
     }
 
     // MARK: Stats 네임스페이스 (인메모리: "stats:<shortId>" 키 분리)

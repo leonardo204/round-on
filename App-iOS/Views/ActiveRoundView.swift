@@ -41,6 +41,14 @@ struct ActiveRoundView: View {
                 Color.springSurface.ignoresSafeArea()
 
                 VStack(spacing: 0) {
+                    // 저장 실패 배너 — 화면의 카운터는 정상으로 보이지만 기록이 유실될 수 있는 상태.
+                    // 오프라인 배너보다 위험도가 높아 위에 배치한다.
+                    if let saveError = roundVM.lastSaveError {
+                        BannerNotice(message: saveError, severity: .error, dismissAction: {
+                            roundVM.clearSaveError()
+                        })
+                    }
+
                     // 오프라인 배너
                     if let msg = bannerMessage {
                         BannerNotice(message: msg, severity: .warning, dismissAction: {

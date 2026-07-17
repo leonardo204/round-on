@@ -128,7 +128,12 @@ struct ImportSummaryView: View {
                     let isImported = existing.isImported
                     logger.info("[Import] 충돌 액션: 대체 선택 — 기존 라운드 '\(name)' \(date) isImported=\(isImported)")
                     modelContext.delete(existing)
-                    try? modelContext.save()
+                    do {
+                        try modelContext.save()
+                    } catch {
+                        // 삭제가 저장되지 않으면 대체가 아니라 중복 라운드가 남는다.
+                        logger.error("[Import] 충돌 대체 — 기존 라운드 삭제 저장 실패 (중복 잔존 가능) \(date): \(error.localizedDescription)")
+                    }
                     withAnimation(.easeOut(duration: 0.2)) {
                         showConflictAlert = false
                     }

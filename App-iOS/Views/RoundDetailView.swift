@@ -169,7 +169,11 @@ struct RoundDetailView: View {
         .task {
             // C2: 기존 평문 editToken Keychain 마이그레이션
             keychainStore.migrateIfNeeded(round: round)
-            try? modelContext.save()
+            do {
+                try modelContext.save()
+            } catch {
+                AppLogger.share.error("[RoundDetail] editToken 마이그레이션 저장 실패: \(error.localizedDescription)")
+            }
 
             // C4: 만료 자동 감지
             let expired = round.sharedExpiresAt.map { $0 < .now } ?? false
@@ -884,8 +888,12 @@ struct RoundDetailView: View {
             firstUsedAt: .now
         )
         modelContext.insert(persisted)
-        try? modelContext.save()
-        AppLogger.round.info("[RoundDetail] 카카오 골프장 영구 캐시 저장 — '\(discovered.name, privacy: .private)' (id=\(kakaoId, privacy: .public))")
+        do {
+            try modelContext.save()
+            AppLogger.round.info("[RoundDetail] 카카오 골프장 영구 캐시 저장 — '\(discovered.name, privacy: .private)' (id=\(kakaoId, privacy: .public))")
+        } catch {
+            AppLogger.round.error("[RoundDetail] 카카오 골프장 캐시 저장 실패 — id=\(kakaoId, privacy: .public): \(error.localizedDescription)")
+        }
     }
 
     // MARK: - 라운드 삭제

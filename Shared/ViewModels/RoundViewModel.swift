@@ -20,6 +20,11 @@ public final class RoundViewModel {
     /// HealthKit 권한 실패 등 배너 표시용 메시지
     public var bannerMessage: String?
 
+    /// SwiftData 저장 실패 시 UI 고지용 메시지. 저장이 다시 성공하면 자동으로 nil이 된다.
+    /// 저장 실패는 화면상 카운터가 정상으로 보여도 기록이 유실되는 유일한 무증상 경로이므로 UI에 반드시 노출한다.
+    /// UI 레이어(ActiveRoundView 등)가 관찰해 배너로 표시 — Shared는 App-iOS를 알지 못한다(상태 노출만).
+    public private(set) var lastSaveError: String?
+
     /// par prefill 성공 시 ActiveRoundView에서 일회성 토스트 표시용
     public var lastPrefillToastMessage: String?
 
@@ -114,6 +119,11 @@ public final class RoundViewModel {
     private func emitSnapshot() {
         guard let round = currentRound, let broadcast = onBroadcastSnapshot else { return }
         broadcast(makeSnapshot(from: round))
+    }
+
+    /// 저장 실패 배너를 사용자가 닫았을 때 UI에서 호출. 다음 저장이 성공해도 자동 해제된다.
+    public func clearSaveError() {
+        lastSaveError = nil
     }
 
     /// 현재 활성 라운드의 snapshot을 Watch에 명시적으로 재전송.
@@ -243,7 +253,7 @@ public final class RoundViewModel {
         round.holes = (round.holes ?? []) + holeScores
 
         modelContext.insert(round)
-        try? modelContext.save()
+        persist("startRound", roundId: round.id)
 
         AppLogger.round.info("라운드 시작: \(courseName, privacy: .private) \(holesCount)홀 \(players.count)명")
 
@@ -287,7 +297,7 @@ public final class RoundViewModel {
         }
         round.isFinished = true
         round.finishedAt = .now
-        try? modelContext.save()
+        persist("finishRound", roundId: roundId)
         AppLogger.round.info("라운드 종료: \(round.courseName, privacy: .private) \(totalHoles)홀 — 전체 홀 잠금")
         emitRoundEnd(roundId: roundId, reason: .finished)
         deactivate()
@@ -303,7 +313,7 @@ public final class RoundViewModel {
         guard let round = currentRound else { return }
         guard let hole = round.holeList.first(where: { $0.holeNumber == holeNumber }) else { return }
         hole.isLocked = false
-        save()
+        save("unlockHole", holeNumber: holeNumber)
         AppLogger.round.info("홀 잠금 해제: \(holeNumber)번 홀")
     }
 
@@ -328,7 +338,7 @@ public final class RoundViewModel {
         }
 
         upsertCount(in: holeScore, playerId: playerId, delta: 1)
-        save()
+        save("increment", holeNumber: holeNumber)
         scoreCardViewModel?.refresh(from: round)
         emitShot(type: .increment, holeNumber: holeNumber, playerId: playerId)
         return true
@@ -363,7 +373,7 @@ public final class RoundViewModel {
         } else {
             AppLogger.round.warning("코스 변경: \(half.rawValue) → \(newSubCourseName) — par catalog 미매칭, par 유지")
         }
-        save()
+        save("changeSubCourse.\(half.rawValue)")
         scoreCardViewModel?.refresh(from: round)
         emitSnapshot()  // Watch sync
     }
@@ -373,7 +383,7 @@ public final class RoundViewModel {
     public func confirmBackCourse() {
         guard let round = currentRound else { return }
         round.isBackTentative = false
-        save()
+        save("confirmBackCourse")
         emitSnapshot()
         AppLogger.round.info("후반 잠정 코스 확인됨: \(round.backCourseName ?? "-", privacy: .private)")
     }
@@ -400,7 +410,7 @@ public final class RoundViewModel {
         guard holeScore.par != par else { return }
         AppLogger.round.info("Par 변경: 홀\(holeNumber) \(holeScore.par)→\(par)")
         holeScore.par = par
-        save()
+        save("setPar", holeNumber: holeNumber)
         scoreCardViewModel?.refresh(from: round)
         emitSnapshot()  // par 변경은 snapshot으로 전체 동기화
 
@@ -452,7 +462,7 @@ public final class RoundViewModel {
             )
             modelContext.insert(override)
         }
-        try? modelContext.save()
+        persist("upsertParOverride", roundId: roundId, holeNumber: changedHoleNumber)
         AppLogger.persistence.info("UserParOverride upsert: courseId=\(courseIdCopy) sub=\(subCourseName) pars=\(pars)")
     }
 
@@ -462,7 +472,7 @@ public final class RoundViewModel {
         let roundId = round.id
         AppLogger.round.warning("라운드 폐기: \(round.courseName, privacy: .private)")
         modelContext.delete(round)
-        try? modelContext.save()
+        persist("discardRound", roundId: roundId)
         emitRoundEnd(roundId: roundId, reason: .discarded)
         deactivate()
         Task { await onWorkoutEnd?() }
@@ -512,7 +522,7 @@ public final class RoundViewModel {
         guard current > 0 else { return }  // 음수 금지 — 골프 룰 최저 1타
 
         upsertCount(in: holeScore, playerId: playerId, delta: -1)
-        save()
+        save("decrement", holeNumber: holeNumber)
         scoreCardViewModel?.refresh(from: round)
         emitShot(type: .decrement, holeNumber: holeNumber, playerId: playerId)
     }
@@ -552,7 +562,7 @@ public final class RoundViewModel {
         if delta != 0 {
             upsertCount(in: holeScore, playerId: playerId, delta: delta)
         }
-        save()
+        save("setToDoublePar", holeNumber: holeNumber)
         scoreCardViewModel?.refresh(from: round)
         emitShot(type: .increment, holeNumber: holeNumber, playerId: playerId)
         AppLogger.counter.info("더블파 설정: 홀\(holeNumber) \(current)→\(target)")
@@ -585,7 +595,7 @@ public final class RoundViewModel {
         case .ok:     break  // OK는 타수만 추가, 별도 카운터 없음
         }
         upsertCount(in: holeScore, playerId: playerId, delta: delta)
-        save()
+        save("penalty.\(kind)", holeNumber: holeNumber)
         scoreCardViewModel?.refresh(from: round)
         let shotType: ShotType = (kind == .ob ? .ob : (kind == .hazard ? .hazard : .ok))
         emitShot(type: shotType, holeNumber: holeNumber, playerId: playerId)
@@ -613,7 +623,7 @@ public final class RoundViewModel {
                     playerListViewModel?.activate(player: p, silent: true)
                 }
             }
-            try? modelContext.save()
+            persist("applyRemoteSnapshot.sync", roundId: round.id)
             scoreCardViewModel?.refresh(from: round)
             return
         }
@@ -634,7 +644,7 @@ public final class RoundViewModel {
             round.holes = (round.holes ?? []) + [hs]
         }
         modelContext.insert(round)
-        try? modelContext.save()
+        persist("applyRemoteSnapshot.insert", roundId: round.id)
         activate(round: round)
         if snapshot.activeHoleNumber > 0 {
             holeViewModel?.goToHole(index: snapshot.activeHoleNumber - 1, silent: true)
@@ -666,7 +676,7 @@ public final class RoundViewModel {
         case .ok:
             upsertCount(in: holeScore, playerId: event.playerId, delta: 1)
         }
-        save()
+        save("applyRemoteShot.\(event.type.rawValue)", holeNumber: event.holeNumber)
         scoreCardViewModel?.refresh(from: round)
     }
 
@@ -695,7 +705,7 @@ public final class RoundViewModel {
         AppLogger.round.info("원격 라운드 종료 수신: reason=\(end.reason.rawValue)")
         // 로컬 데이터 삭제 (Watch는 in-memory mirror라 안전)
         modelContext.delete(round)
-        try? modelContext.save()
+        persist("applyRemoteRoundEnd", roundId: end.roundId)
         deactivate()
     }
 
@@ -761,7 +771,7 @@ public final class RoundViewModel {
 
             round.lastActiveHoleNumber = newHoleNumber
             round.lastActiveAt = Date()
-            save()
+            save("holeChange", holeNumber: newHoleNumber)
         }
         guard let broadcast = onBroadcastHole else { return }
         let subLabel: String? = {
@@ -783,7 +793,7 @@ public final class RoundViewModel {
         if let round = currentRound {
             round.lastActivePlayerIndex = newPlayerIndex
             round.lastActiveAt = Date()
-            save()
+            save("playerSwitch")
         }
         guard let broadcast = onBroadcastPlayerSwitch else { return }
         let switchEvent = PlayerSwitch(
@@ -801,10 +811,35 @@ public final class RoundViewModel {
         self.playerListViewModel = nil
     }
 
-    private func save() {
+    private func save(_ step: String, holeNumber: Int? = nil) {
         // 샷 입력 등 모든 저장 시점에 lastActiveAt 갱신 (정확한 마지막 활동 시각 보존)
         currentRound?.lastActiveAt = Date()
-        try? modelContext.save()
+        persist(step, roundId: currentRound?.id, holeNumber: holeNumber)
+    }
+
+    /// 모든 SwiftData 저장의 단일 통로. 실패 시 진단 로그 + lastSaveError(사용자 고지) 세팅.
+    /// - Parameters:
+    ///   - step: 실패 로그에 남길 작업명 (예: "increment", "finishRound")
+    ///   - roundId: 실패한 저장이 속한 라운드 (UUID prefix만 기록 — PII 아님)
+    ///   - holeNumber: 홀 단위 작업이면 홀 번호
+    /// - Returns: 저장 성공 여부
+    @discardableResult
+    private func persist(_ step: String, roundId: UUID? = nil, holeNumber: Int? = nil) -> Bool {
+        do {
+            try modelContext.save()
+            // 직전 실패 후 복구 성공 → 배너 자동 해제
+            if lastSaveError != nil {
+                AppLogger.persistence.info("저장 복구됨 [\(step)] — 이전 실패 상태 해제")
+                lastSaveError = nil
+            }
+            return true
+        } catch {
+            let roundPart = roundId.map { " round=\($0.uuidString.prefix(8))" } ?? ""
+            let holePart = holeNumber.map { " hole=\($0)" } ?? ""
+            AppLogger.persistence.error("저장 실패 [\(step)]\(roundPart)\(holePart): \(error.localizedDescription)")
+            lastSaveError = "기록 저장에 실패했어요. 이어서 입력한 내용이 유실될 수 있어요."
+            return false
+        }
     }
 
     private func upsertCount(in holeScore: HoleScore, playerId: UUID, delta: Int) {
