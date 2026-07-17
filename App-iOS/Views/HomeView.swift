@@ -19,6 +19,7 @@ struct HomeView: View {
     @State private var showStats = false
     @State private var showSettings = false
     @State private var showAllRounds = false
+    @State private var showImportLanding = false
     @State private var selectedRound: Round?
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
     @State private var pendingDraft: NewRoundDraft?  // 홈에 표시될 hint banner
@@ -97,6 +98,11 @@ struct HomeView: View {
                         }
                     }
             }
+        }
+        // ImportLandingView는 자체 NavigationStack + 닫기 툴바를 가진다 (검토 화면 push 용도).
+        // 여기서 다시 감싸면 네비게이션 스택이 중첩되므로 그대로 띄운다.
+        .fullScreenCover(isPresented: $showImportLanding) {
+            ImportLandingView()
         }
         .task {
             refreshLocationStatus()
@@ -245,6 +251,10 @@ struct HomeView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
 
+                importCTA
+                    .padding(.horizontal, 16)
+                    .padding(.top, 10)
+
                 if !finishedRounds.isEmpty {
                     sectionHeader("요약")
                     metricsGrid
@@ -332,6 +342,28 @@ struct HomeView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("새 라운드 시작")
+
+            // 보조 액션 — 지난 스코어카드로 기록을 채우는 온보딩 경로.
+            // 주 CTA와 경쟁하지 않도록 배경 없는 텍스트 버튼으로 둔다.
+            Button {
+                AppLogger.view.info("빈 상태 불러오기 CTA 탭 → ImportLandingView")
+                showImportLanding = true
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .font(.system(size: 14, weight: .semibold))
+                        .accessibilityHidden(true)
+                    Text("지난 스코어카드 불러오기")
+                        .font(.system(size: 15, weight: .semibold))
+                }
+                .foregroundStyle(Color.accentGreen)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 14)
+            .accessibilityLabel("지난 스코어카드 불러오기")
+            .accessibilityHint("사진 속 스코어카드를 AI가 읽어 라운드로 저장합니다")
 
             // GPS 권한 안내 — 권한 미허용 시에만 표시
             if !isLocationAuthorized {
@@ -430,6 +462,51 @@ struct HomeView: View {
 
     private var heroGradient: some View {
         effectiveSeason.heroGradient(dark: colorScheme == .dark)
+    }
+
+    // MARK: - Import CTA (보조 — hero보다 한 단계 낮은 위계)
+
+    private var importCTA: some View {
+        Button {
+            AppLogger.view.info("불러오기 CTA 탭 → ImportLandingView")
+            showImportLanding = true
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.accentGreen.opacity(0.15))
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.tint)
+                }
+                .frame(width: 38, height: 38)
+                .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("스코어카드 불러오기")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("사진 속 스코어카드를 AI가 읽어 기록해요")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .background(Color(.secondarySystemGroupedBackground),
+                        in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("스코어카드 불러오기")
+        .accessibilityHint("사진 속 스코어카드를 AI가 읽어 라운드로 저장합니다")
     }
 
     // MARK: - Section headers

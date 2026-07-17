@@ -3,7 +3,6 @@ import CoreLocation
 import UIKit
 import SwiftData
 import Shared
-import PhotosUI
 import CloudKit
 import os.log
 
@@ -24,9 +23,6 @@ struct SettingsView: View {
     @State private var syncResultMessage: String? = nil
 
     private let cloudContainerID = "iCloud.kr.zerolive.golf.roundon"
-
-    // 가져오기 진입
-    @State private var showImportLanding = false
 
     // DB 업데이트 상태
     @State private var dbUpdateState: DBUpdateState = .idle
@@ -84,15 +80,6 @@ struct SettingsView: View {
                 Text("앱 실행 시 자동으로 최신 골프장 정보를 확인합니다. 수동으로 즉시 갱신하려면 버튼을 탭하세요.")
             }
 
-            // ★ 가져오기 섹션
-            Section {
-                importRow
-            } header: {
-                Text("가져오기")
-            } footer: {
-                Text("사진 보관함의 스코어카드를 인식해 라운드로 저장합니다. 원본 이미지는 저장되지 않습니다.")
-            }
-
             // ★ AI 분석 섹션 (할당량 + 개인정보 통합)
             Section {
                 aiAnalysisRow
@@ -135,9 +122,6 @@ struct SettingsView: View {
         }
         .navigationTitle("설정")
         .navigationBarTitleDisplayMode(.inline)
-        .fullScreenCover(isPresented: $showImportLanding) {
-            ImportLandingView()
-        }
         .sheet(isPresented: $showAIAnalysis) {
             AIAnalysisView()
         }
@@ -424,37 +408,6 @@ struct SettingsView: View {
 
     private func refreshLocationStatus() {
         locationStatus = LocationService.shared.authorizationStatus
-    }
-
-    // MARK: - Import row
-
-    private var importRow: some View {
-        Button {
-            showImportLanding = true
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 17))
-                    .foregroundStyle(.tint)
-                    .frame(width: 24)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("AI 스코어보드 가져오기")
-                        .font(.body)
-                        .foregroundStyle(.primary)
-                    Text("AI가 사진 속 스코어카드를 읽어 라운드로 변환")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color(.tertiaryLabel))
-            }
-            .padding(.vertical, 4)
-        }
     }
 
     // MARK: - DB update row
