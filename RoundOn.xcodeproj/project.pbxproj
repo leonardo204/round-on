@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		059A1BC221DDC1A849545277 /* ImportGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EE92911168609CDC8F5FEB /* ImportGate.swift */; };
 		05EC037EEACC212315430BF1 /* ScoreDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B91EDAE9E43A6F67D2CE002 /* ScoreDiff.swift */; };
 		075D5B0B7A902D3C1088E48C /* HoleResultMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F393C23320CCDF415B9D26A4 /* HoleResultMessage.swift */; };
 		08CB751214F0061A850B3B38 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = DD9B49C964E96B313246580D /* GoogleMobileAds */; };
@@ -19,6 +20,7 @@
 		107F3BD3FF95B2C484F771BE /* RoundOnWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E74FBB5C1B2201A2640A0CB /* RoundOnWatchApp.swift */; };
 		1130B0769735C447963E6343 /* PlayerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7ADE7B4EEBDD1BBBD64AFD /* PlayerListViewModel.swift */; };
 		1502B88CF3CA9A658971B3A2 /* ShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DADB8A1EBBBCCBFB831647D /* ShareOptions.swift */; };
+		1521177E271F32684E8577F4 /* ImportGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21006497E1D6FE8057415758 /* ImportGateTests.swift */; };
 		16FAD1A1CA872FBFA7BD4D6B /* SyncCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BF69E3C181D9405358D0FC /* SyncCoordinatorTests.swift */; };
 		1712F80421C19B4CB3D2DD62 /* UserParOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D316F29EB876D6EDD6B4616 /* UserParOverride.swift */; };
 		186C9F61BAB5BCF8D854BF5C /* HoleScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8BC201905AB97743D9446 /* HoleScore.swift */; };
@@ -75,8 +77,10 @@
 		55E2DAB3267E8DE860BE6088 /* HoleLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D710AF3C3D02309172494952 /* HoleLockTests.swift */; };
 		563CB27A5BDB5E89F45E141E /* Round+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8586200D803A247A39C2BCA0 /* Round+Display.swift */; };
 		576AA378C4AD869517C79577 /* PenaltySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116B1BDFBE34C1A9B273EFD6 /* PenaltySettings.swift */; };
+		5CA0728CB32D2E43CABB6E8B /* ImportGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EE92911168609CDC8F5FEB /* ImportGate.swift */; };
 		5F0CE4EA0DDCED0205D8664D /* ScoreDiffShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C4AA8153844CEF97D806E7 /* ScoreDiffShape.swift */; };
 		5F2A2824F6FA8792EA2DE79E /* Round+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8586200D803A247A39C2BCA0 /* Round+Display.swift */; };
+		60381CFC09C83A4F94EAEBC1 /* ScorecardMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91AFAD38C3053CD7C5748E9 /* ScorecardMapper.swift */; };
 		626057D85619D703724C37A6 /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9539182D15057C32C5477 /* SyncCoordinator.swift */; };
 		628959B54063C38658ABEFBF /* HoleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E7E4689FB1CB7B01E45597 /* HoleViewModel.swift */; };
 		64B12605CA3972A92A07EF1F /* CourseNameMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44447308BE7AE8631CCF01E6 /* CourseNameMatcher.swift */; };
@@ -334,9 +338,11 @@
 		1CCE8AFECD61E8B87849007D /* CourseDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDiscoveryService.swift; sourceTree = "<group>"; };
 		1E79AB23800063267136648B /* LaunchComplicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchComplicationView.swift; sourceTree = "<group>"; };
 		1ED91986EC4C7446D031E008 /* StatsSharePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSharePayload.swift; sourceTree = "<group>"; };
+		21006497E1D6FE8057415758 /* ImportGateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGateTests.swift; sourceTree = "<group>"; };
 		21D8AFD2F10C199CC2A10FD8 /* WatchScoreInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchScoreInputView.swift; sourceTree = "<group>"; };
 		23C4AA8153844CEF97D806E7 /* ScoreDiffShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreDiffShape.swift; sourceTree = "<group>"; };
 		266ECBE8207CD2C2E8385E8C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		26EE92911168609CDC8F5FEB /* ImportGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGate.swift; sourceTree = "<group>"; };
 		26F8C7C724E980752FC0A307 /* ShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
 		28920937CD4E8F060CFB4431 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC651CE3038389DC2273F08 /* PersistedDiscoveredCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedDiscoveredCourse.swift; sourceTree = "<group>"; };
@@ -484,7 +490,7 @@
 		F7372CB2448ED263BAEF81FF /* WCMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCMessages.swift; sourceTree = "<group>"; };
 		F997DB31726FE8C239021BAE /* RoundOn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoundOn.entitlements; sourceTree = "<group>"; };
 		FB9BB52EDD48E7B54128694A /* ImportSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSummaryView.swift; sourceTree = "<group>"; };
-		"TEMP_D9A02A10-C889-4340-A86D-C44CAF67B8D4" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		"TEMP_124FCA1F-4867-4889-B99C-A7BEBEF4D125" /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -947,6 +953,7 @@
 				8A2C4EE1BF3C37DF8666EF9A /* GeminiScorecardAdapterTests.swift */,
 				68B422356FF277D5F06DD486 /* HaversineTests.swift */,
 				D710AF3C3D02309172494952 /* HoleLockTests.swift */,
+				21006497E1D6FE8057415758 /* ImportGateTests.swift */,
 				6D5592903B2E8D6A58B0D84B /* Info.plist */,
 				477CCAE0392D2D63F49A7977 /* KakaoVerificationServiceTests.swift */,
 				924C66383BD0D02FC8223B18 /* KeychainStoreTests.swift */,
@@ -994,6 +1001,7 @@
 		C53233219C275D49699F2933 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				26EE92911168609CDC8F5FEB /* ImportGate.swift */,
 				48EEEF093D4D07412ECB8561 /* ImportViewModel.swift */,
 			);
 			path = ViewModels;
@@ -1050,10 +1058,10 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		"TEMP_646E28CC-CE63-44E3-A06C-EFC0EBAD5436" /* golfCounter */ = {
+		"TEMP_2A072A8D-DAD8-47FB-BDAC-A97768BB687F" /* golfCounter */ = {
 			isa = PBXGroup;
 			children = (
-				"TEMP_D9A02A10-C889-4340-A86D-C44CAF67B8D4" /* Secrets.xcconfig */,
+				"TEMP_124FCA1F-4867-4889-B99C-A7BEBEF4D125" /* Secrets.xcconfig */,
 			);
 			path = golfCounter;
 			sourceTree = "<group>";
@@ -1415,6 +1423,8 @@
 				65F0162231D037DA2D11281C /* GeminiScorecardAdapterTests.swift in Sources */,
 				3A4C3518B16BF3E0A294EEEB /* HaversineTests.swift in Sources */,
 				55E2DAB3267E8DE860BE6088 /* HoleLockTests.swift in Sources */,
+				5CA0728CB32D2E43CABB6E8B /* ImportGate.swift in Sources */,
+				1521177E271F32684E8577F4 /* ImportGateTests.swift in Sources */,
 				52B4DAFFA9558462C9DF1BCA /* KakaoVerificationService.swift in Sources */,
 				A9A721A70104E499F5C81549 /* KakaoVerificationServiceTests.swift in Sources */,
 				CADA89F7A881E57D8C57F48E /* KeychainStoreTests.swift in Sources */,
@@ -1426,6 +1436,7 @@
 				960B0E022F9766B79F1A85AC /* ScoreCardViewModelStressTests.swift in Sources */,
 				0F9FC3B94FFB5A39E07713DE /* ScoreCardViewModelTests.swift in Sources */,
 				95CB275BB67B50D4D3058473 /* ScoreDiffTests.swift in Sources */,
+				60381CFC09C83A4F94EAEBC1 /* ScorecardMapper.swift in Sources */,
 				402BD55BE099A11148558899 /* ScorecardMapperTests.swift in Sources */,
 				CC416296AA7A9F2284D694A8 /* ScorecardValidatorTests.swift in Sources */,
 				2B22717A387BC3831EEDD7E4 /* SeasonalColorTests.swift in Sources */,
@@ -1475,6 +1486,7 @@
 				80FF43CEC8D4B0D5FAEE6810 /* HoleProgress.swift in Sources */,
 				2E9B82D5288AE9EEA7E6C216 /* HoleScoreGrid.swift in Sources */,
 				39A7BEDA7FD5288004686679 /* HomeView.swift in Sources */,
+				059A1BC221DDC1A849545277 /* ImportGate.swift in Sources */,
 				1D8EEDB603941A7847E69053 /* ImportLandingView.swift in Sources */,
 				4E304844D375D515DA97C25C /* ImportReviewView.swift in Sources */,
 				940EDB399E27A360E6A8FCB7 /* ImportSummaryView.swift in Sources */,
@@ -1632,7 +1644,7 @@
 		};
 		2C03ADBA989C706505E867E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_D9A02A10-C889-4340-A86D-C44CAF67B8D4" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_124FCA1F-4867-4889-B99C-A7BEBEF4D125" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1657,7 +1669,7 @@
 		};
 		3F8AAE358BCFC230E96FBF34 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_D9A02A10-C889-4340-A86D-C44CAF67B8D4" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_124FCA1F-4867-4889-B99C-A7BEBEF4D125" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1681,7 +1693,7 @@
 		};
 		4B919E3C9654019F15F0B6DF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_D9A02A10-C889-4340-A86D-C44CAF67B8D4" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_124FCA1F-4867-4889-B99C-A7BEBEF4D125" /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1705,7 +1717,7 @@
 		};
 		54A0A6D1E7D1EF07B3473E74 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = "TEMP_D9A02A10-C889-4340-A86D-C44CAF67B8D4" /* Secrets.xcconfig */;
+			baseConfigurationReference = "TEMP_124FCA1F-4867-4889-B99C-A7BEBEF4D125" /* Secrets.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;

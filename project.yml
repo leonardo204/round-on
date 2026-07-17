@@ -176,6 +176,10 @@ targets:
       # KakaoVerificationService / CourseDiscoveryService 직접 테스트를 위해 소스 포함
       - path: App-iOS/Network/KakaoVerificationService.swift
       - path: App-iOS/Network/CourseDiscoveryService.swift
+      # ScorecardMapper / ImportGate 직접 테스트를 위해 소스 포함
+      # (둘 다 App-iOS 전용 의존이 없어 테스트 타겟에서 그대로 컴파일된다)
+      - path: App-iOS/Import/Mapper/ScorecardMapper.swift
+      - path: App-iOS/Import/ViewModels/ImportGate.swift
     # 이미지 기반 OCR 테스트용 샘플 번들 리소스 (sources가 아닌 resources로 등록)
     resources:
       - path: Tests/SharedTests/Resources/samples

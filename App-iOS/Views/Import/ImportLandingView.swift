@@ -17,6 +17,8 @@ struct ImportLandingView: View {
     @State private var pickerItem: PhotosPickerItem?
     @State private var showReview = false
     @State private var showAIAnalysis = false
+    /// AIAnalysisView의 충전 결과 — 시트가 닫힌 뒤 재개 여부 판단에 사용
+    @State private var refillOutcome: RewardedAdManager.RefillOutcome?
 
     // 본인 이름 (OCR 결과에서 owner 행 자동 매칭용)
     @AppStorage("ownerName") private var ownerName: String = ""
@@ -27,8 +29,8 @@ struct ImportLandingView: View {
                 .navigationTitle("스코어보드 가져오기")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("취소") {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("닫기") {
                             viewModel.cancel()
                             dismiss()
                         }
@@ -71,7 +73,7 @@ struct ImportLandingView: View {
             case .review:
                 showReview = true
             case .completed:
-                // 저장 완료 — fullScreenCover(SettingsView) 전체 dismiss
+                // 저장 완료 — 홈에서 띄운 fullScreenCover 전체 dismiss
                 dismiss()
             default:
                 break
@@ -83,8 +85,22 @@ struct ImportLandingView: View {
                 viewModel.showQuotaExhausted = false
             }
         }
-        .sheet(isPresented: $showAIAnalysis) {
-            AIAnalysisView()
+        .sheet(isPresented: $showAIAnalysis, onDismiss: {
+            // 충전이 실제로 이뤄졌을 때만 원래 하려던 분석을 재개한다.
+            // .dismissed/.adUnavailable은 잔여가 그대로라 재개 시 할당량 게이트에 다시 걸려
+            // 시트가 무한 재오픈된다 → 재개하지 않는다.
+            let outcome = refillOutcome
+            refillOutcome = nil
+            switch outcome {
+            case .rewarded, .fallbackGranted:
+                viewModel.retryAfterRefill()
+            case .adUnavailable, .dismissed, .none:
+                break
+            }
+        }) {
+            AIAnalysisView(onRefilled: { outcome in
+                refillOutcome = outcome
+            })
         }
     }
 

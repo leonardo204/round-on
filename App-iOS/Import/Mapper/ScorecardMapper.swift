@@ -166,10 +166,16 @@ public enum ScorecardMapper {
             sections.append(section)
 
             // 선수 행 추출 (OCR 등장 순서 보존)
+            // join 조건에 "이 섹션 값이 아직 비어있음"을 포함한다.
+            // 골프장이 인쇄한 마스킹 라벨은 동성 동반자끼리 같은 문자열("이**")이 되므로
+            // label만으로 join하면 같은 섹션의 다른 사람을 덮어쓴다.
+            // 섹션 값이 비어있는 엔트리에만 join → 전반/후반 결합은 유지, 섹션 내 충돌은 방지.
             for row in table.rows where row.kind == .player {
                 let label = row.label
                 let values = extractPlayerRow(from: row, expectedCount: 9)
-                if let idx = playerEntries.firstIndex(where: { $0.label == label }) {
+                if let idx = playerEntries.firstIndex(where: {
+                    $0.label == label && $0.scoresBySection[sectionId] == nil
+                }) {
                     playerEntries[idx].scoresBySection[sectionId] = values
                 } else {
                     playerEntries.append((label: label, scoresBySection: [sectionId: values]))
@@ -178,8 +184,10 @@ public enum ScorecardMapper {
         }
 
         // 선수 배열 구성 — owner 선택: ownerName 매칭 → 없으면 첫 번째 entry (사전순 X)
+        // 동성 마스킹으로 같은 라벨이 여러 명일 수 있으므로 라벨이 아닌 인덱스로 owner를 특정한다.
+        // (라벨 비교 시 "이**" 2명이 모두 owner가 된다)
         var players: [ImportPlayer] = []
-        let ownerLabel: String?
+        let ownerIndex: Int?
 
         if let ownerName {
             // ownerName 매칭 우선순위:
@@ -187,7 +195,7 @@ public enum ScorecardMapper {
             // 2) 라벨에 마스킹("*") 포함 → ownerName 첫 글자만 prefix 매칭
             // 3) 라벨 비마스킹 → ownerName 2글자 prefix 매칭
             // 4) 매칭 없으면 첫 번째 entry로 fallback
-            ownerLabel = playerEntries.first {
+            let matched = playerEntries.firstIndex {
                 let label = $0.label
                 if label == ownerName { return true }
                 if label.contains("*") {
@@ -195,16 +203,17 @@ public enum ScorecardMapper {
                 } else {
                     return label.hasPrefix(String(ownerName.prefix(2)))
                 }
-            }?.label ?? playerEntries.first?.label
+            }
+            ownerIndex = matched ?? (playerEntries.isEmpty ? nil : 0)
         } else {
             // 첫 번째 entry = owner (OCR 카드 순서 기준)
-            ownerLabel = playerEntries.first?.label
+            ownerIndex = playerEntries.isEmpty ? nil : 0
         }
 
-        for entry in playerEntries {
+        for (index, entry) in playerEntries.enumerated() {
             let player = ImportPlayer(
                 rawLabel: entry.label,
-                isOwner: (entry.label == ownerLabel),
+                isOwner: (index == ownerIndex),
                 matchedPlayerName: nil,
                 scores: entry.scoresBySection
             )

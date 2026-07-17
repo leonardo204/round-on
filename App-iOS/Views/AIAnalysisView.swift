@@ -10,6 +10,10 @@ struct AIAnalysisView: View {
 
     private static let logger = Logger(subsystem: "kr.zerolive.golf.roundon", category: "view")
 
+    /// 충전 시도가 끝났을 때 호출 — 호출부가 원래 하려던 작업을 재개하는 데 사용한다.
+    /// SettingsView처럼 단독 진입한 경우 nil (재개할 작업이 없어 부작용 없음).
+    var onRefilled: ((RewardedAdManager.RefillOutcome) -> Void)?
+
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var adManager = RewardedAdManager.shared
 
@@ -210,6 +214,8 @@ struct AIAnalysisView: View {
         case .dismissed:
             Self.logger.info("[AIAnalysis] 충전 결과: dismissed(보상 전 닫음)")
         }
+        // 충전 결과를 호출부에 전달 — 재개 여부는 호출부가 outcome으로 판단한다
+        onRefilled?(outcome)
     }
 
     // MARK: - Helpers

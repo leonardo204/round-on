@@ -55,8 +55,8 @@ public final class ImportViewModel {
     // MARK: Private
 
     private var cgImageForOCR: CGImage?
-    private var pendingItem: PhotosPickerItem?
-    private var pendingOwnerName: String?
+    /// 동의·할당량 게이트 판정 + 보류 항목 보관 (재개용)
+    private var gate = ImportGate<PhotosPickerItem>()
     /// 진행 중인 OCR Task 핸들 — cancel() 시 실제 Task 취소에 사용
     private var ocrTask: Task<Void, Never>?
 
@@ -72,19 +72,26 @@ public final class ImportViewModel {
     public func run(item: PhotosPickerItem, ownerName: String? = nil) async {
         logger.info("[Import] run 진입 — 동의 상태: \(ConsentManager.shared.isAccepted), canAnalyze: \(RewardedAdManager.shared.canAnalyze), remaining: \(RewardedAdManager.shared.remaining)")
 
-        // 동의 미수락이면 팝업 표시 후 대기 (acceptConsentAndContinue가 Task를 생성)
-        if !ConsentManager.shared.isAccepted {
+        // 게이트 판정 — 미통과 시 item을 보관해 동의 수락/광고 충전 후 재개할 수 있게 한다
+        let decision = gate.evaluate(
+            item: item,
+            ownerName: ownerName,
+            isConsentAccepted: ConsentManager.shared.isAccepted,
+            canAnalyze: RewardedAdManager.shared.canAnalyze
+        )
+        switch decision {
+        case .needsConsent:
+            // 팝업 표시 후 대기 (acceptConsentAndContinue가 Task를 생성)
             logger.info("[Import] 동의 미수락 → 동의 팝업 표시 후 대기")
-            pendingItem = item
-            pendingOwnerName = ownerName
             showConsentAlert = true
             return
-        }
-        // 할당량 소진 확인
-        if !RewardedAdManager.shared.canAnalyze {
+        case .quotaExhausted:
+            // AIAnalysisView 진입 → 광고 충전 후 retryAfterRefill로 재개
             logger.warning("[Import] 할당량 소진 → AIAnalysisView 유도 (remaining=\(RewardedAdManager.shared.remaining))")
             showQuotaExhausted = true
             return
+        case .proceed:
+            break
         }
         // 이전 Task가 있으면 취소
         ocrTask?.cancel()
@@ -99,33 +106,62 @@ public final class ImportViewModel {
     public func acceptConsentAndContinue() {
         ConsentManager.shared.accept()
         showConsentAlert = false
-        guard let item = pendingItem else { return }
-        let ownerName = pendingOwnerName
-        pendingItem = nil
-        pendingOwnerName = nil
         // 동의 수락 후에도 할당량 재확인
-        if !RewardedAdManager.shared.canAnalyze {
+        let decision = gate.resume(
+            isConsentAccepted: ConsentManager.shared.isAccepted,
+            canAnalyze: RewardedAdManager.shared.canAnalyze
+        )
+        switch decision {
+        case .proceed(let item, let ownerName):
+            logger.info("[Import] 동의 수락 → OCR 재개")
+            ocrTask = Task {
+                await performOCR(item: item, ownerName: ownerName)
+            }
+        case .quotaExhausted:
             logger.warning("[Import] 동의 수락 후 할당량 재확인 — 소진 (remaining=\(RewardedAdManager.shared.remaining))")
             showQuotaExhausted = true
-            return
+        case .needsConsent:
+            // 방금 수락했으므로 도달하지 않음 (방어)
+            logger.error("[Import] 동의 수락 직후 미동의 상태 — 재개 보류")
+        case .noPending:
+            logger.info("[Import] 동의 수락 — 재개할 보류 항목 없음")
         }
-        logger.info("[Import] 동의 수락 → OCR 재개")
-        let task = Task {
-            await performOCR(item: item, ownerName: ownerName)
-        }
-        ocrTask = task
     }
 
-    /// 동의 거부 → Vision 폴백으로 실행
+    /// 광고 시청/폴백 충전 후 보류 중인 import 재개.
+    /// ImportLandingView가 AIAnalysisView 종료 시 충전 성공(.rewarded/.fallbackGranted)일 때만 호출한다.
+    /// 충전이 실제로 이뤄지지 않았으면 재개하지 않는다 — 할당량 게이트 재진입 → 팝업 재오픈 무한루프 방지.
+    public func retryAfterRefill() {
+        let decision = gate.resume(
+            isConsentAccepted: ConsentManager.shared.isAccepted,
+            canAnalyze: RewardedAdManager.shared.canAnalyze
+        )
+        switch decision {
+        case .proceed(let item, let ownerName):
+            logger.info("[Import] 충전 완료 → OCR 재개 (remaining=\(RewardedAdManager.shared.remaining))")
+            ocrTask?.cancel()
+            ocrTask = Task {
+                await performOCR(item: item, ownerName: ownerName)
+            }
+        case .needsConsent:
+            // AIAnalysisView에서 동의를 철회한 경우 — 재동의 없이 사진을 전송하지 않는다
+            logger.warning("[Import] 충전 후 재개 보류 — 동의 철회 상태 → 동의 팝업 재표시")
+            showConsentAlert = true
+        case .quotaExhausted:
+            // 충전 실패(보상 전 닫음 등) — 재개하면 게이트에 다시 걸려 팝업이 무한 재오픈된다
+            logger.warning("[Import] 충전 후에도 잔여 0 → 재개 안 함 (무한루프 방지)")
+        case .noPending:
+            logger.info("[Import] 충전 후 재개할 보류 항목 없음")
+        }
+    }
+
+    /// 동의 거부 → Vision 폴백으로 실행 (온디바이스 — 외부 전송 없음)
     public func rejectConsentAndFallback() {
         logger.info("[Import] 동의 거부 → Vision 폴백 실행")
         showConsentAlert = false
-        guard let item = pendingItem else { return }
-        let ownerName = pendingOwnerName
-        pendingItem = nil
-        pendingOwnerName = nil
+        guard let pending = gate.takePending() else { return }
         let task = Task {
-            await performOCRWithVision(item: item, ownerName: ownerName)
+            await performOCRWithVision(item: pending.item, ownerName: pending.ownerName)
         }
         ocrTask = task
     }
@@ -166,8 +202,7 @@ public final class ImportViewModel {
         cgImageForOCR = nil
         sourceImage = nil
         draft = nil
-        pendingItem = nil
-        pendingOwnerName = nil
+        gate.clear()
         phase = .idle
     }
 
