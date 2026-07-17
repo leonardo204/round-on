@@ -110,6 +110,15 @@ struct StatsShareSheetView: View {
                             })
                         }
 
+                        // ⑥ 토큰 저장 실패 경고 — 링크는 정상이지만 회수/수정이 불가능한 상태
+                        if vm.tokenPersistenceFailed {
+                            BannerNotice(
+                                message: "링크는 만들어졌지만 이 기기에서 회수·수정할 수 없어요. 7일 뒤 자동으로 만료돼요.",
+                                severity: .warning,
+                                dismissAction: nil
+                            )
+                        }
+
                         Spacer(minLength: 100)
                     }
                     .padding(.horizontal, 16)
@@ -505,14 +514,27 @@ struct StatsShareSheetView: View {
         vm.loadState = .loading
         AppLogger.share.info("[StatsShareSheet] createStatsShare 시작 — cardKind=\(payload.cardKind.rawValue)")
 
+        // og:image는 부가 기능 — 실패하면 nil로 흡수하고 공유는 그대로 만든다
+        let ogBase64 = await makeOgImageBase64(payload: payload, hasPin: pinValue != nil)
+
         do {
             let resp = try await client.createStatsShare(
                 payload: payload,
                 pin: pinValue,
-                deviceToken: deviceToken
+                deviceToken: deviceToken,
+                ogImageBase64: ogBase64
             )
-            // Keychain에 stats editToken 저장
-            try? KeychainStore.shared.setStatsEditToken(resp.editToken, for: resp.shortId)
+            // Keychain에 stats editToken 저장 — 실패해도 링크 제공은 계속한다.
+            // 서버 공유는 이미 생성됐으므로 여기서 실패 처리하면 사용자는 링크도 못 받고
+            // 회수도 못 하는 최악이 된다. 대신 회수 불가 사실을 알리고 자동 닫힘을 취소한다.
+            var tokenSaved = true
+            do {
+                try KeychainStore.shared.setStatsEditToken(resp.editToken, for: resp.shortId)
+            } catch {
+                tokenSaved = false
+                vm.markTokenPersistenceFailed()
+                AppLogger.share.error("[StatsShareSheet] stats editToken 저장 실패 — 회수 불가 (shortId=\(resp.shortId)): \(error.localizedDescription)")
+            }
 
             if let url = URL(string: resp.url) {
                 // SwiftData에 StatsShareRecord 저장 (기존 레코드 모두 제거 후 신규 저장)
@@ -523,9 +545,12 @@ struct StatsShareSheetView: View {
                 AppLogger.share.info("[StatsShareSheet] 성공 — url=\(resp.url)")
                 Task { await HapticEngine.shared.play(.shareSuccess) }
 
-                // 0.5초 후 시트 자동 닫힘 (영속 카드가 통계 화면에 즉시 표시됨)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    isPresented = false
+                // 0.5초 후 시트 자동 닫힘 (영속 카드가 통계 화면에 즉시 표시됨).
+                // 토큰 저장 실패 시엔 경고를 읽을 시간이 없어지므로 자동 닫힘을 하지 않는다.
+                if tokenSaved {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        isPresented = false
+                    }
                 }
             } else {
                 vm.loadState = .failed("URL 생성 실패")
@@ -569,6 +594,47 @@ struct StatsShareSheetView: View {
             cardKind: vm.cardKind,
             dateISO: payload.createdAtISO
         )
+    }
+
+    /// 카톡 미리보기(og:image)용 카드 base64 생성.
+    ///
+    /// 렌더는 ImageRenderer 요구대로 메인에서 하고, 비용이 큰 PNG 압축·base64는 백그라운드로 넘긴다.
+    /// 업로드할 payload와 같은 값으로 새로 렌더한다 — 미리 렌더해 둔 `renderedImage`는
+    /// 닉네임 입력을 반영하지 않아(cardKind 변경 시에만 갱신) 다른 이름의 카드가 올라갈 수 있다.
+    /// 어떤 실패도 nil로 흡수한다.
+    private func makeOgImageBase64(payload: StatsSharePayload, hasPin: Bool) async -> String? {
+        // PIN 공유는 서버가 og를 버린다 → 렌더 비용도 대역폭도 쓰지 않는다
+        guard !hasPin else {
+            AppLogger.share.info("[StatsShareSheet] og 생략 — PIN 보호 공유")
+            return nil
+        }
+
+        let renderStarted = Date()
+        guard let image = StatsShareImageRenderer.renderSignatureCard(
+            signature: payload.signature,
+            cardKind: payload.cardKind,
+            dateISO: payload.createdAtISO
+        ) else {
+            AppLogger.share.error("[StatsShareSheet] og 렌더 실패 — og 없이 공유 계속")
+            return nil
+        }
+        AppLogger.share.debug("[StatsShareSheet] og 렌더 완료 — \(Date().timeIntervalSince(renderStarted) * 1000, format: .fixed(precision: 0))ms")
+
+        // UIImage는 NS_SWIFT_SENDABLE — PNG 압축 + base64를 메인 밖으로 빼낸다
+        let encodeStarted = Date()
+        let result = await Task.detached(priority: .userInitiated) {
+            StatsShareOgImage.encode(pngData: image.pngData(), hasPin: hasPin)
+        }.value
+        let encodeMs = Date().timeIntervalSince(encodeStarted) * 1000
+
+        switch result {
+        case .encoded(let base64):
+            AppLogger.share.info("[StatsShareSheet] og 인코딩 완료 — base64Len=\(base64.count), \(encodeMs, format: .fixed(precision: 0))ms")
+            return base64
+        case .skipped(let reason):
+            AppLogger.share.error("[StatsShareSheet] og 생략 — reason=\(reason.rawValue) (공유는 계속)")
+            return nil
+        }
     }
 
     /// 시스템 공유 시트 호출 — PNG 이미지 + URL 동시 첨부

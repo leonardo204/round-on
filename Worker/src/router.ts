@@ -7,6 +7,7 @@
  *  DELETE /api/share/:shortId
  *  GET    /:shortId
  *  POST   /:shortId/verify-pin        (33-SECURITY §5.3)
+ *  GET    /og/:shortId.png            (통계 공유 og:image — v2 2026-07-17)
  *  GET    /healthz
  *  GET    /robots.txt
  *
@@ -30,6 +31,7 @@ import { handleGetWatchShot }  from "./handlers/getWatchShot.js";
 import { handleGetPhoneShot }  from "./handlers/getPhoneShot.js";
 import { handleCreateStatsShare } from "./handlers/createStatsShare.js";
 import { handleGetStatsViewer }   from "./handlers/getStatsViewer.js";
+import { handleGetStatsOgImage }  from "./handlers/getStatsOgImage.js";
 import { handleUpdateStatsShare } from "./handlers/updateStatsShare.js";
 import { handleDeleteStatsShare } from "./handlers/deleteStatsShare.js";
 import { handleVerifyStatsPin }   from "./handlers/verifyStatsPin.js";
@@ -207,6 +209,19 @@ export async function route(
   const phoneShotMatch = pathname.match(/^\/phone\/([a-z]+)\.png$/);
   if (phoneShotMatch && (method === "GET" || method === "HEAD")) {
     return handleGetPhoneShot(phoneShotMatch[1]);
+  }
+
+  // ── /og/:shortId.png — 통계 공유 og:image (catch-all /:shortId 보다 반드시 앞) ─
+  // /og/... 는 슬래시가 2개라 /:shortId(단일 세그먼트) 정규식엔 걸리지 않지만,
+  // /watch, /phone 정적 PNG 라우트와 동일하게 catch-all 앞에 두어 순서 규칙을 일관되게 유지한다.
+  // 크롤러(카톡 등)가 HEAD 를 선요청할 수 있어 GET + HEAD 모두 처리 (Workers 가 HEAD body 자동 제거).
+  const statsOgMatch = pathname.match(/^\/og\/(s_[0-9A-Za-z]{8})\.png$/);
+  if (statsOgMatch && (method === "GET" || method === "HEAD")) {
+    return handleGetStatsOgImage(env, statsOgMatch[1]);
+  }
+  // /og/* fallthrough → 404 (형식 불일치 shortId, 잘못된 확장자)
+  if (pathname.startsWith("/og/")) {
+    return errorResponse("NOT_FOUND", "이미지를 찾을 수 없습니다.", 404);
   }
 
   // ── /:shortId ──────────────────────────────────────────────────────────

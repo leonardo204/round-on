@@ -6,6 +6,7 @@
 import type { Env, PinLockEntry, StatsShareMeta } from "../types.js";
 import { verifyPin } from "../lib/bcrypt.js";
 import { jsonResponse, errorResponse } from "../middleware/security.js";
+import { statsMetaKey } from "../lib/statsOg.js";
 
 const MAX_ATTEMPTS = 5;
 const LOCK_TTL = 3600;          // 1시간
@@ -51,7 +52,7 @@ export async function handleVerifyStatsPin(
   }
 
   // 5. KV 메타 조회
-  const raw = await env.KV_STATS.get(`stats:${shortId}`);
+  const raw = await env.KV_STATS.get(statsMetaKey(shortId));
   if (!raw) {
     return errorResponse("NOT_FOUND", "통계 공유를 찾을 수 없습니다.", 404);
   }

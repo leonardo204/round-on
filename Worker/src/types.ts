@@ -267,4 +267,10 @@ export interface StatsShareMeta {
   createdAt: number;      // epoch ms
   expiresAt: number;      // createdAt + 7 * 86400 * 1000
   deviceToken?: string;   // rate-limit 추적
+  /**
+   * og:image({shortId}:og) 저장 여부 (Optional — v1 메타 하위 호환).
+   * viewer 렌더 시 KV 추가 조회 없이 og 메타 출력 여부를 판정하기 위한 플래그.
+   * PIN 이 설정된 공유는 og 를 저장하지 않으므로 항상 false/undefined 다 (통계 공유 v2).
+   */
+  hasOgImage?: boolean;
 }

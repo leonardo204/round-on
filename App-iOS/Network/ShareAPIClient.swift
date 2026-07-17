@@ -238,12 +238,17 @@ private struct StatsShareCreateResponseCodable: Decodable {
 extension ShareAPIClient {
 
     /// POST /api/share/stats — 통계 공유 viewer 생성 (30-API §stats)
+    ///
+    /// - Parameter ogImageBase64: 카톡 미리보기용 1080×1080 카드 PNG의 순수 base64.
+    ///   nil이면 `ogImage` 키 자체가 빠져 v1과 동일하게 동작한다.
+    ///   서버는 og 저장에 실패해도 공유를 201로 생성하며, 응답에 og 성공 여부는 담기지 않는다.
     public func createStatsShare(
         payload: StatsSharePayload,
         pin: String?,
-        deviceToken: String
+        deviceToken: String,
+        ogImageBase64: String? = nil
     ) async throws -> StatsShareCreateResponse {
-        AppLogger.share.info("[Share] createStatsShare 시작 — cardKind=\(payload.cardKind.rawValue)")
+        AppLogger.share.info("[Share] createStatsShare 시작 — cardKind=\(payload.cardKind.rawValue), og=\(ogImageBase64 == nil ? "없음" : "포함")")
 
         let url = try makeURL(path: "/api/share/stats")
         var req = URLRequest(url: url)
@@ -252,19 +257,34 @@ extension ShareAPIClient {
         req.setValue(UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
         req.setValue("Bearer \(deviceToken)", forHTTPHeaderField: "X-Device-Token")
 
-        // 요청 바디: {payload, pin?, deviceToken}
-        let body = StatsShareRequestBody(payload: payload, pin: pin, deviceToken: deviceToken)
+        // 요청 바디: {payload, pin?, deviceToken, ogImage?}
+        let body = StatsShareRequestBody(
+            payload: payload,
+            pin: pin,
+            deviceToken: deviceToken,
+            ogImage: ogImageBase64
+        )
         do {
             req.httpBody = try statsEncoder.encode(body)
-            AppLogger.share.debug("[Share] createStatsShare encoded bytes=\(req.httpBody?.count ?? 0)")
+            AppLogger.share.debug("[Share] createStatsShare encoded bytes=\(req.httpBody?.count ?? 0), ogBase64Len=\(ogImageBase64?.count ?? 0)")
         } catch {
             AppLogger.share.error("[Share] createStatsShare encode 실패: \(error.localizedDescription)")
             throw ShareAPIError.encodingError(error)
         }
 
-        let data = try await perform(req)
+        let started = Date()
+        let data: Data
+        do {
+            data = try await perform(req)
+        } catch {
+            let ms = Date().timeIntervalSince(started) * 1000
+            AppLogger.share.error("[Share] createStatsShare 실패 — \(ms, format: .fixed(precision: 0))ms: \(error.localizedDescription)")
+            throw error
+        }
+        let ms = Date().timeIntervalSince(started) * 1000
+
         let resp = try decodeStatsResponse(StatsShareCreateResponseCodable.self, from: data)
-        AppLogger.share.info("[Share] createStatsShare 성공 — shortId=\(resp.shortId)")
+        AppLogger.share.info("[Share] createStatsShare 성공 — shortId=\(resp.shortId), \(ms, format: .fixed(precision: 0))ms")
         return StatsShareCreateResponse(
             shortId: resp.shortId,
             url: resp.url,
@@ -327,4 +347,6 @@ private struct StatsShareRequestBody: Encodable {
     let payload: StatsSharePayload
     let pin: String?
     let deviceToken: String
+    /// payload 안이 아니라 top-level. nil이면 인코딩에서 키가 빠진다(= v1 요청과 동일).
+    let ogImage: String?
 }

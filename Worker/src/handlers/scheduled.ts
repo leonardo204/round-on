@@ -29,6 +29,11 @@ export async function handleScheduled(
 
   if (cron === "0 3 * * *") {
     // 매일 만료 회수 (기존 로직)
+    //
+    // 통계 공유 og:image (v2 2026-07-17): 추가 회수 작업 불필요.
+    //   {shortId}:og 는 페이로드(stats:{shortId})와 동일한 STATS_TTL(7일) expirationTtl 로 저장되므로
+    //   KV 가 두 키를 같은 시점에 자동 만료시킨다. 명시 삭제 경로(DELETE /api/share/stats/:id,
+    //   PIN 신규 설정)는 각 핸들러가 직접 처리한다 — lib/statsOg.ts 참조.
     try {
       const today = new Date().toISOString().slice(0, 10);
       console.log(`[cron] 만료 회수 완료 date=${today}`);

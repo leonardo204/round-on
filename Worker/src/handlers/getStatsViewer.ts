@@ -7,6 +7,7 @@ import type { Env, StatsShareMeta } from "../types.js";
 import { renderStatsViewer } from "../views/statsViewer.js";
 import { renderStatsPinLock } from "../views/statsViewer.js";
 import { applySecurityHeaders } from "../middleware/security.js";
+import { statsMetaKey } from "../lib/statsOg.js";
 
 /** shortId 패턴: 's_' + base62 8자 */
 const STATS_SHORT_ID_RE = /^s_[0-9A-Za-z]{8}$/;
@@ -49,7 +50,7 @@ export async function handleGetStatsViewer(
   }
 
   // 2. KV 조회
-  const raw = await env.KV_STATS.get(`stats:${rawShortId}`);
+  const raw = await env.KV_STATS.get(statsMetaKey(rawShortId));
   if (!raw) {
     return htmlResponse(render404Html(), 404);
   }

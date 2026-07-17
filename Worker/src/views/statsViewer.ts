@@ -6,11 +6,14 @@
  * - 외부 폰트 없음 (시스템 폰트)
  * - 다크모드 비대응 v1
  * - 한국어 고정
- * - og:image: 제거 (v1) — 정적 PNG 자산 미배포 상태, 카톡은 og:title+og:description으로 폴백
- *   v2 todo: og:image 자산 추가 (satori 또는 정적 PNG 3장: og-stats-pr/hcp/trend.png)
+ * - og:image (v2 2026-07-17): iOS 가 공유 생성 시 업로드한 1080x1080 시그니처 카드 PNG 를
+ *   KV 에서 /og/{shortId}.png 로 서빙해 참조한다 (cardKind 별 정적 자산 방식은 폐기 — 번들 한도 때문).
+ *   PIN 공유이거나 og PNG 가 없으면 메타를 아예 출력하지 않고 v1 처럼 og:title+og:description 으로 폴백한다.
+ *   구현: lib/statsOg.ts, handlers/getStatsOgImage.ts
  */
 
 import { escapeHtml } from "../lib/escape.js";
+import { OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT } from "../lib/statsOg.js";
 import type {
   StatsShareMeta,
   StatsSharePayload,
@@ -457,11 +460,23 @@ export function renderStatsViewer(opts: StatsViewerOptions): string {
   const displayName = escapeHtml(payload.displayName || "사용자");
   const periodLabel = escapeHtml(payload.periodLabel || "");
 
-  // og:image 제거 (v1 — 정적 PNG 자산 미배포)
-  // v2 todo: og:image 자산 추가 (satori 또는 정적 PNG: og-stats-{cardKind}.png)
   const ogTitle = `${escapeHtml(payload.signature.headline)} | 라운드온`;
   const ogDesc = `${displayName}님의 골프 통계 · ${periodLabel}`;
   const ogUrl = `https://${escapeHtml(domain)}/s/${escapeHtml(opts.shortId)}`;
+
+  // og:image (v2) — PNG 가 실제 저장돼 있고 PIN 이 없을 때만 출력한다.
+  //  · PIN 공유: 미리보기 이미지로 스코어가 새어나가므로 메타 자체를 생략 (/og 도 404).
+  //  · og 미보유(v1 공유/구버전 앱): 메타 생략 → 카톡은 og:title+og:description 으로 폴백.
+  // twitter:card 는 이미지가 있을 때만 summary_large_image 로 승격한다.
+  const ogImageAvailable = meta.hasOgImage === true && !meta.pinHash;
+  const ogImageTags = ogImageAvailable
+    ? `
+<meta property="og:image" content="https://${escapeHtml(domain)}/og/${escapeHtml(opts.shortId)}.png"/>
+<meta property="og:image:width" content="${OG_IMAGE_WIDTH}"/>
+<meta property="og:image:height" content="${OG_IMAGE_HEIGHT}"/>
+<meta property="og:image:type" content="image/png"/>`
+    : "";
+  const twitterCard = ogImageAvailable ? "summary_large_image" : "summary";
 
   const signatureHtml = renderSignatureCard(payload);
 
@@ -554,8 +569,8 @@ ${payload.trend.sigmaText ? `<div style="font-size:10px;color:#94a39b;margin-top
 <meta property="og:title" content="${ogTitle}"/>
 <meta property="og:description" content="${ogDesc}"/>
 <meta property="og:url" content="${ogUrl}"/>
-<meta property="og:type" content="website"/>
-<meta name="twitter:card" content="summary"/>
+<meta property="og:type" content="website"/>${ogImageTags}
+<meta name="twitter:card" content="${twitterCard}"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
