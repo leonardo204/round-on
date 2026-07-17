@@ -29,6 +29,7 @@
 - **DB**: 한국 골프장 DB v3 965곳 기준. 941곳 `low`. dataQuality 기반 분기 처리 필수
 - **DB 동기화**: 번들 979(다중소스 base) + 원격 골프존 216(보강 피드, 전체 아님). 원격=`/v1/courses`(id+name 메타)+`/v1/course-pars`(실 par). **번들 교체 금지 — id/이름 매칭 par 머지**. 관대한 전용 DTO 사용(full GolfCourse 디코드 금지). 상세: [ref-docs/golf-db-pack/42-COURSE_DB_SYNC.md](ref-docs/golf-db-pack/42-COURSE_DB_SYNC.md)
 - **개인정보**: 위치는 기기 내 처리(단 사용자 골프장 *검색* 시 카카오로 좌표 전송 — 방침에 명시). 동반자 별명 + 스코어만 viewer 공유. **viewer 사진 *공유* 기능 폐기됨(2026-05-18)** — R2 업로드/EXIF strip 무효. 단 **스코어카드 OCR용 PhotosPicker(Gemini 전송)는 유효**. Viewer 7일 후 KV 자동 삭제
+- **통계 og:image (v2, 2026-07-17)**: 앱이 렌더한 통계 카드 PNG를 KV 업로드 → `GET /og/{shortId}.png`로 카톡 미리보기 서빙. **폐기된 "사진 공유"와 무관** — 사용자 사진이 아니라 앱 생성 카드이고, viewer에 이미 있는 통계만 담는다. **PIN 공유는 og 미저장·미서빙**(3중 방어). 단 사후 PIN 설정 시 카톡 CDN 캐시는 회수 불가 — 구조적 한계. **Worker에 이미지 자산을 번들로 넣지 말 것**(gzip 한도, 메모리 참조). 상세: [ref-docs/specs/30-API_SPEC.md](ref-docs/specs/30-API_SPEC.md) TC-1/TC-6
 - **OSM ODbL**: 앱 내 설정 → 정보에 `© OpenStreetMap contributors, ODbL 1.0` 표기 필수
 - **xcodebuild destination**: iPhone 16 Pro는 OS 버전을 명시해야 모호성 회피 (메모리 참조)
 - **iOS 코드 변경**: 단일 ralph에 위임 (두 ralph 동시 iOS 영역 작업 금지)

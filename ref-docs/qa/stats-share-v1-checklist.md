@@ -40,7 +40,6 @@
 
 - [ ] `https://golf.zerolive.co.kr/s/s_xxxxxxxx` — HTTP 200 정상 응답
 - [ ] `Content-Type: text/html; charset=utf-8` 확인
-- [ ] `og:image` URL: `cardKind == "pr"` → `/og-stats-pr.png`, `"hcp"` → `/og-stats-hcp.png`, `"trend"` → `/og-stats-trend.png`
 - [ ] `og:title`: `{headline} | 라운드온`
 - [ ] `og:description`: `{displayName}님의 골프 통계 · {periodLabel}`
 - [ ] 만료 전 viewer — 11개 섹션 모두 렌더 확인:
@@ -63,6 +62,30 @@
 
 ---
 
+## og:image (v2 — 2026-07-17)
+
+> v1 의 `cardKind` 별 정적 자산(`/og-stats-pr.png` 등) 방식은 폐기됨.
+> 번들 gzip 한도(3MB) 여유가 부족해 PNG 를 번들에 넣지 않는다.
+> iOS 가 공유 생성 시 업로드한 1080×1080 시그니처 카드 PNG 를 KV 에 저장하고 shortId 별로 서빙한다.
+
+- [ ] PIN 없는 공유 → viewer HTML 에 `og:image` = `https://golf.zerolive.co.kr/og/{shortId}.png` (shortId 별, cardKind 무관)
+- [ ] `og:image:width` = `1080`, `og:image:height` = `1080`, `og:image:type` = `image/png`
+- [ ] `og:image` 있을 때 `twitter:card` = `summary_large_image` (없으면 `summary`)
+- [ ] `GET /og/{shortId}.png` → HTTP 200 + `Content-Type: image/png`
+- [ ] 응답 헤더 `Cache-Control: public, max-age=604800, immutable`
+- [ ] 반환된 이미지가 공유 시트에서 본 시그니처 카드와 동일 (1080×1080)
+- [ ] **PIN 설정된 공유 → `GET /og/{shortId}.png` 404** (미리보기로 스코어 유출 차단)
+- [ ] **PIN 설정된 공유 → viewer HTML 에 `og:image` 메타 자체가 없음**
+- [ ] PIN 설정된 공유 링크를 카톡에 붙여넣기 → 미리보기에 카드 이미지 **미표시** (제목/설명만)
+- [ ] 공유 생성 후 PIN 을 나중에 추가(PUT) → `/og/{shortId}.png` 404 로 전환
+- [ ] 구버전 앱(ogImage 미전송) 으로 생성한 공유 → `/og` 404 + viewer 에 og:image 메타 없음, viewer 본문은 정상 렌더
+- [ ] 이미지 업로드 실패(1.5MB 초과 / PNG 아님) 상황에서도 공유 생성은 성공 (og 만 생략)
+- [ ] 공유 삭제(DELETE) 후 `/og/{shortId}.png` 404
+- [ ] 만료(7일 경과) 후 `/og/{shortId}.png` 404
+- [ ] `/og/{잘못된 형식}.png` (s_ prefix 없음 / 길이 불일치) → 404
+
+---
+
 ## PIN 잠금
 
 - [ ] PIN 설정된 viewer URL 접근 시 잠금 화면 렌더
@@ -78,7 +101,8 @@
 
 ## 카톡 인앱 호환
 
-- [ ] 카톡 단톡방 링크 공유 후 미리보기 카드 이미지 노출 (og:image 표시)
+- [ ] 카톡 단톡방 링크 공유 후 미리보기 카드 이미지 노출 (og:image 표시 — **PIN 없는 공유 한정**)
+- [ ] PIN 설정 공유는 카톡 미리보기에 이미지 없이 제목/설명만 노출 (스코어 유출 차단)
 - [ ] 카톡 미리보기 카드 제목(`og:title`) 노출
 - [ ] 카톡 인앱 브라우저로 viewer 열림
 - [ ] 인앱 브라우저 스크롤 깨짐 없음
