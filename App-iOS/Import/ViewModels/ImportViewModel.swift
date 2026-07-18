@@ -259,6 +259,12 @@ public final class ImportViewModel {
                 logger.info("[Import] phase → .review (Gemini 성공)")
                 phase = .review
             } catch {
+                // 사용자가 취소한 경우 Vision 폴백으로 이어가지 않고 즉시 중단한다.
+                // cancel()이 이미 phase를 .idle로 되돌렸으므로 여기서 상태를 건드리지 않는다.
+                if Task.isCancelled {
+                    logger.info("[Import] Gemini 취소됨 — Vision 폴백 없이 중단")
+                    return
+                }
                 // Gemini 실패 → Vision 폴백
                 logger.warning("[Import] Gemini 실패: \(error.localizedDescription) → Vision 폴백 진입")
                 let fallbackWarning = "AI 분석 실패(\(error.localizedDescription)). Vision으로 재시도합니다."
@@ -266,6 +272,11 @@ public final class ImportViewModel {
             }
 
         } catch {
+            // 이미지 로드 단계에서 취소된 경우 실패로 표시하지 않고 조용히 중단
+            if Task.isCancelled {
+                logger.info("[Import] performOCR 취소됨 — 중단")
+                return
+            }
             logger.error("[Import] performOCR 예외: \(error.localizedDescription)")
             phase = .failed(error.localizedDescription)
         }
@@ -356,6 +367,13 @@ public final class ImportViewModel {
             let scorecard = try await Task.detached(priority: .userInitiated) {
                 try GolfScorecardExtractor().extract(from: box.image)
             }.value
+
+            // Vision 추출 중 사용자가 취소했으면 리뷰로 넘기지 않고 중단
+            // (온디바이스 추출은 취소를 체크하지 않으므로 완료 후 여기서 가드한다)
+            if Task.isCancelled {
+                logger.info("[Import] Vision 폴백 취소됨 — 리뷰 미표시")
+                return
+            }
 
             var allWarnings = scorecard.warnings
             if let extra = extraWarning {
