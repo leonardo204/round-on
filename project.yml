@@ -67,6 +67,11 @@ targets:
         DEFINES_MODULE: YES
         DYLIB_INSTALL_NAME_BASE: "@rpath"
         SKIP_INSTALL: YES
+        # PRODUCT_NAME은 Shared 유지 필수 — watchOS에서 `import Shared` 동작 근거.
+        # 이 때문에 산출물이 Shared.framework이고, 스킴 BuildableName을 두고 xcodegen(타깃명 기준
+        # Shared-Watch.framework)과 Xcode(산출물 기준 Shared.framework)가 갈린다. 커밋본은
+        # xcodegen 출력(Shared-Watch.framework)에 맞춘다 — build step이 xcodegen이므로. Xcode 빌드가
+        # 로컬에서 Shared.framework로 재작성하면 그건 커밋하지 말 것(discard).
         PRODUCT_NAME: Shared
 
   RoundOn:
